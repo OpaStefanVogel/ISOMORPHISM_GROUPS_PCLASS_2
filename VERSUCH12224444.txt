@@ -1,44 +1,90 @@
 #XSAMMEL:=[];#nur anfangs einmal
-IS:=[4,3,2,1];
-for i1 in IS do
-  for i2 in IS do
+IS:=[2,1];
+for i1 in IS do i2:=i1;
+#  for i2 in IS do
     for i3 in IS do
       for i4 in IS do
         for i5 in IS do
           for i6 in IS do
             Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6);
-            R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[i1,i2,i3,i4,i5,i6]];
-            G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
-            if G1<>fail then 
+            R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[i1,i2,i3,i4,i5,i6]];
+#            G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+#            if G1<>fail then 
               G:=PcgsOfR(R);
-              Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
+              Print(IdSmallGroup(G),"\c");RMAXSUCH(G); 
+#              fi;
             od;
           od;
         od;
       od;
-    od;
+#    od;
   od;
 
 IS:=[4,3,2,1];
-for i1 in IS do
-  for i2 in IS do
+for i1 in IS do i2:=i1; i3:=i1;
+#  for i2 in IS do
+#    for i3 in IS do
+      for i4 in IS do
+        for i5 in IS do
+          for i6 in IS do
+            Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6);
+            R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[i1,i2,i3,i4,i5,i6]];
+#            G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+#            if G1<>fail then 
+              G:=PcgsOfR(R);
+              Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+#              fi;
+            od;
+          od;
+        od;
+#      od;
+#    od;
+  od;
+
+IS:=[2,1];
+for i1 in IS do i2:=i1;
+#  for i2 in IS do
     for i3 in IS do
       for i4 in IS do
         for i5 in IS do
           for i6 in IS do
             for i7 in IS do
               Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7);
-              R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7]];
-              G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
-              if G1<>fail then 
+              R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7]];
+#              G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+#              if G1<>fail then 
                 G:=PcgsOfR(R);
-                Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
+                Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+#                fi;
               od;
             od;
           od;
         od;
       od;
-    od;
+#    od;
+  od;
+
+IS:=[4,3,2,1];
+for i1 in IS do i2:=i1; i3:=i1;
+#  for i2 in IS do
+#    for i3 in IS do
+      for i4 in IS do
+        for i5 in IS do
+          for i6 in IS do
+            for i7 in IS do
+              Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7);
+              R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7]];
+#              G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+#              if G1<>fail then 
+                G:=PcgsOfR(R);
+                Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+#                fi;
+              od;
+            od;
+          od;
+        od;
+#      od;
+#    od;
   od;
 
 2 Ergebnisse:
@@ -144,12 +190,39 @@ ok da muss noch ALLERANFANGSBIT:=-1 aucH beim ersten ZR[3]<>0 rein
    RMAXSUCH(SmallGroup(64,226) 140/0 ms !!!
    Versuch1 geht trotz zusätzlichem [[1],[1,1]...] bei i1-i6 minimal schneller.
    Ergebnis von i1-i7 steht noch aus, aber "ohne" ist schon beim Aufholen
+   also Versuch1 mit [[1],[1,1]...]
+üü dann muss ich aber nochmal schauen, 
+   ob es auch doch noch öfters geht, damit nix verschenkt.
+ok auch mal die überflüssigen i1<>i2<>i3 herausnehmen und damit MatrixOf
+   ok perfekt: Am Anfang großer Rückstand, am Ende riesen Vorsprung.
+vv wo ist 
+
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2]];
+G:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+RMAXSUCH(G);time;
+G:=PcgsOfR(R);
+RMAXSUCH(G);time;
+
+ok ach so, ist gar nicht dabei bei R:=[[1],[1,1],[2,2,2]..., 
+   dehalb umändern bei IS=[2,1];
 .. dann muss ich aber nochmal schauen, 
    ob es auch doch noch öfters geht, damit nix verschenkt.
+   denn inh=202 dauert doch auffällig lange
+   dabei auch Size am längsten und PositionFirstComponentRepariert
+nö dazu ALLERANFANGSBIT:=0 mal von RMAXSUCH in QY13 verschieben
+   nur probehalber mal, geht aber leider nicht.
 
+ClearProfile();
+G:=SmallGroup(64,202);
+RMAXSUCH(G);time;
+DisplayProfile();
 
+ClearProfile();
+G:=SmallGroup(64,201);
+RMAXSUCH(G);time;
+DisplayProfile();
 
-
+also nix geht heute mehr -> Aus.
 
 
 
