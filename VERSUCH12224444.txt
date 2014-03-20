@@ -7,8 +7,11 @@ for i1 in IS do
         for i5 in IS do
           for i6 in IS do
             Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6);
-            R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[i1,i2,i3,i4,i5,i6]];G:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
-            if G<>fail then Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
+            R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[i1,i2,i3,i4,i5,i6]];
+            G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+            if G1<>fail then 
+              G:=PcgsOfR(R);
+              Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
             od;
           od;
         od;
@@ -25,8 +28,11 @@ for i1 in IS do
           for i6 in IS do
             for i7 in IS do
               Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7);
-              R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7]];G:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
-              if G<>fail then Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
+              R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7]];
+              G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+              if G1<>fail then 
+                G:=PcgsOfR(R);
+                Print(IdSmallGroup(G),"\c");RMAXSUCH(G); fi;
               od;
             od;
           od;
@@ -39,3 +45,29 @@ for i1 in IS do
 - bei weitem nicht alle i1...i5 bilden eine Gruppe, ach ja, die ersten drei i1=i2=i3 sind ja gleich!!!
     aber außer wo i1=i2=2, da kann und muss auch i3=1 sein!!!
 - warum durchläuft eine bereits in XSAMMEL enthaltene Gruppe alle "...."?
+
+G:=SmallGroup(128,2229);
+RMAXSUCH(G);time;
+#dauert 1600
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[4,4,4,4,4,4,4]];
+G:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+RMAXSUCH(G);time;
+G:=PcgsOfR(R);
+RMAXSUCH(G);time;
+#dauert 17760
+#und hält sich überdies bei einzelnen Punkten "." auf
+#das darf doch nicht sein!!!
+#das könnte daran liegen, dass ich wohl den [[1],[1,1]...]-Zweig aus XSAMMEL ausgeschlossen habe, 
+#der muss dann halt wieder mit rein.
+#ok hab das in Zeile 88 auskommetiert
+#daraufhin erscheint auch [[1],[1,1],[4,4,4]] in XSAMMELVIEWER2(XSAMMELVIEWER2
+vv aber jetzt dauert inh=202 ewig, 
+vv ich vermute weil viele XMERK in XSAMMEL rein müssen)???
+vv auch dauert RMAXSUCH immer noch ewig 
+vv zweite Fehlermöglichkeit: G ist keine pc-Group
+vv also muss ich das entsprechende MatrixOf suchen oder machen...
+ok ja das ist PcgsOfR(R) aus D4_2_37.txt!!! Also alles da
+ok jetzt geht Versuch1 ganz flott, sogar schneller bei nur [[1],[2,2]]
+.. aber das dürfte eigentlich nicht sein, mit [[1],[1,1]...] muss schneller sein
+.. und das brauch ich auch jetzt, weil viel isomorph ist.
+.. dazu mache ich mal in beiden Varianten ...

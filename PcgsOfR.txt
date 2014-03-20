@@ -1,0 +1,46 @@
+#Read("GAP/PCLASS2/PcgsOfR.txt");
+
+PcgsOfR:=function(R)
+  local F,G,i,j,C,S,ELM,RE,REL,relorders,coll;
+  S:=Size(R);
+  F:=FreeGroup(S);
+  ELM:=[Identity(F)];
+  for i in [1..S] do 
+    for j in [1..Size(ELM)] do 
+      Add(ELM,ELM[j]*F.(S+1-i));
+      od;
+    od;
+  RE:=[];
+  for i in [1..S] do 
+    RE[i]:=[ELM[R[i][1]]];
+    for j in [1..i-1] do
+      RE[i][j+1]:=ELM[R[i][1]]*ELM[R[j][1]]*ELM[R[i][j+1]];
+      od;
+    od;
+  REL:=[];
+  for i in [1..S] do 
+    Add(REL,(F.(S+1-i))^2/ELM[R[i][1]]);
+    for j in [1..i-1] do
+#      Add(REL,(F.(j)*F.(i))^2/ELM[R[i][j+1]]);
+      Add(REL,Comm(F.(S+1-j),F.(S+1-i))/(ELM[R[i][1]]*ELM[R[j][1]]*ELM[R[i][j+1]]));
+      od;
+    od;
+  relorders:=[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
+  coll:=SingleCollector(F,relorders{[1..S]});
+  for i in [1..S] do 
+    SetPower(coll,S+1-i,RE[i][1]);
+    for j in [1..i-1] do
+      SetCommutator( coll, S+1-j, S+1-i, RE[i][j+1] );
+      od;
+    od;
+  G:=GroupByRws( coll );
+  G:=RefinedPcGroup(G);
+  #IsConfluent(P);
+  #IdSmallGroup(G);
+  return G;
+  end;
+
+
+Print ("     PcgsOfR.txt geladen\n");
+
+
