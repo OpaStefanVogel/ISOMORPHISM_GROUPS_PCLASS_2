@@ -1,0 +1,854 @@
+#Read("GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
+#Read("GAP/PCLASS2/MatrixOf.txt");#macht Mat aus R.
+
+#war vordem
+#Read("GAP/D4_2E/D4_2E_36");# 
+#Read("GAP/D4_1/D4_1_4");# 
+#SaveWorkspace("GAP/D4_2E/WORKSPACE_36");
+
+#...
+#   aber das ist der letzte Fehler!!!!
+#ok jetzt nur noch die nicht mehr benötigten raus.
+#   das sind WEGLISTE, QY06, QY07, RETTER, QY21ERW, RGLEICH, WEGPOSITION,
+#   WEGMACHER, PNEUMACHER, QY08alt, QY15alt
+#ok in RMAXSAMMELREKURSIV weniger globale Variablen machen ok
+#ok erstmal soweit, n ist jetzt bei 56053
+#ok hab das Ergebnis auf XSAMMELVIEWER4_56058.txt - Finiti
+#.. nun will ich nochmal die WEGLISTE untersuchen-->D4_2E_38.txt
+
+#jetzt bei [1..1] n=16 nur noch:
+#  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                                                                    
+#    564       44        0       37        0  (oprt.)  PcElementByExponentsNC                                                                      
+#    112       12       76       16       63           XMISCH                                                                                      
+#    200       32       60       66       32           QY21MINI                                                                                    
+#    370      160        0      212        0  GAP      Group                                                                                       
+#   1506      160        0      293        0           QY09                                                                                        
+#    696      396        8      424        0           QY10A                                                                                       
+#   2531      532        0     1195        0  (oprt.)  Size                                                                                        
+#     18       48      632       36      273           QY14                                                                                        
+#    131      484      224      583      410           XFUELL                                                                                      
+#    200       96      692       72      906           QY11A                                                                                       
+#   2110      972        0      519        0  (oprt.)  ExponentsOfPcElement                                                                        
+#    167     1000        0     1599        0  (oprt.)  RightTransversal                                                                            
+#    114      240     1264      222     1904           QY12                                                                                        
+#    608     1520        4     2430        0  (oprt.)  PcgsByPcSequenceNC                                                                          
+#    167      360     4864      427     6549           QY13                                                                                        
+#              52                32                    OTHER                                                                                       
+#            6108              8169                    TOTAL                                                                                       
+#von vorher
+#           10072             14587                    TOTAL                                                                              
+#und noch vorher
+#           36903             53089                    TOTAL                                                                                           
+
+
+
+XMERK:=[];
+ZEILE:=[];SPALTE:=[];S1:=[];S2:=[];
+FINBIT:=0;FIXBIT:=0;FIXFIX:=-1;PBIT:=0;
+HRES0:=[];HRES:=[];STEP:=0;CLIST:=[];R:=[];
+XSAMMEL:=[];
+XMERKZAHL:=0;XMERKZAHLVEKTOR:=[];COUNTER:=0;
+LFDNR:=0;n:=1;nmax:=256;
+
+RMAX:=[];WEGEBAUM:=[];WEGEZAHL:=0;
+ILIST:=[];RMERKER:=[];
+RMAXSUCH:=IdFunc;
+inh:=0;
+
+#Schnittstellen zu GAP
+Commu:=function(a,b) return Comm(a,b); end;
+Commu:=function(a,b) return (b*a)^2; end;
+PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
+  local DRINBIT,POS;
+  DRINBIT:=0;POS:=1;
+  while IsBound(ZEIGER[POS]) and DRINBIT=0 do
+    if PNEU>ZEIGER[POS][1] then POS:=POS+1;
+      else DRINBIT:=-1; fi;
+    od;
+  return POS;
+  #statt return PositionFirstComponent(ZEIGER,PNEU);
+  #welches bei "nicht drin" Size(ZEIGER) ausgibt statt Add-Position 
+  end;
+
+#Schnittstelle zur Ausgabe
+QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
+  local RET;
+  RET:=Iterated(PNEU,function(a,b) return 2*a+b; end)+1;
+  if RET=1 then RET:=255; else
+    if RET=2 then RET:=256; else
+      RET:=RET-2; fi; fi;
+  return RET;
+  end;
+
+QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
+  local RET,j;
+  RET:=(HRES[1])^2 in GROUP;
+  for j in [2..S] do
+    if not Commu(HRES[1],HRES[j]) in GROUP then RET:=false; fi; od;#C
+if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
+#if S=3 and (HRES[1]*HRES[3])^2=(HRES[1])^0 then RET:=false; fi;
+#if S=4 and (HRES[1]*HRES[2])^2=(HRES[1])^0 and (HRES[2]*HRES[3])^2<>(HRES[1])^0 then RET:=false; fi;
+  return RET;
+  end;
+
+QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
+  local PNEU,j,pcgs;
+  pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]),HRES);
+  PNEU:=[QY09(ExponentsOfPcElement(pcgs,pcgs[1]^2))];#RP
+  for j in [2..S] do
+    Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]) )),2);#C
+    od;
+  return PNEU;
+  end;
+
+
+QY07NEU:=function(WEGEBAUM,WEGMERKER,PNEU,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
+  local DRINBIT,i,j,ZEIGER;
+  DRINBIT:=true;ZEIGER:=WEGEBAUM;
+  for i in [1..S-1] do
+    j:=WEGMERKER[S-i];
+    if not IsBound(ZEIGER[j]) then
+      DRINBIT:=false;
+      ZEIGER[j]:=[];
+      fi;
+    ZEIGER:=ZEIGER[j];
+    od;
+  j:=PositionSorted(ZEIGER,PNEU);
+  if IsBound(ZEIGER[j]) then
+    if ZEIGER[j]<>PNEU then
+      DRINBIT:=false;
+      Add(ZEIGER,List(PNEU),j);
+      WEGEZAHL:=WEGEZAHL+1;
+      fi;
+    else
+      DRINBIT:=false;
+      Add(ZEIGER,List(PNEU),j);
+      WEGEZAHL:=WEGEZAHL+1;
+      fi;
+  return DRINBIT;
+  end;
+
+QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
+  local ISO;
+  ISO:=PositionFirstComponent(ZEIGER,PNEU);
+  if not IsBound(ZEIGER[ISO]) then ISO:=0; else
+    if ZEIGER[ISO][1]<>PNEU then ISO:=0; fi; fi;
+  return ISO;
+  end;
+
+RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
+  local NMERK,XMERKMERK,HRESMERK,
+        HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
+        WEGEBAUMMERK,WEGEZAHLMERK,RMAXMERK;
+  #STEP,XMERKZAHL noch offen
+  NMERK:=n;
+  XMERKMERK:=StructuralCopy(XMERK);
+  HRESMERK:=List(HRES);
+  HRES0MERK:=List(HRES0);
+  CLISTMERK:=List(CLIST);
+  XMERKZAHLMERK:=XMERKZAHL;
+  RM:=List(R);
+  WEGEBAUMMERK:=StructuralCopy(WEGEBAUM);
+  WEGEZAHLMERK:=WEGEZAHL;
+  RMAXMERK:=StructuralCopy(RMAX);
+   RMAXSUCH(C);
+  n:=NMERK;
+  XMERK:=XMERKMERK;
+  HRES:=HRESMERK;
+  HRES0:=HRES0MERK;
+  CLIST:=CLISTMERK;
+  XMERKZAHL:=XMERKZAHLMERK;
+  R:=RM;
+  WEGEBAUM:=WEGEBAUMMERK;
+  WEGEZAHL:=WEGEZAHLMERK;
+  RMAX:=RMAXMERK;
+  end;
+
+QY12:=function(C,S,nn) #bestimmt XMERK
+  local i,j,jj,HI,ISO,elm,exp,fam,pcgs, p0,p1,PNEU,HRES1,APHI;
+  if not(IsBound(XMERK[S])) then 
+    XMERK[S]:=[]; ZEILE[S]:=0; S1[S]:=0; S2[S]:=1; fi;
+  ZEILE[S]:=ZEILE[S]+1;SPALTE[S]:=0;
+  for i in [nn+1..2*nn] do if FIXBIT=0 then
+    SPALTE[S]:=SPALTE[S]+1;
+    if SPALTE[S]=S2[S] then S2[S]:=2*S2[S]-1; fi;
+    Add(HRES,CLIST[i],1);
+
+    #ist QY10A mit pcgs zurueck:
+    pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]),HRES);
+    PNEU:=[QY09(ExponentsOfPcElement(pcgs,pcgs[1]^2))];#RP
+    for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]) )),2); od;#C
+
+    ISO:=0;
+    for j in XMERK[S] do if ISO=0 and PNEU=j[1] then ISO:=j; fi; od;
+    if ISO=0 then
+      if IsBound(XMERK[S][1]) then p0:=XMERK[S][1][2]; else
+        p0:=PcgsByPcSequenceNC(FamilyObj(HRES0[1]),HRES0{[Size(HRES0)-S+1..Size(HRES0)]});
+        fi;
+      APHI:=List([1..S],i->ExponentsOfPcElement(p0,HRES[i]));
+      if ZEILE[S]>1 and SPALTE[S]=1 and FIXFIX<>0 then
+        FIXBIT:=FIXFIX;
+        for jj in [1..Size(XMERK[S])] do
+          p1:=XMERK[S][jj][2];
+          HRES1:=List(APHI,i->PcElementByExponents(p1,i));
+
+          pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES1[1]),HRES1);
+          PNEU:=[QY09(ExponentsOfPcElement(pcgs,HRES1[1]^2))];
+          for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]))),2); od; #C
+
+          ISO:=[List(PNEU),pcgs];
+          Add(ISO,List([1..S],i->ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i])));
+          Add(ISO,List([1..S],i->ExponentsOfPcElement(p0,HRES1[i])));
+          Add(XMERK[S],ISO);
+          if PBIT<>0 then Print("\n:",S," ",STEP,ISO); fi; STEP:=STEP+1;
+          od;
+        else 
+          ISO:=[List(PNEU),pcgs];
+          Add(ISO,List([1..S],i->ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i])));
+          Add(ISO,APHI);
+          Add(XMERK[S],ISO);
+          if PBIT<>0 then Print("\n.",S," ",STEP,ISO,"\c"); fi; STEP:=STEP+1;
+          fi;
+      else if 2*nn=n and ZEILE[S]>1 and SPALTE[S]=1 then FIXBIT:=FIXFIX; fi;  
+        fi;
+
+    if 2*nn<n and ISO=XMERK[S][1] and (ZEILE[S]>1 or SPALTE[S]>=S1[S]) then
+      QY12(C,S+1,2*nn);
+      if FIXBIT<>0 and ZEILE[S]=1 then S1[S]:=S2[S]; FIXBIT:=0; fi;  
+      fi;
+    Remove(HRES,1); 
+    fi; od;
+  end;
+
+QY14:=function() #bestimmt PMAX in XSAMMEL
+  local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
+  S:=Size(XMERK);
+    PMAX:=[];
+    for i in [1..Size(XMERK[S])] do
+      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
+      od;
+    pcgs:=XMERK[S][imax][2];
+    for i in [1..Size(XMERK[S])] do
+      HRES1:=List([1..S],j->PcElementByExponents(pcgs,XMERK[S][i][4][j]));
+      pcgs1:=PcgsByPcSequenceNC(FamilyObj(HRES1[1]^0),HRES1);
+      PNEU:=[QY09(ExponentsOfPcElement(pcgs1,HRES1[1]^2))];
+      for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs1, Commu(pcgs1[1], pcgs1[j]))),2); od; #C
+      XMERK[S][i][2]:=pcgs1;
+      XMERK[S][i][1]:=List(PNEU);
+      Unbind(XMERK[S][i][4]);
+      od;
+  end;
+
+#das neue kuerzere QY15, jetzt nur letzte Stufe
+QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
+  local POS,i,ii,ZMERK;
+  POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
+  Add(ZEIGER,StructuralCopy(XM[1]),POS);
+  ZEIGER[POS][6]:=[];
+  ZEIGER[POS][8]:=Size(XM);
+  ZEIGER[POS][14]:=Size(ZEIGER);
+  ZMERK:=ZEIGER[POS];
+  COUNTER:=COUNTER+1;
+  for i in [2..Size(XM)] do
+    ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
+    Add(ZEIGER,StructuralCopy(XM[i]),ii);
+    ZEIGER[ii][5]:=ZMERK;
+    ZEIGER[ii][14]:=Size(ZEIGER);
+    od;
+  end;
+#QY16 und QY17 raus
+
+
+#das neue
+QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
+  local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR;
+  HRES:=List(HRESALT);NICHDRIN:=0;RET:=ZEIGER;RGL:=[];GNR:=0;
+  ISO:=QY08(ZEIGER,PNEU);
+  if ISO=0 then
+    if 2*nn<n then 
+      Print("\nGruppe ",IdSmallGroup(Group(HRES))," fehlt noch \c");
+      RMAXSUCHREKURSIV(Group(HRES));
+      Print("\nGruppe ",IdSmallGroup(Group(HRES))," jetzt drin \c");
+      fi;
+      ISO:=QY08(ZEIGER,PNEU);
+    fi;
+  INDEX1:=ISO;
+  if ISO=0 then INDEX1:=0; else INDEX1:=ZEIGER[ISO][14]; fi;
+  if ISO=0 then NICHDRIN:=-1; else
+    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ZEIGER[ISO][3][i]));
+    ISO:=ZEIGER[ISO];
+    if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
+    if IsBound(ISO[12]) then #Print("\007");
+      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ISO[10][i]));
+      ISO:=ISO[12];
+      fi;
+    RGL:=ISO[1];
+    RET:=ISO[6];
+    if IsBound(ISO[7]) then GNR:=ISO[7]; fi;
+    fi;
+  return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
+  end;
+   
+QY13:=function(C,S,nn,ZEIGER)
+  local i,j,ri,RC, PNEU,GR,HRESMERK, 
+        RDRIN,HRESMERK2, WEGMERKER,HRES0MERK,ZR,
+        HRESMERK3,RBIT,ERSTBIT;
+  ERSTBIT:=0;RBIT:=0;RDRIN:=0;
+  if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
+  RC:=RightTransversal(C,GR);
+  for ri in RC do if ri<>RC[1] and RDRIN>-1 then
+    Add(HRES,ri,1);
+    if S=1 then Print(".\c"); fi;
+    if QY10A(HRES,S,GR) then
+      PNEU:=QY11A(HRES,S);
+      R[S]:=List(PNEU);
+      HRESMERK3:=List(HRES);
+      ZR:=QY21MINI(HRES,S,nn,ZEIGER,PNEU);
+      HRES:=List(ZR[1]);RMAX[S]:=ZR[5];
+      if 2*nn<n then RBIT:=QY13(C,S+1,2*nn,ZR[2]); else
+        WEGMERKER:=RMAX{[1..S-1]};
+        if QY07NEU(WEGEBAUM,WEGMERKER,R[S],S) then RBIT:=-1; else
+          if ZR[3]<>0 then #RDRIN=0
+            HRES0MERK:=List(HRES0);
+            HRES0:=List(HRES);
+            CLIST:=[Identity(C)];
+            for i in Reversed(HRES0) do
+              for j in [1..Size(CLIST)] do
+                Add(CLIST,i*CLIST[j]);
+                od; od;
+            XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
+            QY12(C,1,1);
+            QY14();
+            QY15(ZR[2],XMERK[S]);
+            XMERKZAHL:=XMERKZAHL+1;
+            HRES0:=HRES0MERK;
+            fi; 
+          fi;
+        fi;
+      if ERSTBIT=0 then RDRIN:=RBIT; fi;
+      ERSTBIT:=-1;
+      HRES:=List(HRESMERK3);
+      fi;
+    Remove(HRES,1);
+    fi; od; 
+  if RDRIN=1 then RDRIN:=0; fi;
+  return RDRIN;
+  end;
+
+XFUELL:=function(XSAMMEL) #fuellt [7][8]
+  local i,S,POS;
+  S:=Size(XSAMMEL);
+  for i in [1..S] do 
+    if IsBound(XSAMMEL[i][6]) then 
+      POS:=i;
+      if not(IsInt(XSAMMEL[POS][2])) then
+        if Size(Group(XSAMMEL[POS][2]))<512 then
+          XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));
+          else
+            XSAMMEL[POS][7]:=[512,inh];
+            fi;
+        fi;
+#      Print(XSAMMEL[POS][7],"\c");
+#      XSAMMEL[POS][8]:=0;
+      XFUELL(XSAMMEL[i][6]);
+      fi;
+#    XSAMMEL[POS][8]:=XSAMMEL[POS][8]+1;
+    od;
+  end;
+#XFUELL(XSAMMEL);
+
+XMISCH:=function(XSAMMEL,POSITION,STUFE)
+  local i,ii,S,LEER,HRES,HRES2,pcgs,pcgs2;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  if not IsBound(RMERKER[STUFE]) then RMERKER[STUFE]:=[]; fi;
+
+if n=nmax and 2^STUFE=n then
+  for ii in [1..S] do 
+    if 2^STUFE<=n then 
+      i:=XSAMMEL[S-ii+1]; 
+      if IsBound(i[6]) then
+        if not IsBound(RMERKER[STUFE][i[7][2]]) then 
+          RMERKER[STUFE][i[7][2]]:=i; 
+          else Remove(XSAMMEL,S-ii+1); fi; 
+        else Remove(XSAMMEL,S-ii+1); fi;
+      fi;
+    od;
+
+
+else
+
+  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; if IsBound(i[6]) then
+    if not IsBound(RMERKER[STUFE][i[7][2]]) then 
+      RMERKER[STUFE][i[7][2]]:=i; 
+      else if not IsBound(i[12]) then
+        i[12]:=RMERKER[STUFE][i[7][2]];
+        HRES2:=i[2];
+        HRES:=i[12][2];
+        pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
+        pcgs2:=PcgsByPcSequenceNC(FamilyObj(HRES2[1]^0),List(HRES2));
+#        i[11]:=List([1..STUFE],j->ExponentsOfPcElement(pcgs,HRES2[j]));
+        i[10]:=List([1..STUFE],j->ExponentsOfPcElement(pcgs2,HRES[j]));
+        fi; fi;
+#    Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ",
+#      i[1]," ",i[8]," [",ii,"..",ii+i[5]-1,"] ",i[7][2]);
+    if IsBound(i[12]) then 
+#      Print(" *"); 
+      else
+        XMISCH(i[6],1,STUFE+1);
+        fi;
+    fi; fi; od;
+fi;
+  end;
+
+XLEER:=function(XSAMMEL) #fuellt [7][8]
+  local i,S;
+  S:=Size(XSAMMEL);
+  for i in [1..S] do if 2^Size(XSAMMEL[1][1])<=n then 
+    if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
+    XSAMMEL[i][2]:=i;
+    if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
+    fi; od;
+  end;
+
+RMAXSUCH:=function(C)
+  n:=Size(C);
+  XMERK:=[];HRES:=[];STEP:=1;R:=[];
+  #  XSAMMEL:=[];
+  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
+  QY13(C,1,1,XSAMMEL);
+   XFUELL(XSAMMEL);
+   RMERKER:=[];XMISCH(XSAMMEL,[],1);
+   XLEER(XSAMMEL);
+  end;
+
+ILIST:=[1,1];
+QQQY:=function(n)
+  local C;
+  XMERKZAHLVEKTOR:=[];
+  if ILIST[1]=1 then ILIST:=[1..NumberSmallGroups(n)]; fi;
+  for inh in ILIST do
+Print("\n\ninh=",inh," ");
+    C:=SmallGroup(n,inh);RMAXSUCH(C);
+Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
+    XMERKZAHLVEKTOR[inh]:=XMERKZAHL;
+    od;
+  Print("\n",XMERKZAHLVEKTOR,COUNTER);
+  Print("\n");
+  end;
+
+
+#POS (nur bei)        Inhalt
+#1                    PNEU
+#2                    erst HRES dann ???Positionsindex???
+#3                    klein phi
+#4                    erst klein phi dann Unbound
+#5   not IsBound(6)   kleiner Tunnel oder Unbound
+#6                    Fortsetzung XSAMMEL
+#7   IsBound([6])     IdSmallGroup
+#8    "               Anzahl klein Phi hierher
+#9    "               groß Phi
+#10   "               Unbound, war mal [1,2,8,1] als Weg zu 
+#11   "               groß Phi
+#12   "               Unbound, Platz für groß Phi
+#13   "               großer Tunnel
+#14                   anstelle Index in XSAMMEL für WEGEBAUM[.]
+
+UMKEHRLIST:=function(PNEU)
+  return List(PNEU,function(i)
+    if i=256 then return 2; else
+      if i=255 then return 1; else 
+        return i+2; fi; fi;
+    end);#XSAMMELVIEWER3(XSAMMEL);
+
+  end;
+
+
+XSAMMELVIEWER:=function(XSAMMEL)
+  local i;
+  for i in XSAMMEL do if IsBound(i[6]) then 
+#    Print(i[1],IdSmallGroup(Group(i[2])));
+#    Print(IdSmallGroup(Group(i[2])));
+    Print(i[7]);
+    XSAMMELVIEWER(i[6]);
+    fi; od;
+  end;
+#XSAMMELVIEWER(XSAMMEL);
+XSAMMELVIEWER2:=function(XSAMMEL)
+  local i,S,LEER;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  for i in XSAMMEL do if IsBound(i[6]) then 
+    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ",UMKEHRLIST(i[1])," ",i[8]," ",i[7][2]," ",Size(i[6]));
+#    Print("\n",i[1],i[5]," ",i[8]," ",S,IdSmallGroup(Group(i[2])));
+#    Print(IdSmallGroup(Group(i[2])));
+    XSAMMELVIEWER2(i[6]);
+    fi; od;
+  end;
+#XSAMMELVIEWER2(XSAMMEL);
+
+XSAMMELVIEWER3:=function(XSAMMEL)
+  local i,ii,S,LEER,STUFE;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  STUFE:=Size(XSAMMEL[1][1]);
+  for ii in [1..S] do i:=XSAMMEL[ii]; if IsBound(i[6]) then
+    Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ");
+    View(UMKEHRLIST(i[1]));
+    Print(" ",i[8]," [",ii,"] ",Size(i[6])," ",i[7]);
+    if IsBound(i[12]) then 
+      Print(" *"); 
+      else
+        if IsBound(i[6][1]) then XSAMMELVIEWER3(i[6]); fi;
+        fi;
+    fi; od;
+  end;
+#RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);Print("\n");PMERKER;
+
+XSAMMELVIEWER4:=function(XSAMMEL)#neu aus 3 ohne *
+  local i,ii,S,LEER,STUFE;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  STUFE:=Size(XSAMMEL[1][1]);
+  for ii in [1..S] do i:=XSAMMEL[ii]; if IsBound(i[6]) and not IsBound(i[12]) then 
+    Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ");
+    View(UMKEHRLIST(i[1]));
+    Print(" ",i[8]," [",ii,"] ",Size(i[6])," ",i[7]);
+    if IsBound(i[12]) then 
+      Print(" *"); 
+      else
+        if IsBound(i[6][1]) then XSAMMELVIEWER4(i[6]); fi;
+        fi;
+    fi; od;
+  end;
+#XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+
+T:=function(n)
+  DisplayProfile();ClearProfile();
+  XSAMMEL:=[];COUNTER:=0;LFDNR:=0;
+  ILIST:=[1..1];QQQY(2);#1#
+  ILIST:=[1..2];QQQY(4);#2#
+  ILIST:=[2..5];QQQY(8);#3
+  if n>8 then
+   ILIST:=[2..4];QQQY(16);#4
+   ILIST:=[10..14];QQQY(16);#4
+   DisplayProfile();ClearProfile();
+   if n>16 then
+     ILIST:=[21..35];QQQY(32);Print("\007");#5
+     ILIST:=[45..51];QQQY(32);Print("\007");#5
+     DisplayProfile();ClearProfile();
+     if n>32 then
+       ILIST:=[226];QQQY(64);Print("\007");#6
+       DisplayProfile();ClearProfile();
+       fi;
+     fi;
+   fi;
+ end;
+
+ProfileFunctions([QY07NEU,PositionSorted,PositionFirstComponent,
+PositionFirstComponentRepariert,QY12,Size,Group,
+StructuralCopy,PcElementByExponentsNC,PcgsByPcSequenceNC,
+ExponentsOfPcElement,RightTransversal,RightCosetsNC,
+QY10A,QY11A,QY08,QY21MINI,QY15,QY14,QY13,QY09,
+XFUELL,XMISCH,XLEER]);
+
+
+
+
+#DisplayProfile();ClearProfile();
+#Read("GAP/D4_2E/D4_2E_26");# 
+
+#DisplayProfile();ClearProfile();
+#XSAMMEL:=[];COUNTER:=0;LFDNR:=0;
+#ILIST:=[1..1];QQQY(8);#[ 1, 3, 3, 1, 1 ]12
+#XFUELL(XSAMMEL);XSAMMELVIEWER2(XSAMMEL);RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);XLEER(XSAMMEL);XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+#ILIST:=[1..1];QQQY(16);#[ 1, 1, 7, 2, 3, ...4, 8, 2, 4, 1 ]57
+#XFUELL(XSAMMEL);XSAMMELVIEWER2(XSAMMEL);RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);XLEER(XSAMMEL);XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+#DisplayProfile();ClearProfile();
+#XSAMMELMERK_16:=StructuralCopy(XSAMMEL);;
+#XSAMMEL:=StructuralCopy(XSAMMELMERK_16);;
+#ILIST:=[25..26];QQQY(32);Print("\007");
+#ILIST:=[1..1];QQQY(32);Print("\007");
+#XFUELL(XSAMMEL);XSAMMELVIEWER2(XSAMMEL);
+#RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);
+#XLEER(XSAMMEL);XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+#XSAMMELMERK_36:=StructuralCopy(XSAMMEL);;
+#SaveWorkspace("GAP/D4_2E/WORKSPACE_25");
+#XSAMMEL:=StructuralCopy(XSAMMELMERK_36);;
+#ILIST:=[68..69];QQQY(64);Print("\007");#,,,, 31, 23 ]385
+#ILIST:=[1..1];QQQY(64);Print("\007");
+#XFUELL(XSAMMEL);XSAMMELVIEWER2(XSAMMEL);;
+#RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);
+#XLEER(XSAMMEL);XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+#XSAMMELMERK_64:=StructuralCopy(XSAMMEL);;
+#SaveWorkspace("GAP/D4_2E/WORKSPACE_25");
+#XSAMMEL:=StructuralCopy(XSAMMELMERK_64);;
+#hier das jeweils neueste Ergebnis:
+#[ 1, 3, 3, 1, 1 ]12
+#[ 1, 1, 7, 2, 3, 3, 2, 4, 3, 4, 8, 2, 4, 1 ]57# und das hat endlich gestimmt
+#[ 1, 2, 3, 3, 5, 2, 2, 3, 4, 5, 
+#  6, 5, 2, 2, 3, 3, 3, 2, 3, 2, 
+#  3, 27, 5, 8, 11, 5, 14, 9, 11, 8, 
+#  7, 5, 5, 2, 5, 4, 9, 4, 4, 7, 
+#  5, 7, 7, 8, 5, 14, 2, 7, 2, 2, 1 ]331
+
+#neu nach (ab)^2-Ausgabe:
+# 1 [ 1 ] 1 1 2
+#   2 [ 2, 2 ] 1 1 6
+#     3 [ 4, 4, 3 ] 2 1 16
+#       4 [ 8, 8, 7, 6 ] 4 1 28
+#         5 [ 16, 16, 15, 14, 11 ] 8 1 0
+#         5 [ 8, 8, 7, 6, 3 ] 8 16 0
+#         5 [ 8, 8, 7, 6, 4 ] 8 17 0
+#         5 [ 1, 1, 1, 1, 1 ] 1 18 0
+#         5 [ 2, 2, 2, 2, 1 ] 2 19 0
+#         5 [ 2, 2, 2, 2, 2 ] 1 20 0
+#       4 [ 4, 4, 3, 2 ] 4 5 80
+#         5 [ 16, 16, 16, 16, 16 ] 2 14 0
+#         5 [ 16, 16, 16, 15, 15 ] 2 13 0
+#         5 [ 16, 16, 16, 2, 2 ] 4 10 0
+#         5 [ 16, 16, 16, 1, 1 ] 4 9 0
+#         5 [ 16, 16, 15, 14, 14 ] 4 3 0
+#         5 [ 16, 16, 15, 13, 13 ] 4 4 0
+#         5 [ 14, 14, 13, 2, 2 ] 8 5 0
+#         5 [ 16, 16, 15, 4, 4 ] 8 12 0
+#         5 [ 14, 14, 14, 13, 14 ] 2 15 0
+#         5 [ 4, 4, 3, 2, 2 ] 4 36 0
+#         5 [ 4, 4, 3, 1, 1 ] 4 37 0
+#         5 [ 4, 4, 3, 2, 1 ] 4 38 0
+#         5 [ 1, 1, 1, 1, 1 ] 1 39 0
+#         5 [ 2, 2, 2, 1, 1 ] 2 40 0
+#         5 [ 2, 2, 2, 2, 2 ] 1 41 0
+#         5 [ 2, 2, 2, 2, 1 ] 2 42 0
+#       4 [ 4, 4, 3, 1 ] 4 6 48
+#         5 [ 16, 16, 16, 2, 2 ] 4 8 0
+#         5 [ 16, 16, 16, 1, 1 ] 4 7 0
+#         5 [ 14, 14, 13, 2, 2 ] 8 11 0
+#         5 [ 2, 2, 2, 1, 1 ] 4 43 0
+#         5 [ 2, 2, 2, 2, 2 ] 4 44 0
+#       4 [ 1, 1, 1, 1 ] 1 7 48
+#       4 [ 2, 2, 2, 1 ] 2 8 32
+#       4 [ 2, 2, 2, 2 ] 1 9 48
+#     3 [ 2, 2, 1 ] 2 2 28
+#       4 [ 8, 8, 8, 8 ] 2 4 96
+#         5 [ 8, 8, 8, 8, 8 ] 4 35 0
+#         5 [ 8, 8, 8, 8, 2 ] 4 23 0
+#         5 [ 7, 7, 7, 7, 2 ] 4 24 0
+#         5 [ 8, 8, 7, 7, 1 ] 4 25 0
+#         5 [ 8, 8, 7, 7, 2 ] 4 26 0
+#         5 [ 2, 2, 1, 1, 1 ] 4 28 0
+#         5 [ 8, 8, 2, 2, 8 ] 8 29 0
+#         5 [ 8, 8, 1, 1, 7 ] 8 30 0
+#         5 [ 8, 8, 2, 2, 7 ] 8 32 0
+#         5 [ 7, 7, 2, 2, 7 ] 8 33 0
+#       4 [ 8, 8, 7, 7 ] 2 2 160
+#         5 [ 8, 8, 7, 7, 1 ] 4 21 0
+#         5 [ 8, 8, 1, 1, 8 ] 4 31 0
+#         5 [ 1, 1, 1, 1, 1 ] 1 34 0
+#       4 [ 8, 8, 1, 1 ] 4 3 80
+#         5 [ 14, 11, 7, 1, 7 ] 16 6 0
+#         5 [ 8, 8, 1, 1, 1 ] 4 22 0
+#         5 [ 7, 7, 1, 1, 1 ] 4 27 0
+#       4 [ 2, 2, 1, 1 ] 2 10 288
+#         5 [ 14, 14, 12, 12, 12 ] 8 2 0
+#         5 [ 2, 2, 1, 1, 1 ] 2 45 0
+#         5 [ 1, 1, 1, 1, 1 ] 1 46 0
+#         5 [ 2, 2, 2, 2, 2 ] 1 47 0
+#         5 [ 2, 2, 1, 2, 2 ] 4 48 0
+#       4 [ 1, 1, 1, 1 ] 1 11 144
+#         5 [ 2, 2, 2, 1, 2 ] 8 49 0
+#       4 [ 2, 2, 2, 2 ] 1 12 240
+#         5 [ 2, 2, 2, 1, 2 ] 8 50 0
+#       4 [ 2, 2, 1, 2 ] 2 13 96
+#     3 [ 1, 1, 1 ] 1 3 16
+#     3 [ 2, 2, 2 ] 1 4 32
+#   2 [ 1, 1 ] 1 2 10
+#     3 [ 1, 1, 1 ] 1 5 92
+#       4 [ 1, 1, 1, 1 ] 1 14 1696
+#         5 [ 1, 1, 1, 1, 1 ] 1 51 0
+#[ [  ], [ [ 1 ], [ 1 ] ], [ [ 1 ], [ 1, 2 ], [ 1, 2 ], [ 1 ], [ 2 ] ], 
+#  [ [ 1 ], [ 2 ], [ 2, 5 ], [ 2 ], [ 1, 2 ], [ 1, 2 ], [ 1, 3 ], [ 1, 3, 4 ], [ 1, 4 ], [ 2, 5 ], [ 2, 3, 5 ], [ 2, 4 ], [ 2, 3, 4 ], 
+#      [ 5 ] ], [ [ 1 ], [ 10 ], [ 5, 2 ], [ 5, 2 ], [ 5, 10 ], [ 3, 11 ], [ 6, 11 ], [ 6, 12 ], [ 5, 4, 11 ], [ 5, 4, 12 ], [ 6, 2, 13 ], 
+#      [ 5, 2 ], [ 5, 4 ], [ 5, 4 ], [ 5, 6 ], [ 1, 5 ], [ 1, 5 ], [ 1, 7 ], [ 1, 7, 9 ], [ 1, 9 ], [ 2, 10 ], [ 3, 10, 14 ], [ 4, 10 ], 
+#      [ 4, 3, 2, 10 ], [ 4, 3, 2, 10, 11 ], [ 4, 2, 12 ], [ 3, 11, 14 ], [ 4, 3, 10, 11 ], [ 4, 3, 10, 12 ], [ 4, 3, 10, 11 ], 
+#      [ 3, 2, 11, 12 ], [ 4, 2 ], [ 4, 3, 2 ], [ 2, 11 ], [ 4, 2, 12 ], [ 5, 10 ], [ 5, 6, 10 ], [ 5, 6, 13 ], [ 5, 7, 11 ], 
+#      [ 5, 8, 11, 12 ], [ 5, 9, 12 ], [ 5, 7, 8, 9, 13 ], [ 6, 7, 8, 11, 13 ], [ 6, 8, 9, 12, 13 ], [ 10, 14 ], [ 10, 11, 14 ], 
+#      [ 10, 12 ], [ 10, 11, 12, 13 ], [ 11, 13 ], [ 12, 13 ], [ 14 ] ], [ ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+#      ,, [ 23, 21, 2 ], [ 23, 22, 21, 2 ] ], [  ] ]
+
+
+#bei nur [25,26] muss das herauskommen:
+# 1 [ 1 ] 1 1 2
+#   2 [ 2, 2 ] 1 1 6
+#     3 [ 2, 2, 1 ] 2 2 28
+#       4 [ 8, 8, 8, 8 ] 2 4 8
+#         5 [ 8, 8, 7, 7, 2 ] 4 26 0
+#         5 [ 8, 8, 7, 7, 1 ] 4 25 0
+#       4 [ 8, 8, 7, 7 ] 2 2 24
+#         5 [ 8, 8, 8, 8, 2 ] 4 26 0 *
+#         5 [ 8, 8, 8, 8, 1 ] 4 25 0 *
+#         5 [ 8, 8, 1, 1, 1 ] 4 25 0 *
+#         5 [ 2, 2, 1, 1, 2 ] 4 25 0 *
+#         5 [ 8, 8, 2, 2, 8 ] 4 26 0 *
+#         5 [ 8, 8, 7, 7, 8 ] 4 26 0 *
+#       4 [ 8, 8, 1, 1 ] 4 3 8
+#         5 [ 8, 8, 7, 7, 1 ] 4 25 0 *
+#         5 [ 7, 7, 2, 2, 2 ] 4 25 0 *
+#       4 [ 8, 8, 2, 2 ] 4 4 0 *
+#       4 [ 2, 2, 1, 1 ] 2 10 48
+#         5 [ 14, 14, 13, 2, 2 ] 16 25 0 *
+#         5 [ 8, 8, 7, 7, 2 ] 8 25 0 *
+#         5 [ 8, 8, 2, 2, 7 ] 8 25 0 *
+#         5 [ 14, 14, 2, 13, 13 ] 16 25 0 *
+#       4 [ 1, 1, 1, 1 ] 1 11 8
+#         5 [ 8, 8, 8, 8, 8 ] 8 25 0 *
+#       4 [ 2, 2, 2, 2 ] 1 12 8
+#         5 [ 8, 8, 8, 8, 8 ] 8 26 0 *
+#     3 [ 1, 1, 1 ] 1 3 16
+#       4 [ 2, 2, 1, 1 ] 4 11 0 *
+#     3 [ 2, 2, 2 ] 1 4 32
+#       4 [ 2, 2, 2, 2 ] 4 12 0 *
+#   2 [ 1, 1 ] 1 2 10
+#     3 [ 4, 4, 4 ] 2 2 0 *
+#     3 [ 2, 2, 2 ] 1 2 0 *
+#     3 [ 4, 1, 1 ] 4 3 0 *
+#     3 [ 2, 2, 1 ] 2 3 0 *
+#     3 [ 1, 1, 1 ] 1 5 92
+#       4 [ 8, 8, 8, 8 ] 4 10 0 *
+#       4 [ 8, 8, 7, 7 ] 4 3 0 *
+#       4 [ 8, 6, 8, 6 ] 8 3 0 *
+#       4 [ 8, 4, 4, 8 ] 16 3 0 *
+#       4 [ 4, 4, 4, 3 ] 2 3 0 *
+#       4 [ 8, 8, 2, 2 ] 8 3 0 *
+#       4 [ 4, 4, 4, 2 ] 4 3 0 *
+#       4 [ 4, 4, 4, 4 ] 2 10 0 *
+#       4 [ 2, 2, 2, 2 ] 1 10 0 *
+#       4 [ 8, 1, 8, 1 ] 16 11 0 *
+#       4 [ 4, 1, 1, 4 ] 8 11 0 *
+#       4 [ 8, 8, 1, 1 ] 8 11 0 *
+#       4 [ 4, 4, 4, 1 ] 4 11 0 *
+#       4 [ 2, 2, 1, 2 ] 4 11 0 *
+#       4 [ 2, 2, 2, 1 ] 2 11 0 *
+
+
+
+#XSAMMELMERK:=StructuralCopy(XSAMMEL);;
+#XSAMMEL:=StructuralCopy(XSAMMELMERK);;
+
+#fuer RMAXSUCHREKURSIV:
+#DisplayProfile();ClearProfile();
+#XSAMMEL:=[];COUNTER:=0;LFDNR:=0;
+#ILIST:=[2];QQQY(8);#3#
+#ILIST:=[2,3,4,10,11,12,13,14];QQQY(16);#3#
+#ILIST:=[23];QQQY(32);Print("\007");#[6] 5
+#ILIST:=[25];QQQY(32);Print("\007");#[17] 11
+#ILIST:=[198];QQQY(64);Print("\007");#[149] 8
+#ILIST:=[219];QQQY(64);Print("\007");#[189] 21
+#ILIST:=[2167..2167];QQQY(128);Print("\007");#[1125] 97
+#ILIST:=[55644..55644];QQQY(256);Print("\007");#[260] 52
+#XSAMMELVIEWER2(XSAMMEL);
+#XSAMMELVIEWER3(XSAMMEL);
+
+
+
+#DisplayProfile();ClearProfile();
+#XSAMMEL:=[];COUNTER:=0;LFDNR:=0;
+#ILIST:=[1..1];QQQY(2);#1#
+#ILIST:=[1..2];QQQY(4);#2#
+#ILIST:=[2..5];QQQY(8);#3
+#[ , 1, 1, 1, 0 ]5
+#ILIST:=[2..4];QQQY(16);#4
+#[ , 1, 1, 2 ]9
+#ILIST:=[10..14];QQQY(16);#4
+#,,,,, 1, 2, 2, 4, 0 ]18
+#XSAMMELVIEWER4(XSAMMEL);
+#ILIST:=[21..35];QQQY(32);Print("\007");#5
+#,,,,,,,,,,,,, 3, 3, 5, 8, 11, 5, 2, 9, 11, 8, 7, 5, 5, 2, 5 ]107
+#ILIST:=[45..51];QQQY(32);Print("\007");#5
+#,,,,,,,,,,,,, 1, 2, 2, 7, 2, 2, 0 ]123
+#XSAMMELVIEWER4(XSAMMEL);
+#DisplayProfile();ClearProfile();
+#XSAMMELMERK_36:=StructuralCopy(XSAMMEL);;
+#SaveWorkspace("WORKSPACE_36");#FEHLERSUCH
+#XSAMMEL:=StructuralCopy(XSAMMELMERK_36);;
+##ILIST:=[204,213,217,218];QQQY(64);Print("\007");#6
+##ILIST:=[219..219];QQQY(64);Print("\007");#6
+##XSAMMELMERK_36:=StructuralCopy(XSAMMEL);;
+##XSAMMEL:=StructuralCopy(XSAMMELMERK_36);;
+#ILIST:=[192..245];QQQY(64);Print("\007");#6
+#  ,,,,,, 4, 4, 7, 17, 21, 
+#  7, 8, 5, 4, 5, 4, 20, 22, 14, 31, 11, 6, 6, 22, 4, 8, 12, 10, 7, 14, 16, 6, 17, 19, 9, 13, 15, 2, 6, 10, 22, 
+#  11, 13, 10, 7, 17, 21, 18, 11, 5, 12, 7, 2, 7, 7, 2, 6, 10, 1 ]715
+#ILIST:=[260..267];QQQY(64);Print("\007");#6
+#  ,,,,,,,, 1, 2, 2, 9, 4, 4, 3, 0 ]740
+#XSAMMELVIEWER4(XSAMMEL);
+#DisplayProfile();ClearProfile();
+##R:=[[1],[2,2],[2,2,1],[2,2,1,1],[2,2,1,1,1],[2,2,1,2,2,14]];
+##G:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));time;IdSmallGroup(G);
+##inh:=206;RMAXSUCH(G);
+#XSAMMELMERK_64:=StructuralCopy(XSAMMEL);;
+#SaveWorkspace("WORKSPACE_36");#FEHLERSUCH
+#XSAMMEL:=StructuralCopy(XSAMMELMERK_64);;
+##ILIST:=[2167..2167];QQQY(128);Print("\007");
+##inh=2167 ......
+##G  FULL 1545662/ 108273kb live   10550K/ 507281kb dead    17956$
+##G  FULL 1688464/ 114182kb live   10626K/ 513702kb dead    19177/ 177152kb free
+##G  FULL 1857749/ 121232kb live  8167056/ 379309kb dead    20185/ 189440kb free
+##G  FULL 2027078/ 128323kb live  6830807/ 312917kb dead    21630/ 202240kb free
+##...............................................................................$
+##[1125] 97
+#ILIST:=[2150..2300];QQQY(128);Print("\007");
+#ILIST:=[2319..2328];QQQY(128);Print("\007");
+#  ,,,,,,,,, 5, 5, 9, 29, 34, 8, 14, 11, 9, 8, 8, 7, 5, 5, 34, 36, 21, 97, 14, 6, 6, 29, 5, 10, 19, 15, 13, 13, 25, 
+#  35, 10, 15, 21, 23, 10, 14, 16, 12, 4, 8, 4, 12, 14, 16, 19, 37, 16, 27, 23, 9, 18, 22, 24, 21, 14, 6, 13, 23, 8, 
+#  3, 10, 8, 15, 13, 15, 5, 27, 18, 28, 12, 24, 26, 20, 15, 17, 12, 26, 28, 16, 10, 14, 14, 20, 17, 9, 14, 9, 33, 
+#  19, 22, 17, 18, 22, 20, 16, 44, 32, 28, 22, 14, 15, 31, 26, 44, 15, 20, 21, 8, 3, 7, 11, 12, 2, 7, 19, 37, 50, 
+#  45, 28, 19, 17, 28, 24, 41, 50, 23, 21, 26, 28, 29, 10, 6, 14, 25, 33, 31, 34, 36, 10, 22, 30, 25, 36, 32, 50, 
+#  58, 42, 41, 65, 22, 11 ]3826
+#,,,, 1, 2, 2, 11, 5, 5, 5, 2, 2, 0 ]3861
+#XSAMMELVIEWER4(XSAMMEL);
+#DisplayProfile();ClearProfile();
+#SaveWorkspace("WORKSPACE_36");#FEHLERSUCH
+####PrintTo("RF.txt",XSAMMEL);nee, nich mehr mach
+####in RF.txt XSAMMEL:= ...; ergaenzen
+##Read("RF.txt");
+##ILIST:=[55637..55637];QQQY(256);Print("\007");
+##ILIST:=[55638..55638];QQQY(256);Print("\007");
+###Read("RF.txt");#nich mit neuem XSAMMEL
+###ILIST:=[55644..55644];QQQY(256);Print("\007");
+###ILIST:=[55647..55647];QQQY(256);Print("\007");
+### XFUELL(XSAMMEL);XSAMMELVIEWER2(XSAMMEL);RMERKER:=[];XSAMMELVIEWER3(XSAMMEL,1);
+### SaveWorkspace("WORKSPACE_36");#FEHLERSUCH
+#ILIST:=[55626..56058];QQQY(256);Print("\007");
+#SaveWorkspace("WORKSPACE_36");#fast fertig
+#ILIST:=[56082..56092];QQQY(256);Print("\007");
+#SaveWorkspace("WORKSPACE_36");#ganz fertig
+#DisplayProfile();ClearProfile();
+#XSAMMELVIEWER4(XSAMMEL);
+#  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, 6, 6, 11, 45, 51, 9,
+#  19, 18, 15, 10, 15, 11, 8, 5, 5, 6, 5, 6, 52, 54, 30, 225, 17, 6, 6, 35,
+#  6, 12, 25, 19, 28, 20, 5, 24, 26, 17, 39, 13, 9, 10, 16, 17, 61, 14, 19,
+#  33, 6, 14, 10, 8, 3, 7, 11, 13, 2, 8, 3, 31, 41, 55, 46, 20, 10, 33, 16,
+#  26, 26, 23, 13, 6, 28, 8, 8, 19, 3, 14, 16, 19, 6, 12, 24, 53, 45, 57, 53,
+#  33, 22, 20, 40, 29, 25, 40, 33, 35, 30, 63, 46, 40, 12, 23, 23, 26, 51,
+#  42, 66, 73, 28, 37, 35, 29, 44, 25, 30, 37, 65, 30, 34, 30, 11, 7, 15, 36,
+#  11, 37, 40, 70, 25, 22, 35, 42, 30, 22, 51, 36, 32, 39, 33, 19, 14, 27,
+#  36, 33, 51, 30, 87, 16, 11, 26, 19, 24, 31, 21, 15, 16, 22, 22, 43, 23,
+#  17, 31, 22, 23, 31, 48, 24, 33, 21, 36, 34, 12, 25, 19, 45, 42, 21, 12,
+#  23, 28, 35, 5, 23, 30, 21, 32, 20, 23, 20, 19, 11, 55, 55, 31, 47, 51, 10,
+#  18, 21, 42, 38, 26, 28, 15, 11, 10, 14, 4, 10, 12, 31, 25, 21, 3, 20, 17,
+#  34, 19, 12, 17, 21, 40, 22, 52, 26, 27, 17, 13, 16, 19, 11, 80, 81, 43,
+#  45, 10, 35, 43, 25, 36, 29, 36, 39, 49, 22, 25, 87, 45, 89, 45, 27, 30,
+#  24, 37, 65, 56, 40, 26, 20, 9, 54, 32, 64, 34, 52, 33, 32, 32, 22, 11, 88,
+#  56, 52, 89, 45, 52, 51, 32, 26, 29, 15, 19, 58, 36, 66, 72, 43, 39, 77,
+#  47, 50, 42, 46, 26, 21, 26, 32, 79, 56, 44, 65, 61, 63, 66, 103, 104, 59,
+#  28, 27, 27, 14, 25, 59, 34, 97, 65, 36, 42, 75, 49, 69, 35, 40, 30, 25,
+#  29, 30, 80, 59, 51, 60, 78, 63, 65, 84, 94, 5, 51, 62, 62, 23, 75, 72, 35,
+#  3, 15, 7, 29, 18, 26, 17, 24, 14, 10, 38, 27, 26, 44, 25, 30, 31, 5, 25,
+#  12, 29, 18, 40, 12, 12, 32, 19, 24, 38, 29, 34, 12, 34, 48, 25, 42, 18,
+#  63, 59, 40, 31, 26, 15, 79, 29, 46, 27, 95, 30, 63, 38, 41, 33, 40, 24,
+#  17, 18, 11, 14, 15, 3, 61, 80, 87, 40, 23, 24, 28, 10, 60, 92, 49, 33, 63,
+#  31, 35, 59, 25, 65, 82, 61, 39, 79, 43, 54, 56, 21, 19, 20, 17, 5 ]18316
+#  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, 1, 2, 2, 13, 6, 6, 6, 4, 4, 4, 0 ]18364
+#ILIST:=[10493062..10494173];QQQY(512);Print("\007");
+#ILIST:=[10494201..10494213];QQQY(512);Print("\007");
+#XFUELL(XSAMMEL);;XSAMMELVIEWER2(XSAMMEL);;RMERKER:=[];;;XSAMMELVIEWER3(XSAMMEL,1);;XLEER(XSAMMEL);;XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");LFDNR;
+#erstmal bis n=64, ist aber nicht brauchbar wegen der 15
+#FEHLERSUCH wegen der Sortierung 6 [
+

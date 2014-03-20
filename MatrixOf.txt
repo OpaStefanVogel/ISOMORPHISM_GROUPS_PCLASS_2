@@ -1,0 +1,94 @@
+#Read("GAP/D4_1/D4_1_4");
+
+I:=[];T:=[];k:=0;z:=0;y:=0;x:=0;jj:=0;
+A1:=0;A2:=0;A3:=0;A4:=0;A5:=0;A6:=0;
+B1:=0;B2:=0;B3:=0;B4:=0;
+C1:=0;C2:=0;C3:=0;
+D1:=0;D2:=0;
+E1:=0;
+MatrixBit:=0;
+MatrixOf:=function(R)
+  local M;
+  #a
+  n:=1;M:=[[1]];I:=[1];
+  for S in [1..Size(R)] do
+    #b
+    for i in [1..n] do M[i+n]:=[];
+      for j in [1..n] do 
+      M[i][j+n]:=M[i][j]+n;
+      M[i+n][j+n]:=0;
+      M[i+n][j]:=n;
+      od; od;
+    #c
+    nn:=1; T:=R[S];
+    M[n+1][n+1]:=T[1];
+    for j in [1..n] do if M[1][j]=T[1] then
+      for k in [1..n] do 
+        M[n+k][n+1]:=M[k][j];
+        if M[k][j]=1 then I[n+1]:=n+k; fi; 
+        od;
+      fi; od;
+    for i in [2..Size(T)] do 
+      M[n+1+nn][n+1+nn]:=T[i];
+      #d
+      for j in [1..n] do if M[1+nn][j]=T[i] then
+        for k in [1..n] do 
+          M[n+k][n+1+nn]:=M[k][j]; 
+          if M[k][j]=1 then I[n+1+nn]:=n+k; fi; 
+          od;
+        fi; od;
+      #e
+      for j in [n+1+nn+1..n+1+nn+nn-1] do
+        z:=n+1;y:=nn+1;x:=j-z-y+2;
+A1:=M[y][z];A2:=M[z][z];A3:=I[y];A4:=I[x];A5:=I[y];A6:=M[x][y];
+B1:=M[A1][A1];B2:=I[A2];B3:=M[A3][A4];B4:=M[A5][A6];
+C1:=M[B1][B2];C2:=M[B3][y];C3:=M[B4][z];
+D1:=M[C1][C2];D2:=M[C3][C3];
+E1:=M[D1][D2];        
+M[j][j]:=M[x][E1];
+#D(M);
+#Print("\n",i," ",j);
+#Print("\n",z," ",y," ",x);
+#Print("\n",A1," ",A2," ",A3," ",A4," ",A5);
+#Print("\n",B1," ",B2," ",B3," ",B4);
+#Print("\n",C1," ",C2," ",C3);
+#Print("\n",D1," ",D2);
+#Print("\n",E1);
+#Print("\n",M[j][j]);
+        #f
+        for jj in [1..n] do if M[j-n][jj]=M[j][j] then
+          for k in [1..n] do 
+            M[n+k][j]:=M[k][jj]; 
+            if M[k][jj]=1 then I[j]:=n+k; fi; 
+            od;
+          fi; od;
+        od;
+      nn:=nn+nn;
+      od;
+ #    #e
+ #    for i in [n+1..n+n] do if M[i][i]=0 then
+ #      for j in [1..n] do if M[j][n+1]=i-1 then z:=j; fi; od; #oo
+ #      M[i][i]:=M[M[M[i][i-1]][I[n+1]]][M[I[z]][i]];
+ #      #f
+ #      for j in [1..n] do if M[i-n][j]=M[i][i] then
+ #        for k in [1..n] do 
+ #          M[n+k][i]:=M[k][j]; 
+ #          if M[k][j]=1 then I[i]:=n+k; fi; 
+ #          od;
+ #        fi; od;
+ #      fi; od;
+    #g
+    for i in [1..n] do
+      for j in [1..n] do 
+      if MatrixBit=0 then
+        M[n+i][M[I[n+i]][n+j]]:=n+j;
+        else
+          M[n+i][j]:=M[M[n+i][n+j]][I[n+1]];
+          fi;
+      od; od;
+    n:=n+n;
+    od;
+  return M;
+  end;
+
+Print ("     MatrixOf.txt geladen\n");
