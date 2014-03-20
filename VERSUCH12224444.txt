@@ -70,4 +70,11 @@ ok ja das ist PcgsOfR(R) aus D4_2_37.txt!!! Also alles da
 ok jetzt geht Versuch1 ganz flott, sogar schneller bei nur [[1],[2,2]]
 .. aber das dürfte eigentlich nicht sein, mit [[1],[1,1]...] muss schneller sein
 .. und das brauch ich auch jetzt, weil viel isomorph ist.
-.. dazu mache ich mal in beiden Varianten ...
+.. dazu mache ich mal in beiden Varianten ... 
+
+T(64);
+G:=SmallGroup(64,226);
+RMAXSUCH(G);time;
+
+.. der Unterschied ist 200 zu 1780. Das darf doch nicht sein!!!
+.. gut, das muss ich rausbekommen, erstemal überlegen, das ist die nächste Aufgabe.

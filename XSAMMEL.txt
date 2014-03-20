@@ -85,7 +85,7 @@ QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
   RET:=(HRES[1])^2 in GROUP;
   for j in [2..S] do
     if not Commu(HRES[1],HRES[j]) in GROUP then RET:=false; fi; od;#C
-if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
+#if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
 #if S=3 and (HRES[1]*HRES[3])^2=(HRES[1])^0 then RET:=false; fi;
 #if S=4 and (HRES[1]*HRES[2])^2=(HRES[1])^0 and (HRES[2]*HRES[3])^2<>(HRES[1])^0 then RET:=false; fi;
   return RET;
