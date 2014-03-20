@@ -85,7 +85,7 @@ QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
   RET:=(HRES[1])^2 in GROUP;
   for j in [2..S] do
     if not Commu(HRES[1],HRES[j]) in GROUP then RET:=false; fi; od;#C
-if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
+#if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
 #if S=3 and (HRES[1]*HRES[3])^2=(HRES[1])^0 then RET:=false; fi;
 #if S=4 and (HRES[1]*HRES[2])^2=(HRES[1])^0 and (HRES[2]*HRES[3])^2<>(HRES[1])^0 then RET:=false; fi;
   return RET;
@@ -124,3 +124,16 @@ n:=Size(G);RMAXSUCH(G);time;
 ok hab jetzt extra neu XSAMMELVIEWER1(XSAMMEL)
 .. und bei Prob(...) da ist eindeutig was nicht funktionierend!!!
 .. deranbleiben!!! aber erstmal Pause.
+.. huiii da stimmt ja überhaupt nix
+   .. erstens einmal das erste R ist meistens false, muss aber immer true sein
+   .. zweitens dann wenn einmal true-1-1, dann dürfen nur noch Punkte "..." sein
+      das konnte aber an erstens liegen weil ERSTBIT dann -1 ist
+      und dann soll ja BRIT unwirksam sein
+      also liegt alles an erstens.
+ok na gut, hab eine mögliche Stelle gefunden: 
+   in QY13 muss bei ZR[3]=0 auch RDRIN=-1 gesetzt werden
+   das ist möglicherweise bei irgendeiner Umstellung verlorengegangen
+.. jetzt aber ist bei n=32, inh=197 ein HRES=67 statt HRES=[...] da.???
+   das nachher weiter, erstmal kurze Pause
+   
+      
