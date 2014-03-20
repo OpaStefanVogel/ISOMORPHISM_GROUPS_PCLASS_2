@@ -54,6 +54,7 @@ RMAX:=[];WEGEBAUM:=[];WEGEZAHL:=0;
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
+ALLERANFANGSBIT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -334,7 +335,13 @@ QY13:=function(C,S,nn,ZEIGER)
             QY15(ZR[2],XMERK[S]);
             XMERKZAHL:=XMERKZAHL+1;
             HRES0:=HRES0MERK;
-            else RBIT:=-1; fi; 
+            ALLERANFANGSBIT:=-1;
+            else
+              if ALLERANFANGSBIT=0 then
+                RBIT:=-1; 
+                ALLERANFANGSBIT:=-1;
+                fi;
+              fi; 
           fi;
         fi;
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
@@ -426,7 +433,7 @@ RMAXSUCH:=function(C)
   n:=Size(C);
   XMERK:=[];HRES:=[];STEP:=1;R:=[];
   #  XSAMMEL:=[];
-  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
+  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;ALLERANFANGSBIT:=0;
   QY13(C,1,1,XSAMMEL);
    XFUELL(XSAMMEL);
    RMERKER:=[];XMISCH(XSAMMEL,[],1);

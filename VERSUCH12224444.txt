@@ -122,18 +122,36 @@ G:=PcgsOfR(R);IdSmallGroup(G);
 n:=Size(G);RMAXSUCH(G);time;
 
 ok hab jetzt extra neu XSAMMELVIEWER1(XSAMMEL)
-.. und bei Prob(...) da ist eindeutig was nicht funktionierend!!!
-.. deranbleiben!!! aber erstmal Pause.
-.. huiii da stimmt ja überhaupt nix
-   .. erstens einmal das erste R ist meistens false, muss aber immer true sein
-   .. zweitens dann wenn einmal true-1-1, dann dürfen nur noch Punkte "..." sein
+vv und bei Prob(...) da ist eindeutig was nicht funktionierend!!!
+vv deranbleiben!!! aber erstmal Pause.
+vv huiii da stimmt ja überhaupt nix
+   vv erstens einmal das erste R ist meistens false, muss aber immer true sein
+   ok zweitens dann wenn einmal true-1-1, dann dürfen nur noch Punkte "..." sein
       das konnte aber an erstens liegen weil ERSTBIT dann -1 ist
       und dann soll ja BRIT unwirksam sein
       also liegt alles an erstens.
 ok na gut, hab eine mögliche Stelle gefunden: 
    in QY13 muss bei ZR[3]=0 auch RDRIN=-1 gesetzt werden
    das ist möglicherweise bei irgendeiner Umstellung verlorengegangen
-.. jetzt aber ist bei n=32, inh=197 ein HRES=67 statt HRES=[...] da.???
+vv jetzt aber ist bei n=64, inh=197 ein HRES=67 statt HRES=[...] da.???
    das nachher weiter, erstmal kurze Pause
-   
+   Versuch: ich setze bei ZR[3]=0 auch RDRIN=-1 nur beim allerallerersten Durchlauf
+   ALLERANFANGSBIT:=-1;
+ok da muss noch ALLERANFANGSBIT:=-1 aucH beim ersten ZR[3]<>0 rein
+   dann erhalte ich das gewünschte Resultat:
+   mit/ohne [[1],[1,1]...] 
+   T(64) 1950/390 ms
+   RMAXSUCH(SmallGroup(64,226) 140/0 ms !!!
+   Versuch1 geht trotz zusätzlichem [[1],[1,1]...] bei i1-i6 minimal schneller.
+   Ergebnis von i1-i7 steht noch aus, aber "ohne" ist schon beim Aufholen
+.. dann muss ich aber nochmal schauen, 
+   ob es auch doch noch öfters geht, damit nix verschenkt.
+
+
+
+
+
+
+
+
       
