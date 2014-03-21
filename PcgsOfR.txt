@@ -33,11 +33,13 @@ PcgsOfR:=function(R)
       SetCommutator( coll, S+1-j, S+1-i, RE[i][j+1] );
       od;
     od;
-  G:=GroupByRws( coll );
-  G:=RefinedPcGroup(G);
+#  if IsConfluent(coll)=true then
+    G:=GroupByRws( coll );
+    G:=RefinedPcGroup(G);
+    return G;
+#    else return fail; fi;
   #IsConfluent(P);
   #IdSmallGroup(G);
-  return G;
   end;
 
 

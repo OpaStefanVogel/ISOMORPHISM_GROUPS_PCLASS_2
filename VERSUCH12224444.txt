@@ -63,6 +63,7 @@ for i1 in IS do i2:=i1;
       od;
 #    od;
   od;
+XSAMMEL128:=StructuralCopy(XSAMMEL);;
 
 IS:=[4,3,2,1];
 for i1 in IS do i2:=i1; i3:=i1;
@@ -108,6 +109,7 @@ for i1 in IS do i2:=i1;
       od;
 #    od;
   od;
+XSAMMEL256:=StructuralCopy(XSAMMEL);;
 
 IS:=[4,3,2,1];
 for i1 in IS do i2:=i1; i3:=i1;
@@ -273,7 +275,6 @@ ok warum geht "ist schon drin" oftmals erst nach 4 oder 5 Punkten?
    und hat auch kaum Zeitverbrauch
 ok neue GAP-Version mal installieren ob da PositionFirstComponent korrekt geht
    ist installiert, aber PositionFirstComponent geht dort noch nicht
-.. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
 ok jetzt ist bei inh=56089 nochmal ein Fehler: R=[[..2,1]] dauert ewig???
    huuu ja, da ist bei XSAMMELVIEWER1(XSAMMEL)
    tatsächlich nicht 8[2,2,2,2,2,2,2,1] enthalten
@@ -313,4 +314,14 @@ G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
 RMAXSUCH(G);time;
 XSAMMELMERK56089C:=StructuralCopy(XSAMMEL);;
 
-      
+nö was auch interessant wäre, statt R=[1][1,1]...[4...]] durchweg mit
+   R=[1][2,2]...[4...]] zu beginnen
+ok dafür bräuchte ich aber ein IsConfluent für das Pcgs
+.. auch ListX müsste ich mal aktivieren.
+ok aber neee, R=[1][2,2]...[4...]] geht nicht als Ausgangspunkt
+   weil dann statt 4... auch 1-256 stehen kann...
+   also bleibt doch nur R=[1][1,1]...[4...]].
+.. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
+
+
+
