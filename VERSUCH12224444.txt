@@ -398,7 +398,12 @@ OK so, jetzt hab ich mal in QY21MINI die völlig unverständliche Zeile
    die Zeile war schon nötig um über REKURSIV die Wegenummern beizubehaten
    statt dessen hab ich mal mit ZSIZE in QY21MINI die Nummer etwas vereinfacht
    mal sehen wie weit das geht
-.. damit nochmal zurück zu "ohne WEGEBAUM" 
+.. damit nochmal zurück zu "ohne WEGEBAUM"
+.. den muss ich mir mal ausgeben und ausgiebig anschauen 
+   zusammen mit XSAMMELVIEWER1(XSAMMEL)
+.. na gut, morgen mach ich mal WEGEBAUM wieder mit []-Spitzen.
+   
+   
 
 Gruppe [ 8, 2 ] jetzt drin 
 [ 1, 1, 8 ][ 10001, 10001, 10002, 10001 ] -1 0 
@@ -431,3 +436,45 @@ XSAMMELVIEWER1(XSAMMEL);
 G:=SmallGroup(16,13);
 RMAXSUCH(G);time;Print("\007");
 XSAMMELVIEWER1(XSAMMEL);
+
+1111
+1131
+1211
+1241
+1231
+1181
+1141
+1212
+
+1 [ 1 ] 1  #5 2 [ 2, 1 ]<=k1 ##12 1 
+  2 [ 1, 1 ] 1  #5 9 [ 4, 2 ]<=k1 ##12 1 
+    3 [ 3, 3, 3 ] 1 ==>[ 4, 4, 4 ]3[ 8, 2 ] 
+    3 [ 3, 1, 3 ] 2 ==>[ 1, 4, 4 ]6[ 8, 3 ] 
+Y    3 [ 4, 4, 4 ] 3  #5 0 [ 8, 2 ]<=k2===>[ 2, 2, 1 ]3[ 8, 2 ] 1 
+    3 [ 4, 1, 1 ] 4 ==>[ 1, 4, 4 ]6[ 8, 3 ] 
+    3 [ 1, 3, 1 ] 5 ==>[ 1, 4, 4 ]6[ 8, 3 ] 
+Y    3 [ 1, 4, 4 ] 6  #5 0 [ 8, 3 ]<=k4===>[ 1, 1, 1 ]1[ 8, 3 ] 4 
+    3 [ 1, 1, 2 ] 7 ==>[ 2, 2, 1 ]8[ 8, 3 ] 
+Y    3 [ 2, 2, 1 ] 8  #5 0 [ 8, 3 ]<=k2===>[ 1, 1, 1 ]1[ 8, 3 ] 8 
+Y    3 [ 2, 2, 2 ] 9  #5 0 [ 8, 2 ]<=k1===>[ 2, 2, 1 ]3[ 8, 2 ] 3 
+  2 [ 2, 2 ] 2  #5 4 [ 4, 1 ]<=k1 ##12 2 
+X    3 [ 1, 1, 1 ] 1  #5 4 [ 8, 3 ]<=k1 ##12 3 
+      4 [ 1, 1, 2, 2 ] 1 ==>[ 2, 2, 2, 2 ]4[ 16, 13 ] 
+      4 [ 2, 2, 1, 2 ] 2 ==>[ 2, 2, 2, 2 ]4[ 16, 13 ] 
+      4 [ 2, 2, 2, 1 ] 3 ==>[ 2, 2, 2, 2 ]4[ 16, 13 ] 
+      4 [ 2, 2, 2, 2 ] 4  #5 0 [ 16, 13 ]<=k4===>[ 2, 2, 1, 1 ]4[ 16, 13 ] 1 
+    3 [ 1, 1, 2 ] 2 ==>[ 2, 2, 1 ]3[ 8, 2 ] 
+X    3 [ 2, 2, 1 ] 3  #5 4 [ 8, 2 ]<=k2 ##12 1 
+      4 [ 1, 1, 1, 2 ] 1 ==>[ 2, 2, 2, 1 ]4[ 16, 13 ] 
+      4 [ 1, 1, 2, 1 ] 2 ==>[ 2, 2, 1, 2 ]3[ 16, 13 ] 
+Y      4 [ 2, 2, 1, 2 ] 3  #5 0 [ 16, 13 ]<=k2===>[ 2, 2, 1, 1 ]4[ 16, 13 ] 1 
+Y      4 [ 2, 2, 2, 1 ] 4  #5 0 [ 16, 13 ]<=k2===>[ 2, 2, 1, 1 ]4[ 16, 13 ] 3 
+X    3 [ 2, 2, 2 ] 4  #5 4 [ 8, 4 ]<=k1 ##12 4 
+      4 [ 1, 1, 1, 1 ] 1 ==>[ 2, 2, 1, 1 ]4[ 16, 13 ] 
+      4 [ 1, 1, 1, 2 ] 2 ==>[ 2, 2, 1, 1 ]4[ 16, 13 ] 
+      4 [ 1, 1, 2, 1 ] 3 ==>[ 2, 2, 1, 1 ]4[ 16, 13 ] 
+X      4 [ 2, 2, 1, 1 ] 4  #5 0 [ 16, 13 ]<=k4 ##12 1 
+1111
+1191
+1231
+1241
