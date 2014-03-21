@@ -224,7 +224,9 @@ DisplayProfile();
 
 also nix geht heute mehr -> Aus.
 
-
+.. warum geht "ist schon drin" oftmals erst nach 4 oder 5 Punkten?
+.. neue GAP-Version mal installieren ob da PositionFirstComponent korrekt geht
+.. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
 
 
       

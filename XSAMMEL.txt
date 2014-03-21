@@ -1,5 +1,5 @@
 #Read("GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
-#Read("GAP/PCLASS2/MatrixOf.txt");#macht Mat aus R.
+#Read("GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
 
 #war vordem
 #Read("GAP/D4_2E/D4_2E_36");# 
