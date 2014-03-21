@@ -118,8 +118,8 @@ for i1 in IS do i2:=i1; i3:=i1;
           for i6 in IS do
             for i7 in IS do
               for i8 in IS do
-                Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8);
-                R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8]];
+                Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8,"\c");
+                R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8]];
                 G:=PcgsOfR(R);
                 Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
                 od;
@@ -274,25 +274,43 @@ ok warum geht "ist schon drin" oftmals erst nach 4 oder 5 Punkten?
 ok neue GAP-Version mal installieren ob da PositionFirstComponent korrekt geht
    ist installiert, aber PositionFirstComponent geht dort noch nicht
 .. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
-.. jetzt ist bei inh=56089 nochmal ein Fehler: R=[[..2,1]] dauert ewig???
+ok jetzt ist bei inh=56089 nochmal ein Fehler: R=[[..2,1]] dauert ewig???
+   huuu ja, da ist bei XSAMMELVIEWER1(XSAMMEL)
+   tatsächlich nicht 8[2,2,2,2,2,2,2,1] enthalten
+   und auch nicht 8[2,2,2,2,2,2,1,2]
+   und 8[2,2,2,2,2,2,1,1]
+   das müsste aber alles schon bei 8[2,2,2,2,2,2,2,2]
+   mit rauskommen
+   Vorgehen: ich ergänze mal noch die fehlenden
+   und vergleiche dann die beiden XSAMMEL 
+   das läuft darauf hinaus, QY13 nochmal durchzuchecken.
+   aaaaha, das liegt daran weil ich für n=nmax=256 
+   eine Speichersparmodus drin hab, den muss ich natürlich ausmachen
+   und auch in XSAMMEL die 255 256 in was anderes umwandeln z.B. 10001 und 10002
+   ok das scheint der Fehler gewesen zu sein, 
+   jetzt sollte auch i1-i8 durchgehen
 
 ClearProfile();
 XSAMMEL:=[];#nur anfangs einmal
 G:=SmallGroup(256,56089);
-RMAXSUCH(G);time;
+RMAXSUCH(G);time;Print("\007");
 DisplayProfile();
-XSAMMELMERK56089:=StructuralCopy(XSAMMEL);
+XSAMMELMERK56089:=StructuralCopy(XSAMMEL);;
+XSAMMEL:=StructuralCopy(XSAMMELMERK56089);;
 R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];
 G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
 RMAXSUCH(G);time;
 R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,1]];
 G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
 RMAXSUCH(G);time;
+XSAMMELMERK56089A:=StructuralCopy(XSAMMEL);;
 R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,1,2]];
 G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
 RMAXSUCH(G);time;
+XSAMMELMERK56089B:=StructuralCopy(XSAMMEL);;
 R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,1,1]];
 G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
 RMAXSUCH(G);time;
+XSAMMELMERK56089C:=StructuralCopy(XSAMMEL);;
 
       
