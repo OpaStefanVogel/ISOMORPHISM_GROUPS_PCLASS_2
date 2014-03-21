@@ -322,6 +322,56 @@ ok aber neee, R=[1][2,2]...[4...]] geht nicht als Ausgangspunkt
    weil dann statt 4... auch 1-256 stehen kann...
    also bleibt doch nur R=[1][1,1]...[4...]].
 .. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
+   .. ich mach mal WEGEBAUM raus
+      da geht n=32, inh=51 verhältnismäßig langsam, das dürfte eigentlich nicht sein
+      also ALLERANFANGSBIT auch inaktiv machen.
+      da ist bei n=32, inh=21 ein Error in WEBEBAUM
+      den wollte ich sowieso rausmach-->
+      dann fehlt bei n=64, inh=226 auf einmal [32,27] und [32,28]
+      wieso das?, Die waren doch schon bei T(32) dabei!!!
+      und wieso ist da HRES2=1083 und nicht [...irgendwas...]???
+      aha, da wurde halt 32,27] und [32,28] nicht vollständig gespeichert
+      das auch bei [32,48] --> extra probieren
+      und sogar bei [16,13]
+      na und da stimmt was nicht
+      das erste [ 1, 1, 8 ] ist [8,3]
+      aber das dritte [ 1, 1, 3 ] ist [8,2]
+      und kann deshalb unmöglich ZR3MERK=0 zurückliefern
+      denn das sollte noch nicht in XSAMMEL drin sein!!!???!!!
+      nee doch, [ 1, 1, 3 ] war schon mal weiter oben drin ganz kurz
+      nächster Versuch, ich generiere [8,2] und [8,3] extra vorher
+.. so, jetzt hab ich mal in QY21MINI die völlig unverständliche Zeile
+      #  if ISO=0 then INDEX1:=0; else INDEX1:=ZEIGER[ISO][14]; fi;
+      herausgemacht, mal sehen, was da läuft.
+
+Gruppe [ 8, 2 ] jetzt drin 
+[ 1, 1, 8 ][ 10001, 10001, 10002, 10001 ] -1 0 
+[ 1, 1, 4 ][ 10002, 10002, 10001, 10002 ] 0 -1 .
+[ 1, 1, 3 ][ 10002, 10002, 10001, 10002 ] 0 -1 ..
+
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(64,267);
+RMAXSUCH(G);time;Print("\007");
 
 
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(32,48);
+RMAXSUCH(G);time;Print("\007");
+XSAMMELVIEWER1(XSAMMEL);
 
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(16,13);
+RMAXSUCH(G);time;Print("\007");
+XSAMMELVIEWER1(XSAMMEL);
+
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(8,2);
+RMAXSUCH(G);time;
+G:=SmallGroup(8,3);
+RMAXSUCH(G);time;
+G:=SmallGroup(8,4);
+RMAXSUCH(G);time;
+XSAMMELVIEWER1(XSAMMEL);
+G:=SmallGroup(16,13);
+RMAXSUCH(G);time;Print("\007");
+XSAMMELVIEWER1(XSAMMEL);
