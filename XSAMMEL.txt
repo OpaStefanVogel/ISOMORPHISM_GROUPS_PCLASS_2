@@ -249,19 +249,20 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
 
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
-  local POS,i,ii,ZMERK;
+  local POS,i,ii,ZMERK,ZSIZE;
+  ZSIZE:=Size(ZEIGER)+1;
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
   Add(ZEIGER,StructuralCopy(XM[1]),POS);
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
-  ZEIGER[POS][14]:=Size(ZEIGER);
+  ZEIGER[POS][14]:=ZSIZE;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
   for i in [2..Size(XM)] do
     ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
     Add(ZEIGER,StructuralCopy(XM[i]),ii);
     ZEIGER[ii][5]:=ZMERK;
-    ZEIGER[ii][14]:=Size(ZEIGER);
+    ZEIGER[ii][14]:=ZSIZE;
     od;
   end;
 #QY16 und QY17 raus
@@ -281,8 +282,8 @@ QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
       fi;
       ISO:=QY08(ZEIGER,PNEU);
     fi;
-  INDEX1:=ISO;
-#  if ISO=0 then INDEX1:=0; else INDEX1:=ZEIGER[ISO][14]; fi;
+#  INDEX1:=ISO;
+  if ISO=0 then INDEX1:=0; else INDEX1:=ZEIGER[ISO][14]; fi;
   if ISO=0 then NICHDRIN:=-1; else
     HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ZEIGER[ISO][3][i]));
     ISO:=ZEIGER[ISO];
@@ -317,7 +318,7 @@ QY13:=function(C,S,nn,ZEIGER)
       if 2*nn<n then 
        RBIT:=QY13(C,S+1,2*nn,ZR[2]); 
        else
-#Print("\n",RMAX{[1..S]},R[S]," ",ZR3MERK," ");
+Print("\n",RMAX{[1..S]},R[S]," ",ZR3MERK," ");
 #if RMAX{[1..S-1]}=[1,1,3] then Error("HALT"); fi;
         WEGMERKER:=RMAX{[1..S-1]};
         DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,R[S],S);
@@ -344,7 +345,7 @@ QY13:=function(C,S,nn,ZEIGER)
                 fi;
               fi; ### (if ZR3MERK<>0 then)
           fi; ### (if DDDD=99 then)
-#Print(RBIT," ");
+Print(DDDD," ",RBIT," ");
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
         fi; ### (if 2*nn<n) 
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
