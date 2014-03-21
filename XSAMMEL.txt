@@ -1,5 +1,5 @@
 #Read("GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
-#Read("GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
+Read("GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
 
 #war vordem
 #Read("GAP/D4_2E/D4_2E_36");# 
@@ -54,7 +54,7 @@ RMAX:=[];WEGEBAUM:=[];WEGEZAHL:=0;
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
-ALLERANFANGSBIT:=0;
+ALLERANFANGSBIT:=0;DDDD:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -85,8 +85,12 @@ QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
 QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
   local RET,j;
   RET:=(HRES[1])^2 in GROUP;
-  for j in [2..S] do
-    if not Commu(HRES[1],HRES[j]) in GROUP then RET:=false; fi; od;#C
+  if RET=true then 
+    for j in [2..S] do
+      if not Commu(HRES[1],HRES[j]) in GROUP then RET:=false; #C
+        fi; 
+      od;
+    fi;
 #if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
 #if S=3 and (HRES[1]*HRES[3])^2=(HRES[1])^0 then RET:=false; fi;
 #if S=4 and (HRES[1]*HRES[2])^2=(HRES[1])^0 and (HRES[2]*HRES[3])^2<>(HRES[1])^0 then RET:=false; fi;
@@ -892,3 +896,4 @@ XFUELL,XMISCH,XLEER]);
 #erstmal bis n=64, ist aber nicht brauchbar wegen der 15
 #FEHLERSUCH wegen der Sortierung 6 [
 
+Print ("     XSAMMEL.txt geladen\n");

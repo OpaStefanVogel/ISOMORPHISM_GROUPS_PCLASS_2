@@ -87,6 +87,50 @@ for i1 in IS do i2:=i1; i3:=i1;
 #    od;
   od;
 
+IS:=[2,1];
+for i1 in IS do i2:=i1;
+#  for i2 in IS do
+    for i3 in IS do
+      for i4 in IS do
+        for i5 in IS do
+          for i6 in IS do
+            for i7 in IS do
+              for i8 in IS do
+                Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8);
+                R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8]];
+                G:=PcgsOfR(R);
+                Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+                od;
+              od;
+            od;
+          od;
+        od;
+      od;
+#    od;
+  od;
+
+IS:=[4,3,2,1];
+for i1 in IS do i2:=i1; i3:=i1;
+#  for i2 in IS do
+#    for i3 in IS do
+      for i4 in IS do
+        for i5 in IS do
+          for i6 in IS do
+            for i7 in IS do
+              for i8 in IS do
+                Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8);
+                R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8]];
+                G:=PcgsOfR(R);
+                Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+                od;
+              od;
+            od;
+          od;
+        od;
+#      od;
+#    od;
+  od;
+
 2 Ergebnisse:
 - bei weitem nicht alle i1...i5 bilden eine Gruppe, ach ja, die ersten drei i1=i2=i3 sind ja gleich!!!
     aber außer wo i1=i2=2, da kann und muss auch i3=1 sein!!!
@@ -224,9 +268,31 @@ DisplayProfile();
 
 also nix geht heute mehr -> Aus.
 
-.. warum geht "ist schon drin" oftmals erst nach 4 oder 5 Punkten?
-.. neue GAP-Version mal installieren ob da PositionFirstComponent korrekt geht
+ok warum geht "ist schon drin" oftmals erst nach 4 oder 5 Punkten?
+   nee das ist schon ok, das ist weil nicht jedes HRES ein pcgs ist
+   und hat auch kaum Zeitverbrauch
+ok neue GAP-Version mal installieren ob da PositionFirstComponent korrekt geht
+   ist installiert, aber PositionFirstComponent geht dort noch nicht
 .. dann nochmal den ganzen RBIT-Ablauf von QY13 checken.
+.. jetzt ist bei inh=56089 nochmal ein Fehler: R=[[..2,1]] dauert ewig???
 
+ClearProfile();
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(256,56089);
+RMAXSUCH(G);time;
+DisplayProfile();
+XSAMMELMERK56089:=StructuralCopy(XSAMMEL);
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];
+G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
+RMAXSUCH(G);time;
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,1]];
+G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
+RMAXSUCH(G);time;
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,1,2]];
+G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
+RMAXSUCH(G);time;
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,1,1]];
+G:=PcgsOfR(R);Size(G);IdSmallGroup(G);
+RMAXSUCH(G);time;
 
       
