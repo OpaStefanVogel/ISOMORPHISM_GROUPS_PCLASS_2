@@ -124,7 +124,9 @@ QY07NEU:=function(WEGEBAUM,WEGMERKER,S,NW)#fügt WEGMERKER,PNEU ein, wenn nicht 
         else 
           if ZEIGER[j]<NW then 
             DRINBIT:=false;
-            ZEIGER[j]:=NW; 
+            fi;
+          if ZEIGER[j]>NW+1 then 
+            DRINBIT:=false;
             fi;
           fi;
       else 

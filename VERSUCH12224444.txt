@@ -530,7 +530,25 @@ Alle Prints und so zurück und mal weng laufenlassen...
       Die alten mache ich aber nicht wieder her, 
       sondern versuche stattdessen ein anderes DDDD
    .. auf mit NEUWEGLAENGE.
-   
+      ok geht schon mal
+      aber das HRES2=1150 ist immer noch drin
+      als letzten Versuch mach ich
+      if ZEIGER[j]<>NW then 
+      statt if ZEIGER[j]<NW then
+      aber da dauert inh=51 wieder ewig
+      also hier muss noch eine Lösung her.
+      als Behelf habe ich jetzt
+          if ZEIGER[j]<NW then 
+            DRINBIT:=false;
+            fi;
+          if ZEIGER[j]>NW+1 then 
+            DRINBIT:=false;
+            fi;
+      reicht aber auch nicht
+      XMERKZAHL=10 statt 14
+      kann aber nicht so bleiben...
+      gut, das reicht für heute
+
 T(32);
 T(16);
 XSAMMEL:=[];#nur anfangs einmal
@@ -549,7 +567,7 @@ G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
 G:=SmallGroup(32,27);
 RMAXSUCH(G);time;
-XMERKZAHL;
+XMERKZAHL;#14 muss rauskommen und nicht 8
 XSAMMEL1:=StructuralCopy(XSAMMEL);;
 
 XSAMMEL:=[];#nur anfangs einmal
@@ -562,7 +580,7 @@ G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
 G:=SmallGroup(32,27);
 RMAXSUCH(G);time;
-XMERKZAHL;
+XMERKZAHL;#14 wie auch bisher schon
 
 XSAMMEL=XSAMMEL1;
 XSAMMELVIEWER1(XSAMMEL1);
