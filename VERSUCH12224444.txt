@@ -512,3 +512,57 @@ dadurch ein WEGMERKER weniger.
 na gut, muss ich erstmal so lassen.
 Alle Prints und so zurück und mal weng laufenlassen...
 
+.. neuer Fehler [64,206] da ist HRES2=1126??? Wieso das???
+   ok dieser Fehler tritt nicht auf, wenn immer DDDD:=false;
+      also muss ich da mal das XMISCH gucken...
+   ok dieser Fehler tritt nicht auf, wenn ich nur RMAXSUCH ohne T(32) mach.
+   ok dieser Fehler tritt nicht auf, wenn ich RMAXSUCH nach T(16) mach.
+   ok dieser Fehler tritt auf, wenn ich RMAXSUCH nach T(32) mach.
+      überhaupt, wieso fehlt dann [32,27]???
+   also muss ich mal gucken wie XMISCH funktioniert hat.
+   .. davor erstmal nur [32,27] vergleichen mit/ohne DDDD
+      bei ohne DDDD fehlt ein Teil in XSAMMEL:
+      XMERKZAHL=14 ohne DDDD (DDDDBIT=1)
+      XMERKZAHL=6 mit DDDD (DDDDBIT=0)
+      das ist ne ganze Menge
+      nach den unteren Versuchen denke ich,
+      dass wohl doch die neuen Wegspitzen nicht funktionieren
+      Die alten mache ich aber nicht wieder her, 
+      sondern versuche stattdessen ein anderes DDDD
+      
+T(32);
+T(16);
+XSAMMEL:=[];#nur anfangs einmal
+G:=SmallGroup(64,206);
+RMAXSUCH(G);time;
+XSAMMELVIEWER1(XSAMMEL);
+WEGEZAHL;
+
+XSAMMEL:=[];#nur anfangs einmal
+DDDDBIT:=0;#kurze Variante
+G:=SmallGroup(16,14);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,11);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,3);
+RMAXSUCH(G);time;
+G:=SmallGroup(32,27);
+RMAXSUCH(G);time;
+XMERKZAHL;
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+
+XSAMMEL:=[];#nur anfangs einmal
+DDDDBIT:=1;#ausführliche Variante
+G:=SmallGroup(16,14);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,11);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,3);
+RMAXSUCH(G);time;
+G:=SmallGroup(32,27);
+RMAXSUCH(G);time;
+XMERKZAHL;
+
+XSAMMEL=XSAMMEL1;
+XSAMMELVIEWER1(XSAMMEL1);
+
