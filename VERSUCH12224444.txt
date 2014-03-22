@@ -1,4 +1,5 @@
 #XSAMMEL:=[];#nur anfangs einmal
+ClearProfile();
 IS:=[2,1];
 for i1 in IS do i2:=i1;
 #  for i2 in IS do
@@ -87,6 +88,7 @@ for i1 in IS do i2:=i1; i3:=i1;
 #      od;
 #    od;
   od;
+DisplayProfile();
 
 IS:=[2,1];
 for i1 in IS do i2:=i1;
@@ -109,6 +111,7 @@ for i1 in IS do i2:=i1;
       od;
 #    od;
   od;
+DisplayProfile();
 XSAMMEL256:=StructuralCopy(XSAMMEL);;
 
 IS:=[4,3,2,1];
@@ -490,15 +493,22 @@ X      4 [ 2, 2, 1, 1 ] 4  #5 0 [ 16, 13 ]<=k4 ##12 1
 .. aber erstmal die neue Wegespitze, so die ist drin
 .. trotzdem noch unterschiedliche WEGEZAHLEN
    die muss ich genauestens herausfinden.
+   Mit folgender Rechnung:
    
-XSAMMEL:=[];#nur anfangs einmal
-G:=SmallGroup(2,1);
-RMAXSUCH(G);time;
-XSAMMELVIEWER1(XSAMMEL);
-WEGEZAHL;
-
 T(16);
 G:=SmallGroup(32,33);#gefunden 25..28
 RMAXSUCH(G);time;
 XSAMMELVIEWER1(XSAMMEL);
 WEGEZAHL;
+.
+[ 1, 2, 10, 1, 1 ][ 1 ] -1 false [ f1, f4, f5, f2, f3 ]|[ f3, f1, f1*f2*f5, f1*f2*f4, f5 ]0 
+[ 1, 2, 10, 9, 5 ][ 5 ] -1 false [ f1, f4, f5, f3, f2 ]|[ f2, f1, f3*f4*f5, f3, f4 ]0 
+[ 1, 2, 10, 9, 1 ][ 1 ] 0 false [ f1, f4, f5, f2*f3, f3 ]|[ f3, f1, f1*f2*f3*f4, f1*f2*f3*f4*f5, f4 ]0 
+[ 1, 2, 10, 9, 1 ][ 1 ] 0 true [ f1, f5, f4, f2, f3 ]|[ f2*f3*f5, f1, f1*f2*f5, f1*f2*f4, f5 ]0 
+[ 1, 2, 10, 1, 5 ][ 1 ] 0 false [ f1, f5, f4, f3, f2 ]|[ f1*f2*f3*f5, f1, f3*f4*f5, f3, f4 ]0 
+
+das erste true überspringt das darauffolgende false,
+dadurch ein WEGMERKER weniger.
+na gut, muss ich erstmal so lassen.
+Alle Prints und so zurück und mal weng laufenlassen...
+
