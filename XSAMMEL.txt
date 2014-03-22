@@ -108,17 +108,28 @@ QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
   return PNEU;
   end;
 
-QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
+QY07NEU:=function(WEGEBAUM,WEGMERKER,S,NW)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   local DRINBIT,i,j,ZEIGER;
   DRINBIT:=true;ZEIGER:=WEGEBAUM;
   for i in [1..S] do
     j:=WEGMERKER[S+1-i];
     if not IsBound(ZEIGER[j]) then
-      DRINBIT:=false;
       ZEIGER[j]:=[];
       if i=S then WEGEZAHL:=WEGEZAHL+1; fi;
       fi;
-    ZEIGER:=ZEIGER[j];
+    if i=S then 
+      if ZEIGER[j]=[] then 
+        DRINBIT:=false;
+        ZEIGER[j]:=NW;
+        else 
+          if ZEIGER[j]<NW then 
+            DRINBIT:=false;
+            ZEIGER[j]:=NW; 
+            fi;
+          fi;
+      else 
+        ZEIGER:=ZEIGER[j];
+        fi;
     od;
 #Print("\n",WEGEBAUM);
   return DRINBIT;
@@ -288,10 +299,11 @@ QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
   end;
    
-QY13:=function(C,S,nn,ZEIGER)
+QY13:=function(C,S,nn,ZEIGER,NW)
   local i,j,ri,RC, PNEU,GR,HRESMERK, 
         RDRIN,HRESMERK2, WEGMERKER,HRES0MERK,ZR,
-        HRESMERK3,RBIT,ERSTBIT,ZR3MERK;
+        HRESMERK3,RBIT,ERSTBIT,ZR3MERK,
+        NEUWEGLAENGE;
   ERSTBIT:=0;RBIT:=0;RDRIN:=0;#ALLERANFANGSBIT:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
@@ -306,12 +318,13 @@ QY13:=function(C,S,nn,ZEIGER)
       HRES:=List(ZR[1]);RMAX[S]:=ZR[5];ZR3MERK:=ZR[3];
       if ZR[5]=0 then RMAX[S]:=Size(ZR[2])+1; fi;
       if 2*nn<n then 
-       RBIT:=QY13(C,S+1,2*nn,ZR[2]); 
+       if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
+       RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
        else
-Print("\n",RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
+#Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
         WEGMERKER:=RMAX{[1..S]};
-        DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S);
-Print(DDDD," ",HRESEXT,"|","HRES ");
+        DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,NW);
+#Print(DDDD," ",HRESEXT,"|","HRES ");
 if DDDDBIT=1 then DDDD:=false; fi;
         if DDDD then RBIT:=-1; ALLERANFANGSBIT:=-1; else
           if ZR3MERK<>0 then #RDRIN=0
@@ -329,7 +342,7 @@ if DDDDBIT=1 then DDDD:=false; fi;
             XMERKZAHL:=XMERKZAHL+1;
             HRES0:=HRES0MERK;
             ALLERANFANGSBIT:=-1;
-Print("*************");
+#Print("*************");
             else
               if ALLERANFANGSBIT=0 then
                 RBIT:=-1; 
@@ -337,7 +350,7 @@ Print("*************");
                 fi;
               fi; ### (if ZR3MERK<>0 then)
           fi; ### (if DDDD=99 then)
-Print(RBIT," ");
+#Print(RBIT," ");
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
         fi; ### (if 2*nn<n) 
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
@@ -429,7 +442,7 @@ RMAXSUCH:=function(C)
   XMERK:=[];HRES:=[];STEP:=1;R:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;ALLERANFANGSBIT:=0;
-  QY13(C,1,1,XSAMMEL);
+  QY13(C,1,1,XSAMMEL,1);
    XFUELL(XSAMMEL);
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
    XLEER(XSAMMEL);

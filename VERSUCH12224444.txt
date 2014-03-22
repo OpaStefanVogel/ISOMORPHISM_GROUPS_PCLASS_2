@@ -529,7 +529,8 @@ Alle Prints und so zurück und mal weng laufenlassen...
       dass wohl doch die neuen Wegspitzen nicht funktionieren
       Die alten mache ich aber nicht wieder her, 
       sondern versuche stattdessen ein anderes DDDD
-      
+   .. auf mit NEUWEGLAENGE.
+   
 T(32);
 T(16);
 XSAMMEL:=[];#nur anfangs einmal
@@ -552,7 +553,7 @@ XMERKZAHL;
 XSAMMEL1:=StructuralCopy(XSAMMEL);;
 
 XSAMMEL:=[];#nur anfangs einmal
-DDDDBIT:=1;#ausführliche Variante
+DDDDBIT:=1;#ausfuehrliche Variante
 G:=SmallGroup(16,14);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,11);
