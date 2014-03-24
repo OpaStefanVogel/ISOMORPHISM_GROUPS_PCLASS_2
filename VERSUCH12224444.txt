@@ -163,7 +163,30 @@ for i1 in IS do i2:=i1;
   od;
 XSAMMEL512:=StructuralCopy(XSAMMEL);;
 
-IS:=[4,3,2,1];
+#nachfolgendes ging bis:
+#"Gruppe [ 256, 55969 ] fehlt noch ......................
+#Gruppe [ 256, 55969 ] jetzt drin .Error, exceeded the permitted memory (`-o' command line option) in
+#also da muss noch eine Lösung her.
+#einzeln erhalte ich aus 444444444
+             7 [ 2, 2, 2, 2, 2, 2, 2 ] 16 [64] 128 [ 128, 2326 ]
+               8 [ 2, 2, 2, 2, 2, 2, 1, 1 ] 64 [125] 0 [ 256, 56091 ]
+               8 [ 2, 2, 2, 2, 2, 2, 2, 2 ] 64 [128] 128 [ 256, 56089 ]
+                 9 [ 256, 256, 256, 256, 256, 256, 256, 256, 255 ] 128 [128] 
+#einzeln erhalte ich aus 444444442 Error out of memory:
+4 4 4 4 4 4 4 4 23........
+Gruppe [ 256, 55782 ] fehlt noch ....
+Gruppe [ 128, 2194 ] fehlt noch ...............................................................................................................................
+Gruppe [ 128, 2194 ] jetzt drin
+Gruppe [ 128, 2164 ] fehlt noch ...............................................................................................................................
+Gruppe [ 128, 2164 ] jetzt drin ...........................................................................................................................................................................................................................................................
+Gruppe [ 256, 55782 ] jetzt drin
+Gruppe [ 256, 55969 ] fehlt noch ...............................................................................................................................................................................................................................................................
+Gruppe [ 256, 55969 ] jetzt drin .....................................gap: cannot extend the workspace any more!
+#Prognose aus n=32:
+#44444
+#44442
+#44432
+#44431
 for i1 in IS do i2:=i1; i3:=i1;
 #  for i2 in IS do
 #    for i3 in IS do
@@ -172,10 +195,13 @@ for i1 in IS do i2:=i1; i3:=i1;
           for i6 in IS do
             for i7 in IS do
               for i8 in IS do
-                Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8,"\c");
-                R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8]];
-                G:=PcgsOfR(R);
-                Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+                for i9 in IS do inh:=inh+1;
+                  Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8," ",i9,"\c");
+                  R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8,i9]];
+                  G:=PcgsOfR(R);
+                  Print(" inh=",inh,"\c");RMAXSUCH(G);
+                  Print("\007");Error("Pause");
+                  od;
                 od;
               od;
             od;
@@ -186,6 +212,55 @@ for i1 in IS do i2:=i1; i3:=i1;
   od;
 XSAMMEL512A:=StructuralCopy(XSAMMEL);;
 XSAMMEL:=XSAMMEL512A;;
+
+#>kurzversion n=32:
+XSAMMEL:=[];#nur anfangs einmal
+IS:=[4,3,2,1];
+for i1 in IS do i2:=i1; i3:=i1;
+      for i4 in IS do
+        for i5 in IS do
+          Print("\n",i1," ",i2," ",i3," ",i4," ",i5);
+          R:=[[1],[1,1],[2,2,2],[2,2,2,2],[i1,i2,i3,i4,i5]];
+          G:=PcgsOfR(R);
+          Print(IdSmallGroup(G),"\c");RMAXSUCH(G);
+          od;
+        od;
+  od;
+oder nur
+XSAMMEL:=[];#nur anfangs einmal
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[4,4,4,4,4]];G:=PcgsOfR(R);Print(IdSmallGroup(G),"\c");RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#wird [ 16, 16, 16, 16, 15 ] 5 19
+Gruppe [ 16, 4 ] jetzt drin 
+Gruppe [ 16, 2 ] jetzt drin 
+Gruppe [ 16, 12 ] jetzt drin ...........................5
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[4,4,4,4,2]];G:=PcgsOfR(R);Print(IdSmallGroup(G),"\c");RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#wird [ 2, 2, 1, 16, 16 ] 11 54
+ Gruppe [ 16, 4 ] jetzt drin 
+Gruppe [ 16, 3 ] jetzt drin 
+ Gruppe [ 16, 12 ] jetzt drin 
+Gruppe [ 16, 10 ] jetzt drin ...........................11
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[4,4,4,3,2]];G:=PcgsOfR(R);Print(IdSmallGroup(G),"\c");RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#wird [ 2, 2, 2, 16, 15 ] 5 20
+wie bei 44444 3 Stück 4 2 12
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[4,4,4,3,1]];G:=PcgsOfR(R);Print(IdSmallGroup(G),"\c");RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#wird [ 1, 1, 1, 16, 15 ] 7 41
+ Gruppe [ 16, 3 ] jetzt drin 
+ Gruppe [ 16, 2 ] jetzt drin 
+ Gruppe [ 16, 12 ] jetzt drin 
+Gruppe [ 16, 11 ] jetzt drin ...........................7
+###dasselbe jetzt für n=512:
+XSAMMEL:=[];#nur anfangs einmal
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#?wird [ 16, 16, 16, 16, 15 ] 5 19
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#?wird [ 2, 2, 1, 16, 16 ] 11 54
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#?wird [ 2, 2, 2, 16, 15 ] 5 20
+Gruppe [ 256, 55991 ] fehlt noch .......
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+#?wird [ 1, 1, 1, 16, 15 ] 7 41
+Gruppe [ 256, 55990 ] fehlt noch .......
+
 
 2 Ergebnisse:
 - bei weitem nicht alle i1...i5 bilden eine Gruppe, ach ja, die ersten drei i1=i2=i3 sind ja gleich!!!
@@ -583,5 +658,6 @@ RMAXSUCH(G);time;
 XMERKZAHL;#14 wie auch bisher schon
 
 XSAMMEL=XSAMMEL1;
-XSAMMELVIEWER1(XSAMMEL1);
+XSAMMELVIEWER3(XSAMMEL);
+XSAMMELVIEWER3(XSAMMEL1);
 
