@@ -307,49 +307,41 @@ QY13:=function(C,S,nn,ZEIGER,NW)
       HRES:=List(ZR[1]);RMAX[S]:=ZR[5];ZR3MERK:=ZR[3];
       if ZR[5]=0 then RMAX[S]:=Size(ZR[2])+1; fi;
       if 2*nn<n then 
-       if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
-       RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
-       else
-        WEGMERKER:=RMAX{[1..S]};
-        if ZR3MERK<>0 then #RDRIN=0
-          HRES0MERK:=List(HRES0);
-          HRES0:=List(HRES);
-          CLIST:=[Identity(C)];
-          for i in Reversed(HRES0) do
-            for j in [1..Size(CLIST)] do
-              Add(CLIST,i*CLIST[j]);
-              od; od;
-          XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
-          QY12(C,1,1);
-          QY14();
-          QY15(ZR[2],XMERK[S]);
-          XMERKZAHL:=XMERKZAHL+1;
-          ALLERANFANGSBIT:=-1;
-          ZR:=QY21MINI(HRES0,S,nn,ZEIGER,PNEU);
-          RMAX[S]:=ZR[5];
-          DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
-          HRES0:=HRES0MERK;
-#if NW=S-1 then Print("\n"); fi;
-#Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
-#Print(DDDD," ",HRESEXT,"|","HRES ");
-#Print("*************");
-#Print(RBIT," ");
-          else
-            DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
-#if NW=S-1 then Print("\n"); fi;
-#Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
-#Print(DDDD," ",HRESEXT,"|","HRES ");
-#if DDDDBIT=1 then DDDD:=false; fi;
-#Print(RBIT," ");
-            if DDDD then RBIT:=-1; ALLERANFANGSBIT:=-1; else
-              if ALLERANFANGSBIT=0 then
-                RBIT:=-1; 
-                ALLERANFANGSBIT:=-1;
-                fi;
-              fi; ### (if DDDD=99 then)
-          fi; ### (if ZR3MERK<>0 then)
+        if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
+        RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
+        else
+          if ZR3MERK<>0 then #RDRIN=0
+            HRES0MERK:=List(HRES0);
+            HRES0:=List(HRES);
+            CLIST:=[Identity(C)];
+            for i in Reversed(HRES0) do
+              for j in [1..Size(CLIST)] do
+                Add(CLIST,i*CLIST[j]);
+                od; od;
+            XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
+            QY12(C,1,1);
+            QY14();
+            QY15(ZR[2],XMERK[S]);
+            XMERKZAHL:=XMERKZAHL+1;
+            ZR:=QY21MINI(HRES0,S,nn,ZEIGER,PNEU);
+            RMAX[S]:=ZR[5];
+            DDDD:=QY07NEU(WEGEBAUM,RMAX,S,1);#1 statt NW
+            HRES0:=HRES0MERK;
+            else
+              DDDD:=QY07NEU(WEGEBAUM,RMAX,S,1);#1 statt NW
+if DDDDBIT=0 then 
+              if DDDD or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
+fi;
+              fi; ### (if ZR3MERK<>0 then)
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
-        fi; ### (if 2*nn<n) 
+if DBIT=1 then
+if NW=S-1 then Print("\n"); fi;
+Print("\n",NW,RMAX{[1..S]}," ",ZR3MERK," ");
+Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
+if ZR3MERK=-1 then Print("***************"); fi;
+fi;
+          ALLERANFANGSBIT:=-1;
+          fi; ### (if 2*nn<n) 
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
       ERSTBIT:=-1;
       HRES:=List(HRESMERK3);
