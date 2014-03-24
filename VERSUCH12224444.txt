@@ -698,3 +698,17 @@ ok mit altem WEGMERK (Size+i) von 8 auf 0,5h !!! -->Speichern!!!
 2[ 1, 1, 4, 2, 1 ][ 1 ] 0 true   [ f1*f5, f4*f5, f2*f3*f5, f5, f3 ]|HRES 0 .
 3[ 1, 1, 4, 2, 5 ][ 1 ] 0 true   [ f2*f3, f4*f5, f1, f5, f3 ]|HRES 0 
 
+ok die Umstellung QY12 vor QY21MINI.
+.. offensichtlich sind in einem true-Block noch einzelne false drin
+   jedoch keine neuen *****, also könnte ich WEGMERKER
+   noch ein wenig allgemeiner machen. hier:
+
+4[ 1, 1, 1, 1, 285 ][ 1 ] 0 true  [ f3, f2, f4, f5, f1 ]|HRES 0 
+2[ 1, 1, 1, 1, 157 ][ 1 ] 0 false [ f3, f2, f4*f5, f5, f1 ]|HRES 0 
+1[ 1, 1, 1, 1, 637 ][ 1 ] 0 false [ f3, f4, f5, f2, f1 ]|HRES 0 
+1[ 1, 1, 1, 1, 469 ][ 1 ] 0 false [ f3, f5, f4, f2, f1 ]|HRES 0 
+3[ 1, 1, 1, 1, 509 ][ 1 ] 0 false [ f3, f4*f5, f2, f5, f1 ]|HRES 0 
+2[ 1, 1, 1, 8, 5 ]  [ 1 ] 0 false [ f3, f4*f5, f5, f1, f2 ]|HRES 0 
+1[ 1, 1, 1, 1, 633 ][ 1 ] 0 false [ f3, f4*f5, f5, f2, f1 ]|HRES 0 
+1[ 1, 1, 1, 60, 3 ] [ 1 ] 0 false [ f3, f4*f5, f5, f1*f2*f4, f2 ]|HRES 0 
+
