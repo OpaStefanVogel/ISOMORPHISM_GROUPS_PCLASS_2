@@ -310,6 +310,7 @@ QY13:=function(C,S,nn,ZEIGER,NW)
        if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
        RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
        else
+if NW=S-1 then Print("\n"); fi;
 Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
         WEGMERKER:=RMAX{[1..S]};
         DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
@@ -489,7 +490,35 @@ XSAMMELVIEWER:=function(XSAMMEL)
     fi; od;
   end;
 #XSAMMELVIEWER(XSAMMEL);
-XSAMMELVIEWER0:=function(XSAMMEL)
+XSAMMELVIEWER1:=function(XSAMMEL)
+  local i,S,LEER;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  if Size(XSAMMEL)>0 then for i in XSAMMEL{[Size(XSAMMEL)]} do  
+    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ");#die Einrückung
+    Print(UMKEHRLIST(i[1])," ");#PNEU
+    Print(i[2]," ");
+    if IsBound(i[5]) then 
+      Print(i[5][2]," "); 
+      Print("(",i[14],") ");#steht in Wegebaum dann
+      else
+        if IsBound(i[12]) then 
+          if IsBound(i[12][7]) then 
+            Print("===> ",i[12][7]," "); 
+            else Print("===> ???");
+            fi;
+          else 
+            if IsBound(i[7]) then 
+              Print("<=== ",i[7]," "); 
+              else Print("<=== ???");
+              fi;
+            fi;
+        Print("(",i[14],") ");#steht in Wegebaum dann
+        XSAMMELVIEWER1(i[6]);
+        fi;
+    od; fi;
+  end;
+
+XSAMMELVIEWER2:=function(XSAMMEL)
   local i,S,LEER;
   S:=Size(XSAMMEL);LEER:="                  ";
   for i in XSAMMEL do  
@@ -501,47 +530,21 @@ XSAMMELVIEWER0:=function(XSAMMEL)
       Print("(",i[14],") ");#steht in Wegebaum dann
       else
         if IsBound(i[12]) then 
-          Print("===> ",i[12][7]," "); 
+          if IsBound(i[12][7]) then 
+            Print("===> ",i[12][7]," "); 
+            else Print("===> ???");
+            fi;
           else 
-            Print("<=== ",i[7]," "); 
+            if IsBound(i[7]) then 
+              Print("<=== ",i[7]," "); 
+              else Print("<=== ???");
+              fi;
             fi;
         Print("(",i[14],") ");#steht in Wegebaum dann
-        XSAMMELVIEWER0(i[6]);
+        XSAMMELVIEWER2(i[6]);
         fi;
     od;
   end;
-
-XSAMMELVIEWER1:=function(XSAMMEL)
-  local i,S,LEER;
-  S:=Size(XSAMMEL);LEER:="                  ";
-  for i in XSAMMEL do  
-    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ");#die Einrückung
-    Print(UMKEHRLIST(i[1])," ");#PNEU
-if IsBound(i[2]) then Print(i[2]," "); else Print(" #2 "); fi;#???
-#    Print(i[3]," ");#klein phi
-if IsBound(i[5]) then Print("==>",UMKEHRLIST(i[5][1]),i[5][2],i[5][7]," "); else Print(" #5 "); fi;#???
-#    Print("\n",i[1],i[5]," ",i[8]," ",S,IdSmallGroup(Group(i[2])));
-#    Print(IdSmallGroup(Group(i[2])));
-    if IsBound(i[6]) then 
-      Print(Size(i[6])," ",i[7],"<=k",i[8]);#,UMKEHRLIST(i[13][1]),i[13][2]);
-#if IsBound(i[10]) then Print(i[10]," "); else Print(" [] "); fi;#???
-if IsBound(i[12]) then Print("===>",UMKEHRLIST(i[12][1]),i[12][2],i[12][7]," "); else Print(" ##12 "); fi;#???
-      Print(">",i[14]," ");#??
-      XSAMMELVIEWER1(i[6]); fi;
-    od;
-  end;
-
-XSAMMELVIEWER2:=function(XSAMMEL)
-  local i,S,LEER;
-  S:=Size(XSAMMEL);LEER:="                  ";
-  for i in XSAMMEL do if IsBound(i[6]) then 
-    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ",UMKEHRLIST(i[1])," ",i[8]," ",i[7][2]," ",Size(i[6]));
-#    Print("\n",i[1],i[5]," ",i[8]," ",S,IdSmallGroup(Group(i[2])));
-#    Print(IdSmallGroup(Group(i[2])));
-    XSAMMELVIEWER2(i[6]);
-    fi; od;
-  end;
-#XSAMMELVIEWER2(XSAMMEL);
 
 XSAMMELVIEWER3:=function(XSAMMEL)
   local i,ii,S,LEER,STUFE;

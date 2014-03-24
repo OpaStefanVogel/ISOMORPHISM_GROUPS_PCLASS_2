@@ -258,7 +258,11 @@ R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2
 #?wird [ 2, 2, 2, 16, 15 ] 5 20
 Gruppe [ 256, 55991 ] jetzt drin 
 Gruppe [ 256, 55800 ] jetzt drin 
-Gruppe [ 256, 55969 ] fehlt noch ...hängt momentan 10h bei [128,2161]
+Gruppe [ 256, 55969 ] jetzt drin 
+Gruppe [ 256, 55783 ] jetzt drin 
+Gruppe [ 256, 55840 ] jetzt drin 
+Gruppe [ 256, 55639 ] jetzt drin
+Gruppe [ 256, 56089 ] jetzt drin 1h14%20%.2h33%2410708 9 [ 2, 2, 2, 2, 2, 2, 2, 256, 255 ] Pcgs
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 1, 1, 1, 16, 15 ] 7 41
 Gruppe [ 256, 55990 ] jetzt drin 
@@ -681,6 +685,7 @@ nö nö dazu kann ich erstmal die Wegspitze generell nullsetzen nö
    dann die Restweglänge deaktivieren
    Schwupp und da hab ich wieder meine XMERKZAHL=14 bei DDDDBIT=0
 .. !!das erste RMAX[S]:=Size(ZR[2])+1 muss aber noch korrigiert werden
+   !!! ja das muss ich machen, ich versuche QY12 vor QY10NEU zu bringen
 ok mit altem WEGMERK (Size+i) von 8 auf 0,5h !!! -->Speichern!!!
 2[ 1, 1, 1, 18, 1 ][ 1 ] 0 false [ f1, f4, f5, f2, f3 ]|HRES 0 
 2[ 1, 1, 1, 18, 1 ][ 1 ] 0 true  [ f2, f4, f5, f1, f3 ]|HRES 0 
@@ -692,3 +697,4 @@ ok mit altem WEGMERK (Size+i) von 8 auf 0,5h !!! -->Speichern!!!
 2[ 1, 1, 1, 22, 7 ][ 1 ] 0 false [ f2, f4, f5, f1, f3 ]|HRES 0 
 2[ 1, 1, 4, 2, 1 ][ 1 ] 0 true   [ f1*f5, f4*f5, f2*f3*f5, f5, f3 ]|HRES 0 .
 3[ 1, 1, 4, 2, 5 ][ 1 ] 0 true   [ f2*f3, f4*f5, f1, f5, f3 ]|HRES 0 
+
