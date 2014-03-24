@@ -681,12 +681,14 @@ XSAMMELVIEWER3(XSAMMEL1);
    Konkret sind im obigen [32,27] folgende gleich, 
    welche eigentlich verschieden sein müssten
 nö nö dazu kann ich erstmal die Wegspitze generell nullsetzen nö
-.. als erstes in Q15 wieder aufwärts Zählen
-   dann die Restweglänge deaktivieren
+ok als erstes in Q15 wieder aufwärts Zählen
+nö dann die Restweglänge deaktivieren nö bleibt für Print
    Schwupp und da hab ich wieder meine XMERKZAHL=14 bei DDDDBIT=0
-.. !!das erste RMAX[S]:=Size(ZR[2])+1 muss aber noch korrigiert werden
+ok !!das erste RMAX[S]:=Size(ZR[2])+1 muss aber noch korrigiert werden
    !!! ja das muss ich machen, ich versuche QY12 vor QY10NEU zu bringen
 ok mit altem WEGMERK (Size+i) von 8 auf 0,5h !!! -->Speichern!!!
+ok ist gut geworden heute das alles. Fin.
+
 2[ 1, 1, 1, 18, 1 ][ 1 ] 0 false [ f1, f4, f5, f2, f3 ]|HRES 0 
 2[ 1, 1, 1, 18, 1 ][ 1 ] 0 true  [ f2, f4, f5, f1, f3 ]|HRES 0 
 

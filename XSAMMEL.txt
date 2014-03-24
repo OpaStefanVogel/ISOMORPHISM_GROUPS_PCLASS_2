@@ -333,6 +333,7 @@ if DDDDBIT=0 then
               if DDDD or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
 fi;
               fi; ### (if ZR3MERK<>0 then)
+          ALLERANFANGSBIT:=-1;
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
 if DBIT=1 then
 if NW=S-1 then Print("\n"); fi;
@@ -340,7 +341,6 @@ Print("\n",NW,RMAX{[1..S]}," ",ZR3MERK," ");
 Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
-          ALLERANFANGSBIT:=-1;
           fi; ### (if 2*nn<n) 
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
       ERSTBIT:=-1;
