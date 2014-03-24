@@ -256,10 +256,14 @@ R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2
 #?wird [ 2, 2, 1, 16, 16 ] 11 54
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 2, 2, 2, 16, 15 ] 5 20
-Gruppe [ 256, 55991 ] fehlt noch .......
+Gruppe [ 256, 55991 ] jetzt drin 
+Gruppe [ 256, 55800 ] jetzt drin 
+Gruppe [ 256, 55969 ] fehlt noch ...hängt momentan 10h bei [128,2161]
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 1, 1, 1, 16, 15 ] 7 41
-Gruppe [ 256, 55990 ] fehlt noch .......
+Gruppe [ 256, 55990 ] jetzt drin 
+Gruppe [ 256, 55800 ] jetzt drin 
+Gruppe [ 256, 55975 ] fehlt noch .....
 
 
 2 Ergebnisse:
@@ -661,3 +665,30 @@ XSAMMEL=XSAMMEL1;
 XSAMMELVIEWER3(XSAMMEL);
 XSAMMELVIEWER3(XSAMMEL1);
 
+.. neuer Ansatz: ich trage die Restweglänge erst nach kompletten 
+   Durchlaufen der Teilstruktur in den Wegebaum ein. Ist eine kleine Hoffnung
+   nee geht wohl auch nicht, damit bekomme ich nicht die folgende 2[....18,1] hin
+   aber mit dieser Liste erhalte ich eine neue Idee:
+.. also gut, mit dem jetzigen WEGMERKER sind zwei 
+   definitiv verschiedene Teilstrukturen
+   nicht mehr Wegedisjunkt. Das war vorher mal anders. 
+   Deshalb WEGMERKER wieder zurück auf die Elementnummern
+   und in die Wegspitze das PNEU rein.
+   Konkret sind im obigen [32,27] folgende gleich, 
+   welche eigentlich verschieden sein müssten
+nö nö dazu kann ich erstmal die Wegspitze generell nullsetzen nö
+.. als erstes in Q15 wieder aufwärts Zählen
+   dann die Restweglänge deaktivieren
+   Schwupp und da hab ich wieder meine XMERKZAHL=14 bei DDDDBIT=0
+.. !!das erste RMAX[S]:=Size(ZR[2])+1 muss aber noch korrigiert werden
+ok mit altem WEGMERK (Size+i) von 8 auf 0,5h !!! -->Speichern!!!
+2[ 1, 1, 1, 18, 1 ][ 1 ] 0 false [ f1, f4, f5, f2, f3 ]|HRES 0 
+2[ 1, 1, 1, 18, 1 ][ 1 ] 0 true  [ f2, f4, f5, f1, f3 ]|HRES 0 
+
+2[ 1, 1, 2, 1, 1 ][ 1 ] 0 false [ f1*f5, f4*f5, f2*f3*f5, f5, f3 ]|HRES 0 .
+3[ 1, 1, 2, 1, 1 ][ 1 ] 0 false [ f2*f3, f4*f5, f1, f5, f3 ]|HRES 0 
+
+2[ 1, 1, 1, 22, 3 ][ 1 ] 0 false [ f1, f4, f5, f2, f3 ]|HRES 0 
+2[ 1, 1, 1, 22, 7 ][ 1 ] 0 false [ f2, f4, f5, f1, f3 ]|HRES 0 
+2[ 1, 1, 4, 2, 1 ][ 1 ] 0 true   [ f1*f5, f4*f5, f2*f3*f5, f5, f3 ]|HRES 0 .
+3[ 1, 1, 4, 2, 5 ][ 1 ] 0 true   [ f2*f3, f4*f5, f1, f5, f3 ]|HRES 0 

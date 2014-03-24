@@ -115,23 +115,10 @@ QY07NEU:=function(WEGEBAUM,WEGMERKER,S,NW)#fügt WEGMERKER,PNEU ein, wenn nicht 
     j:=WEGMERKER[S+1-i];
     if not IsBound(ZEIGER[j]) then
       ZEIGER[j]:=[];
+      DRINBIT:=false;
       if i=S then WEGEZAHL:=WEGEZAHL+1; fi;
       fi;
-    if i=S then 
-      if ZEIGER[j]=[] then 
-        DRINBIT:=false;
-        ZEIGER[j]:=NW;
-        else 
-          if ZEIGER[j]<NW then 
-            DRINBIT:=false;
-            fi;
-          if ZEIGER[j]>NW+1 then 
-            DRINBIT:=false;
-            fi;
-          fi;
-      else 
-        ZEIGER:=ZEIGER[j];
-        fi;
+    if i<S then ZEIGER:=ZEIGER[j]; fi;
     od;
 #Print("\n",WEGEBAUM);
   return DRINBIT;
@@ -252,19 +239,19 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   local POS,i,ii,ZMERK,ZSIZE;
-  ZSIZE:=Size(ZEIGER)+1;
+  ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
   Add(ZEIGER,StructuralCopy(XM[1]),POS);
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
-  ZEIGER[POS][14]:=ZSIZE;
+  ZEIGER[POS][14]:=ZSIZE+1;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
   for i in [2..Size(XM)] do
     ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
     Add(ZEIGER,StructuralCopy(XM[i]),ii);
     ZEIGER[ii][5]:=ZMERK;
-    ZEIGER[ii][14]:=ZSIZE;
+    ZEIGER[ii][14]:=ZSIZE+i;
     od;
   end;
 #QY16 und QY17 raus
@@ -323,10 +310,10 @@ QY13:=function(C,S,nn,ZEIGER,NW)
        if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
        RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
        else
-#Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
+Print("\n",NW,RMAX{[1..S]},[Size(ZR[2])]+1," ",ZR3MERK," ");
         WEGMERKER:=RMAX{[1..S]};
-        DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,NW);
-#Print(DDDD," ",HRESEXT,"|","HRES ");
+        DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
+Print(DDDD," ",HRESEXT,"|","HRES ");
 if DDDDBIT=1 then DDDD:=false; fi;
         if DDDD then RBIT:=-1; ALLERANFANGSBIT:=-1; else
           if ZR3MERK<>0 then #RDRIN=0
@@ -344,7 +331,7 @@ if DDDDBIT=1 then DDDD:=false; fi;
             XMERKZAHL:=XMERKZAHL+1;
             HRES0:=HRES0MERK;
             ALLERANFANGSBIT:=-1;
-#Print("*************");
+Print("*************");
             else
               if ALLERANFANGSBIT=0 then
                 RBIT:=-1; 
@@ -352,7 +339,7 @@ if DDDDBIT=1 then DDDD:=false; fi;
                 fi;
               fi; ### (if ZR3MERK<>0 then)
           fi; ### (if DDDD=99 then)
-#Print(RBIT," ");
+Print(RBIT," ");
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
         fi; ### (if 2*nn<n) 
       if ERSTBIT=0 then RDRIN:=RBIT; fi;
@@ -511,11 +498,12 @@ XSAMMELVIEWER0:=function(XSAMMEL)
     Print(i[2]," ");
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
+      Print("(",i[14],") ");#steht in Wegebaum dann
       else
         if IsBound(i[12]) then 
-          Print("=> ",i[12][7]," "); 
+          Print("===> ",i[12][7]," "); 
           else 
-            Print(i[7],"<= "); 
+            Print("<=== ",i[7]," "); 
             fi;
         Print("(",i[14],") ");#steht in Wegebaum dann
         XSAMMELVIEWER0(i[6]);
