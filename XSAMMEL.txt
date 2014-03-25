@@ -51,7 +51,7 @@ XSAMMEL:=[];
 XMERKZAHL:=0;XMERKZAHLVEKTOR:=[];COUNTER:=0;
 LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];;
 
-RMAX:=[];WEGEBAUM:=[];WEGEZAHL:=0;
+WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
@@ -136,7 +136,7 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
-        WEGEBAUMMERK,WEGEZAHLMERK,RMAXMERK;
+        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -147,7 +147,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   RM:=List(R);
   WEGEBAUMMERK:=StructuralCopy(WEGEBAUM);
   WEGEZAHLMERK:=WEGEZAHL;
-  RMAXMERK:=StructuralCopy(RMAX);
+  WEGLIMERK:=StructuralCopy(WEGLI);
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -158,7 +158,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   R:=RM;
   WEGEBAUM:=WEGEBAUMMERK;
   WEGEZAHL:=WEGEZAHLMERK;
-  RMAX:=RMAXMERK;
+  WEGLI:=WEGLIMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -304,8 +304,7 @@ QY13:=function(C,S,nn,ZEIGER,NW)
       R[S]:=List(PNEU);
       HRESMERK3:=List(HRES);
       ZR:=QY21MINI(HRES,S,nn,ZEIGER,PNEU);
-      HRES:=List(ZR[1]);RMAX[S]:=ZR[5];ZR3MERK:=ZR[3];
-      if ZR[5]=0 then RMAX[S]:=Size(ZR[2])+1; fi;
+      HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
         if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
         RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
@@ -324,11 +323,12 @@ QY13:=function(C,S,nn,ZEIGER,NW)
             QY15(ZR[2],XMERK[S]);
             XMERKZAHL:=XMERKZAHL+1;
             ZR:=QY21MINI(HRES0,S,nn,ZEIGER,PNEU);
-            RMAX[S]:=ZR[5];
-            DDDD:=QY07NEU(WEGEBAUM,RMAX,S,1);#1 statt NW
+            WEGLI[S]:=ZR[5];WEGMERKER:=WEGLI{[1..S]};
+            DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
             HRES0:=HRES0MERK;
             else
-              DDDD:=QY07NEU(WEGEBAUM,RMAX,S,1);#1 statt NW
+              WEGMERKER:=WEGLI{[1..S]};
+              DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
 if DDDDBIT=0 then 
               if DDDD or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
 fi;
@@ -337,7 +337,7 @@ fi;
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
 if DBIT=1 then
 if NW=S-1 then Print("\n"); fi;
-Print("\n",NW,RMAX{[1..S]}," ",ZR3MERK," ");
+Print("\n",NW,WEGLI{[1..S]}," ",ZR3MERK," ");
 Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
@@ -428,7 +428,7 @@ XLEER:=function(XSAMMEL) #fuellt [7][8]
 
 RMAXSUCH:=function(C)
   n:=Size(C);
-  XMERK:=[];HRES:=[];STEP:=1;R:=[];
+  XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;ALLERANFANGSBIT:=0;
   QY13(C,1,1,XSAMMEL,1);
@@ -588,7 +588,7 @@ WEGEDISP:=function(WEG,ZEIGER,S)
     Print("-->",UMKEHRLIST(ZEIG[1]));
     if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
     Print("==>",UMKEHRLIST(ZEIG[1]));
-    if IsBound(ZEIG[6]) then WEGEDISP(WEG,ZEIG[6],S+1); fi;
+    if S<Size(WEG) then WEGEDISP(WEG,ZEIG[6],S+1); fi;
     fi; od;
   end;
 

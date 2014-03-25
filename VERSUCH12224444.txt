@@ -248,12 +248,32 @@ R:=[[1],[1,1],[2,2,2],[2,2,2,2],[4,4,4,3,1]];G:=PcgsOfR(R);Print(IdSmallGroup(G)
  Gruppe [ 16, 2 ] jetzt drin 
  Gruppe [ 16, 12 ] jetzt drin 
 Gruppe [ 16, 11 ] jetzt drin ...........................7
+
 ###dasselbe jetzt für n=512:
 XSAMMEL:=[];#nur anfangs einmal
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 16, 16, 16, 16, 15 ] 5 19
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 2, 2, 1, 16, 16 ] 11 54
+Gruppe [ 256, 55991 ] jetzt drin 
+Gruppe [ 256, 55799 ] jetzt drin 
+Gruppe [ 256, 55975 ] fehlt noch .......dann aber Error Memory bei
+1 [ 1 ] 1 <=== [ 2, 1 ] (1) 
+  2 [ 2, 2 ] 2 <=== [ 4, 1 ] (2) 
+    3 [ 2, 2, 2 ] 4 <=== [ 8, 4 ] (3) 
+      4 [ 2, 2, 2, 2 ] 8 <=== [ 16, 12 ] (1) 
+        5 [ 2, 2, 2, 2, 2 ] 72 <=== [ 32, 50 ] (53) 
+          6 [ 2, 2, 2, 2, 2, 2 ] 32 <=== [ 64, 266 ] (17) 
+            7 [ 2, 2, 2, 2, 2, 2, 1 ] 32 <=== [ 128, 2325 ] (1) 
+              8 [ 2, 2, 2, 2, 2, 2, 98, 98 ] 864 <=== [ 256, 55991 ] (321) 
+                9 [ 2, 2, 2, 2, 2, 2, 2, 2, 1 ] Pcgs(
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,1,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+Gruppe [ 256, 56088 ] jetzt drin Das ist schon der Beweis, dass nicht in den folgenden enthalten
+Gruppe [ 256, 55991 ] jetzt drin 
+Gruppe [ 256, 55799 ] jetzt drin 
+Gruppe [ 256, 55782 ] fehlt noch .......
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 2, 2, 2, 16, 15 ] 5 20
 Gruppe [ 256, 55991 ] jetzt drin 
@@ -263,13 +283,25 @@ Gruppe [ 256, 55783 ] jetzt drin
 Gruppe [ 256, 55840 ] jetzt drin 
 Gruppe [ 256, 55639 ] jetzt drin
 Gruppe [ 256, 56089 ] jetzt drin 1h14%20%.2h33%2410708 9 [ 2, 2, 2, 2, 2, 2, 2, 256, 255 ] 8h54% dann irgendwannERROR Memory
+XMERKZAHL war >=24 und WEGEZAHL>500000
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
-#?wird [ 1, 1, 1, 16, 15 ] 7 41
+#?wird [ 1, 1, 1, 16, 15 ] 7 41---nicht ganz!!!
 Gruppe [ 256, 55990 ] jetzt drin 
-Gruppe [ 256, 55800 ] jetzt drin 
-Gruppe [ 256, 55975 ] fehlt noch .....
-
-
+ Gruppe [ 256, 55800 ] jetzt drin 
+Gruppe [ 256, 55975 ] jetzt drin 
+Gruppe [ 256, 55794 ] jetzt drin 
+Gruppe [ 256, 55847 ] jetzt drin 8,6%
+ Gruppe [ 256, 55840 ] jetzt drin 
+ Gruppe [ 256, 55639 ] jetzt drin 2h3,2%
+ Gruppe [ 256, 56089 ] jetzt drin 
+Gruppe [ 256, 56090 ] jetzt drin >3h24,8%
+versehentlich beendet, aber erstes erhofftes Ergebnis ist da: 9 [ 2, 2, 2, 2, 2, 1, 1, 256, 255 ]
+ich muss aber dabei [1,1... als [1,... lesen!!! Dann stimmt es. Das war knapp!!!! Hätt ich beihnahe übersehen. Also geht weiter.
+XMERKZAHL=45 bis hierher, WEGEZAHL=1426211
+[4,4,4,4,4][ 16, 16, 16, 16, 15 ][256,256,256,256,256,256,256,256,256]
+[4,4,4,4,2]   [ 2, 2, 1, 16, 16 ]????[ 2, 2, 2, 2, 2, 2, 1, 256, 256 ]
+[4,4,4,3,2]   [ 2, 2, 2, 16, 15 ][ 2, 2, 2, 2, 2, 2, 2, 256, 255 ]
+[4,4,4,3,1]   [ 1, 1, 1, 16, 15 ][ 2, 2, 2, 2, 2, 1, 1, 256, 255 ]
 2 Ergebnisse:
 - bei weitem nicht alle i1...i5 bilden eine Gruppe, ach ja, die ersten drei i1=i2=i3 sind ja gleich!!!
     aber außer wo i1=i2=2, da kann und muss auch i3=1 sein!!!
@@ -666,7 +698,7 @@ RMAXSUCH(G);time;
 XMERKZAHL;#14 wie auch bisher schon
 
 XSAMMEL=XSAMMEL1;
-XSAMMELVIEWER3(XSAMMEL);
+XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER3(XSAMMEL1);
 
 nö neuer Ansatz: ich trage die Restweglänge erst nach kompletten 
@@ -712,5 +744,46 @@ ok die Umstellung QY12 vor QY21MINI.
 1[ 1, 1, 1, 1, 633 ][ 1 ] 0 false [ f3, f4*f5, f5, f2, f1 ]|HRES 0 
 1[ 1, 1, 1, 60, 3 ] [ 1 ] 0 false [ f3, f4*f5, f5, f1*f2*f4, f2 ]|HRES 0 
 
+nö auch mal 3 und 4 nach 256 einsortieren? nö, bringt trotzdem die 15 16
 .. zu diesem Zweck Bilden einer Gruppe entlang eines vorgegebenen Weges
-.. als Anfang WEGEDISP(WEG)
+   ok als Anfang WEGEDISP(WEG)
+   .. weiter: neueste Idee, ich mache in jedem Schritt S ein Pcgs
+      und dann die beiden phi Phi Transformationen
+      und dann das nächste R[S] hinzu und damit aich Pcgs und phi Phi
+      und so weiter. Ja, das sieht gut aus.
+   .. außerdem kann ich als Behelf folgendes versuchen:
+      ich gehe davon aus, dass zwar unterschiedliche Teilstrukturen 
+      in jedem Fall disjunkt sind, aber gleiche Teilstrukturen
+      auch unterschiedliche Wege enthalten. Wenn der erste Weg
+      noch nicht enthalten ist, aber der zweite oder dritte,
+      dann kann ich die Durchsuchung der Teilstruktur abbrechen.
+      Damit entfällt ERSTBIT und bin wieder bei einer urzeitlichen Version.
+      Allerdings wenn erst der dritte Weg enthalten ist, so kann dieser
+      der erste Weg der aktuellen Teilstruktur gewesen sein,
+      und das muss ich jetzt irgendwie ausschließen, möglcherweise mit NM.
+   .. für eine endgültige Lösung:
+      das WEGLI entspricht nur auf direktem Weg einem kompletten XMERK
+      Teilstrukturen sind daher komplett unterschiedlich oder komplett gleich
+      wenn alle XMERK unverändert in XSAMMEL gespeichert werden. 
+      Wenn aber Umwege reinkommen, so könnten zwei origional unterschiedliche XMERK
+      in ein einziges XMERK vom komprimierten XSAMMEL münden. Das hatte ich schon mal
+      und jetzt besteht die Aussicht, das endgültig zu packen.
+
+
+[ 1 ]1-->[ 1 ]==>[ 1 ]
+[ 1, 1 ]1-->[ 1, 1 ]==>[ 1, 1 ]
+[ 1, 3, 1 ]4-->[ 1, 4, 4 ]==>[ 1, 1, 1 ]
+[ 1, 1, 2, 1 ]2-->[ 2, 2, 1, 1 ]==>[ 1, 1, 1, 1 ]
+[ 1, 1, 8, 8, 1 ]1-->[ 1, 1, 8, 8, 1 ]==>[ 1, 1, 8, 8, 1 ]
+
+Beispiel:
+T(16);
+R:=[[1],[1,1],[2,2,2],[4,4,4,3]];
+G:=PcgsOfR(R);
+RMAXSUCH(G);IdSmallGroup(G);
+XSAMMELVIEWER2(XSAMMEL);
+IdSmallGroup(G);
+WEGLI;
+WEGEDISP(WEGLI,XSAMMEL,1);#ergibt: R:=[[1],[2,2],[2,2,1],[8,8,7,7]];
+
+.. gesucht ist jetzt die umgekehrte Richtung, 
