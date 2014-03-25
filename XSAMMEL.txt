@@ -109,12 +109,11 @@ QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
   end;
 
 QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
-  local DRINBIT,i,j,ZEIGER;
-  DRINBIT:=true;ZEIGER:=WEGEBAUM;
+  local i,j,ZEIGER;
+  ZEIGER:=WEGEBAUM;
   for i in [1..S] do
     j:=WEGMERKER[S+1-i];
     if not IsBound(ZEIGER[j]) then
-      DRINBIT:=false;
       if i<S then ZEIGER[j]:=[]; else
         WEGEZAHL:=WEGEZAHL+1; 
         ZEIGER[j]:=WEGEZAHL;
@@ -124,7 +123,7 @@ QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht dri
     ZEIGER:=ZEIGER[j];
     od;
 #Print("\n",WEGEBAUM);
-  return [DRINBIT,WEGEARRAY[ZEIGER]];
+  return WEGEARRAY[ZEIGER];
   end;
 
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
@@ -331,7 +330,8 @@ QY13:=function(C,S,nn,ZEIGER)
             HRES0:=HRES0MERK;
             else
               WEGMERKER:=WEGLI{[1..S]};
-              DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S);
+              if WEGEZAHL=0 then DDDD:=0; else
+                DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S); fi;
               fi; ### (if ZR3MERK<>0 then)
           RBIT:=DDDD;
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
@@ -341,7 +341,7 @@ Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
           fi; ### (if 2*nn<n) 
-      if RBIT[2]<=S then 
+      if RBIT<=S then 
         RDRIN:=-1; 
 if DBIT=1 then Print("###"); fi;
         fi;

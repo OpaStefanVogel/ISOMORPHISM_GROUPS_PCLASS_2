@@ -798,6 +798,11 @@ ok also denn mal los, rein mit der 4533R
       ....hier muss noch Ergänzung rein....
       ansonsten funktioniert es bis jetzt bestens!!!
       ok Erstbit raus? ja, auch NEUWEGLAENGE und ALLERANFANGSBIT
+      erstaunlich, dass ohne ALLERANFANGSBIT alles automatisch funktioniert 
+      nee, doch nicht, das ALLERANFANGSBIT muss wieder rein.
+      und zwar jetzt einfach als if WEGEZAHL=0
+      außerdem in QY07NEU jetzt DRINBIT raus. 
+      Jetzt wird wieder Platz!!!
 
 [ 1 ]1-->[ 1 ]==>[ 1 ]
 [ 1, 1 ]1-->[ 1, 1 ]==>[ 1, 1 ]
