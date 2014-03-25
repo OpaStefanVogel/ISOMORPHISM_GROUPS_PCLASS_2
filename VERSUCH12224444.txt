@@ -292,6 +292,7 @@ Gruppe [ 256, 55990 ] jetzt drin
 Gruppe [ 256, 55841 ] fehlt noch halt, das kann ja p-class>2 sein!!!
 also gleich mit der richtigen anfangen:
  R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+Gruppe [ 256, 56088 ] fehlt noch .......
 
 inh:=444444432;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
@@ -695,7 +696,7 @@ XSAMMELVIEWER1(XSAMMEL);
 WEGEZAHL;
 
 XSAMMEL:=[];#nur anfangs einmal
-DDDDBIT:=0;#kurze Variante
+DDDDBIT:=0;DBIT:=1;#kurze Variante
 G:=SmallGroup(16,14);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,11);
@@ -773,7 +774,7 @@ nö auch mal 3 und 4 nach 256 einsortieren? nö, bringt trotzdem die 15 16
       und dann die beiden phi Phi Transformationen
       und dann das nächste R[S] hinzu und damit aich Pcgs und phi Phi
       und so weiter. Ja, das sieht gut aus.
-   .. außerdem kann ich als Behelf folgendes versuchen:
+   vv außerdem kann ich als Behelf folgendes versuchen:
       ich gehe davon aus, dass zwar unterschiedliche Teilstrukturen 
       in jedem Fall disjunkt sind, aber gleiche Teilstrukturen
       auch unterschiedliche Wege enthalten. Wenn der erste Weg
@@ -790,9 +791,13 @@ nö auch mal 3 und 4 nach 256 einsortieren? nö, bringt trotzdem die 15 16
       Wenn aber Umwege reinkommen, so könnten zwei origional unterschiedliche XMERK
       in ein einziges XMERK vom komprimierten XSAMMEL münden. Das hatte ich schon mal
       und jetzt besteht die Aussicht, das endgültig zu packen.
-.. also denn mal los, rein mit der 4533R
-   .. zuerst WEGEZAHL in die Wegspitze rein 
-
+.. die große PositionFirstComponentRepariert-Zeit tritt markant bei [n=64,202] auf
+ok also denn mal los, rein mit der 4533R
+   ok zuerst WEGEZAHL in die Wegspitze rein 
+      ok es muss RBIT[2]<=S heißen, nicht =
+      ....hier muss noch Ergänzung rein....
+      ansonsten funktioniert es bis jetzt bestens!!!
+      ok Erstbit raus? ja, auch NEUWEGLAENGE und ALLERANFANGSBIT
 
 [ 1 ]1-->[ 1 ]==>[ 1 ]
 [ 1, 1 ]1-->[ 1, 1 ]==>[ 1, 1 ]

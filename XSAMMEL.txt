@@ -55,7 +55,7 @@ WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;WEGEARRAY:=[];
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
-ALLERANFANGSBIT:=0;DDDD:=0;DDDDBIT:=0;DBIT:=0;
+DDDD:=0;DDDDBIT:=0;DBIT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -108,7 +108,7 @@ QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
   return PNEU;
   end;
 
-QY07NEU:=function(WEGEBAUM,WEGMERKER,S,NW)#fügt WEGMERKER,PNEU ein, wenn nicht drin
+QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   local DRINBIT,i,j,ZEIGER;
   DRINBIT:=true;ZEIGER:=WEGEBAUM;
   for i in [1..S] do
@@ -293,12 +293,11 @@ QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
   end;
    
-QY13:=function(C,S,nn,ZEIGER,NW)
+QY13:=function(C,S,nn,ZEIGER)
   local i,j,ri,RC, PNEU,GR,HRESMERK, 
         RDRIN,HRESMERK2, WEGMERKER,HRES0MERK,ZR,
-        HRESMERK3,RBIT,ERSTBIT,ZR3MERK,
-        NEUWEGLAENGE;
-  ERSTBIT:=0;RBIT:=0;RDRIN:=0;#ALLERANFANGSBIT:=0;
+        HRESMERK3,RBIT,ZR3MERK;
+  RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
@@ -311,8 +310,7 @@ QY13:=function(C,S,nn,ZEIGER,NW)
       ZR:=QY21MINI(HRES,S,nn,ZEIGER,PNEU);
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
-        if ERSTBIT=0 then NEUWEGLAENGE:=NW+1; else NEUWEGLAENGE:=1; fi;
-        RBIT:=QY13(C,S+1,2*nn,ZR[2],NEUWEGLAENGE); 
+        RBIT:=QY13(C,S+1,2*nn,ZR[2]); 
         else
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
@@ -329,35 +327,30 @@ QY13:=function(C,S,nn,ZEIGER,NW)
             XMERKZAHL:=XMERKZAHL+1;
             ZR:=QY21MINI(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];WEGMERKER:=WEGLI{[1..S]};
-            DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
+            DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S);
             HRES0:=HRES0MERK;
             else
               WEGMERKER:=WEGLI{[1..S]};
-              DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
-if DDDDBIT=0 then 
-              if DDDD[1] or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
-fi;
+              DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S);
               fi; ### (if ZR3MERK<>0 then)
-          ALLERANFANGSBIT:=-1;
           RBIT:=DDDD;
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
 if DBIT=1 then
-if NW=S-1 then Print("\n"); fi;
-Print("\n",NW,WEGLI{[1..S]}," ",ZR3MERK," ");
+Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ");
 Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
           fi; ### (if 2*nn<n) 
-      #if ERSTBIT=0 then RDRIN:=RBIT; fi;
-      ERSTBIT:=-1;
-      if RBIT[2]=S then RDRIN:=-1; fi;
+      if RBIT[2]<=S then 
+        RDRIN:=-1; 
+if DBIT=1 then Print("###"); fi;
+        fi;
       HRES:=List(HRESMERK3);
       fi;
     Remove(HRES,1);
     fi; od;
-  i:=WEGEZAHL;
-  while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
-if DDDDBIT=1 then return 0; else return RBIT; fi;
+  i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
+if DDDDBIT=1 then return [false,9999]; else return RBIT; fi;
   end;
 
 XFUELL:=function(XSAMMEL) #fuellt [7][8]
@@ -440,8 +433,8 @@ RMAXSUCH:=function(C)
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
-  WEGEARRAY:=[];ALLERANFANGSBIT:=0;
-  QY13(C,1,1,XSAMMEL,1);
+  WEGEARRAY:=[];
+  QY13(C,1,1,XSAMMEL);
    XFUELL(XSAMMEL);
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
    XLEER(XSAMMEL);
@@ -856,10 +849,14 @@ XFUELL,XMISCH,XLEER]);
 ##XSAMMEL:=StructuralCopy(XSAMMELMERK_36);;
 #ILIST:=[192..245];QQQY(64);Print("\007");#6
 #  ,,,,,, 4, 4, 7, 17, 21, 
-#  7, 8, 5, 4, 5, 4, 20, 22, 14, 31, 11, 6, 6, 22, 4, 8, 12, 10, 7, 14, 16, 6, 17, 19, 9, 13, 15, 2, 6, 10, 22, 
+#  ,,,,,, 4, 64, 7, 17, 21 (jeweils die untere Zeile mit R=[[1],[1,1]...
+#  7, 8, 5, 4, 5, 4,  20, 22, 14, 31, 11, 6, 6, 22, 4, 8, 12, 10, 7, 14, 16, 6, 17, 19, 9, 13, 15, 2, 6, 10, 22, 
+#  7, 8, 5, 4, 5, 64, 20, 22, 14, 31, 11, 6, 6, 22, 4, 8, 12, 10, 7, 14, 16, 6, 17, 19, 9, 13, 15, 2, 6, 10, 22, 
 #  11, 13, 10, 7, 17, 21, 18, 11, 5, 12, 7, 2, 7, 7, 2, 6, 10, 1 ]715
+#  11, 13, 10, 7, 17, 21, 18, 11, 5, 12, 7, 2, 7, 7, 2, 6, 10, 1 ]893
 #ILIST:=[260..267];QQQY(64);Print("\007");#6
-#  ,,,,,,,, 1, 2, 2, 9, 4, 4, 3, 0 ]740
+#  ,,,,,,,, 1, 2,  2, 9, 4, 4, 3, 0 ]740
+#  ,,,,,,,, 6, 22, 2, 9, 4, 4, 3, 1 ]944
 #XSAMMELVIEWER4(XSAMMEL);
 #DisplayProfile();ClearProfile();
 ##R:=[[1],[2,2],[2,2,1],[2,2,1,1],[2,2,1,1,1],[2,2,1,2,2,14]];
