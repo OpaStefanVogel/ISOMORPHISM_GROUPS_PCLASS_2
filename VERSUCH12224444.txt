@@ -262,7 +262,7 @@ Gruppe [ 256, 55969 ] jetzt drin
 Gruppe [ 256, 55783 ] jetzt drin 
 Gruppe [ 256, 55840 ] jetzt drin 
 Gruppe [ 256, 55639 ] jetzt drin
-Gruppe [ 256, 56089 ] jetzt drin 1h14%20%.2h33%2410708 9 [ 2, 2, 2, 2, 2, 2, 2, 256, 255 ] Pcgs
+Gruppe [ 256, 56089 ] jetzt drin 1h14%20%.2h33%2410708 9 [ 2, 2, 2, 2, 2, 2, 2, 256, 255 ] 8h54% dann irgendwannERROR Memory
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 1, 1, 1, 16, 15 ] 7 41
 Gruppe [ 256, 55990 ] jetzt drin 
@@ -654,7 +654,7 @@ XMERKZAHL;#14 muss rauskommen und nicht 8
 XSAMMEL1:=StructuralCopy(XSAMMEL);;
 
 XSAMMEL:=[];#nur anfangs einmal
-DDDDBIT:=1;#ausfuehrliche Variante
+DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
 G:=SmallGroup(16,14);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,11);
@@ -669,11 +669,11 @@ XSAMMEL=XSAMMEL1;
 XSAMMELVIEWER3(XSAMMEL);
 XSAMMELVIEWER3(XSAMMEL1);
 
-.. neuer Ansatz: ich trage die Restweglänge erst nach kompletten 
+nö neuer Ansatz: ich trage die Restweglänge erst nach kompletten 
    Durchlaufen der Teilstruktur in den Wegebaum ein. Ist eine kleine Hoffnung
    nee geht wohl auch nicht, damit bekomme ich nicht die folgende 2[....18,1] hin
    aber mit dieser Liste erhalte ich eine neue Idee:
-.. also gut, mit dem jetzigen WEGMERKER sind zwei 
+nö also gut, mit dem jetzigen WEGMERKER sind zwei 
    definitiv verschiedene Teilstrukturen
    nicht mehr Wegedisjunkt. Das war vorher mal anders. 
    Deshalb WEGMERKER wieder zurück auf die Elementnummern
@@ -712,6 +712,5 @@ ok die Umstellung QY12 vor QY21MINI.
 1[ 1, 1, 1, 1, 633 ][ 1 ] 0 false [ f3, f4*f5, f5, f2, f1 ]|HRES 0 
 1[ 1, 1, 1, 60, 3 ] [ 1 ] 0 false [ f3, f4*f5, f5, f1*f2*f4, f2 ]|HRES 0 
 
-also wirklich, obwohl XMERKZAHL längst fertig ist, 
-kommen immer noch WEGEZAHLEN hinzu.
-
+.. zu diesem Zweck Bilden einer Gruppe entlang eines vorgegebenen Weges
+.. als Anfang WEGEDISP(WEG)

@@ -55,7 +55,7 @@ RMAX:=[];WEGEBAUM:=[];WEGEZAHL:=0;
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
-ALLERANFANGSBIT:=0;DDDD:=0;DDDDBIT:=0;
+ALLERANFANGSBIT:=0;DDDD:=0;DDDDBIT:=0;DBIT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -578,6 +578,19 @@ XSAMMELVIEWER4:=function(XSAMMEL)#neu aus 3 ohne *
     fi; od;
   end;
 #XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
+
+WEGEDISP:=function(WEG,ZEIGER,S)
+  local PART,ZEIG;
+  for PART in ZEIGER do if PART[14]=WEG[S] then
+    Print("\n",UMKEHRLIST(PART[1]),PART[14]);
+    ZEIG:=PART;
+    if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
+    Print("-->",UMKEHRLIST(ZEIG[1]));
+    if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
+    Print("==>",UMKEHRLIST(ZEIG[1]));
+    if IsBound(ZEIG[6]) then WEGEDISP(WEG,ZEIG[6],S+1); fi;
+    fi; od;
+  end;
 
 T:=function(n)
   DisplayProfile();ClearProfile();
