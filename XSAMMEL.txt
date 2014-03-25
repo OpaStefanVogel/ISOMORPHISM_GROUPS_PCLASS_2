@@ -83,7 +83,7 @@ QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   return RET;
   end;
 
-QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
+QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
   local RET,j;
   RET:=(HRES[1])^2 in GROUP;
   if RET=true then 
@@ -98,7 +98,7 @@ QY10A:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
   return RET;
   end;
 
-QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
+QY11:=function(HRES,S)#bestimmt PNEU aus HRES
   local PNEU,j,pcgs;
   pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]),HRES);
   PNEU:=[QY09(ExponentsOfPcElement(pcgs,pcgs[1]^2))];#RP
@@ -108,7 +108,7 @@ QY11A:=function(HRES,S)#bestimmt PNEU aus HRES
   return PNEU;
   end;
 
-QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
+QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   local i,j,ZEIGER;
   ZEIGER:=WEGEBAUM;
   for i in [1..S] do
@@ -117,7 +117,7 @@ QY07NEU:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht dri
       if i<S then ZEIGER[j]:=[]; else
         WEGEZAHL:=WEGEZAHL+1; 
         ZEIGER[j]:=WEGEZAHL;
-        WEGEARRAY[WEGEZAHL]:=S;
+        WEGEARRAY[WEGEZAHL]:=S+1;
         fi;
       fi;
     ZEIGER:=ZEIGER[j];
@@ -175,7 +175,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
     if SPALTE[S]=S2[S] then S2[S]:=2*S2[S]-1; fi;
     Add(HRES,CLIST[i],1);
 
-    #ist QY10A mit pcgs zurueck:
+    #ist QY10 mit pcgs zurueck:
     pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]),HRES);
     PNEU:=[QY09(ExponentsOfPcElement(pcgs,pcgs[1]^2))];#RP
     for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]) )),2); od;#C
@@ -262,11 +262,11 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
 
 
 #das neue
-QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
+QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR;
   HRES:=List(HRESALT);NICHDRIN:=0;RET:=ZEIGER;RGL:=[];GNR:=0;
   ISO:=QY08(ZEIGER,PNEU);
-##Print("\nQY21MINI:ISO=",ISO);
+##Print("\nQY21:ISO=",ISO);
   if ISO=0 then
     if 2*nn<n then 
       Print("\nGruppe ",IdSmallGroup(Group(HRES))," fehlt noch \c");
@@ -293,20 +293,19 @@ QY21MINI:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   end;
    
 QY13:=function(C,S,nn,ZEIGER)
-  local i,j,ri,RC, PNEU,GR,HRESMERK, 
-        RDRIN,HRESMERK2, WEGMERKER,HRES0MERK,ZR,
-        HRESMERK3,RBIT,ZR3MERK;
+  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN, 
+    HRES0MERK,ZR,RBIT,ZR3MERK;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
     if S=1 then Print(".\c"); fi;
-    if QY10A(HRES,S,GR) then
-      PNEU:=QY11A(HRES,S);
+    if QY10(HRES,S,GR) then
+      PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
-      HRESMERK3:=List(HRES);
-      ZR:=QY21MINI(HRES,S,nn,ZEIGER,PNEU);
+      HRESMERK:=List(HRES);
+      ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
         RBIT:=QY13(C,S+1,2*nn,ZR[2]); 
@@ -324,28 +323,21 @@ QY13:=function(C,S,nn,ZEIGER)
             QY14();
             QY15(ZR[2],XMERK[S]);
             XMERKZAHL:=XMERKZAHL+1;
-            ZR:=QY21MINI(HRES0,S,nn,ZEIGER,PNEU);
-            WEGLI[S]:=ZR[5];WEGMERKER:=WEGLI{[1..S]};
-            DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S);
+            ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
+            WEGLI[S]:=ZR[5];
             HRES0:=HRES0MERK;
-            else
-              WEGMERKER:=WEGLI{[1..S]};
-              if WEGEZAHL=0 then DDDD:=0; else
-                DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S); fi;
-              fi; ### (if ZR3MERK<>0 then)
-          RBIT:=DDDD;
-#if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
+            fi;
+          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
+            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
+#if ZR[3]=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
 if DBIT=1 then
 Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ");
-Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
+Print(RBIT," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
           fi; ### (if 2*nn<n) 
-      if RBIT<=S then 
-        RDRIN:=-1; 
-if DBIT=1 then Print("###"); fi;
-        fi;
-      HRES:=List(HRESMERK3);
+      if RBIT<=S then RDRIN:=-1; fi;
+      HRES:=List(HRESMERK);
       fi;
     Remove(HRES,1);
     fi; od;
@@ -617,11 +609,11 @@ T:=function(n)
    fi;
  end;
 
-ProfileFunctions([QY07NEU,PositionSorted,PositionFirstComponent,
+ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,
 PositionFirstComponentRepariert,QY12,Size,Group,
 StructuralCopy,PcElementByExponentsNC,PcgsByPcSequenceNC,
 ExponentsOfPcElement,RightTransversal,RightCosetsNC,
-QY10A,QY11A,QY08,QY21MINI,QY15,QY14,QY13,QY09,
+QY10,QY11,QY08,QY21,QY15,QY14,QY13,QY09,
 XFUELL,XMISCH,XLEER]);
 
 
