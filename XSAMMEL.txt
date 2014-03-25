@@ -51,7 +51,7 @@ XSAMMEL:=[];
 XMERKZAHL:=0;XMERKZAHLVEKTOR:=[];COUNTER:=0;
 LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];;
 
-WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;
+WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;WEGEARRAY:=[];
 ILIST:=[];RMERKER:=[];
 RMAXSUCH:=IdFunc;
 inh:=0;
@@ -114,14 +114,17 @@ QY07NEU:=function(WEGEBAUM,WEGMERKER,S,NW)#fügt WEGMERKER,PNEU ein, wenn nicht 
   for i in [1..S] do
     j:=WEGMERKER[S+1-i];
     if not IsBound(ZEIGER[j]) then
-      ZEIGER[j]:=[];
       DRINBIT:=false;
-      if i=S then WEGEZAHL:=WEGEZAHL+1; fi;
+      if i<S then ZEIGER[j]:=[]; else
+        WEGEZAHL:=WEGEZAHL+1; 
+        ZEIGER[j]:=WEGEZAHL;
+        WEGEARRAY[WEGEZAHL]:=S;
+        fi;
       fi;
-    if i<S then ZEIGER:=ZEIGER[j]; fi;
+    ZEIGER:=ZEIGER[j];
     od;
 #Print("\n",WEGEBAUM);
-  return DRINBIT;
+  return [DRINBIT,WEGEARRAY[ZEIGER]];
   end;
 
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
@@ -136,7 +139,7 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
-        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK;
+        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -148,6 +151,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEBAUMMERK:=StructuralCopy(WEGEBAUM);
   WEGEZAHLMERK:=WEGEZAHL;
   WEGLIMERK:=StructuralCopy(WEGLI);
+  WEGEARRAYMERK:=StructuralCopy(WEGEARRAY);
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -159,6 +163,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEBAUM:=WEGEBAUMMERK;
   WEGEZAHL:=WEGEZAHLMERK;
   WEGLI:=WEGLIMERK;
+  WEGEARRAY:=WEGEARRAYMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -330,7 +335,7 @@ QY13:=function(C,S,nn,ZEIGER,NW)
               WEGMERKER:=WEGLI{[1..S]};
               DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
 if DDDDBIT=0 then 
-              if DDDD or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
+              if DDDD[2]<S or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
 fi;
               fi; ### (if ZR3MERK<>0 then)
           ALLERANFANGSBIT:=-1;
@@ -430,7 +435,8 @@ RMAXSUCH:=function(C)
   n:=Size(C);
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];
   #  XSAMMEL:=[];
-  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;ALLERANFANGSBIT:=0;
+  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
+  WEGEARRAY:=[];ALLERANFANGSBIT:=0;
   QY13(C,1,1,XSAMMEL,1);
    XFUELL(XSAMMEL);
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
