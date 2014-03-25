@@ -302,7 +302,7 @@ Gruppe [ 256, 55841 ] jetzt drin 3,7%
 Gruppe [ 256, 55840 ] jetzt drin 3,8%
 Gruppe [ 256, 55975 ] jetzt drin 
 Gruppe [ 256, 56089 ] jetzt drin 7,4%
-Gruppe [ 256, 55642 ] fehlt noch ........
+Gruppe [ 256, 55642 ] jetzt drin 8,3% 77 699810 10,3% 77 973608
 
 inh:=444444432;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
@@ -819,7 +819,9 @@ ok also denn mal los, rein mit der 4533R
       QY07NEU in QY07, das ist jetzt die Zeit für. Q21MINI in QY21 auch
       QY10A in QY10, QY11A in QY11
       huuu in QY07 muss WEGEARRAY[WEGEZAHL]:=S+1; rein statt nur S;
-
+      das war nochmal wichtig, alles auf screen ummach 
+      und nochmal das richtige R=444444442 starten
+      dann Feierabend! 
       
 [ 1 ]1-->[ 1 ]==>[ 1 ]
 [ 1, 1 ]1-->[ 1, 1 ]==>[ 1, 1 ]
@@ -837,4 +839,4 @@ IdSmallGroup(G);
 WEGLI;
 WEGEDISP(WEGLI,XSAMMEL,1);#ergibt: R:=[[1],[2,2],[2,2,1],[8,8,7,7]];
 
-.. gesucht ist jetzt die umgekehrte Richtung, 
+.. gesucht ist jetzt die umgekehrte Richtung von WEGLI zu R.

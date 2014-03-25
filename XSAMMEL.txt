@@ -293,8 +293,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   end;
    
 QY13:=function(C,S,nn,ZEIGER)
-  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN, 
-    HRES0MERK,ZR,RBIT,ZR3MERK;
+  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
@@ -329,20 +328,19 @@ QY13:=function(C,S,nn,ZEIGER)
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
-#if ZR[3]=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
-if DBIT=1 then
-Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ");
-Print(RBIT," ",HRESEXT,"|","HRES ",RBIT," ");
-if ZR3MERK=-1 then Print("***************"); fi;
-fi;
-          fi; ### (if 2*nn<n) 
+          if DBIT=1 then
+            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT);
+            if ZR3MERK=-1 then Print("***************"); fi;
+            fi;
+          if DDDDBIT=1 then RBIT:=999999; fi;
+          fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
-      fi;
+      fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
-    fi; od;
+    fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
   i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
-if DDDDBIT=1 then return [false,9999]; else return RBIT; fi;
+  return RBIT;
   end;
 
 XFUELL:=function(XSAMMEL) #fuellt [7][8]
