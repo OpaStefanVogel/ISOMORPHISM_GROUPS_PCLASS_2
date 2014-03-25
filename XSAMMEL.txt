@@ -335,10 +335,11 @@ QY13:=function(C,S,nn,ZEIGER,NW)
               WEGMERKER:=WEGLI{[1..S]};
               DDDD:=QY07NEU(WEGEBAUM,WEGMERKER,S,1);#1 statt NW
 if DDDDBIT=0 then 
-              if DDDD[2]<S or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
+              if DDDD[1] or ALLERANFANGSBIT=0 then RBIT:=-1; fi;
 fi;
               fi; ### (if ZR3MERK<>0 then)
           ALLERANFANGSBIT:=-1;
+          RBIT:=DDDD;
 #if ZR3MERK=-1 then XSAMMELVIEWER0(XSAMMEL); fi;
 if DBIT=1 then
 if NW=S-1 then Print("\n"); fi;
@@ -347,13 +348,16 @@ Print(DDDD," ",HRESEXT,"|","HRES ",RBIT," ");
 if ZR3MERK=-1 then Print("***************"); fi;
 fi;
           fi; ### (if 2*nn<n) 
-      if ERSTBIT=0 then RDRIN:=RBIT; fi;
+      #if ERSTBIT=0 then RDRIN:=RBIT; fi;
       ERSTBIT:=-1;
+      if RBIT[2]=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK3);
       fi;
     Remove(HRES,1);
-    fi; od; 
-if DDDDBIT=1 then return 0; else return RDRIN; fi;
+    fi; od;
+  i:=WEGEZAHL;
+  while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
+if DDDDBIT=1 then return 0; else return RBIT; fi;
   end;
 
 XFUELL:=function(XSAMMEL) #fuellt [7][8]
