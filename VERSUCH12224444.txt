@@ -251,11 +251,27 @@ Gruppe [ 16, 11 ] jetzt drin ...........................7
 
 ###dasselbe jetzt für n=512:
 XSAMMEL:=[];#nur anfangs einmal
+
+inh:=444444444;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 16, 16, 16, 16, 15 ] 5 19
+Gruppe [ 256, 55642 ] jetzt drin 16:09h1,7%
+Gruppe [ 256, 55639 ] jetzt drin 
+Gruppe [ 256, 55640 ] jetzt drin 
+Gruppe [ 256, 55637 ] jetzt drin 
+Gruppe [ 256, 56089 ] jetzt drin 17:25h
+Error, no 1st choice method found for `[]' on 2 arguments called from
+2 ^ STUFE <= n called from
+XMISCH( i[6], 1, STUFE + 1 ); called from
+brk> XSAMMELVIEWER1(XSAMMEL);       
+                9 [ 256, 256, 256, 256, 256, 256, 256, 256, 255 ] Pcgs([ f1, f2*f3*f4*f5*f6*f7*f8, f7, f6, f5, f4, f3, f2, f9 ]) <=== [ 512, 0 ] (1) 
+XMERKZAHL=5;WEGEZAHL=1854266
+
+inh:=444444442;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 2, 2, 1, 16, 16 ] 11 54
 Gruppe [ 256, 55991 ] jetzt drin 
+Gruppe [ 256, 56089 ] jetzt drin 
 Gruppe [ 256, 55799 ] jetzt drin 
 Gruppe [ 256, 55975 ] fehlt noch .......dann aber Error Memory bei
 1 [ 1 ] 1 <=== [ 2, 1 ] (1) 
@@ -267,13 +283,17 @@ Gruppe [ 256, 55975 ] fehlt noch .......dann aber Error Memory bei
             7 [ 2, 2, 2, 2, 2, 2, 1 ] 32 <=== [ 128, 2325 ] (1) 
               8 [ 2, 2, 2, 2, 2, 2, 98, 98 ] 864 <=== [ 256, 55991 ] (321) 
                 9 [ 2, 2, 2, 2, 2, 2, 2, 2, 1 ] Pcgs(
-R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,1,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+ R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,1,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 Gruppe [ 256, 56088 ] jetzt drin Das ist schon der Beweis, dass nicht in den folgenden enthalten
 Gruppe [ 256, 55991 ] jetzt drin 
 Gruppe [ 256, 55799 ] jetzt drin 
-Gruppe [ 256, 55782 ] fehlt noch .......
-R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+Gruppe [ 256, 55782 ] jetzt drin 
+Gruppe [ 256, 55990 ] jetzt drin 
+Gruppe [ 256, 55841 ] fehlt noch halt, das kann ja p-class>2 sein!!!
+also gleich mit der richtigen anfangen:
+ R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 
+inh:=444444432;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 2, 2, 2, 16, 15 ] 5 20
 Gruppe [ 256, 55991 ] jetzt drin 
@@ -284,6 +304,8 @@ Gruppe [ 256, 55840 ] jetzt drin
 Gruppe [ 256, 55639 ] jetzt drin
 Gruppe [ 256, 56089 ] jetzt drin 1h14%20%.2h33%2410708 9 [ 2, 2, 2, 2, 2, 2, 2, 256, 255 ] 8h54% dann irgendwannERROR Memory
 XMERKZAHL war >=24 und WEGEZAHL>500000
+
+inh:=444444431;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 1, 1, 1, 16, 15 ] 7 41---nicht ganz!!!
 Gruppe [ 256, 55990 ] jetzt drin 
@@ -768,6 +790,8 @@ nö auch mal 3 und 4 nach 256 einsortieren? nö, bringt trotzdem die 15 16
       Wenn aber Umwege reinkommen, so könnten zwei origional unterschiedliche XMERK
       in ein einziges XMERK vom komprimierten XSAMMEL münden. Das hatte ich schon mal
       und jetzt besteht die Aussicht, das endgültig zu packen.
+.. also denn mal los, rein mit der 4533R
+   .. zuerst WEGEZAHL in die Wegspitze rein 
 
 
 [ 1 ]1-->[ 1 ]==>[ 1 ]
