@@ -43,9 +43,10 @@ LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];;
 
 WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;WEGEARRAY:=[];
 ILIST:=[];RMERKER:=[];
-RMAXSUCH:=IdFunc;
+RMAX:=0;RMAXSUCH:=IdFunc;
 inh:=0;
-DDDD:=0;DDDDBIT:=0;DBIT:=0;
+DDDDBIT:=0;DBIT:=0;
+PARTZ:=0;XMERKZAHLZIEL:=9999999;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -128,7 +129,8 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
-        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK;
+        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
+        XMERKZAHLZIELMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -141,6 +143,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEZAHLMERK:=WEGEZAHL;
   WEGLIMERK:=StructuralCopy(WEGLI);
   WEGEARRAYMERK:=StructuralCopy(WEGEARRAY);
+  XMERKZAHLZIELMERK:=XMERKZAHLZIEL;XMERKZAHLZIEL:=999999;
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -153,6 +156,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEZAHL:=WEGEZAHLMERK;
   WEGLI:=WEGLIMERK;
   WEGEARRAY:=WEGEARRAYMERK;
+  XMERKZAHLZIEL:=XMERKZAHLZIELMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -265,12 +269,12 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
       fi;
       ISO:=QY08(ZEIGER,PNEU);
     fi;
-#  INDEX1:=ISO;
-  if ISO=0 then INDEX1:=0; else INDEX1:=ZEIGER[ISO][14]; fi;
-  if ISO=0 then NICHDRIN:=-1; else
+  if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
     HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ZEIGER[ISO][3][i]));
     ISO:=ZEIGER[ISO];
+    INDEX1:=ISO[14];
     if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
+#    INDEX1:=ISO[14];
     if IsBound(ISO[12]) then #Print("\007");
       HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ISO[10][i]));
       ISO:=ISO[12];
@@ -289,7 +293,8 @@ QY13:=function(C,S,nn,ZEIGER)
   RC:=RightTransversal(C,GR);
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
-    if S=1 then Print(".\c"); fi;
+    if S=1 then Print(".\c"); if DBIT=1 then Print("\n"); fi; fi;
+#    if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; fi;
     if QY10(HRES,S,GR) then
       PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
@@ -319,15 +324,21 @@ QY13:=function(C,S,nn,ZEIGER)
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
           if DBIT=1 then
-            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT);
+            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT,RBIT<=S);
             if ZR3MERK=-1 then Print("***************"); fi;
             fi;
+          if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
           if DDDDBIT=1 then RBIT:=999999; fi;
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
+#    if S=1 then 
+#      if XMERKZAHL1=XMERKZAHL and WEGEZAHL1<WEGEZAHL then
+#        Error("hier aber da"); 
+#        fi;
+#      fi;
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
   i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
   return RBIT;
@@ -472,6 +483,7 @@ XSAMMELVIEWER:=function(XSAMMEL)
     fi; od;
   end;
 #XSAMMELVIEWER(XSAMMEL);
+
 XSAMMELVIEWER1:=function(XSAMMEL)
   local i,S,LEER;
   S:=Size(XSAMMEL);LEER:="                  ";
@@ -649,6 +661,24 @@ T:=function(n)
      fi;
    fi;
  end;
+ 
+#  RMAXSUCH(G);
+#  PART:=WEGEDISP(WEGLI,XSAMMEL,1);;
+ALLEWEGEDISP:=function(PART,ZEIGER,S)
+  local ZEIG;
+  for PART in ZEIGER do
+    Print("\n",UMKEHRLIST(PART[1]),PART[14]);
+    ZEIG:=PART;
+    if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
+    Print("-->",UMKEHRLIST(ZEIG[1]));
+    if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
+    Print("==>",UMKEHRLIST(ZEIG[1]));
+    ZEIG:=ALLEWEGEDISP(PART,ZEIG[6],S+1);;
+    od;
+  return ZEIG;
+  end;
+  
+
 
 ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,
 PositionFirstComponentRepariert,QY12,Size,Group,
@@ -1211,7 +1241,8 @@ XFUELL,XMISCH,XLEER,Commu]);
 #  63, 59, 40, 31, 26, 15, 79, 29, 46, 27, 95, 30, 63, 38, 41, 33, 40, 24,
 #  17, 18, 11, 14, 15, 3, 61, 80, 87, 40, 23, 24, 28, 10, 60, 92, 49, 33, 63,
 #  31, 35, 59, 25, 65, 82, 61, 39, 79, 43, 54, 56, 21, 19, 20, 17, 5 ]18316
-#  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,, 1, 2, 2, 13, 6, 6, 6, 4, 4, 4, 0 ]18364
+#  ,,,,,,,,,,,,,,,,,,,,,,,,,,,  1, 2, 2, 13, 6, 6, 6, 4, 4, 4, 0 ]18364
+## ,,,,,,,,,,,,,,,,,,,,,,,,,,, 8, 44, 2, 13, 6, 6, 6, 4, 4, 4, 1 ]284
 #ILIST:=[10493062..10494173];QQQY(512);Print("\007");
 #ILIST:=[10494201..10494213];QQQY(512);Print("\007");
 #XFUELL(XSAMMEL);;XSAMMELVIEWER2(XSAMMEL);;RMERKER:=[];;;XSAMMELVIEWER3(XSAMMEL,1);;XLEER(XSAMMEL);;XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");LFDNR;
