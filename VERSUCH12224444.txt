@@ -292,17 +292,17 @@ Gruppe [ 256, 55990 ] jetzt drin
 Gruppe [ 256, 55841 ] fehlt noch halt, das kann ja p-class>2 sein!!!
 also gleich mit der richtigen anfangen:
  R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
-Gruppe [ 256, 56088 ] jetzt drin 
-Gruppe [ 256, 55990 ] jetzt drin 
-Gruppe [ 256, 55799 ] jetzt drin 
-Gruppe [ 256, 55782 ] jetzt drin 4,1% 
-Gruppe [ 256, 55969 ] jetzt drin 7,2% 3,3%
-Gruppe [ 256, 55991 ] jetzt drin 3,1%
-Gruppe [ 256, 55841 ] jetzt drin 3,7%
-Gruppe [ 256, 55840 ] jetzt drin 3,8%
-Gruppe [ 256, 55975 ] jetzt drin 
-Gruppe [ 256, 56089 ] jetzt drin 7,4%
-Gruppe [ 256, 55642 ] jetzt drin 8,3% 77 699810 10,3% 77 973608
+Gruppe [ 256, 56088 ]B1 jetzt drin 
+Gruppe [ 256, 55991 ]12 jetzt drin 
+Gruppe [ 256, 55799 ]23 jetzt drin 
+Gruppe [ 256, 55782 ]44 jetzt drin 3,8% 100 min
+Gruppe [ 256, 55990 ]65 jetzt drin 2,9% 112 min
+Gruppe [ 256, 55841 ]96 jetzt drin 
+Gruppe [ 256, 55969 ]8 jetzt drin 
+Gruppe [ 256, 55840 ]7 jetzt drin 
+Gruppe [ 256, 55975 ]3 jetzt drin 
+Gruppe [ 256, 56089 ]A jetzt drin 
+Gruppe [ 256, 55642 ]5 jetzt drin 8,3% 77 699810 10,3% 77 973608
 
 inh:=444444432;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
@@ -840,3 +840,4 @@ WEGLI;
 WEGEDISP(WEGLI,XSAMMEL,1);#ergibt: R:=[[1],[2,2],[2,2,1],[8,8,7,7]];
 
 .. gesucht ist jetzt die umgekehrte Richtung von WEGLI zu R.
+.. und eine Isomorphie-Abfrage, ohne das Speichern auszulösen.
