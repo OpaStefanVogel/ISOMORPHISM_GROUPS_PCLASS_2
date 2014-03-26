@@ -266,8 +266,8 @@ R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2
 #?wird [ 16, 16, 16, 16, 15 ] 5 19
 Gruppe [ 256, 55639 ] jetzt drin 
 Gruppe [ 256, 55642 ] jetzt drin 
-Gruppe [ 256, 55640 ] jetzt drin 
 Gruppe [ 256, 55637 ] jetzt drin 
+Gruppe [ 256, 55640 ] jetzt drin 
 Gruppe [ 256, 56089 ] jetzt drin 17:25h
 Error, no 1st choice method found for `[]' on 2 arguments called from
 2 ^ STUFE <= n called from
@@ -920,7 +920,23 @@ nö ConjugacyClasses gehen nicht, weil bei inh=14 alle Elemente
 .. das ist was anderes, bloß was, irgendwie nicht isomorphierbar?
 .. also mal so ein Beispiel raussuchen lassen.
    das sieht aber ganz so danach aus wie wenn phi wieder rein muss
-.. probieren mal, zumindestens für die Wegspitze.
+.. probieren mal, jo, überall kleines phi geht nicht bei [64,203]
+[ 1, 2, 10, 50, 57, 1 ] -1 7 [ f1, f4, f5, f2, f6, f3 ]false***************
+[ 1, 2, 10, 92, 1146, 1 ] 0 7 [ f1, f4, f5, f6, f2, f3 ]false
+[ 1, 2, 10, 92, 1082, 17 ] -1 7 [ f1, f4, f5, f6, f3, f2 ]false***************
+.
+[ 1, 2, 10, 43, 169, 1 ] -1 7 [ f3, f4, f5, f2, f6, f1 ]false***************
+[ 1, 2, 10, 92, 1082, 17 ] 0 2 [ f3, f4, f5, f6, f1, f2 ]true.
+was eigentlich war:
+[ 1, 2, 10, 57, 58, 10 ] -1 7 [ f1, f4, f5, f2, f6, f3 ]false***************
+[ 1, 2, 10, 92, 1563, 14 ] 0 7 [ f1, f4, f5, f6, f2, f3 ]false
+[ 1, 2, 10, 92, 1500, 42 ] -1 7 [ f1, f4, f5, f6, f3, f2 ]false***************
+.
+[ 1, 2, 10, 46, 170, 13 ] -1 7 [ f3, f4, f5, f2, f6, f1 ]false***************
+[ 1, 2, 10, 92, 1500, 46 ] 0 7 [ f3, f4, f5, f6, f1, f2 ]false
+.. aber jetzt mach ich mal in die Wegspitze neu INDEX2
+   noooo, [64,203] geht jetzt!!!!->speichern
+
 
 ^^^^ neu Conjugacy(HRES); vvvv
 
@@ -932,7 +948,7 @@ G:=SmallGroup(8,5);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
-XMERKZAHL;#14 wie auch bisher schon
+XMERKZAHL;#
 
 XSAMMEL:=[];
 DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
@@ -942,8 +958,22 @@ G:=SmallGroup(8,5);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
-XMERKZAHL;#14 wie auch bisher schon
+XMERKZAHL;#
 
+
+DDDDBIT:=0;DBIT:=0;#ausfuehrliche Variante
+T(32);
+DDDDBIT:=0;DBIT:=1;#ausfuehrliche Variante
+G:=SmallGroup(64,203);
+RMAXSUCH(G);time;
+XMERKZAHL;#20
+
+DDDDBIT:=0;DBIT:=0;#ausfuehrliche Variante
+T(32);
+DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
+G:=SmallGroup(64,203);
+RMAXSUCH(G);time;
+XMERKZAHL;#
 
       4 [ 3, 3, 3, 4 ] 1 7 (30) 5
       4 [ 3, 3, 3, 2 ] 2 42 (42)  7
