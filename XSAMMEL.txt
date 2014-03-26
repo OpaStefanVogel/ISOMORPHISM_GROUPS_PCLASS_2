@@ -593,6 +593,26 @@ PARTFIND:=function(XSAMMEL,PART)
   return RBIT;
   end;
 
+PARTZAHL:=function(XSAMMEL)
+  local i,S,LEER,RBIT;
+  S:=Size(XSAMMEL);RBIT:=0;
+  for i in XSAMMEL do
+    PARTZ:=PARTZ+1;
+    if IsBound(i[5]) then 
+      else
+        if IsBound(i[12]) then 
+          if IsBound(i[12][7]) then 
+            fi;
+          else 
+            if IsBound(i[7]) then 
+              fi;
+            fi;
+        PARTZAHL(i[6]);
+        fi;
+    od;
+  end;
+#PARTZ:=0;PARTZAHL(XSAMMEL);PARTZ;
+
 WEGEDISP:=function(WEG,ZEIGER,S)
   local PART,ZEIG;
   for PART in ZEIGER do if PART[14]=WEG[S] then
