@@ -257,7 +257,7 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
 
 #das neue
 QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
-  local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR,INDEX2;
+  local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR;
   HRES:=List(HRESALT);NICHDRIN:=0;RET:=ZEIGER;RGL:=[];GNR:=0;
   ISO:=QY08(ZEIGER,PNEU);
 ##Print("\nQY21:ISO=",ISO);
@@ -269,12 +269,11 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
       fi;
       ISO:=QY08(ZEIGER,PNEU);
     fi;
-  if ISO=0 then NICHDRIN:=-1; INDEX1:=0; INDEX2:=0; else
+  if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
     HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ZEIGER[ISO][3][i]));
     ISO:=ZEIGER[ISO];
-    INDEX2:=ISO[14];
-    if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
     INDEX1:=ISO[14];
+    if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
     if IsBound(ISO[12]) then #Print("\007");
       HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ISO[10][i]));
       ISO:=ISO[12];
@@ -283,7 +282,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
     RET:=ISO[6];
     if IsBound(ISO[7]) then GNR:=ISO[7]; fi;
     fi;
-  return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR,INDEX2];
+  return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
   end;
    
 QY13:=function(C,S,nn,ZEIGER)
@@ -318,10 +317,9 @@ QY13:=function(C,S,nn,ZEIGER)
             QY15(ZR[2],XMERK[S]);
             XMERKZAHL:=XMERKZAHL+1;
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
-            WEGLI[S]:=ZR[7];
+            WEGLI[S]:=ZR[5];
             HRES0:=HRES0MERK;
             fi;
-          WEGLI[S]:=ZR[7];
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
           if DBIT=1 then
