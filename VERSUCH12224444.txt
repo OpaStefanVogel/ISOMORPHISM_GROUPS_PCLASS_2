@@ -252,6 +252,10 @@ Gruppe [ 16, 11 ] jetzt drin ...........................7
 ###dasselbe jetzt für n=512:
 XSAMMEL:=[];#nur anfangs einmal
 
+#Vortest:
+R:=[[1],[1,1],[2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+
 inh:=444444444;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 #?wird [ 16, 16, 16, 16, 15 ] 5 19
@@ -297,12 +301,20 @@ Gruppe [ 256, 55991 ]12 jetzt drin
 Gruppe [ 256, 55799 ]23 jetzt drin 
 Gruppe [ 256, 55782 ]44 jetzt drin 3,8% 100 min
 Gruppe [ 256, 55990 ]65 jetzt drin 2,9% 112 min
-Gruppe [ 256, 55841 ]96 jetzt drin 
-Gruppe [ 256, 55969 ]8 jetzt drin 
-Gruppe [ 256, 55840 ]7 jetzt drin 
-Gruppe [ 256, 55975 ]3 jetzt drin 
-Gruppe [ 256, 56089 ]A jetzt drin 
-Gruppe [ 256, 55642 ]5 jetzt drin 8,3% 77 699810 10,3% 77 973608
+Gruppe [ 256, 55841 ]96 jetzt drin 5,6% 132 min
+Gruppe [ 256, 55840 ]77 jetzt drin 3,2% 152 min
+Gruppe [ 256, 55969 ]88 jetzt drin 8,8% 196 min
+Gruppe [ 256, 55975 ]39 jetzt drin 7,2% 228 min
+Gruppe [ 256, 56089 ]AA jetzt drin 13,2% 235 min
+Gruppe [ 256, 55642 ]5B jetzt drin 9,5% 245 min 
+77 742124 9,5% 246 min
+77 952161 11,0% 256 min
+77 1428639 13,9% 282 min
+77 2119635 17,9% 319 min... !!!
+77 3666813 27,4% 367 min..............................................................
+77 4359602 37,4% 420 min
+
+^^^^ aktuell R=444444442 ^^^^
 
 inh:=444444432;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
@@ -822,6 +834,32 @@ ok also denn mal los, rein mit der 4533R
       das war nochmal wichtig, alles auf screen ummach 
       und nochmal das richtige R=444444442 starten
       dann Feierabend! 
+      
+ok PARTFIND(XSAMMEL,PART) ist da.
+   ok nur stimmt nicht???? Doch, ist ok.
+T(64);
+R:=[[1],[1,1],[2,2,2],[4,4,4,2],[3,3,3,2,1],[2,2,2,4,4,1]];
+G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+PART:=WEGEDISP(WEGLI,XSAMMEL,1);;
+RMAX:=[];PARTFIND(XSAMMEL,PART);RMAX;IdSmallGroup(G);
+
+^^^^^^^^ RMAX tatsächlich finden ^^^^^^^^
+.. jetzt muss ich noch die Isomorphieprüfung ohne reinspeichern machen
+
+
+.. kann WEGEBAUM etwa auch wieder raus? 
+   Das müsste doch mit in XSAMMEL untergebracht werden können.
+   Wenn das so wäre, das wäre die Wucht! Nee doch nicht. 
+   Wenn sich zwei Wege trennen und dann wieder zusammenführen,
+   und dann sich wieder trennen, wenn schon drei dieser vier Wege gegangen sind,
+   kann man dann noch erkennen, dass er noch nicht gegangen war? 
+   Vom ersten Eindruck her nicht, aber wenn dabei diese Aufspaltung
+   in erscheinung tritt und dafür sorgt, dass der vierte 
+   tatsächlich noch nicht gegangen wurde? 
+   Na zumindestens kann ich das mal nachträglich mitlaufen lassen,
+   .. ob sich soetwas ergibt. z,B: wenigstens WEGEZAHL<ZEILENZAHL(XSAMMELVIEW1)
+      
+****soweit WEGEZAHL<ZEILENZAH *********
       
 [ 1 ]1-->[ 1 ]==>[ 1 ]
 [ 1, 1 ]1-->[ 1, 1 ]==>[ 1, 1 ]
