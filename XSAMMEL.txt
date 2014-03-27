@@ -692,6 +692,18 @@ ALLEWEGEDISP:=function(PART,ZEIGER,S)
   return ZEIG;
   end;
   
+GANZLOS:=function()
+  local inh,G;
+  Exec("date");
+  XSAMMEL:=[];#nur anfangs einmal
+  ILIST:=[56082..56092];QQQY(256);Print("\007");
+  inh:=4444;XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  Exec("date");
+  end;
+#AUZAHL:=4;GANZLOS();
 
 
 ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,

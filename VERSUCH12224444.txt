@@ -357,14 +357,14 @@ GANZLOS:=function()
   Exec("date");
   XSAMMEL:=[];#nur anfangs einmal
   ILIST:=[56082..56092];QQQY(256);Print("\007");
-  inh:=444444444;XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=444444442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=444444432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=444444431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4444;XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   Exec("date");
   end;
 #AUZAHL:=4;GANZLOS();
-^^^^lib anlegen
+^^^^lib 512 anfangen
 
 
 
@@ -980,7 +980,9 @@ ok und für S>1 habe ich inzwischen auch eine Idee; Statt A nur St(A,Gr)
    Ich schau mal, wo der Speicher nicht reicht, muss in XMISCH sein oder so.
    Außerdem auch mal die phi=[1,1,0,0,1] in einem Separatvektor speichern.
 .. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
-.. hab jetzt IZUN und NUZI mit drin, mal schauen, ob der Speicher jetzt reicht.
+.. hab jetzt IZUN und NUZI <C/> mit drin, mal schauen, ob der Speicher jetzt reicht.
+.. alles Klar inh=444444444 erzeugt einen so langen Vektor!!!! das geht so natüröich nicht!
+
 <A>
 G:=SmallGroup(64,203);
 A:=AutomorphismGroup(G);
