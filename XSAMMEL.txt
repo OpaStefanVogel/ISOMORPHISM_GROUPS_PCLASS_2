@@ -47,7 +47,7 @@ RMAX:=0;RMAXSUCH:=IdFunc;
 inh:=0;
 DDDDBIT:=0;DBIT:=0;
 PARTZ:=0;XMERKZAHLZIEL:=9999999;
-AUZAHL:=0;
+AUZAHL:=4;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -302,6 +302,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 #    Print("\n;;;",RC,HRES);
     else STAB:=0; fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
+  if S=1 then Print("/",Size(RC),"/"); fi;
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
     if S=1 then Print(".\c"); if DBIT=1 then Print("\n"); fi; fi;
@@ -437,11 +438,8 @@ RMAXSUCH:=function(C)
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
   WEGEARRAY:=[];
   QY13(C,1,1,XSAMMEL,AU);
-Print("XFUELL\c");
    XFUELL(XSAMMEL);
-Print("XMISCH\c");
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
-Print("XLEER\c");
    XLEER(XSAMMEL);
   end;
 
@@ -697,10 +695,10 @@ GANZLOS:=function()
   Exec("date");
   XSAMMEL:=[];#nur anfangs einmal
   ILIST:=[56082..56092];QQQY(256);Print("\007");
-  inh:=4444;XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=4442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=4432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=4431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  Exec("date");inh:=4444;Print("inh=",inh);XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print("XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4442;Print("inh=",inh);XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4432;Print("inh=",inh);XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4431;Print("inh=",inh);XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
   Exec("date");
   end;
 #AUZAHL:=4;GANZLOS();

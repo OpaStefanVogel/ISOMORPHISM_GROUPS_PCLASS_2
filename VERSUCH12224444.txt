@@ -968,20 +968,21 @@ vv demnächst versuch ich aber mal rauszubekommen, ob da wo kein *****
 ok und für S>1 habe ich inzwischen auch eine Idee; Statt A nur St(A,Gr)
    versuche das in <B/> Jo, dass ist es, jedoch schneckenlangsam.
    Also rein mit AUZAHL=0 -->speich
-.. in der gemischten Version könnte ich auf dem Anfangs S
+ok in der gemischten Version könnte ich auf dem Anfangs S
    einen neuen WEGEBAUM beginnen. Das könnte ich aber auch bei AUZAHL=0!
    Das ist im Prinzip schon das WEGEARRAY zurückschreiben.
    ja, das wäre zu überlegen. Bräuchte wohl nur WEGEMAUM umdrehen.
    Aber erstmal aus.
-.. So. Nun hat R=4444444XX wieder nicht ausreichend Speicher, 
+vv So. Nun hat R=4444444XX wieder nicht ausreichend Speicher, 
    daher versuche ich doch mal AUZAHL>2 oder sowas. 
    Es müsste reichen, dass bei S=AUZAHL+1 WEGEBAUM gelöscht wird am Anfang QY13
    ok das geht prima, verringert aber die Zeit von 200 auf unter 100 und WEGEZAHL auf 1/100.
    Ich schau mal, wo der Speicher nicht reicht, muss in XMISCH sein oder so.
    Außerdem auch mal die phi=[1,1,0,0,1] in einem Separatvektor speichern.
-.. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
-.. hab jetzt IZUN und NUZI <C/> mit drin, mal schauen, ob der Speicher jetzt reicht.
-.. alles Klar inh=444444444 erzeugt einen so langen Vektor!!!! das geht so natüröich nicht!
+ok hab jetzt IZUN und NUZI <C/> mit drin, mal schauen, ob der Speicher jetzt reicht.
+ok alles klar, inh=444444444 erzeugt einen so langen Vektor!!!! das geht so natüröich nicht!
+ok bin jetzt nach 30 min schon bei inh=4442 und 2,2% also so kann es laufen
+ok läuft los, hab dann noch paar Prints zurückgestellt und - aus.
 
 <A>
 G:=SmallGroup(64,203);
@@ -1014,7 +1015,8 @@ Iterated([1,1,1,1,1],function(a,b) return a+a+b; end);
 ^^^^ neu Orbits(AU,RC); ^^^^
 
 
-
+.. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
+.. dann nochmal ohne XMERKZAHLZIEL versuchen
 
 
 
