@@ -353,12 +353,17 @@ XMERKZAHL=45 bis hierher, WEGEZAHL=1426211
 [4,4,4,3,2]   [ 2, 2, 2, 16, 15 ]24[ 2, 2, 2, 2, 2, 2, 2, 256, 255 ]
 [4,4,4,3,1]   [ 1, 1, 1, 16, 15 ]45[ 2, 2, 2, 2, 2, 1, 1, 256, 255 ]
 .. also mal los:
-XSAMMEL:=[];#nur anfangs einmal
-ILIST:=[56082..56092];QQQY(256);Print("\007");
-XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
-XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
-XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
-XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
+GANZLOS:=function()
+  Exec("date");
+  XSAMMEL:=[];#nur anfangs einmal
+  ILIST:=[56082..56092];QQQY(256);Print("\007");
+  inh:=444444444;XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=444444442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=444444432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=444444431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  Exec("date");
+  end;
+
 ^^^^lib anlegen
 
 
@@ -941,7 +946,7 @@ vv aber jetzt mach ich mal in die Wegspitze neu INDEX2
 ok doch auch die geht nicht, weil dann G.3 einen glöeichen Weg enthält wie G.1
 
 ok ALSO INDEX2 geht definitiv nicht in keiner Variante. ok Schluss damit
-   
+
 DDDDBIT:=0;DBIT:=0;#ausfuehrliche Variante
 T(32);
 DDDDBIT:=0;DBIT:=1;#ausfuehrliche Variante
@@ -954,6 +959,62 @@ T(32);
 DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
 G:=SmallGroup(64,203);
 RMAXSUCH(G);time;
-XMERKZAHL;#
-^^^^ neu Conjugacy(HRES); vvvv
+XMERKZAHL;
+^^^^ neu Conjugacy(HRES); ^^^^^
+vv demnächst versuch ich aber mal rauszubekommen, ob da wo kein *****
+   auftritt, isodings vorliegt. bzw. probiere es aus. Fini
+   nachfolgendes Orbits(A,RC,OnPoints) logischerweise ging nicht,
+   versuche es nochmal auf nur S=1: ja das scheint es zu sein <A/>
+ok und für S>1 habe ich inzwischen auch eine Idee; Statt A nur St(A,Gr)
+   versuche das in <B/> Jo, dass ist es, jedoch schneckenlangsam.
+   Also rein mit AUZAHL=0 -->speich
+
+<A>
+G:=SmallGroup(64,203);
+A:=AutomorphismGroup(G);
+HRES:=[G.1];
+GR:=Group(HRES);
+RC:=RightTransversal(G,GR);Size(RC);List(RC);
+OR:=Orbits(A,List(RC),OnPoints);Size(ORB);
+ORB:=List(OR,i->Representative(i)); 
+</A>
+
+<B>
+G:=SmallGroup(64,203);
+A:=AutomorphismGroup(G);
+HRES:=[G.1];
+GR:=Group(HRES);
+ri:=G.2;
+S:=Stabilizer(A,Set(GR),OnSets);
+RC:=RightTransversal(G,GR);Size(RC);List(RC);
+OR:=Orbits(A,List(RC),OnPoints);Size(ORB);
+ORB:=List(OR,i->Representative(i)); 
+</B>
+^^^^ neu Orbits(AU,RC); ^^^^
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

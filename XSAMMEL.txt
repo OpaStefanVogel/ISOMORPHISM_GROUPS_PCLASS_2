@@ -285,11 +285,19 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
   end;
    
-QY13:=function(C,S,nn,ZEIGER)
-  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK;
+QY13:=function(C,S,nn,ZEIGER,AU)
+  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,
+  orbi,ORB,STAB;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
+  if S<=AUZAHL then
+#    Print("\n:::",List(RC),HRES);
+    STAB:=Stabilizer(AU,Set(GR),OnSets);
+    ORB:=Orbits(STAB,RC,OnPoints);
+    RC:=List(ORB,i->Representative(i));
+#    Print("\n;;;",RC,HRES);
+    else STAB:=0; fi;
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
     if S=1 then Print(".\c"); if DBIT=1 then Print("\n"); fi; fi;
@@ -301,7 +309,7 @@ QY13:=function(C,S,nn,ZEIGER)
       ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
-        RBIT:=QY13(C,S+1,2*nn,ZR[2]); 
+        RBIT:=QY13(C,S+1,2*nn,ZR[2],STAB); 
         else
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
@@ -419,12 +427,12 @@ XLEER:=function(XSAMMEL) #fuellt [7][8]
   end;
 
 RMAXSUCH:=function(C)
-  n:=Size(C);
+  n:=Size(C);AU:=AutomorphismGroup(C);
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
   WEGEARRAY:=[];
-  QY13(C,1,1,XSAMMEL);
+  QY13(C,1,1,XSAMMEL,AU);
    XFUELL(XSAMMEL);
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
    XLEER(XSAMMEL);
