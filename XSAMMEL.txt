@@ -47,6 +47,7 @@ RMAX:=0;RMAXSUCH:=IdFunc;
 inh:=0;
 DDDDBIT:=0;DBIT:=0;
 PARTZ:=0;XMERKZAHLZIEL:=9999999;
+AUZAHL:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -63,11 +64,13 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
 #  return PositionFirstComponent(ZEIGER,PNEU);
   #welches bei "nicht drin" Size(ZEIGER) ausgibt statt Add-Position 
   end;
+IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
+NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 
 #Schnittstelle zur Ausgabe
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
-  RET:=Iterated(PNEU,function(a,b) return 2*a+b; end)+1;
+  RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
   if RET=1 then RET:=10001; else
     if RET=2 then RET:=10002; else
       RET:=RET; fi; fi;
@@ -103,7 +106,7 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   local i,j,ZEIGER;
   ZEIGER:=WEGEBAUM;
   for i in [1..S] do
-    j:=WEGMERKER[S+1-i];
+    j:=WEGMERKER[S+1-i];#WEGMERKER[i];#
     if not IsBound(ZEIGER[j]) then
       if i<S then ZEIGER[j]:=[]; else
         WEGEZAHL:=WEGEZAHL+1; 
@@ -180,26 +183,26 @@ QY12:=function(C,S,nn) #bestimmt XMERK
       if IsBound(XMERK[S][1]) then p0:=XMERK[S][1][2]; else
         p0:=PcgsByPcSequenceNC(FamilyObj(HRES0[1]),HRES0{[Size(HRES0)-S+1..Size(HRES0)]});
         fi;
-      APHI:=List([1..S],i->ExponentsOfPcElement(p0,HRES[i]));
+      APHI:=List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES[i])));
       if ZEILE[S]>1 and SPALTE[S]=1 and FIXFIX<>0 then
         FIXBIT:=FIXFIX;
         for jj in [1..Size(XMERK[S])] do
           p1:=XMERK[S][jj][2];
-          HRES1:=List(APHI,i->PcElementByExponents(p1,i));
+          HRES1:=List(APHI,i->PcElementByExponents(p1,NZUI(i,S)));
 
           pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES1[1]),HRES1);
           PNEU:=[QY09(ExponentsOfPcElement(pcgs,HRES1[1]^2))];
           for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]))),2); od; #C
 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i])));
-          Add(ISO,List([1..S],i->ExponentsOfPcElement(p0,HRES1[i])));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES1[i]))));
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n:",S," ",STEP,ISO); fi; STEP:=STEP+1;
           od;
         else 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i])));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
           Add(ISO,APHI);
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n.",S," ",STEP,ISO,"\c"); fi; STEP:=STEP+1;
@@ -224,7 +227,7 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
       od;
     pcgs:=XMERK[S][imax][2];
     for i in [1..Size(XMERK[S])] do
-      HRES1:=List([1..S],j->PcElementByExponents(pcgs,XMERK[S][i][4][j]));
+      HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
       pcgs1:=PcgsByPcSequenceNC(FamilyObj(HRES1[1]^0),HRES1);
       PNEU:=[QY09(ExponentsOfPcElement(pcgs1,HRES1[1]^2))];
       for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs1, Commu(pcgs1[1], pcgs1[j]))),2); od; #C
@@ -270,12 +273,12 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
       ISO:=QY08(ZEIGER,PNEU);
     fi;
   if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
-    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ZEIGER[ISO][3][i]));
     ISO:=ZEIGER[ISO];
+    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[3][i],S)));
     INDEX1:=ISO[14];
     if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
     if IsBound(ISO[12]) then #Print("\007");
-      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,ISO[10][i]));
+      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[10][i],S)));
       ISO:=ISO[12];
       fi;
     RGL:=ISO[1];
@@ -298,6 +301,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     RC:=List(ORB,i->Representative(i));
 #    Print("\n;;;",RC,HRES);
     else STAB:=0; fi;
+  if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
     if S=1 then Print(".\c"); if DBIT=1 then Print("\n"); fi; fi;
@@ -372,7 +376,6 @@ XFUELL:=function(XSAMMEL) #fuellt [7][8]
     od;
   end;
 #XFUELL(XSAMMEL);
-
 XMISCH:=function(XSAMMEL,POSITION,STUFE)
   local i,ii,S,LEER,HRES,HRES2,pcgs,pcgs2;
   S:=Size(XSAMMEL);LEER:="                  ";
@@ -403,7 +406,7 @@ else
         pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
         pcgs2:=PcgsByPcSequenceNC(FamilyObj(HRES2[1]^0),List(HRES2));
 #        i[11]:=List([1..STUFE],j->ExponentsOfPcElement(pcgs,HRES2[j]));
-        i[10]:=List([1..STUFE],j->ExponentsOfPcElement(pcgs2,HRES[j]));
+        i[10]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs2,HRES[j])));
         fi; fi;
 #    Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ",
 #      i[1]," ",i[8]," [",ii,"..",ii+i[5]-1,"] ",i[7][2]);
@@ -427,14 +430,18 @@ XLEER:=function(XSAMMEL) #fuellt [7][8]
   end;
 
 RMAXSUCH:=function(C)
+  local AU;
   n:=Size(C);AU:=AutomorphismGroup(C);
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
   WEGEARRAY:=[];
   QY13(C,1,1,XSAMMEL,AU);
+Print("XFUELL\c");
    XFUELL(XSAMMEL);
+Print("XMISCH\c");
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
+Print("XLEER\c");
    XLEER(XSAMMEL);
   end;
 
@@ -692,7 +699,7 @@ PositionFirstComponentRepariert,QY12,Size,Group,
 StructuralCopy,PcElementByExponentsNC,PcgsByPcSequenceNC,
 ExponentsOfPcElement,RightTransversal,RightCosetsNC,
 QY10,QY11,QY08,QY21,QY15,QY14,QY13,QY09,
-XFUELL,XMISCH,XLEER,Commu]);
+XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI]);
 
 
 #T(16);XSAMMELVIEWER2(XSAMMEL);
