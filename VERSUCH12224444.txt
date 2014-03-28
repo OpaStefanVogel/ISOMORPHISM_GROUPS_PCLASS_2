@@ -1029,14 +1029,70 @@ Iterated([1,1,1,1,1],function(a,b) return a+a+b; end);
       vermutlich war das schon mal drin und ich habs wieder raus
       weil es anscheindend aussieht wie immer <=n.
    .. die erste Hürde Print() am Anfang von inh=4444 ist geschafft
-.. gleich bei der Gelegenheit: RMERKER muss kein Vektor mehr sein. 
+   .. gut, läuft jetzt, erstmal aus.
+.. gleich bei der Gelegenheit: RMERKER muss kein Vektor mehr sein.
+.. doch neues XFUELL reicht noch nicht, immer noch verkehrt!!! Na sowas!
 ^^^^ XMISCH-Fehler ^^^
 .. auch AUZAHL=5 probieren.
 .. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
 .. dann nochmal ohne XMERKZAHLZIEL versuchen, es ist wieder Leerlauf drin, wie das?
 .. wie war gleich die Folge 1,5,28,212???
 
+vvvv HGRAPH vvvv
+P:=[
+         [0,100,1],         [100,100,2],             #   1   2
+[-50,50,3],         [50,50,4],          [150,50,5],  #  3  4  5
+          [0,0,6],           [100,0,7]];             #   6   7
+K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
+    [3,4],[4,5,6]];
 
+MINIMIERE:=function(P,K,L,COUNT)
+  local i,j,MIN,MAX,D,MERK1,MERK2,dx,dy,COUNTER,G;
+  MAX:=0;COUNTER:=0;G:=Lcm(List(K,i->Size(i)));
+  repeat
+    MAX:=0;
+    for i in [1..Size(P)] do
+      MIN:=-1;
+      for dx in [0,1,-1] do for dy in [0,1,-1] do
+        D:=0;
+        for j in K[i] do
+          D:=D+((P[i][1]+dx-P[j][1])^2+(P[i][2]+dy-P[j][2])^2-L^2)^2;
+          od;
+        D:=D/Size(K[i]);
+        if D<MIN or MIN=-1 then MIN:=D; MERK1:=[i,dx,dy];  fi;
+if COUNT=1 then Print("\n MIN",D," ",MIN,MERK1); fi;
+        od; od;
+      if MIN>MAX then MAX:=MIN; MERK2:=MERK1; fi;
+if COUNT=1 then Print("\nMAX ",MIN," ",MAX,MERK2); fi;
+      od;
+    P[MERK2[1]][1]:=P[MERK2[1]][1]+MERK2[2];
+    P[MERK2[1]][2]:=P[MERK2[1]][2]+MERK2[3];
+    Print("\n",MAX*G," ",MERK2,P[MERK2[1]]);
+    COUNTER:=COUNTER+1;
+    until COUNTER=COUNT;
+  end;
+
+P:=[
+         [0,100,1],         [100,100,2],             #   1   2
+[-50,50,3],         [50,50,4],          [150,50,5],  #  3  4  5
+          [0,0,6],           [100,0,7]];             #   6   7
+K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
+    [3,4],[4,5,6]];
+#MINIMIERE(P,K,100,1);
+
+
+PROB:=function(P,K)
+  local i;
+  for i in [1..Size(K)] do 
+    Print("\n",i);
+    for j in K[i] do
+      Print(" ", Sqrt(1.0*((P[i][1]-P[j][1])^2+(P[i][2]-P[j][2])^2)));
+    od; od;
+  end;
+#PROB(P,K);
+
+
+^^^^ HGRAPH ^^^^
 
 
 
