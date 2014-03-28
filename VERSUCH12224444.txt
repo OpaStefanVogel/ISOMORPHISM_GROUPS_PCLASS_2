@@ -187,6 +187,7 @@ Gruppe [ 256, 55969 ] jetzt drin .....................................gap: canno
 #44442
 #44432
 #44431
+IS:=[4,3,2,1];
 for i1 in IS do i2:=i1; i3:=i1;
 #  for i2 in IS do
 #    for i3 in IS do
@@ -199,8 +200,7 @@ for i1 in IS do i2:=i1; i3:=i1;
                   Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8," ",i9,"\c");
                   R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8,i9]];
                   G:=PcgsOfR(R);
-                  Print(" inh=",inh,"\c");RMAXSUCH(G);
-                  Print("\007");Error("Pause");
+                  RMAXSUCH(G);
                   od;
                 od;
               od;
@@ -364,6 +364,11 @@ GANZLOS:=function()
   Exec("date");
   end;
 #AUZAHL:=4;GANZLOS();
+#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);
+#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,3]];G:=PcgsOfR(R);RMAXSUCH(G);
+#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+
+
 ^^^^lib 512 anfangen
 
 
@@ -739,7 +744,7 @@ XSAMMELVIEWER1(XSAMMEL);
 WEGEZAHL;
 
 XSAMMEL:=[];#nur anfangs einmal
-DDDDBIT:=0;DBIT:=1;#kurze Variante
+AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
 G:=SmallGroup(16,14);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,11);
@@ -748,11 +753,11 @@ G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
 G:=SmallGroup(32,27);
 RMAXSUCH(G);time;
-XMERKZAHL;#14 muss rauskommen und nicht 8
+XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
 XSAMMEL1:=StructuralCopy(XSAMMEL);;
 
 XSAMMEL:=[];#nur anfangs einmal
-DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
+AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
 G:=SmallGroup(16,14);
 RMAXSUCH(G);time;
 G:=SmallGroup(16,11);
@@ -761,7 +766,7 @@ G:=SmallGroup(16,3);
 RMAXSUCH(G);time;
 G:=SmallGroup(32,27);
 RMAXSUCH(G);time;
-XMERKZAHL;#14 wie auch bisher schon
+XMERKZAHL;WEGEZAHL;#14 wie auch bisher schon
 
 XSAMMEL=XSAMMEL1;
 XSAMMELVIEWER2(XSAMMEL);
@@ -863,7 +868,7 @@ T(64);
 R:=[[1],[1,1],[2,2,2],[4,4,4,2],[3,3,3,2,1],[2,2,2,4,4,1]];
 G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
 PART:=WEGEDISP(WEGLI,XSAMMEL,1);;
-RMAX:=[];PARTFIND(XSAMMEL,PART);RMAX;IdSmallGroup(G);
+RMAX:=[];PARTFIND(XSAMMEL,PART);RMAX;#IdSmallGroup(G);
 
 ^^^^^^^^ RMAX tatsächlich finden ^^^^^^^^
 XMERKZAHLZIEL:=11;
@@ -1014,6 +1019,7 @@ Iterated([1,1,1,1,1],function(a,b) return a+a+b; end);
 </C>
 
 #Read("GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
+#T(8);
 #AUZAHL:=4;GANZLOS();#6 min für alle n=256 /
 #AUZAHL:=5;GANZLOS();#11 min/
 #AUZAHL:=6;GANZLOS();#29 min/
@@ -1033,14 +1039,15 @@ ok wie in aller Welt kommt 56092 in das [512,56092] hinein???
 .. doch neues XFUELL reicht noch nicht, immer noch verkehrt!!! Na sowas!
 ok ok ok ok ich habs!!! inh war local in GANZLOS, alles klar.
 ^^^^ XMISCH-Fehler ^^^
-.. RMERKER muss kein Vektor mehr sein.
-.. auch AUZAHL=5 probieren.
+ok statt 2^..<n in XFUELL sollte auch else gehen
+o. RMERKER muss kein Vektor mehr sein.
+o. auch AUZAHL=5 probieren.
+nö RC doch nochmal komplette Nebenklassen versuchen, ob dann gleich Ende bei XMERKZALZIEL
 .. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
 .. dann nochmal ohne XMERKZAHLZIEL versuchen, es ist wieder Leerlauf drin, wie das?
 .. wie war gleich die Folge 1,5,28,212???
 .. Zusammenhang vollständige WEGEZAHL und Size(A).
-.. statt 2^..<n sollte auch else gehen
-.. RC doch nochmal komplette Nebenklassen versuchen, ob dann gleich Ende bei XMERKZALZIEL
+
 
 vvvv HGRAPH vvvv
 P:=[
@@ -1098,10 +1105,49 @@ PROB:=function(P,K)
 
 ^^^^ HGRAPH ^^^^
 
+vvvv ALLEWAEGEZAEHLER vvvv
+ALLEWEGEZAEHLER:=function(ZEIGER,ZIEL)
+  local PART,ZEIG;
+  for PART in ZEIGER do
+#    Print("\n",UMKEHRLIST(PART[1]),PART[14]);
+    ZEIG:=PART;
+    if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
+#    Print("-->",UMKEHRLIST(ZEIG[1]));
+    if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
+#    Print("==>",UMKEHRLIST(ZEIG[1]));
+    if IsBound(ZEIG[6]) then ALLEWEGEZAEHLER(ZEIG[6],ZIEL); fi;
+    if ZEIG[7]=ZIEL then ALLEWEGEZAHL:=ALLEWEGEZAHL+1; fi;
+    od;
+  end;
+#ALLEWEGEZAHL:=0;ALLEWEGEZAEHLER(XSAMMEL,[32,27]);ALLEWEGEZAHL;
+#ALLEWEGEZAHL:=0;ALLEWEGEZAEHLER(XSAMMEL,[8,4]);ALLEWEGEZAHL;
+^^^^ ALLEWAEGEZAEHLER ^^^^
 
-
-
-
+#XSAMMEL:=[];#nur anfangs einmal
+ClearProfile();
+IS2:=[1,2];
+IS4:=[1,2,3,4];
+for i1 in IS2 do i2:=i1;
+  for i2 in IS2 do
+    for i3 in IS4 do
+    for i4 in IS4 do
+    for i5 in IS4 do
+            Print("\n",i1," ",i2," ",i3," ",i4," ",i5);
+            R:=[[1],[i1,i2],[i3,i4,i5]];
+#            G1:=AsGroup(MagmaByMultiplicationTable(MatrixOf(R)));
+              G:=PcgsOfR(R);
+            if G<>fail then 
+              Print(IdSmallGroup(G),"\c");RMAXSUCH(G);Print(WEGLI);
+              fi;
+      od;
+      od;
+      od;
+    od;
+  od;
+     
+.. neues von 4444: 4222 fehlt auch noch und 
+.. Gruppe [ 128, 2163 ] die dauert ewig
+.. Gruppe [ 64, 202 ] die dauert ewig
 
 
 

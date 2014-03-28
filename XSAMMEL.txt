@@ -295,14 +295,11 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
   if S<=AUZAHL then
-#    Print("\n:::",List(RC),HRES);
     STAB:=Stabilizer(AU,Set(GR),OnSets);
     ORB:=Orbits(STAB,RC,OnPoints);
     RC:=List(ORB,i->Representative(i));
-#    Print("\n;;;",RC,HRES);
     else STAB:=0; fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
-#  if S=1 then Print("/",Size(RC),"/"); fi;
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
     if S=1 then Print("/",Size(RC)-Position(RC,ri)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
@@ -370,10 +367,9 @@ XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht
 #Error("Wie kam inh=56092 hier rein? Jetzt ist inh=",inh);
             XSAMMEL[POS][7]:=[512,inh];
             fi;
-        fi;
+        else XFUELL(XSAMMEL[i][6]); fi;
 #      Print(XSAMMEL[POS][7],"\c");
 #      XSAMMEL[POS][8]:=0;
-      if 2^Size(XSAMMEL[POS][1])<n then XFUELL(XSAMMEL[i][6]); fi;
       fi;
 #    XSAMMEL[POS][8]:=XSAMMEL[POS][8]+1;
     od;
@@ -399,11 +395,12 @@ if n=nmax and 2^STUFE=n then
 
 else
 
-  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; if IsBound(i[6]) then
-    if not IsBound(RMERKER[STUFE][i[7][2]]) then 
-      RMERKER[STUFE][i[7][2]]:=i; 
+  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; 
+   if IsBound(i[6]) and not IsInt(i[2]) then
+    if not IsBound(RMERKER[STUFE][1]) then #war i[7][2]
+      RMERKER[STUFE][1]:=i;#war i[7][2]
       else if not IsBound(i[12]) then
-        i[12]:=RMERKER[STUFE][i[7][2]];
+        i[12]:=RMERKER[STUFE][1];#war i[7][2]
         HRES2:=i[2];
         HRES:=i[12][2];
         pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
@@ -655,8 +652,8 @@ PARTFIND:=function(XSAMMEL,PART)
   end;
 
 PARTZAHL:=function(XSAMMEL)
-  local i,S,LEER,RBIT;
-  S:=Size(XSAMMEL);RBIT:=0;
+  local i,S,LEER;
+  S:=Size(XSAMMEL);
   for i in XSAMMEL do
     PARTZ:=PARTZ+1;
     if IsBound(i[5]) then 
