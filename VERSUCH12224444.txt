@@ -1020,23 +1020,27 @@ Iterated([1,1,1,1,1],function(a,b) return a+a+b; end);
 #AUZAHL:=99;GANZLOS();# min
 
 ^^^^ neu Orbits(AU,RC); ^^^^
-.. rumms, wieder Error bei XMISCH, wei HRES2 keine Liste
+vv rumms, wieder Error bei XMISCH, wei HRES2 keine Liste
    MERKE: tritt vermutlich auf, wenn schon eine Gruppe mit Nr. inh drin ist
-.. muss ich wenigstens überbrücken...
-.. wie in aller Welt kommt 56092 in das [512,56092] hinein???
-   .. so ich glaub ich hab was gefunden:
+nö muss ich wenigstens überbrücken... nö habs unten
+ok wie in aller Welt kommt 56092 in das [512,56092] hinein???
+   ok so ich glaub ich hab was gefunden: ok auch mit aber nicht alles
       XFUELL darf nicht über das aktuelle n hinaus rekursiv aufgerufen werden.
       vermutlich war das schon mal drin und ich habs wieder raus
       weil es anscheindend aussieht wie immer <=n.
-   .. die erste Hürde Print() am Anfang von inh=4444 ist geschafft
-   .. gut, läuft jetzt, erstmal aus.
-.. gleich bei der Gelegenheit: RMERKER muss kein Vektor mehr sein.
+   ok die erste Hürde Print() am Anfang von inh=4444 ist geschafft
+   vv gut, läuft jetzt, erstmal aus.
 .. doch neues XFUELL reicht noch nicht, immer noch verkehrt!!! Na sowas!
+ok ok ok ok ich habs!!! inh war local in GANZLOS, alles klar.
 ^^^^ XMISCH-Fehler ^^^
+.. RMERKER muss kein Vektor mehr sein.
 .. auch AUZAHL=5 probieren.
 .. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
 .. dann nochmal ohne XMERKZAHLZIEL versuchen, es ist wieder Leerlauf drin, wie das?
 .. wie war gleich die Folge 1,5,28,212???
+.. Zusammenhang vollständige WEGEZAHL und Size(A).
+.. statt 2^..<n sollte auch else gehen
+.. RC doch nochmal komplette Nebenklassen versuchen, ob dann gleich Ende bei XMERKZALZIEL
 
 vvvv HGRAPH vvvv
 P:=[
@@ -1047,10 +1051,10 @@ K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
     [3,4],[4,5,6]];
 
 MINIMIERE:=function(P,K,L,COUNT)
-  local i,j,MIN,MAX,D,MERK1,MERK2,dx,dy,COUNTER,G;
-  MAX:=0;COUNTER:=0;G:=Lcm(List(K,i->Size(i)));
+  local i,j,MIN,MAX,D,MERK1,MERK2,dx,dy,MAXMERK,G;
+  MAX:=0;G:=Lcm(List(K,i->Size(i)));
   repeat
-    MAX:=0;
+    MAXMERK:=MAX;MAX:=0;
     for i in [1..Size(P)] do
       MIN:=-1;
       for dx in [0,1,-1] do for dy in [0,1,-1] do
@@ -1062,14 +1066,14 @@ MINIMIERE:=function(P,K,L,COUNT)
         if D<MIN or MIN=-1 then MIN:=D; MERK1:=[i,dx,dy];  fi;
 if COUNT=1 then Print("\n MIN",D," ",MIN,MERK1); fi;
         od; od;
+      P[MERK1[1]][1]:=P[MERK1[1]][1]+MERK1[2];
+      P[MERK1[1]][2]:=P[MERK1[1]][2]+MERK1[3];
       if MIN>MAX then MAX:=MIN; MERK2:=MERK1; fi;
 if COUNT=1 then Print("\nMAX ",MIN," ",MAX,MERK2); fi;
       od;
-    P[MERK2[1]][1]:=P[MERK2[1]][1]+MERK2[2];
-    P[MERK2[1]][2]:=P[MERK2[1]][2]+MERK2[3];
     Print("\n",MAX*G," ",MERK2,P[MERK2[1]]);
-    COUNTER:=COUNTER+1;
-    until COUNTER=COUNT;
+    until MAX=MAXMERK;
+  PROB(P,K);
   end;
 
 P:=[
@@ -1077,8 +1081,8 @@ P:=[
 [-50,50,3],         [50,50,4],          [150,50,5],  #  3  4  5
           [0,0,6],           [100,0,7]];             #   6   7
 K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
-    [3,4],[4,5,6]];
-#MINIMIERE(P,K,100,1);
+    [3,4,7],[4,5,6]];
+#MINIMIERE(P,K,100,10);
 
 
 PROB:=function(P,K)

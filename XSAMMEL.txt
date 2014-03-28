@@ -728,7 +728,7 @@ ALLEWEGEDISP:=function(PART,ZEIGER,S)
   end;
   
 GANZLOS:=function()
-  local inh,G;
+  local G;
   Exec("date");
   XSAMMEL:=[];#nur anfangs einmal
   XMERKZAHLZIEL:=99999;#45,24,77,5
@@ -738,6 +738,7 @@ GANZLOS:=function()
   Exec("date");inh:=4432;Print("inh=",inh);XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
   Exec("date");inh:=4431;Print("inh=",inh);XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
   Exec("date");
+  SaveWorkspace("GAP_WORKSPACE_4431");
   end;
 #AUZAHL:=4;GANZLOS();
 
