@@ -1012,12 +1012,29 @@ NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 CoefficientsQadic(23,2);
 Iterated([1,1,1,1,1],function(a,b) return a+a+b; end);
 </C>
+
+#Read("GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
+#AUZAHL:=4;GANZLOS();#6 min für alle n=256 /
+#AUZAHL:=5;GANZLOS();#11 min/
+#AUZAHL:=6;GANZLOS();#29 min/
+#AUZAHL:=99;GANZLOS();# min
+
 ^^^^ neu Orbits(AU,RC); ^^^^
-
-
+.. rumms, wieder Error bei XMISCH, wei HRES2 keine Liste
+   MERKE: tritt vermutlich auf, wenn schon eine Gruppe mit Nr. inh drin ist
+.. muss ich wenigstens überbrücken...
+.. wie in aller Welt kommt 56092 in das [512,56092] hinein???
+   .. so ich glaub ich hab was gefunden:
+      XFUELL darf nicht über das aktuelle n hinaus rekursiv aufgerufen werden.
+      vermutlich war das schon mal drin und ich habs wieder raus
+      weil es anscheindend aussieht wie immer <=n.
+   .. die erste Hürde Print() am Anfang von inh=4444 ist geschafft
+.. gleich bei der Gelegenheit: RMERKER muss kein Vektor mehr sein. 
+^^^^ XMISCH-Fehler ^^^
+.. auch AUZAHL=5 probieren.
 .. auch die WEGEZAHL bei AUZAHL=99 gucken. Da sollte doch XMERKZAHL rauskommen?
-.. dann nochmal ohne XMERKZAHLZIEL versuchen
-
+.. dann nochmal ohne XMERKZAHLZIEL versuchen, es ist wieder Leerlauf drin, wie das?
+.. wie war gleich die Folge 1,5,28,212???
 
 
 

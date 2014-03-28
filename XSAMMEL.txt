@@ -302,10 +302,10 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 #    Print("\n;;;",RC,HRES);
     else STAB:=0; fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
-  if S=1 then Print("/",Size(RC),"/"); fi;
+#  if S=1 then Print("/",Size(RC),"/"); fi;
   for ri in RC do if ri<>RC[1] and RDRIN>-1 then
     Add(HRES,ri,1);HRESEXT[S]:=ri;
-    if S=1 then Print(".\c"); if DBIT=1 then Print("\n"); fi; fi;
+    if S=1 then Print("/",Size(RC)-Position(RC,ri)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 #    if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; fi;
     if QY10(HRES,S,GR) then
       PNEU:=QY11(HRES,S);
@@ -356,7 +356,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   return RBIT;
   end;
 
-XFUELL:=function(XSAMMEL) #fuellt [7][8]
+XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
   local i,S,POS;
   S:=Size(XSAMMEL);
   for i in [1..S] do 
@@ -366,12 +366,13 @@ XFUELL:=function(XSAMMEL) #fuellt [7][8]
         if Size(Group(XSAMMEL[POS][2]))<512 then
           XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));
           else
+Error("Wie kommt inh=56092 hier rein?");
             XSAMMEL[POS][7]:=[512,inh];
             fi;
         fi;
 #      Print(XSAMMEL[POS][7],"\c");
 #      XSAMMEL[POS][8]:=0;
-      XFUELL(XSAMMEL[i][6]);
+      if 2^Size(XSAMMEL[POS][1])<n then XFUELL(XSAMMEL[i][6]); fi;
       fi;
 #    XSAMMEL[POS][8]:=XSAMMEL[POS][8]+1;
     od;
@@ -379,7 +380,7 @@ XFUELL:=function(XSAMMEL) #fuellt [7][8]
 #XFUELL(XSAMMEL);
 XMISCH:=function(XSAMMEL,POSITION,STUFE)
   local i,ii,S,LEER,HRES,HRES2,pcgs,pcgs2;
-  S:=Size(XSAMMEL);LEER:="                  ";
+  S:=Size(XSAMMEL);
   if not IsBound(RMERKER[STUFE]) then RMERKER[STUFE]:=[]; fi;
 
 if n=nmax and 2^STUFE=n then
@@ -438,9 +439,16 @@ RMAXSUCH:=function(C)
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
   WEGEARRAY:=[];
   QY13(C,1,1,XSAMMEL,AU);
+#XSAMMELVIEWER0(XSAMMEL);
+#Print("\n***XFUELL***");
    XFUELL(XSAMMEL);
+#XSAMMELVIEWER0(XSAMMEL);
+#Print("\n***XMISCH***");
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
+#XSAMMELVIEWER0(XSAMMEL);
+#Print("\n***XLEER***");
    XLEER(XSAMMEL);
+#XSAMMELVIEWER0(XSAMMEL);
   end;
 
 ILIST:=[1,1];
@@ -454,7 +462,7 @@ Print("\n\ninh=",inh," ");
 Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
     XMERKZAHLVEKTOR[inh]:=XMERKZAHL;
     od;
-  Print("\n",XMERKZAHLVEKTOR,COUNTER);
+  Print("\n",Compacted(XMERKZAHLVEKTOR),COUNTER);
   Print("\n");
   end;
 
@@ -495,6 +503,34 @@ XSAMMELVIEWER:=function(XSAMMEL)
     fi; od;
   end;
 #XSAMMELVIEWER(XSAMMEL);
+
+XSAMMELVIEWER0:=function(XSAMMEL)
+  local i,S,LEER;
+  S:=Size(XSAMMEL);LEER:="                  ";
+  for i in XSAMMEL do  
+    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ");#die Einrückung
+    Print(UMKEHRLIST(i[1])," ");#PNEU
+    Print(i[2]," ");
+    if IsBound(i[5]) then 
+      Print(i[5][2]," "); 
+      Print("(",i[14],") ");#steht in Wegebaum dann
+      else
+        if IsBound(i[12]) then 
+          if IsBound(i[12][7]) then 
+            Print("===> ",i[12][7]," "); 
+            else Print("===> ",i[12][2]," ");
+            fi;
+          else 
+            if IsBound(i[7]) then 
+              Print("= ",i[7]," "); 
+              else Print("= ??? ");
+              fi;
+            fi;
+        Print("(",i[14],") ");#steht in Wegebaum dann
+        XSAMMELVIEWER0(i[6]);
+        fi;
+    od;
+  end;
 
 XSAMMELVIEWER1:=function(XSAMMEL)
   local i,S,LEER;
@@ -694,11 +730,12 @@ GANZLOS:=function()
   local inh,G;
   Exec("date");
   XSAMMEL:=[];#nur anfangs einmal
+  XMERKZAHLZIEL:=99999;#45,24,77,5
   ILIST:=[56082..56092];QQQY(256);Print("\007");
-  Exec("date");inh:=4444;Print("inh=",inh);XMERKZAHLZIEL:=5;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print("XMERKZAHL," ",WEGEZAHL);Print("\007");
-  Exec("date");inh:=4442;Print("inh=",inh);XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
-  Exec("date");inh:=4432;Print("inh=",inh);XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
-  Exec("date");inh:=4431;Print("inh=",inh);XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4444;Print("inh=",inh);R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[ 256, 256, 256, 256, 256, 256, 256, 256, 255 ]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4442;Print("inh=",inh);R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4432;Print("inh=",inh);R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
+  Exec("date");inh:=4431;Print("inh=",inh);R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);Print("\007");
   Exec("date");
   end;
 #AUZAHL:=4;GANZLOS();
