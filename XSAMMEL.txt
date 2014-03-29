@@ -289,22 +289,23 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   end;
    
 QY13:=function(C,S,nn,ZEIGER,AU)
-  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,
+  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
   orbi,ORB,STAB;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
-  RC:=RightTransversal(C,GR);
+#  RC:=RightTransversal(C,GR);
+  RC:=CosetDecomposition(C,GR);RC:=List(RC,i->Set(i));
   if S<=AUZAHL then
     STAB:=Stabilizer(AU,Set(GR),OnSets);
-    ORB:=Orbits(STAB,RC,OnPoints);
+    ORB:=Orbits(STAB,RC,OnSets);
     RC:=List(ORB,i->Representative(i));
     else STAB:=0; fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
-  for ri in RC do if ri<>RC[1] and RDRIN>-1 then
+  for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
     Add(HRES,ri,1);HRESEXT[S]:=ri;
-    if S=1 then Print("/",Size(RC)-Position(RC,ri)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
-#    if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; fi;
     if QY10(HRES,S,GR) then
+      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
+if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
       PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
       HRESMERK:=List(HRES);
@@ -312,7 +313,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
         RBIT:=QY13(C,S+1,2*nn,ZR[2],STAB); 
-        else
+        else XMERKBIT:=-1;
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
             HRES0:=List(HRES);
@@ -329,6 +330,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];
             HRES0:=HRES0MERK;
+            Print("*");
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
@@ -341,13 +343,15 @@ QY13:=function(C,S,nn,ZEIGER,AU)
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
+#+++++++++
+      if S=1 then 
+        if XMERKZAHL1=XMERKZAHL and XMERKBIT=-1 then #and WEGEZAHL1<WEGEZAHL then
+          Error("hier aber da"); 
+          fi;
+        fi;
+#---------
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
-#    if S=1 then 
-#      if XMERKZAHL1=XMERKZAHL and WEGEZAHL1<WEGEZAHL then
-#        Error("hier aber da"); 
-#        fi;
-#      fi;
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
   i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
   return RBIT;
@@ -396,7 +400,7 @@ if n=nmax and 2^STUFE=n then
 else
 
   for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; if IsBound(i[6]) then
-    if not IsBound(RMERKER[STUFE][i[7][2]]) then 
+    if not IsBound(RMERKER[STUFE][i[7][2]]) then #nicht gleich [1] setzen!!!
       RMERKER[STUFE][i[7][2]]:=i; 
       else if not IsBound(i[12]) then
         i[12]:=RMERKER[STUFE][i[7][2]];

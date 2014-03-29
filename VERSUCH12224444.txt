@@ -366,7 +366,9 @@ GANZLOS:=function()
 #AUZAHL:=4;GANZLOS();
 #R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);
 #R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,3]];G:=PcgsOfR(R);RMAXSUCH(G);
-#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
 
 
 ^^^^lib 512 anfangen
@@ -1150,17 +1152,32 @@ for i1 in IS2 do i2:=i1;
 .. Gruppe [ 64, 202 ] die dauert ewig
 
 
+########
+so, hier habe ich verdingst wegen dem i[2] in XMISCH. Alles weg von heut
+.. da war das CosetDecomposition,
+o. das Auprodukt ausrechnen, hat schon tüchtig gestimmt
+.. diverse Testausgaben mit **** ####
+.. das Aufg
+
+XSAMMEL:=[];AUZAHL:=4;HRESEXT:=[];
+RMAXSUCH(SmallGroup(256,55975));XMERKZAHL;WEGEZAHL
+ist durch!!! in 1,7% und 18 min. Gleich weiter mit
+#inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
 
 
+.. so, jetzt aber richtig: bei [16,4] ist XMERKZAHL1=XMERKZAHL
+   da mach ich erneut die CosetDecomposition rein.
+   und da tritt wieder XMERKZAHL1=XMERKZAHL auf.
+.. das muss ich rausbekommen, was das ist. Das ist bei der [16,4] zuerst,
+.. kann auch bei größerem S leer durchlaufen, also ein XMERKBIT:=-1; rein bei SMAX 
+   aber trotzdem anhalt. Also muss ich [16,4] gucken.
 
+XSAMMEL:=[];AUZAHL:=4;HRESEXT:=[];
+RMAXSUCH(SmallGroup(16,4));XMERKZAHL;WEGEZAHL;
+XSAMMELVIEWER0(XSAMMEL);
 
+.. bei dem XMISCH muss ich RMAXSUCHREKURSIV mir berücksichtigen
+.. auch nochmal Aproduckt gucken bei mit/ohne CosetDecomposition
 
-
-
-
-
-
-
-
-
+huuuu, das war eine extra Aktion heut! Mach ich morgen normal weiter, gute Nacht
 
