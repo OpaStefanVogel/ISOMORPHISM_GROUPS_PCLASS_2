@@ -395,12 +395,11 @@ if n=nmax and 2^STUFE=n then
 
 else
 
-  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; 
-   if IsBound(i[6]) and not IsInt(i[2]) then
-    if not IsBound(RMERKER[STUFE][1]) then #war i[7][2]
-      RMERKER[STUFE][1]:=i;#war i[7][2]
+  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; if IsBound(i[6]) then
+    if not IsBound(RMERKER[STUFE][i[7][2]]) then 
+      RMERKER[STUFE][i[7][2]]:=i; 
       else if not IsBound(i[12]) then
-        i[12]:=RMERKER[STUFE][1];#war i[7][2]
+        i[12]:=RMERKER[STUFE][i[7][2]];
         HRES2:=i[2];
         HRES:=i[12][2];
         pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
