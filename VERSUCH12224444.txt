@@ -361,13 +361,16 @@ GANZLOS:=function()
   inh:=4442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   inh:=4432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   inh:=4431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4222;XMERKZAHLZIEL:>=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,256,256,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   Exec("date");
   end;
+#SaveWorkSpace("GAP_WORKSPACE_4222")
+#Ausgangspunkt dafuer war:
 #AUZAHL:=4;GANZLOS();
-#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);
-#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,3]];G:=PcgsOfR(R);RMAXSUCH(G);
-#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);
-#R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4444;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4443;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,3]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4432;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4431;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);
 #inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
 
 
@@ -1159,11 +1162,15 @@ o. das Auprodukt ausrechnen, hat schon tüchtig gestimmt
 .. diverse Testausgaben mit **** ####
 .. das Aufg
 
+vvvv inh=4222 vvvv
 XSAMMEL:=[];AUZAHL:=4;HRESEXT:=[];
 RMAXSUCH(SmallGroup(256,55975));XMERKZAHL;WEGEZAHL
 ist durch!!! in 1,7% und 18 min. Gleich weiter mit
 #inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
-
+jetzt dauert [ 128, 2163 ] in [ 256, 55751 ] bei QY15 Size(Zeiger)=300000...
+und 99% massiv PositionFirstComponentRepariert
+jetzt darüber hinweg, schade, läuft auf [2,2,2,2,1,256,256,256,256]
+jetzt kann ich nur noch hoffen, dass das auch als [256,256,256,256,1,256,256,255 geht
 
 .. so, jetzt aber richtig: bei [16,4] ist XMERKZAHL1=XMERKZAHL
    da mach ich erneut die CosetDecomposition rein.
@@ -1171,13 +1178,24 @@ ist durch!!! in 1,7% und 18 min. Gleich weiter mit
 .. das muss ich rausbekommen, was das ist. Das ist bei der [16,4] zuerst,
 .. kann auch bei größerem S leer durchlaufen, also ein XMERKBIT:=-1; rein bei SMAX 
    aber trotzdem anhalt. Also muss ich [16,4] gucken.
+.. versuch mal Orbits HRES+ri, nee ertmal könnte es so sein
+   dass dieser Weg erst bei n=32 wirksam wird und dort zu neuen Wegen führt.
 
 XSAMMEL:=[];AUZAHL:=4;HRESEXT:=[];
 RMAXSUCH(SmallGroup(16,4));XMERKZAHL;WEGEZAHL;
 XSAMMELVIEWER0(XSAMMEL);
 
-.. bei dem XMISCH muss ich RMAXSUCHREKURSIV mir berücksichtigen
-.. auch nochmal Aproduckt gucken bei mit/ohne CosetDecomposition
-
+.. bei dem XMISCH muss ich RMAXSUCHREKURSIV mit berücksichtigen
+.. auch nochmal Aprodukt gucken bei mit/ohne CosetDecomposition
+ok dazu FAKT mit rein, ok ist drin ok
 huuuu, das war eine extra Aktion heut! Mach ich morgen normal weiter, gute Nacht
+
+XSAMMEL:=[];AUZAHL:=9999;HRESEXT:=[];DBIT:=1;DDDDBIT:=1;
+G:=SmallGroup(8,4);
+RMAXSUCH(SmallGroup(4,1));
+RMAXSUCH(SmallGroup(4,2));
+RMAXSUCH(G);
+XSAMMELVIEWER0(XSAMMEL);
+A:=AutomorphismGroup(G);
+Size(A);168/Size(A);
 
