@@ -621,7 +621,7 @@ XSAMMELVIEWER4:=function(XSAMMEL)#neu aus 3 ohne *
     if IsBound(i[12]) then 
       Print(" *"); 
       else
-        if IsBound(i[6][1]) then XSAMMELVIEWER4(i[6]); fi;
+        if IsBound(i[6][1]) then LETZTERABZWEIG:=i[6]; XSAMMELVIEWER4(i[6]); fi;
         fi;
     fi; od;
   end;

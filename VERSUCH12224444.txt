@@ -187,7 +187,7 @@ Gruppe [ 256, 55969 ] jetzt drin .....................................gap: canno
 #44442
 #44432
 #44431
-IS:=[4,3,2,1];
+IS:=[4,3,2,1];inh:=5000;
 for i1 in IS do i2:=i1; i3:=i1;
 #  for i2 in IS do
 #    for i3 in IS do
@@ -197,10 +197,12 @@ for i1 in IS do i2:=i1; i3:=i1;
             for i7 in IS do
               for i8 in IS do
                 for i9 in IS do inh:=inh+1;
-                  Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8," ",i9,"\c");
-                  R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8,i9]];
-                  G:=PcgsOfR(R);
-                  RMAXSUCH(G);
+                  Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8," ",i9," \c");
+                  if [i1,i2,i3,i4,i5,i6,i7,i8,i9]<[4,4,4,4,1,...] then
+                    R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8,i9]];
+                    G:=PcgsOfR(R);
+                    RMAXSUCH(G);
+                    fi;
                   od;
                 od;
               od;
@@ -361,7 +363,7 @@ GANZLOS:=function()
   inh:=4442;XMERKZAHLZIEL:=77;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,1,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   inh:=4432;XMERKZAHLZIEL:=24;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   inh:=4431;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,2,1,1,256,255]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
-  inh:=4222;XMERKZAHLZIEL:>=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,256,256,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
+  inh:=4222;XMERKZAHLZIEL:=45;R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[2,2,2,2,1,256,256,256,256]];G:=PcgsOfR(R);RMAXSUCH(G);Print(XMERKZAHL," ",WEGEZAHL);
   Exec("date");
   end;
 #SaveWorkSpace("GAP_WORKSPACE_4222")
@@ -372,6 +374,8 @@ GANZLOS:=function()
 #inh:=4432;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);
 #inh:=4431;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);
 #inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4211;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,1,1]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=3222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,3,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
 
 
 ^^^^lib 512 anfangen
@@ -1062,9 +1066,14 @@ P:=[
 K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
     [3,4],[4,5,6]];
 
-MINIMIERE:=function(P,K,L,COUNT)
-  local i,j,MIN,MAX,D,MERK1,MERK2,dx,dy,MAXMERK,G;
+MINIMIERE:=function(P,K,L,SKAL)
+  local i,j,MIN,MAX,D,MERK1,MERK2,dx,dy,MAXMERK,G,LL;
   MAX:=0;G:=Lcm(List(K,i->Size(i)));
+  for i in [1..Size(P)] do 
+    P[i][1]:=P[i][1]*SKAL;
+    P[i][2]:=P[i][2]*SKAL;
+    od;
+  LL:=L*SKAL;
   repeat
     MAXMERK:=MAX;MAX:=0;
     for i in [1..Size(P)] do
@@ -1072,20 +1081,22 @@ MINIMIERE:=function(P,K,L,COUNT)
       for dx in [0,1,-1] do for dy in [0,1,-1] do
         D:=0;
         for j in K[i] do
-          D:=D+((P[i][1]+dx-P[j][1])^2+(P[i][2]+dy-P[j][2])^2-L^2)^2;
+          D:=D+((P[i][1]+dx-P[j][1])^2+(P[i][2]+dy-P[j][2])^2-LL^2)^2;
           od;
         D:=D/Size(K[i]);
         if D<MIN or MIN=-1 then MIN:=D; MERK1:=[i,dx,dy];  fi;
-if COUNT=1 then Print("\n MIN",D," ",MIN,MERK1); fi;
         od; od;
       P[MERK1[1]][1]:=P[MERK1[1]][1]+MERK1[2];
       P[MERK1[1]][2]:=P[MERK1[1]][2]+MERK1[3];
       if MIN>MAX then MAX:=MIN; MERK2:=MERK1; fi;
-if COUNT=1 then Print("\nMAX ",MIN," ",MAX,MERK2); fi;
       od;
     Print("\n",MAX*G," ",MERK2,P[MERK2[1]]);
     until MAX=MAXMERK;
-  PROB(P,K);
+  for i in [1..Size(P)] do 
+    P[i][1]:=P[i][1]/SKAL;
+    P[i][2]:=P[i][2]/SKAL;
+    od;
+  PROB(P,K,L);
   end;
 
 P:=[
@@ -1097,20 +1108,63 @@ K:=[[2,3,4],[1,4,5],[1,4,6],[1,2,3,5,6,7],[2,4,7],
 #MINIMIERE(P,K,100,10);
 
 
-PROB:=function(P,K)
-  local i;
+PROB:=function(P,K,L)
+  local i,MAX,D,A;
+  MAX:=-1.0;
   for i in [1..Size(K)] do 
     Print("\n",i);
     for j in K[i] do
-      Print(" ", Sqrt(1.0*((P[i][1]-P[j][1])^2+(P[i][2]-P[j][2])^2)));
+      D:=Sqrt(1.0*((P[i][1]-P[j][1])^2+(P[i][2]-P[j][2])^2));
+      A:=AbsoluteValue(D-L);
+      if MAX=-1. or A>MAX then MAX:=A; fi;
+      Print(" ",D );
     od; od;
+  Print("\n",MAX);
+  Print("\n",MAX/L*100,"%");
+  Print("\n");
+  return MAX/L*100;
   end;
-#PROB(P,K);
+#PROB(P,K,50);
 
+
+p:=[]; 
+p[ 1]:=[150,400,[2,4,5,6]];   p[ 2]:=[200,400,[1,3,6,7]];     p[ 3]:=[250,400,[2,7,8,9]]; 
+p[ 4]:=[100,350,[1,5,10,11]]; p[ 5]:=[155,345,[1,4,11,16]];   p[ 6]:=[175,340,[1,2,7,17]];
+p[44]:=[100,050,[40,41,45,50]];p[45]:=[155,055,[35,41,44,50]];p[46]:=[175,060,[36,47,50,51]];
+p[49]:=[300,050,[42,43,48,52]];p[48]:=[245,055,[37,42,49,52]];p[47]:=[225,060,[36,46,51,52]];
+p[ 9]:=[300,350,[3,8,12,13]]; p[ 8]:=[245,345,[3,9,12,18]];   p[ 7]:=[225,340,[2,3,6,17]];
+p[50]:=[150,000,[44,45,46,51]];p[51]:=[200,000,[46,47,50,52]];p[52]:=[250,000,[47,48,49,51]];
+p[10]:=[050,300,[4,11,14,15]]; p[11]:=[125,275,[4,5,10,15]];
+p[40]:=[050,100,[33,34,41,44]];p[41]:=[125,125,[34,40,44,45]];
+p[43]:=[350,100,[38,39,42,49]];p[42]:=[275,125,[38,43,48,49]];
+p[13]:=[350,300,[9,12,19,20]]; p[12]:=[275,275,[8,9,13,19]];
+p[14]:=[000,250,[10,15,21,25]];p[15]:=[100,240,[10,11,14,22]];
+p[33]:=[000,150,[25,29,34,40]];p[34]:=[100,160,[30,33,40,41]];
+p[39]:=[400,150,[28,32,38,43]];p[38]:=[300,160,[31,39,42,43]];
+p[20]:=[400,250,[13,19,24,28]];p[19]:=[300,240,[12,13,20,23]];
+p[16]:=[150,240,[5,17,22,26]]; p[17]:=[200,250,[6,7,16,18]];  p[18]:=[250,240,[8,17,23,27]];
+p[35]:=[150,160,[26,30,36,45]];p[36]:=[200,150,[35,37,46,47]];p[37]:=[250,160,[27,31,36,48]];
+p[21]:=[060,225,[14,22,25,29]];p[22]:=[130,220,[15,16,21,26]];
+p[29]:=[060,175,[21,25,30,33]];p[30]:=[130,180,[26,29,34,35]];
+p[32]:=[340,175,[24,28,31,39]];p[31]:=[270,180,[27,32,37,38]];
+p[24]:=[340,225,[20,23,28,32]];p[23]:=[270,220,[18,19,24,27]];
+p[25]:=[000,200,[14,21,29,33]];p[26]:=[180,200,[16,22,30,35]];
+p[28]:=[400,200,[20,24,32,39]];p[27]:=[220,200,[18,23,31,37]];
+P:=[];K:=[];
+for i in [1..Size(p)] do
+  P[i]:=[p[i][1],p[i][2]];
+  K[i]:=p[i][3];
+  od;
+MINIMIERE(P,K,50,10);
+
+for i in [1..Size(P)] do Print("\np(",P[i][1]/100.0,",",P[i][2]/100.0,",P",i,")"); od;
+for i in [1..Size(K)] do Print("\n");
+  for j in [1..Size(K[i])] do Print("s(P",i,",P",K[i][j],") "); od; od;
 
 ^^^^ HGRAPH ^^^^
 
 vvvv ALLEWAEGEZAEHLER vvvv
+for i in 
 ALLEWEGEZAEHLER:=function(ZEIGER,ZIEL)
   local PART,ZEIG;
   for PART in ZEIGER do
@@ -1171,6 +1225,7 @@ jetzt dauert [ 128, 2163 ] in [ 256, 55751 ] bei QY15 Size(Zeiger)=300000...
 und 99% massiv PositionFirstComponentRepariert
 jetzt darüber hinweg, schade, läuft auf [2,2,2,2,1,256,256,256,256]
 jetzt kann ich nur noch hoffen, dass das auch als [256,256,256,256,1,256,256,255 geht
+ja, ist was passendes dabei:[ 256, 256, 256, 256, 256, 2, 2, 2, 1 ]
 
 .. so, jetzt aber richtig: bei [16,4] ist XMERKZAHL1=XMERKZAHL
    da mach ich erneut die CosetDecomposition rein.
@@ -1199,3 +1254,45 @@ XSAMMELVIEWER0(XSAMMEL);
 A:=AutomorphismGroup(G);
 Size(A);168/Size(A);
 
+
+vvvv die untersten n=256 Abzweige vvvv
+ILIST:=[55626..56058];
+for inha in ILIST do
+  Print(".\c");
+  G:=SmallGroup(256,inha);
+#C:=ConjugacyClassesSubgroups(G);
+#C:=ConjugacyClassesMaximalSubgroups(G);
+  C:=MaximalSubgroupClassReps(G);
+  L:=List(C,i->IdSmallGroup(i));
+  if [128,2325] in L then Print(inha); fi;
+  od;
+
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,1]];
+M:=PcgsOfR(R);
+IdSmallGroup(M);
+
+Ergebnis:
+XSAMMEL:=[];
+ILIST:=[55639,55642,55799,55800,55840,55841,55847,55975,55976,55990,55991];
+Size(ILIST);
+for inha in ILIST do
+  Print("\n",inha);
+  G:=SmallGroup(256,inha);
+  RMAXSUCH(G);
+  od;
+XSAMMELVIEWER4(XSAMMEL);
+
+vvvv das große XSAMMEL weiter vvvv
+.. das else XFUELL in XFUELL passt auch noch nicht so richtig.
+   Es sollte verhindern, dass bei Ergänzung kleinerer Gruppen 
+   weiter XSAMMEL aufgerufen wird. Funktionieren tut es aber...
+ok das Workspace laden natürlich mit gap -L und nicht LoadWorkspace()!!!
+ok das reparieren des wegen inh=0 abgebrochenen XSAMMEL scheint zu gehen:
+ok XSAMMELVIEWER4 jetzt mit LETZTERABZWEIG
+
+   gap.sh -L GAP_WORKSPACE_4222
+   inh:=4222;
+   XFUELL(XSAMMEL);
+   RMERKER:=[];XMISCH(XSAMMEL,[],1);
+   XLEER(XSAMMEL);
+   
