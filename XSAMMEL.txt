@@ -518,7 +518,8 @@ XSAMMELVIEWER0:=function(XSAMMEL)
     Print(i[2]," ");
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
-      Print("(",i[14],") ");#steht in Wegebaum dann
+      Print("(",i[14],") -->");#steht in Wegebaum dann
+      Print(i[5][7]);#steht in Wegebaum dann
       else
         if IsBound(i[12]) then 
           if IsBound(i[12][7]) then 

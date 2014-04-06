@@ -1,0 +1,170 @@
+#asterix:./GAP4R7P4/gap4r7/bin/gap.sh
+#Read("GAP/PCLASS2/ENUM5.txt");
+n:=0*Z(2);
+z:=Z(2);
+#V:=FullRowSpace( GF(2),d*(d+1)/2 );
+
+d:=2;
+P:=Group((1,2)(3,4),(2,4),(2,3));Size(P);
+V:=FullRowSpace( GF(2),2^d );
+Q2:=Orbits(P,V,Permuted);Size(Q2);SortedList(List(Q2,i->Size(i)));
+#5
+#[ 1, 1, 4, 4, 6 ]
+d:=3;
+P:=Group(
+  (1,2)(3,4)(5,6)(7,8),
+  (2,4)(6,8),
+  (2,3,5)(7,6,4));Size(P);
+V:=FullRowSpace( GF(2),2^d );
+Q3:=Orbits(P,V,Permuted);Size(Q3);SortedList(List(Q3,i->Size(i)));
+#10
+#[ 1, 1, 8, 8, 14, 28, 28, 56, 56, 56 ]
+d:=4;
+P:=Group(
+  (1,2)(3,4)(5,6)(7,8)(9,10)(11,12)(13,14)(15,16),
+  (2,4)(6,8)(10,12)(14,16),
+  (2,3,5,9)(4,7,13,10)(6,11)(15,14,12,8));Size(P);
+V:=FullRowSpace( GF(2),2^d );
+Q4:=Orbits(P,V,Permuted);;Size(Q4);SortedList(List(Q4,i->Size(i)));
+Q41:=Orbit(P,[n,z,n,n,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(Q4);
+#32
+#[ 1, 1, 16, 16, 30, 120, 120, 140, 140, 240, 240, 448, 448,
+#  560, 560, 840, 840, 840, 1680, 1680, 1680, 1680, 1920, 
+#  2688, 2688, 4480, 4480, 6720, 6720, 6720, 6720, 10080 ]
+K41:=Orbit(P,[n,z,n,n,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K41);
+K42:=Orbit(P,[n,z,z,n,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K42);
+K43:=Orbit(P,[n,z,z,z,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K43);
+K44:=Orbit(P,[n,z,z,n,z,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K44);
+K45:=Orbit(P,[n,z,z,n,z,n,n,n,z,n,n,n,n,n,n,n],Permuted);;Size(K45);
+K46:=Orbit(P,[n,z,z,n,z,n,n,n,z,n,n,n,n,n,n,z],Permuted);;Size(K46);
+G41:=Orbit(P,[n,z,z,n,z,n,n,z,n,n,n,n,n,n,n,n],Permuted);;Size(G41);
+G42:=Orbit(P,[n,z,z,n,z,n,n,z,z,n,n,z,n,z,z,n],Permuted);;Size(G42);
+G43:=Orbit(P,[n,z,z,z,z,n,n,n,z,n,n,n,z,n,n,n],Permuted);;Size(G43);
+G44:=Orbit(P,[n,z,z,z,z,z,z,n,z,n,n,n,n,n,n,z],Permuted);;Size(G44);
+G45:=Orbit(P,[n,z,z,z,z,z,z,n,z,z,z,n,n,z,z,z],Permuted);;Size(G45);
+G46:=Orbit(P,[n,z,z,z,z,z,z,n,z,z,z,n,z,n,n,n],Permuted);;Size(G46);
+
+#2 5
+#3 10
+#4 2560
+
+#ohne e:
+d:=2;
+P:=Group((1,3),(1,2));Size(P);
+V:=FullRowSpace( GF(2),2^d-1 );
+Q2:=Orbits(P,V,Permuted);Size(Q2);SortedList(List(Q2,i->Size(i)));
+#4
+#[ 1, 1, 3, 3 ]
+d:=3;
+P:=Group(
+  (1,3)(5,7),
+  (1,2,4)(6,5,3));Size(P);
+V:=FullRowSpace( GF(2),2^d-1 );
+Q3:=Orbits(P,V,Permuted);;Size(Q3);SortedList(List(Q3,i->Size(i)));
+#10
+#[ 1, 1, 7, 7, 7, 7, 21, 21, 28, 28 ]
+d:=4;
+P:=Group(
+  (1,3)(5,7)(9,11)(13,15),
+  (1,2,4,8)(3,6,12,9)(5,10)(14,13,11,7)
+  );Size(P);
+V:=FullRowSpace( GF(2),2^d-1 );
+Q4:=Orbits(P,V,Permuted);;Size(Q4);SortedList(List(Q4,i->Size(i)));
+#46
+#[ 1, 1, 15, 15, 15, 15, 35, 35, 105, 105, 105, 105, 105, 105, 120, 120,
+#  168, 168, 280, 280, 315, 315, 420, 420, 420, 
+#  420, 420, 420, 420, 420, 840, 840, 840, 840, 840, 840, 
+#  1680, 1680, 1680, 1680, 2520, 2520, 2520, 2520, 2520, 2520 ]
+K41:=Orbit(P,[z,n,n,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K41);
+K42:=Orbit(P,[z,z,n,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K42);
+K43:=Orbit(P,[z,z,z,n,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K43);
+K44:=Orbit(P,[z,z,n,z,n,n,n,n,n,n,n,n,n,n,n],Permuted);;Size(K44);
+K45:=Orbit(P,[z,z,n,z,n,n,n,z,n,n,n,n,n,n,n],Permuted);;Size(K45);
+K46:=Orbit(P,[z,z,n,z,n,n,n,z,n,n,n,n,n,n,z],Permuted);;Size(K46);
+G41:=Orbit(P,[z,z,n,z,n,n,z,n,n,n,n,n,n,n,n],Permuted);;Size(G41);
+G42:=Orbit(P,[z,z,n,z,n,n,z,z,n,n,z,n,z,z,n],Permuted);;Size(G42);
+G43:=Orbit(P,[z,z,z,z,n,n,n,z,n,n,n,z,n,n,n],Permuted);;Size(G43);
+G44:=Orbit(P,[z,z,z,z,z,z,n,z,n,n,n,n,n,n,z],Permuted);;Size(G44);
+G45:=Orbit(P,[z,z,z,z,z,z,n,z,z,z,n,n,z,z,z],Permuted);;Size(G45);
+G46:=Orbit(P,[z,z,z,z,z,z,n,z,z,z,n,z,n,n,n],Permuted);;Size(G46);
+SortedList(G46)=SortedList(K46);
+#Ergebnis: bis auf d=2 auch 4 10 2560
+
+#2 3 4
+#3 6 8
+#4 10 16
+#5 15 32
+#6 21 64 
+
+Pr:=function(L)
+  return L{[1,2,3,4,5,6,8,9,10,12]};
+  end;
+DrT:=function(L)
+  return [
+    L[1]+L[7]+L[11]+L[13],
+    L[2]+L[7]+L[11]+L[14],
+    L[3]+L[7]+L[11]+L[15],
+    L[4]+L[7]+L[13]+L[14],
+    L[5]+L[7]+L[13]+L[15],
+    L[6]+L[7]+L[14]+L[15],
+    L[8]+L[11]+L[13]+L[14],
+    L[9]+L[11]+L[13]+L[15],
+    L[10]+L[11]+L[14]+L[15],
+    L[12]+L[13]+L[14]+L[15]];
+  end;
+QQD4:=Unique(List(Q4,j->SortedList(List(j,i->DrT(i)))));;Size(QQD4);List(QQD4,i->Size(i));
+QQP4:=Unique(List(Q4,j->SortedList(List(j,i->Pr(i)))));;Size(QQP4);
+
+FilterG:=function(LL)
+  local RET,L;
+  RET:=false;
+  for L in LL do if 
+    L[7]=L[1]+L[2]+L[3]+L[4]+L[5]+L[6] and
+    L[11]=L[1]+L[2]+L[3]+L[8]+L[9]+L[10] and
+    L[13]=L[1]+L[4]+L[5]+L[8]+L[9]+L[12] and
+    L[14]=L[2]+L[4]+L[6]+L[8]+L[10]+L[12] and
+    L[15]=L[3]+L[5]+L[6]+L[9]+L[10]+L[12]
+    then RET:=true; fi; od;
+  return RET;
+  end;
+FilterK:=function(LL)
+  local RET,L;
+  RET:=false;
+  for L in LL do if 
+    L[7]=n and
+    L[11]=n and
+    L[13]=n and
+    L[14]=n and
+    L[15]=n
+    then RET:=true; fi; od;
+  return RET;
+  end;
+FilterG(G41);
+Collected(List(Q4,i->FilterG(i)));
+List(Q4,i->FilterG(i));
+List(Q4,i->FilterK(i));
+List(Q4,i->FilterG(i)=true and FilterK(i)=true);
+Q4FILTG:=Filtered(Q4,FilterG);;Size(Q4FILTG);
+QQD4:=Unique(List(Q4FILTG,j->Unique(SortedList(List(j,i->Pr(i))))));;Size(QQD4);List(QQD4,i->Size(i));
+Q4FILTK:=Filtered(Q4,FilterK);;Size(Q4FILTK);
+QQP4:=Unique(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4);List(QQP4,i->Size(i));
+QQP4:=(List(Q4,j->SortedList(List(j,i->DrT(i)))));;Size(QQP4);List(QQP4,i->Size(i));
+QQP4:=Unique(List(Q4,j->SortedList(List(j,i->DrT(i)))));;Size(QQP4);List(QQP4,i->Size(i));
+QQP4:=Unique(List(Q4,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4);List(QQP4,i->Size(i));
+#nochmal einzelne Schritte:
+List(Q4,i->Size(i));
+QQP4:=List(Q4,j->List(j,i->DrT(i)));;List(QQP4,i->Size(i));
+QQP4:=List(Q4,j->SortedList(List(j,i->DrT(i))));;List(QQP4,i->Size(i));
+QQP4:=List(Q4,j->Unique(SortedList(List(j,i->DrT(i)))));;List(QQP4,i->Size(i));
+QQP4:=Collected(List(Q4,j->Unique(SortedList(List(j,i->DrT(i))))));;List(QQP4,i->Size(i[1]));List(QQP4,i->i[2]);
+QQP4:=Unique(List(Q4,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4);List(QQP4,i->Size(i));
+#nochmal mit Q4FILTK:
+List(Q4FILTK,i->Size(i));
+QQP4:=List(Q4FILTK,j->List(j,i->DrT(i)));;List(QQP4,i->Size(i));
+QQP4:=List(Q4FILTK,j->SortedList(List(j,i->DrT(i))));;List(QQP4,i->Size(i));
+QQP4:=List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i)))));;List(QQP4,i->Size(i));
+QQP4:=Collected(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;List(QQP4,i->Size(i[1]));List(QQP4,i->i[2]);
+QQP4:=Unique(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4);List(QQP4,i->Size(i));
+
+
+########## ^^^ soweit aus D4_2E ####### 
