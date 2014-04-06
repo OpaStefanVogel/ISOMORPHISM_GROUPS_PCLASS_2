@@ -168,3 +168,28 @@ QQP4:=Unique(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4)
 
 
 ########## ^^^ soweit aus D4_2E ####### 
+### aus ENUM.txt:
+MACH:=function(d)
+  local i,j,K,L,n;
+  n:=2^d;K:=[];L:=[];
+  for i in [1..n-1] do
+    if not(IsBound(K[i])) then
+      if IsOddInt(i) then K[i]:=i+2; K[i+2]:=i; else K[i]:=i; fi;
+      fi; 
+    od;
+  for i in [1..n-1] do
+    j:=2*i;
+    if j>=n then j:=j mod n +1; fi;
+    L[i]:=j;
+    od;
+  return Group(PermList(K),PermList(L));
+  end;
+
+
+####
+Q:=[];QQP:=[];
+d:=4;#d:=5;#d:=3;
+P:=MACH(d);Size(P);
+V:=FullRowSpace( GF(2),2^d-1 );
+Q[d]:=OrbitsDomain(P,V,Permuted);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
+QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
