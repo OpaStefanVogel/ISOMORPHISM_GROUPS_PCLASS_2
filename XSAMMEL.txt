@@ -50,6 +50,7 @@ PARTZ:=0;XMERKZAHLZIEL:=9999999;
 AUZAHL:=4;FAKT:=[];
 
 XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
+LETZTERABZWEIG:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;

@@ -112,6 +112,11 @@ DrT:=function(L)
     L[10]+L[11]+L[14]+L[15],
     L[12]+L[13]+L[14]+L[15]];
   end;
+PrT:=function(L)
+  return [
+    L[1],L[2],L[3],L[4],L[5],L[6],
+    n,L[7],L[8],L[9],n,L[10],n,n,n];
+  end;
 QQD4:=Unique(List(Q4,j->SortedList(List(j,i->DrT(i)))));;Size(QQD4);List(QQD4,i->Size(i));
 QQP4:=Unique(List(Q4,j->SortedList(List(j,i->Pr(i)))));;Size(QQP4);
 
@@ -184,25 +189,6 @@ MACH:=function(d)
     od;
   return Group(PermList(K),PermList(L));
   end;
-
-
-####
-Q:=[];QQP:=[];
-d:=4;#d:=5;#d:=3;
-P:=MACH(d);Size(P);
-V:=FullRowSpace( GF(2),2^d-1 );
-Q[d]:=OrbitsDomain(P,V,Permuted);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
-QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
-#suche alternative
- Orbit(F,Z(2)^0*[1,0,0,0],OnLines);#da geht nur [1,0,0,0] nicht [1,0,0,0,1]
-S:=GL(d,2);Size(S);#aber hab schonmal Size(S)=Size(P);
-Orbit(S,Z(2)^0*[1,0,1,0,1,1,1,0,0,0,0,0,0,0,0],OnLines);
-Orbit(S,List(V)[1],OnLines);
-
-Q[d]:=Orbits(S,V,OnLines);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
-
-
-
 ### in CYCLQ.txt hatt ich auch
 G:=SmallGroup(2,1);#1          #M1, M2, M3, M4, M5
 G:=ElementaryAbelianGroup(4);  # 3   6   9  12  15
@@ -235,3 +221,69 @@ Collected(List(PreImages(CH.cohom),i->IdSmallGroup(Extension(G,M,i))));
 Collected(List(Extensions(G,M),i->IdSmallGroup(i)));
 
 ### unklar
+
+
+#### hier der neueste Anlauf:
+Q:=[];QQP:=[];
+d:=4;#d:=5;#d:=3;
+P:=MACH(d);Size(P);
+V:=FullRowSpace( GF(2),2^d-1 );
+Q[d]:=OrbitsDomain(P,V,Permuted);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
+QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
+
+List(Q[d],i->Size(i));
+B50:=[z,z,z,z,z,z,n,z,z,z,n,z,n,n,n];
+B47:=[z,z,z,z,z,z,n,z,z,z,n,n,z,z,z];
+B48:=[z,z,z,z,z,z,n,z,n,n,n,n,n,n,z];
+B49:=[z,z,z,z,n,n,n,z,n,n,n,z,n,n,n];
+B45:=[z,z,n,z,n,n,z,z,n,n,z,n,z,z,n];
+B46:=[z,z,n,z,n,n,z,n,n,n,n,n,n,n,n];
+B:=B50;
+B:=B47;
+B:=B48;
+B:=B49;
+B:=B45;
+B:=B46;
+for i in [1..Size(Q[d])] do if B in Q[d][i] then Print(i," "); fi; od;
+#DA:=[41,35,24,25,10,5];
+List(DA,i->Size(Q[4][i]));
+List(Q[d],i->FilterG(i));
+List(Q[d],i->FilterK(i));
+Size(DrT(Q[d][1]));
+Position(QQP[d],SortedList(Unique(List(Q[d][41],i->DrT(i)))));#7
+Position(QQP[d],SortedList(Unique(List(Q[d][35],i->DrT(i)))));#7
+Position(QQP[d],SortedList(Unique(List(Q[d][24],i->DrT(i)))));#7
+Position(QQP[d],SortedList(Unique(List(Q[d][25],i->DrT(i)))));#7
+Position(QQP[d],SortedList(Unique(List(Q[d][10],i->DrT(i)))));#7
+Position(QQP[d],SortedList(Unique(List(Q[d][05],i->DrT(i)))));#7
+List(Q[d],i->Size(i));
+List(Q[d],j->Position(QQP[d],SortedList(Unique(List(j,i->DrT(i))))));
+
+#A1:=[z,z,n,z,n,n,-,n,n,n,-,n,-,-,-];
+XA1:=[z,n,n,n,n,n,n,n,n,n,n,n,n,n,n];
+XA2:=[n,z,n,n,n,n,n,n,n,n,n,n,n,n,n];
+XA3:=[n,n,n,n,n,n,z,n,n,n,n,n,n,n,n];
+XA4:=[z,z,z,z,z,z,n,n,n,n,n,n,n,n,n];
+XA5:=[z,z,z,z,z,z,z,z,z,z,z,z,z,z,n];
+B:=XA1;
+B:=XA2;
+B:=XA3;
+B:=XA4;
+B:=XA5;
+SortedList(Unique(List(Q[d][9],i->DrT(i))));
+DK:=[];for j in QQP[d][3] do
+  Print("\n",j);
+  for i in [1..Size(Q[d])] do if PrT(j) in Q[d][i] then Print(i," "); Add(DK,i);fi; od;
+  od;Unique(SortedList(DK));
+  
+
+#suche alternative
+ Orbit(S,Z(2)^0*[1,0,0,0],OnLines);#da geht nur [1,0,0,0] nicht [1,0,0,0,1]
+S:=GL(d,2);Size(S);#aber hab schonmal Size(S)=Size(P);
+Orbit(S,Z(2)^0*[1,0,1,0,1,1,1,0,0,0,0,0,0,0,0],OnLines);
+Orbit(S,List(V)[1],OnLines);
+
+Q[d]:=Orbits(S,V,OnLines);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
+
+
+
