@@ -193,3 +193,45 @@ P:=MACH(d);Size(P);
 V:=FullRowSpace( GF(2),2^d-1 );
 Q[d]:=OrbitsDomain(P,V,Permuted);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
 QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
+#suche alternative
+ Orbit(F,Z(2)^0*[1,0,0,0],OnLines);#da geht nur [1,0,0,0] nicht [1,0,0,0,1]
+S:=GL(d,2);Size(S);#aber hab schonmal Size(S)=Size(P);
+Orbit(S,Z(2)^0*[1,0,1,0,1,1,1,0,0,0,0,0,0,0,0],OnLines);
+Orbit(S,List(V)[1],OnLines);
+
+Q[d]:=Orbits(S,V,OnLines);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
+
+
+
+### in CYCLQ.txt hatt ich auch
+G:=SmallGroup(2,1);#1          #M1, M2, M3, M4, M5
+G:=ElementaryAbelianGroup(4);  # 3   6   9  12  15
+G:=ElementaryAbelianGroup(8);  # 6  12  18  24  30
+G:=ElementaryAbelianGroup(16); #10  20  30  40  50
+G:=ElementaryAbelianGroup(32); #15  30  45  60  75
+G:=ElementaryAbelianGroup(64); #21  42  63  84 105
+G:=ElementaryAbelianGroup(128);#28
+G:=ElementaryAbelianGroup(256);#36
+mats:=List(Pcgs(G),x->IdentityMat(1,GF(2)));
+mats:=List(Pcgs(G),x->IdentityMat(2,GF(2)));
+mats:=List(Pcgs(G),x->IdentityMat(3,GF(2)));
+mats:=List(Pcgs(G),x->IdentityMat(4,GF(2)));
+M:=GModuleByMats(mats,GF(2));
+T:=TwoCocycles(G,M);Size(T);
+B:=TwoCoboundaries(G,M);
+L:=Extensions(G,M);;Size(L);
+L1:=Collected(List(L,i->IdSmallGroup(i)));
+L2:=Collected(List(L,i->Size(FrattiniSubgroup(i))));
+
+S:=SplitExtension(G,M);
+IdSmallGroup(S);
+IdSmallGroup(ModuleOfExtension(S));
+T:=TwoCocycles(G,M);
+B:=TwoCoboundaries(G,M);
+CH:=TwoCohomology(G, M);
+Size(PreImage(CH.cohom));
+Collected(List(T,i->IdSmallGroup(Extension(G,M,i))));
+Collected(List(PreImages(CH.cohom),i->IdSmallGroup(Extension(G,M,i))));
+Collected(List(Extensions(G,M),i->IdSmallGroup(i)));
+
+### unklar
