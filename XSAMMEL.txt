@@ -49,6 +49,8 @@ DDDDBIT:=0;DBIT:=0;
 PARTZ:=0;XMERKZAHLZIEL:=9999999;
 AUZAHL:=4;FAKT:=[];
 
+XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
+
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
 Commu:=function(a,b) return (b*a)^2; end;
@@ -63,6 +65,9 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   return POS;
 #  return PositionFirstComponent(ZEIGER,PNEU);
   #welches bei "nicht drin" Size(ZEIGER) ausgibt statt Add-Position 
+  end;
+PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
+  return PositionSorted(ZEIGER,[PNEU]);
   end;
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
@@ -308,7 +313,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     if QY10(HRES,S,GR) then
       if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
-FAKT[S]:=Size(ORB[Position(RC,rj)]);
+#FAKT[S]:=Size(ORB[Position(RC,rj)]);
       PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
       HRESMERK:=List(HRES);
@@ -343,14 +348,16 @@ FAKT[S]:=Size(ORB[Position(RC,rj)]);
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
           if DDDDBIT=1 then RBIT:=999999; fi;
-          XMERKBIT:=-1;Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
+          XMERKBIT:=-1;
+#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
 #+++++++++
       if S=1 then 
         if XMERKZAHL1=XMERKZAHL and XMERKBIT=-1 then #and WEGEZAHL1<WEGEZAHL then
-          Error("hier aber da"); 
+          Print("#");
+#          Error("hier aber da"); 
           fi;
         fi;
 #---------
