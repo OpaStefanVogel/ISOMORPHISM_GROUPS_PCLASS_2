@@ -224,7 +224,7 @@ Collected(List(Extensions(G,M),i->IdSmallGroup(i)));
 
 
 #### hier der neueste Anlauf:
-Q:=[];QQP:=[];
+Q:=[];QQP:=[];QQL:=[];
 d:=4;#d:=5;#d:=3;
 P:=MACH(d);Size(P);
 V:=FullRowSpace( GF(2),2^d-1 );
@@ -275,7 +275,17 @@ DK:=[];for j in QQP[d][3] do
   Print("\n",j);
   for i in [1..Size(Q[d])] do if PrT(j) in Q[d][i] then Print(i," "); Add(DK,i);fi; od;
   od;Unique(SortedList(DK));
-  
+QQL[d]:=List(DA,i->Unique(SortedList(List(Q[d][i],j->Pr(j)))));List(QQL[d],i->Size(i));
+Print(QQL[d][1]);
+DK:=[];for j in QQL[d][1] do
+  Print("\n",j);
+  for i in [1..Size(Q[d])] do if PrT(j) in Q[d][i] then Print(i," "); Add(DK,i);fi; od;
+  od;Unique(SortedList(DK));
+
+
+
+
+
 
 #suche alternative
  Orbit(S,Z(2)^0*[1,0,0,0],OnLines);#da geht nur [1,0,0,0] nicht [1,0,0,0,1]

@@ -369,13 +369,14 @@ GANZLOS:=function()
 #SaveWorkSpace("GAP_WORKSPACE_4222")
 #Ausgangspunkt dafuer war:
 #AUZAHL:=4;GANZLOS();
-#inh:=4444;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=4443;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,3]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=4432;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=4431;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=4211;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,1,1]];G:=PcgsOfR(R);RMAXSUCH(G);
-#inh:=3222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,3,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);
+#inh:=4444;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=4442;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,2]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=4432;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,2]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=4431;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,3,1]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=4222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=4211;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,2,1,1]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+#inh:=3222;R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,3,2,2,2]];G:=PcgsOfR(R);RMAXSUCH(G);Exec("date");
+
 #DisplayProfile();
 
 
@@ -781,6 +782,41 @@ XMERKZAHL;WEGEZAHL;#14 wie auch bisher schon
 XSAMMEL=XSAMMEL1;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER3(XSAMMEL1);
+
+#hier suche ich warum # 
+XSAMMEL:=[];#nur anfangs einmal
+AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
+G:=SmallGroup(8,2);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,4);
+RMAXSUCH(G);time;
+XMERKZAHL;WEGEZAHL;#14 wie auch bisher schon
+XSAMMELVIEWER0(XSAMMEL);
+
+ALLEPCGS:=function(G)
+  local i,j,k,l,ANZAHL,map,G1,fam,pcgs,ALLEW,ALLEP;
+  ANZAHL:=0;fam:=FamilyObj(G.1);
+  ALLEW:=[];ALLEP:=[];
+  for i in List(G) do if Size(Group(i))=2 then
+    for j in List(G) do if Size(Group(i,j))=4 then
+      for k in List(G) do if Size(Group(i,j,k))=8 then
+        for l in List(G) do if Size(Group(i,j,k,l))=16 then
+          ANZAHL:=ANZAHL+1;
+#          map:=GroupGeneralMappingByImages(G,[G.4,G.3,G.2,G.1],[i,j,k,l]);
+#          G1:=Image(map);
+          pcgs:=PcgsByPcSequence(fam,[l,k,j,i]);
+          G1:=GroupOfPcgs(pcgs);
+          RMAXSUCH(G1);
+          ALLEW[ANZAHL]:=List(WEGLI);
+          ALLEP[ANZAHL]:=[l,k,j,i];
+          Print ("\n",ANZAHL," ",WEGLI," ",[i,j,k,l]);
+          fi; od; fi; od; fi; od; fi; od;
+  return [ALLEW,ALLEP];
+  end;
+#DDDDBIT:=0;DBIT:=0;ALLEN16G4:=ALLEPCGS(G);
+G1:=Group(G.4,G.3,G.2,G.1);List(G);List(G1);
+Collected(ALLEN16G4[1]);
+
 
 nö neuer Ansatz: ich trage die Restweglänge erst nach kompletten 
    Durchlaufen der Teilstruktur in den Wegebaum ein. Ist eine kleine Hoffnung
@@ -1308,18 +1344,27 @@ Size(A);168/Size(A);
 
 
 vvvv die untersten n=256 Abzweige vvvv
-ILIST:=[55626..56058];
+#jetzt auch für 512
+#ILIST:=[55626..56058];
+#ILIST:=[10493062..10494173];
 for inha in ILIST do
   Print(".\c");
-  G:=SmallGroup(256,inha);
+#  G:=SmallGroup(256,inha);
+  G:=SmallGroup(512,inha);
 #C:=ConjugacyClassesSubgroups(G);
 #C:=ConjugacyClassesMaximalSubgroups(G);
   C:=MaximalSubgroupClassReps(G);
   L:=List(C,i->IdSmallGroup(i));
-  if [128,2325] in L then Print(inha); fi;
+#  if [128,2325] in L then Print(inha); fi;
+  if [256,56089] in L then Print(inha); fi;
   od;
+#JLIST:=[10493080,10493262,10493263,10493272,10493292,10493293,10493302];#ab [256,56089]
+
 
 R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,1]];
+M:=PcgsOfR(R);
+IdSmallGroup(M);
+R:=[[1],[2,2],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];
 M:=PcgsOfR(R);
 IdSmallGroup(M);
 
@@ -1362,3 +1407,89 @@ ok ist durch bis 111111111 !!!!! 9 Stück sind es geworden,
 
 .. wenn drin, muss gar nicht XFUELL, XMISCH und XLEER durch.
 ^^^^ das große XSAMMEL fertig ^^^^
+
+
+vvvv ein WEGFINDER aus HRES zu WEGLI vvvv
+QY13MOD:=function(C,S,nn,ZEIGER,AU)
+  local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
+  orbi,ORB,STAB;
+  RBIT:=0;RDRIN:=0;
+  if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
+#  RC:=RightTransversal(C,GR);
+  RC:=CosetDecomposition(C,GR);RC:=List(RC,i->Set(i));
+  if S<=AUZAHL then
+    STAB:=Stabilizer(AU,Set(GR),OnSets);
+    ORB:=Orbits(STAB,RC,OnSets);
+    RC:=List(ORB,i->Representative(i));
+    else STAB:=0; fi;
+  if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
+  for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
+    Add(HRES,ri,1);HRESEXT[S]:=ri;
+    if QY10(HRES,S,GR) then
+      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
+if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
+#FAKT[S]:=Size(ORB[Position(RC,rj)]);
+      PNEU:=QY11(HRES,S);
+      R[S]:=List(PNEU);
+      HRESMERK:=List(HRES);
+      ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);
+      HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
+      if 2*nn<n then 
+        RBIT:=QY13MOD(C,S+1,2*nn,ZR[2],STAB); 
+        else 
+          if ZR3MERK<>0 then #RDRIN=0
+            HRES0MERK:=List(HRES0);
+            HRES0:=List(HRES);
+            CLIST:=[Identity(C)];
+            for i in Reversed(HRES0) do
+              for j in [1..Size(CLIST)] do
+                Add(CLIST,i*CLIST[j]);
+                od; od;
+            XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
+            QY12(C,1,1);
+            QY14();
+            QY15(ZR[2],XMERK[S]);
+            XMERKZAHL:=XMERKZAHL+1;
+            ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
+            WEGLI[S]:=ZR[5];
+            HRES0:=HRES0MERK;
+            Print("*\c");
+            fi;
+          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
+            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
+          if DBIT=1 then
+            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT{[1..S]},RBIT<=S," ");
+            if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
+            fi;
+          if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
+          if DDDDBIT=1 then RBIT:=999999; fi;
+          XMERKBIT:=-1;
+#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
+          fi; #(if 2*nn<n) 
+      if RBIT<=S then RDRIN:=-1; fi;
+      HRES:=List(HRESMERK);
+#+++++++++
+      if S=1 then 
+        if XMERKZAHL1=XMERKZAHL and XMERKBIT=-1 then #and WEGEZAHL1<WEGEZAHL then
+          Print("#");
+#          Error("hier aber da"); 
+          fi;
+        fi;
+#---------
+      fi; #(if QY10(HRES,S,GR))
+    Remove(HRES,1);
+    fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
+  i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
+  return RBIT;
+  end;
+
+WEGGUCK:=function(HRESW)
+  local AU;
+  n:=Size(C);
+  XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
+  #  XSAMMEL:=[];
+  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
+  WEGEARRAY:=[];
+  QY13MOD(C,1,1,XSAMMEL,AU);
+  end;
+^^^^^ WEGFINDER aus HRES das WEGLI ^^^^^

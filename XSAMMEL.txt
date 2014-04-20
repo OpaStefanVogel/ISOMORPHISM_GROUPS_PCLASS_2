@@ -339,13 +339,13 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];
             HRES0:=HRES0MERK;
-            Print("*");
+            Print("*\c");
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
           if DBIT=1 then
-            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT,RBIT<=S);
-            if ZR3MERK=-1 then Print("***************"); fi;
+            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT{[1..S]},RBIT<=S," ");
+            if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
           if DDDDBIT=1 then RBIT:=999999; fi;
@@ -521,12 +521,13 @@ XSAMMELVIEWER0:=function(XSAMMEL)
   local i,S,LEER;
   S:=Size(XSAMMEL);LEER:="                  ";
   for i in XSAMMEL do  
-    Print("\n",LEER{[1..2*Size(i[1])-2]},Size(i[1])," ");#die Einrückung
+    Print("\n",LEER{[1..2*Size(i[1])-2]});#die Einrückung
+    Print("(",i[14],") ");#steht in Wegebaum dann
+    Print(Size(i[1])," ");
     Print(UMKEHRLIST(i[1])," ");#PNEU
     Print(i[2]," ");
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
-      Print("(",i[14],") -->");#steht in Wegebaum dann
       Print(i[5][7]);#steht in Wegebaum dann
       else
         if IsBound(i[12]) then 
@@ -540,7 +541,6 @@ XSAMMELVIEWER0:=function(XSAMMEL)
               else Print("= ??? ");
               fi;
             fi;
-        Print("(",i[14],") ");#steht in Wegebaum dann
         XSAMMELVIEWER0(i[6]);
         fi;
     od;
