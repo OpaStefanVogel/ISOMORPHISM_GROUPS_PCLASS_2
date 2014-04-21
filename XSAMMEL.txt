@@ -314,7 +314,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     if QY10(HRES,S,GR) then
       if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
-#FAKT[S]:=Size(ORB[Position(RC,rj)]);
+#0#FAKT[S]:=Size(ORB[Position(RC,rj)]);
       PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
       HRESMERK:=List(HRES);
@@ -350,7 +350,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
           if DDDDBIT=1 then RBIT:=999999; fi;
           XMERKBIT:=-1;
-#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
+#0#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
@@ -528,13 +528,15 @@ XSAMMELVIEWER0:=function(XSAMMEL)
     Print(i[2]," ");
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
-      Print(i[5][7]);#steht in Wegebaum dann
+      Print(i[5][7]," ::::");
+      Print(i[3]);
       else
         if IsBound(i[12]) then 
           if IsBound(i[12][7]) then 
             Print("===> ",i[12][7]," "); 
-            else Print("===> ",i[12][2]," ");
+            else Print("==-> ",i[12][2]," ");
             fi;
+          Print("~~~~",i[10]);
           else 
             if IsBound(i[7]) then 
               Print("= ",i[7]," "); 
