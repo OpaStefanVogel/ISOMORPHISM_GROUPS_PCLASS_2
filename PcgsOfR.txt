@@ -1,5 +1,4 @@
 #Read("GAP/PCLASS2/PcgsOfR.txt");
-
 PcgsOfR:=function(R)
   local F,G,i,j,C,S,ELM,RE,REL,relorders,coll;
   S:=Size(R);
