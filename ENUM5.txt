@@ -1,5 +1,5 @@
 #asterix:./GAP4R7P4/gap4r7/bin/gap.sh
-#Read("GAP/PCLASS2/ENUM5.txt");
+#Read("Desktop/GAP/PCLASS2/ENUM5.txt");
 n:=0*Z(2);
 z:=Z(2);
 #V:=FullRowSpace( GF(2),d*(d+1)/2 );
@@ -296,4 +296,14 @@ Orbit(S,List(V)[1],OnLines);
 Q[d]:=Orbits(S,V,OnLines);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
 
 
-
+#
+QSUM:=function(Q)
+  local i,SUM;
+  SUM:=0;
+  for i in Q[1] do if i=z then SUM:=SUM+1; fi; od;
+  return SUM;
+  end;
+List(Q[d],i->QSUM(i));
+FQ:=Filtered(Q[d],i->QSUM(i)=8);;
+UQ:=List(FQ,j->Unique(List(j,i->DrT(i))));;List(UQ,i->Size(i));
+#[ 1, 105, 35, 420, 420, 15 ]
