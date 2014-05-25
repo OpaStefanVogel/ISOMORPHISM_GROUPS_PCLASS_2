@@ -1,0 +1,787 @@
+#./gap4r7/pkg/xgap/bin/xgap.sh -L GAP_WORKSPACE
+#Read("~/Desktop/GAP/PCLASS2/VERSUCH_HGRAPH2.txt");
+#cd Desktop/GAP/
+#gitk &
+#vvvv HGRAPH2 vvvv
+
+
+var pi=Math.PI;
+var D=50;
+var P=new Array(51);
+var K=new Array(99);
+var w=Math.sin(60/180*pi);
+var strokevar="black";
+var strokedashvar="";
+var strokewidthvar="1";
+
+
+
+function draw(x,i,z) {
+//  alert(x+";"+i);
+  for (j in x) {
+  c=document.getElementById("symb").cloneNode(true);
+//  alert(x[j]);
+//  alert(c.firstChild);
+  c.setAttribute("x1",P[x[j]][0]);
+  c.setAttribute("y1",P[x[j]][1]);
+  c.setAttribute("x2",P[i][0]);
+  c.setAttribute("y2",P[i][1]);
+  c.setAttribute("stroke",strokevar);
+  c.setAttribute("stroke-dasharray",strokedashvar);
+  c.setAttribute("stroke-width",strokewidthvar);
+//  alert(c.lastChild.firstChild.nodeValue);
+//  c.lastChild.previousSibling.previousSibling.firstChild.nodeValue=x.split("=")[0];
+//  c.lastChild.firstChild.nodeValue=x.split("=")[1];
+  document.getElementById("awd").appendChild(c);
+    }
+  }
+
+ab:=function(i,j) #Abstand pi,pj
+  return Sqrt(Square(P[i][1]-P[j][1])+Square(P[i][2]-P[j][2])); 
+  end;
+
+LI:=function(k,i);
+  if IsBound(K[k]) then Add(K[k],i); else K[k]:=[i]; fi;
+#  return Line(GR,Int(P[k][1]+400.0),Int(300.0-P[k][2]),Int(P[i][1]-P[k][1]),Int(P[k][2]-P[i][2]));
+  end;
+  
+L:=function(k,i,j) #60° Fortsetzung
+  local dx,dy;
+  dx:=P[j][1]-P[i][1];
+  dy:=P[j][2]-P[i][2];
+  P[k]:=[P[i][1]+dx/2-w*dy,P[i][2]+dy/2+w*dx];
+  LI(k,i);
+  LI(k,j);
+  end;
+
+M:=function(k,i,f) # bewegliche Fortsetzung
+  P[k]:=[P[i][1]+Cos(f/180*pi)*D,P[i][2]+Sin(f/180*pi)*D];
+  LI(k,i);
+  end;
+
+N:=function(k,i,j) #x-1-1 Fortsetzung
+  local uu,ww,dx,dy;
+  uu:=ab(i,j)/D;
+  ww:=Sin(Acos(uu/2));
+  dx:=P[j][1]-P[i][1];
+  dy:=P[j][2]-P[i][2];
+  P[k]:=[P[i][1]+dx/2-ww*dy/uu,P[i][2]+dy/2+ww*dx/uu];
+  LI(k,i);
+  LI(k,j);
+  end;
+
+Q:=function(k,i,j,b,a) #x-b-a Fortsetzung
+  local c,dx,dy,delta,my;
+  c:=ab(i,j);
+  beta:=Acos((b*b+c*c-a*a)/(2*b*c));
+  dx:=P[j][1]-P[i][1];
+  dy:=P[j][2]-P[i][2];
+  delta:=Atan2(dy,dx);
+  my:=beta+delta;
+  P[k]:=[P[i][1]+Cos(my)*b,P[i][2]+Sin(my)*b];
+  LI(k,i);
+  LI(k,j);
+  end;
+
+H:=function(k,i,j,di) #k in der Mitte von i,j
+  P[k]:=[P[i][1]+(P[j][1]-P[i][1])/di,P[i][2]+(P[j][2]-P[i][2])/di];
+  end;
+
+HPLOT:=function()
+  local i,k;
+  Close(GR);GR:=GraphicSheet("HALLO",800,400);
+  for k in [1..Size(K)] do
+    if not(IsBound(K[k])) then K[k]:=[]; fi;
+    for i in K[k] do
+      Line(GR,Int(P[k][1]+400.0),Int(300.0-P[k][2]),Int(P[i][1]-P[k][1]),Int(P[k][2]-P[i][2]));
+      od;
+    od;
+  end;
+
+ErzeugeFedgeoCode:=function(D,dx)
+  local i,j;
+  Print("\n\\fedon\\geo");
+  Print("\nebene(500,500)");
+  for i in [1..Size(P)] do Print("\np(",P[i][1]/D+dx,",",P[i][2]/D,",P",i,")"); od;
+  Print("\nnolabel()");
+  for i in [1..Size(K)] do Print("\n");
+    for j in [1..Size(K[i])] do Print("s(P",i,",P",K[i][j],") "); od; 
+    od;
+  Print("\ncolor(blue) pen(2)");
+  for i in [1..Size(WACK_K)] do Print("\n");
+    Print("s(P",WACK_K[i][1],",P",WACK_K[i][2],") "); 
+    od;
+  Print("\ncolor(green)");
+  for i in [1..Size(FULL_K)] do Print("\n");
+    Print("s(P",FULL_K[i][1],",P",FULL_K[i][2],") "); 
+    od;
+  Print("\ncolor(red) pen(1)");
+  for i in [1..Size(REST_K)] do Print("\n");
+    Print("s(P",REST_K[i][1],",P",REST_K[i][2],") "); 
+    od;
+  Print("\n\\geooff");
+  Print("\n\\fedoffgeoprint()");
+  end;
+
+
+#Close(GR);GR:=GraphicSheet("HALLO",800,400);
+Line(100,100,200,200);
+i:=2;j:=1;
+Line(GR,Int(P[i][1]),Int(P[i][2]),Int(P[P[i][3][j]][1]-P[i][1]),Int(P[P[i][3][j]][2]-P[i][2]))
+
+#*
+# das wird 108,54,c)
+
+rech:=function() 
+pi:=FLOAT.PI;
+w:=Sin(pi/3);
+D:=50.0;
+P:=[];K:=[[]];
+P[1]:=[0.0,0.0];
+P[2]:=[-D,0.0];
+LI(2,1);
+L(3,2,1);
+L(4,2,3);
+L(5,4,3);
+L(6,2,4);
+M(7,6,x);
+L(8,6,7);
+L(9,8,7);
+L(10,8,9);
+L(11,10,9);
+L(12,10,11);
+N(13,7,5);
+N(14,11,13);
+N(15,12,14);
+L(16,12,15);
+L(17,16,15);
+L(18,16,17);
+M(19,18,y);
+L(20,18,19);
+L(21,20,19);
+L(22,20,21);
+L(23,22,21);
+L(24,22,23);
+N(25,19,17);
+N(27,25,14);
+N(29,27,13);
+N(31,29,5);
+N(32,1,31);
+L(33,32,1);
+L(34,32,33);
+L(35,34,33);
+L(36,34,35);
+L(37,36,35);
+N(38,31,36);
+N(39,38,37);
+N(30,29,38);
+N(28,27,30);
+N(26,25,28);
+L(40,39,37);
+L(41,39,40);
+L(42,41,40);
+Q(43,24,26,2*D,D);
+Q(44,24,43,2*D,2*D);
+N(45,43,28);
+N(46,45,30);
+N(47,45,44);
+L(48,44,47);
+L(49,48,47);
+L(50,48,49);
+L(51,50,49);
+H(52,24,44,2);
+L(53,52,24);
+L(54,52,53);
+  end;
+
+x:=72.55;
+y:=-17.5;
+rech();
+
+
+
+los:=function()
+  local xx,yy,hh,h;
+  xx:=[72.5,72.6];
+x:=72.55;
+y:=-17.5;
+  for hh in [1..60] do
+    x:=(xx[1]+xx[2])/2;
+    yy:=[-15.0,-20.0];
+    for h in [1..60] do
+      y:=(yy[1]+yy[2])/2;
+      rech();
+      if ab(23,26)>D then yy[1]:=y; else yy[2]:=y; fi;
+      od;
+    if ab(50,42)<D then xx[1]:=x; else xx[2]:=x; fi;
+    od;
+
+  WACK_K:=[[6,7],[18,19]];
+  FULL_K:=[[42,50],[23,26]];
+  REST_K:=[[46,51],[51,42],[41,46]];
+  end;
+
+strokevar="blue";
+strokewidthvar="4";
+alert(x+" x 7-6 50-42 "+ab(50,42));
+alert(y+" y 19-18 24-28 "+ab(23,26));
+draw([7],6,1);
+draw([19],18,1);
+strokevar="green";
+draw([50],42,1);
+draw([26],23,1);
+strokevar="red";
+strokedashvar="4,4";
+alert(" 46...51 "+ab(46,51));
+alert(" 51...42 "+ab(51,42));
+alert(" 46...41 "+ab(46,41));
+draw([46],51,1);
+draw([51],42,1);
+draw([41],46,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+}
+*/
+
+
+/*
+// das war 108,54,a) von 45..:
+function rech() {
+P[1]=[0,0];
+P[2]=[-D,0];
+K[2]=[1];
+L(3,2,1);
+L(4,2,3);
+L(5,2,4);
+L(6,5,4);
+L(7,5,6);
+M(8,7,x);
+L(9,7,8);
+L(10,9,8);
+L(11,9,10);
+L(12,11,10);
+L(13,11,12);
+M(14,8,y);
+N(15,14,6);
+N(16,15,3);
+L(17,15,16);
+N(19,12,14);
+N(18,19,14);
+N(20,13,19);
+L(21,13,20);
+L(22,21,20);
+L(23,21,22);
+N(24,22,18);
+N(25,23,24);
+L(26,23,25);
+L(27,26,25);
+L(28,26,27);
+N(29,16,1);
+L(30,29,1);
+L(31,29,30);
+L(32,31,30);
+N(33,17,31);
+M(40,28,z);
+N(49,40,27);
+N(53,49,24);
+N(54,53,33);
+L(39,28,40);
+L(41,39,40);
+L(42,39,41);
+L(43,42,41);
+L(50,49,53);
+N(51,50,54);
+N(52,51,54);
+L(38,42,43);
+Q(37,38,32,3*D,2*D);
+H(47,38,37,3);
+L(48,47,38);
+L(46,47,48);K[46].push(45);
+L(44,47,46);
+L(45,37,44);
+H(35,32,37,2);
+L(36,35,37);
+L(34,35,36);K[34].push(32);
+K[18].push(17);
+K[51].push(48);
+K[50].push(43);
+  }
+
+function los() {
+  yy=[90.288,90.289];
+alert("dauert 3 sek nach ok");
+for (var hh=0;hh<60;hh++) {
+  y=(yy[0]+yy[1])/2;
+  xx=[78,79];
+  zz=[-57,-57.2];
+  z=-57.1;
+  for (var h=0;h<60;h++) {
+    x=(xx[0]+xx[1])/2;
+    rech();
+//alert(h+" "+x+" "+ab(17,18));
+    if (ab(17,18)<D) xx[0]=x; else xx[1]=x;
+    }
+  for (var h=0;h<60;h++) {
+    z=(zz[0]+zz[1])/2;
+    rech();
+//alert(h+" "+z+" "+ab(43,50));
+    if (ab(43,50)>D) zz[0]=z; else zz[1]=z;
+    }
+//alert(hh+" "+y+" "+ab(48,51));
+    if (ab(48,51)>D) yy[0]=y; else yy[1]=y;
+    }
+
+alert(x+" x 7-8 17-18 "+ab(17,18));
+alert(y+" y 8-14 48-51 "+ab(48,51));
+alert(z+" z 28-40 43-50 "+ab(50,43));
+strokevar="blue";
+strokewidthvar="4";
+draw([7],8,1);
+draw([8],14,1);
+draw([28],40,1);
+strokevar="green";
+draw([17],18,1);
+draw([48],51,1);
+draw([43],50,1);
+
+//alert(ab(48,51));
+alert(" 45...52 "+ab(52,45));
+alert(" 36...52 "+ab(52,36));
+alert(" 33...34 "+ab(33,34));
+alert([[33,34],[36,52]][0]);
+strokevar="red";
+strokedashvar="4,4";
+draw([33],34,1);
+draw([36],52,1);
+draw([45],52,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+alert("fertig");
+}
+*/
+
+/*
+// das war 106,53
+function rech() {
+P[1]=[0,0];
+P[2]=[-D,0];
+K[2]=[1];
+L(3,2,1);
+L(4,2,3);
+L(5,4,3);
+L(6,2,4);
+M(7,6,x);
+L(8,6,7);
+L(9,8,7);
+L(10,8,9);
+L(11,10,9);
+L(12,10,11);
+N(13,7,5);
+N(14,11,13);
+L(15,14,13);
+N(16,12,14);
+L(17,12,16);
+L(18,17,16);
+N(19,17,18);
+N(20,15,18);
+N(21,19,20);
+L(22,19,21);
+L(23,22,21);
+L(24,22,23);
+L(25,24,23);
+L(50,24,25);
+N(26,25,20);
+N(27,26,15);
+Q(28,50,26,2*D,D);
+H(51,50,28,2);
+L(52,50,51);
+L(53,52,51);K[53].push(28);
+L(29,52,53);
+N(30,28,27);
+N(31,30,29);
+L(32,29,31);
+L(33,32,31);
+L(34,32,33);
+L(35,34,33);
+L(36,34,35);
+N(37,35,30);
+N(38,37,27);
+N(39,36,37);
+L(40,36,39);
+L(41,40,39);
+L(42,40,41);
+N(43,38,41);
+N(44,43,38);
+N(45,42,43);
+L(46,42,45);
+L(47,46,45);
+L(48,46,47);
+L(49,48,47);
+  }
+
+function los() {
+//alert(77);
+//alert(P[2]);//var x=63.74825;
+  xx=[82.70,82.705];
+//alert(9876);
+  for (var h=0;h<60;h++) {
+    x=(xx[0]+xx[1])/2;
+    rech();
+//alert(h+" "+x+" "+ab(44,5));
+    if (ab(44,5)>D) xx[0]=x; else xx[1]=x;
+    }
+
+K.forEach(draw);
+//alert(ab(18,15));
+//alert(ab(29,30));
+alert(ab(44,5));
+alert(ab(49,1));
+alert(ab(48,1));
+alert(ab(49,44));
+strokevar="blue";
+strokewidthvar="4";
+alert(x+" x 7-6 5-44 "+ab(5,44));
+draw([7],6,1);
+strokevar="green";
+draw([5],44,1);
+strokevar="red";
+strokedashvar="4,4";
+alert(" 49...1 "+ab(49,1));
+alert(" 48...1 "+ab(48,1));
+alert(" 49...44 "+ab(49,44));
+draw([49],1,1);
+draw([48],1,1);
+draw([49],44,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+}
+*/
+
+
+//* das war 102,51
+function rech() {
+P[1]=[0,0];
+P[2]=[-D,0];
+K[2]=[1];
+L(3,2,1);
+L(4,2,3);
+L(5,2,4);
+L(6,5,4);
+L(7,5,6);
+M(8,7,x);
+L(9,7,8);
+L(10,9,8);
+L(11,9,10);
+L(12,10,8);
+N(13,12,6);
+N(14,13,3);
+L(15,13,14);
+L(16,15,14);
+N(17,12,15);
+N(18,17,16);
+N(19,17,11);
+L(20,11,19);
+L(21,20,19);
+L(22,20,21);
+L(23,22,21);
+L(24,22,23);
+N(25,24,18);
+L(26,24,25);
+L(27,26,25);
+
+M(28,1,y);
+L(29,1,28);
+L(30,29,28);
+L(31,30,28);
+L(32,29,30);
+Q(33,32,31,1*D,2*D);
+H(34,31,33,2);
+L(35,33,34);
+L(36,34,31);K[36].push(35);
+L(37,35,36);
+L(38,32,33);
+Q(39,38,37,1*D,2*D);
+H(40,37,39,2);
+L(41,40,37);
+L(42,39,40);K[42].push(41);
+L(43,42,41);
+L(44,38,39);
+H(45,43,44,2);K[45]=[];K[45].push(43);K[45].push(44);
+L(46,45,43);
+L(47,45,46);
+L(48,47,46);
+L(49,47,48);
+L(50,49,48);
+N(51,44,49);
+
+
+//N(29,16,27);
+  }
+
+function los() {
+//alert(77);
+//alert(P[2]);//var x=63.74825;
+  xx=[63,64];
+  y=32.5;
+//alert(9876);
+  for (var h=0;h<50;h++) {
+    x=(xx[0]+xx[1])/2;
+    rech();
+//alert(h+" "+x+" "+ab(23,18));
+    if (ab(23,18)<D) xx[0]=x; else xx[1]=x;
+    }
+  yy=[32,33];
+  for (var h=0;h<60;h++) {
+    y=(yy[0]+yy[1])/2;
+    rech();
+//alert(h+" "+y+" "+ab(27,51));
+    if (ab(27,51)>D) yy[0]=y; else yy[1]=y;
+    }
+
+alert(ab(23,18));
+alert(ab(27,16));
+alert(ab(27,51));
+strokevar="blue";
+strokewidthvar="4";
+alert(x+" x 8-7 23-18 "+ab(23,18));
+alert(y+" y 1-28 27-51 "+ab(51,27));
+draw([8],7,1);
+draw([28],1,1);
+strokevar="green";
+draw([23],18,1);
+draw([51],27,1);
+strokevar="red";
+strokedashvar="4,4";
+alert(" 26...50 "+ab(26,50));
+alert(" 27...50 "+ab(27,50));
+alert(" 16...51 "+ab(51,16));
+draw([50],26,1);
+draw([50],27,1);
+draw([51],16,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+}
+
+
+/*
+// das war 104,52
+function rech() {
+P[1]=[0,0];
+P[2]=[D,0];
+K[2]=[1];
+L(3,1,2);
+L(4,3,2);
+L(5,3,4);
+L(6,4,2);
+M(7,1,x);
+L(8,1,7);
+L(9,8,7);
+L(10,8,9);
+L(11,10,9);
+L(12,10,11);
+N(13,7,5);
+N(14,11,13);
+N(15,14,13);
+N(16,12,14);
+L(17,12,16);
+L(18,17,16);
+L(19,17,18);
+N(20,15,18);
+N(21,19,20);
+L(22,19,21);
+L(23,22,21);
+L(24,22,23);
+L(25,24,23);
+L(26,24,25);
+N(27,20,15);
+Q(28,26,27,2*D,D);
+H(29,26,28,2);
+L(30,26,29);
+L(31,29,28);
+L(32,30,31);K[32].push(31);
+M(33,6,y);
+L(34,33,6);
+L(35,33,34);
+L(36,35,34);
+L(37,35,36);
+L(38,37,36);
+N(39,5,33);
+N(40,39,37);
+N(41,39,40);
+N(42,40,38);
+L(43,42,38);
+L(44,42,43);
+L(45,44,43);
+N(46,44,41);
+N(47,46,45);
+L(48,47,45);
+L(49,47,48);
+L(50,49,48);
+L(51,49,50);
+N(52,41,46);
+  }
+
+function los() {
+//alert(77);
+//alert(P[2]);//var x=63.74825;
+  xx=[82.705,83];
+//alert(9876);
+  for (var h=0;h<60;h++) {
+    x=(xx[0]+xx[1])/2;
+    y=180-x;
+    rech();
+//alert(h+" "+x+" "+ab(25,27));
+    if (ab(25,27)>D) xx[0]=x; else xx[1]=x;
+    }
+
+//K.forEach(draw);
+//alert(ab(18,15));
+//alert(ab(29,30));
+//alert(ab(44,5));
+strokevar="blue";
+strokewidthvar="4";
+alert(x+" x 7-1 27-25 "+ab(27,25));
+alert(y+" y 33-6 52-51 "+ab(52,51));
+draw([7],1,1);
+draw([33],6,1);
+strokevar="green";
+draw([27],25,1);
+draw([52],51,1);
+strokevar="red";
+strokedashvar="4,4";
+alert(" 50...32 "+ab(50,32));
+alert(" 51...32 "+ab(51,32));
+alert(" 52...28 "+ab(52,28));
+draw([50],32,1);
+draw([51],32,1);
+draw([52],28,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+
+}
+*/
+
+/*
+// das wird 108,54,b)
+function rech() {
+P[1]=[0,0];
+P[2]=[D,0];
+K[2]=[1];
+L(3,1,2);
+L(4,3,2);
+L(5,3,4);
+L(6,4,2);
+M(7,1,x);
+L(8,1,7);
+L(9,8,7);
+L(10,8,9);
+L(11,10,9);
+L(12,10,11);
+N(13,7,5);
+N(14,11,13);
+N(15,14,13);
+N(16,12,14);
+L(17,12,16);
+L(18,17,16);
+L(19,17,18);
+M(20,19,y);
+L(21,19,20);
+L(22,21,20);
+L(23,21,22);
+L(24,23,22);
+L(25,23,24);
+N(26,20,18);
+N(27,26,15);
+N(28,26,27);
+Q(29,25,28,2*D,D);K[28].push(24);
+H(30,25,29,2);
+L(31,25,30);
+L(32,31,30);K[32].push(29);
+L(33,31,32);
+M(34,33,z);
+L(35,33,34);
+L(36,35,34);
+L(37,35,36);
+L(38,37,36);
+L(39,37,38);
+N(40,34,29);
+N(41,38,40);
+N(42,41,40);
+N(43,39,41);
+L(44,39,43);
+L(45,44,43);
+L(46,44,45);
+H(47,6,46,3);
+L(48,6,47);
+L(49,48,47);
+L(50,49,47);K[50].push(46);
+L(51,50,46);K[51].push(49);
+N(52,5,48);
+N(53,52,51);
+N(54,52,53);
+
+  }
+
+function los() {
+  z=-99;
+  xx=[70,73];
+alert("nach ok dauert's etwa 3 sek");
+  for (var hh=0;hh<60;hh++) {
+    x=(xx[0]+xx[1])/2;
+    yy=[-15,-25];
+    for (var h=0;h<60;h++) {
+      y=(yy[0]+yy[1])/2;
+      rech();
+//alert(h+" "+y+" "+ab(24,28));
+      if (ab(24,28)>D) yy[0]=y; else yy[1]=y;
+      }
+    zz=[-105,-110];
+    for (var h=0;h<60;h++) {
+      z=(zz[0]+zz[1])/2;
+      rech();
+//alert(h+" "+z+" "+ab(6,47));
+      if (ab(6,47)>D) zz[0]=z; else zz[1]=z;
+      }
+//alert(hh+"x"+x+" "+ab(53,45));
+    if (ab(53,45)>D) xx[0]=x; else xx[1]=x;
+    }
+
+strokevar="blue";
+strokewidthvar="4";
+alert(x+" x 1-7 45-53 "+ab(53,45));
+alert(y+" y 19-20 24-28 "+ab(24,28));
+alert(z+" z 33-34 6-47 "+ab(6,47));
+draw([7],1,1);
+draw([20],19,1);
+draw([34],33,1);
+strokevar="green";
+draw([53],45,1);
+draw([28],24,1);
+draw([47],6,1);
+strokevar="red";
+strokedashvar="4,4";
+alert(" 27...42 "+ab(27,42));
+alert(" 15...54 "+ab(15,54));
+alert(" 42...54 "+ab(42,54));
+draw([42],27,1);
+draw([54],15,1);
+draw([54],42,1);
+strokevar="black";
+strokedashvar="";
+strokewidthvar="1";
+K.forEach(draw);
+  }
+*/
+
+ ]]> </script> 
+ </svg>
