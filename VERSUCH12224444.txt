@@ -801,25 +801,32 @@ ALLEPCGS:=function(G)
     for j in List(G) do if Size(Group(i,j))=4 then
       for k in List(G) do if Size(Group(i,j,k))=8 then
         for l in List(G) do if Size(Group(i,j,k,l))=16 then
-#          for m in List(G) do if Size(Group(i,j,k,l,m))=32 then
+          for m in List(G) do if Size(Group(i,j,k,l,m))=32 then
           ANZAHL:=ANZAHL+1;
 #          map:=GroupGeneralMappingByImages(G,[G.4,G.3,G.2,G.1],[i,j,k,l]);
 #          G1:=Image(map);
 #          pcgs:=PcgsByPcSequence(fam,[l,k,j,i]);
 #          G1:=GroupOfPcgs(pcgs);
 #          RMAXSUCH(G1);
-          HRESW:=[i,j,k,l];
+          HRESW:=[i,j,k,l,m];
           WEGGUCK(G);
           ALLEW[ANZAHL]:=List(WEGLI);
           ALLEP[ANZAHL]:=[l,k,j,i];
-          Print ("\n",ANZAHL," ",WEGLI," ",[i,j,k,l]);
-          fi; od; fi; od; fi; od; fi; od;
+          Print ("\n",ANZAHL," ",WEGLI," ",[i,j,k,l,m]);
+          fi; od; fi; od; fi; od; fi; od; fi; od;
   return [ALLEW,ALLEP];
   end;
 #DDDDBIT:=0;DBIT:=0;ALLEN16G4:=ALLEPCGS(G);Collected(ALLEN16G4[1]);
 Collected(ALLEN16G4[1]{[1..448]});
 Collected(ALLEN16G4[1]{[449..768]});
 Collected(ALLEN16G4[1]{[769..960]});
+
+T(16);G:=SmallGroup(32,27);#da aber HRESW mit i,j,k,l,m
+DDDDBIT:=0;DBIT:=0;ALLEN32G27:=ALLEPCGS(G);Collected(ALLEN32G27[1]);
+ALLEZ32G27:=StructuralCopy(ALLEN32G27[1]);;
+for i in [1..Size(ALLEN32G27[1])] do Add(ALLEZ32G27[i],ALLEN32G27[2][i][1],1); od;
+Collected(ALLEZ32G27);
+
 #Ergebnis: 
 gap> XSAMMELVIEWER0(XSAMMEL);
 (1) 1 [ 1 ] 1 = [ 2, 1 ] 
