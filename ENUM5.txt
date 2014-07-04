@@ -172,7 +172,9 @@ QQP4:=Collected(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;List(QQ
 QQP4:=Unique(List(Q4FILTK,j->Unique(SortedList(List(j,i->DrT(i))))));;Size(QQP4);List(QQP4,i->Size(i));
 
 
-########## ^^^ soweit aus D4_2E ####### 
+#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#
+########## ^^^ soweit aus D4_2E #######
+#hier der neue Anlauf, was auch funktioniert 
 ### aus ENUM.txt:
 MACH:=function(d)
   local i,j,K,L,n;
@@ -229,7 +231,51 @@ d:=4;#d:=5;#d:=3;
 P:=MACH(d);Size(P);
 V:=FullRowSpace( GF(2),2^d-1 );
 Q[d]:=OrbitsDomain(P,V,Permuted);;Size(Q[d]);SortedList(List(Q[d],i->Size(i)));
-QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
+#QQP[d]:=Unique(List(Q[d],j->SortedList(Unique(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
+QQP[d]:=Set(List(Q[d],j->Set(List(j,i->DrT(i))))));;Size(QQP[d]);List(QQP[d],i->Size(i));
+LogTo("GAP_LOGFILE4.txt");
+for j in [1..Size(Q[d])] do
+  Print("\n",j,List(Q[d][j][1],function(i) if i=n then return 0; else return 1; fi; end));
+  od;
+LogTo();
+Q4FILTG:=Filtered(Q[d],FilterG);;Size(Q4FILTG);
+List(Q4FILTG,i->Size(i));
+
+VV:=Enumerator(V);
+GZ:=Orbit(P,VV[999999],Permuted);;Size(GZ);#4999680
+GZ:=Orbit(P,[n,z,n,n,z,z,n,n,n,z,z,n,z,z,n,n,n,n,n,z,z,z,z,z,n,n,n,n,z,z,z],Permuted);;Size(GZ);#4999680 auch.
+[n,z,n,n,z,z,n,n,n,z,z,n,z,n,z,n,n,n,n,z,z,z,z,z,n,n,n,n,z,z,z] in GZ;
+GZ2:=Orbit(P,[n,z,n,n,z,z,n,n,n,z,z,n,z,n,z,n,n,n,n,z,z,z,z,z,n,n,n,n,z,z,z],Permuted);;Size(GZ2);#4999680 auch.
+
+
+ConvI:=function(LL)
+  local L,LLL,LLLL,MM,i,NN;
+  LLLL:=[];
+  for L in LL do 
+    LLL:=ShallowCopy(L);
+    if L[7]=n then LLL[7]:=z; else LLL[7]:=n; fi;
+    if L[11]=n then LLL[11]:=z; else LLL[11]:=n; fi;
+    if L[13]=n then LLL[13]:=z; else LLL[13]:=n; fi;
+    if L[14]=n then LLL[14]:=z; else LLL[14]:=n; fi;
+#    if L[15]=n then LLL[15]:=z; else LLL[15]:=n; fi;
+    MM:=0;NN:=DrT(LLL);
+    for i in [1..Size(QQP[d])] do
+      if NN in QQP[d][i] then MM:=i; fi;
+      od;
+    Add(LLLL,MM);
+    od;
+  return Set(LLLL);
+  end;
+
+QQCONV:=Set(Q4FILTG,i->ConvI(i));
+List(QQCONV,i->Size(i));
+
+
+
+
+
+
+
 
 List(Q[d],i->Size(i));
 B50:=[z,z,z,z,z,z,n,z,z,z,n,z,n,n,n];
@@ -307,3 +353,30 @@ List(Q[d],i->QSUM(i));
 FQ:=Filtered(Q[d],i->QSUM(i)=8);;
 UQ:=List(FQ,j->Unique(List(j,i->DrT(i))));;List(UQ,i->Size(i));
 #[ 1, 105, 35, 420, 420, 15 ]
+
+
+
+###### neu mit Action
+n:=4;ORB:=[];
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+    c*d,a*c*d,b*c*d,a*b*c*d];
+A:=AutomorphismGroup(G);
+P:=Action(A,L);
+Size(P);
+V:=GF(2)^(2^n-1);
+ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
+Size(ORB[n]);
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i))))));;
+Size(QQP);List(QQP,i->Size(i));
+
+
+
+
+
+
+
+
+
+

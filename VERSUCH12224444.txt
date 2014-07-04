@@ -811,7 +811,7 @@ ALLEPCGS:=function(G)
           HRESW:=[i,j,k,l,m];
           WEGGUCK(G);
           ALLEW[ANZAHL]:=List(WEGLI);
-          ALLEP[ANZAHL]:=[l,k,j,i];
+          ALLEP[ANZAHL]:=[i,j,k,l,m];
           Print ("\n",ANZAHL," ",WEGLI," ",[i,j,k,l,m]);
           fi; od; fi; od; fi; od; fi; od; fi; od;
   return [ALLEW,ALLEP];
@@ -822,10 +822,23 @@ Collected(ALLEN16G4[1]{[449..768]});
 Collected(ALLEN16G4[1]{[769..960]});
 
 T(16);G:=SmallGroup(32,27);#da aber HRESW mit i,j,k,l,m
-DDDDBIT:=0;DBIT:=0;ALLEN32G27:=ALLEPCGS(G);Collected(ALLEN32G27[1]);
+DDDDBIT:=0;DBIT:=0;ALLEN32G27:=ALLEPCGS(G);;Collected(ALLEN32G27[1]);
 ALLEZ32G27:=StructuralCopy(ALLEN32G27[1]);;
 for i in [1..Size(ALLEN32G27[1])] do Add(ALLEZ32G27[i],ALLEN32G27[2][i][1],1); od;
+LogTo("GAP_LOGFILE.txt");
 Collected(ALLEZ32G27);
+LogTo();
+LogTo("GAP_LOGFILE2.txt");
+XSAMMELVIEWER0(XSAMMEL);
+LogTo();
+LogTo("GAP_LOGFILE2.txt");
+RMAXSUCH(G);time;
+LogTo();
+
+PP:=Positions(ALLEN32G27[1],[]);
+ALLEN32G27[2]{PP};
+
+
 
 #Ergebnis: 
 gap> XSAMMELVIEWER0(XSAMMEL);
@@ -1384,6 +1397,6 @@ WEGGUCK:=function(C)#aus RMAXSUCH abgeleitet
   QY13MOD(C,1,1,XSAMMEL,AU);
   end;
 #HRESW:=[G.4,G.3,G.2,G.1];WEGGUCK(G);WEGLI;
-#HRESW:=[G.3,G.4,G.1,G.];WEGGUCK(G);WEGLI;
+#HRESW:=[G.3,G.4,G.1,G.2];WEGGUCK(G);WEGLI;
 ^^^^^ WEGFINDER aus HRES das WEGLI ^^^^^
 ok na ok, hat ein brauchbares Ergebnis. fini bei WEGEZAHL*32=A
