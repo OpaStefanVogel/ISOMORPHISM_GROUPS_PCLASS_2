@@ -1400,3 +1400,52 @@ WEGGUCK:=function(C)#aus RMAXSUCH abgeleitet
 #HRESW:=[G.3,G.4,G.1,G.2];WEGGUCK(G);WEGLI;
 ^^^^^ WEGFINDER aus HRES das WEGLI ^^^^^
 ok na ok, hat ein brauchbares Ergebnis. fini bei WEGEZAHL*32=A
+
+
+
+
+##############################################
+also gänzlich neu: jetzt ohne WEGEBAUM:
+#W#
+#letzter Testablauf war:
+XSAMMEL:=[];#nur anfangs einmal
+AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+G:=SmallGroup(16,14);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,11);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,3);
+RMAXSUCH(G);time;
+G:=SmallGroup(32,27);
+RMAXSUCH(G);time;
+XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+
+XSAMMEL:=[];#nur anfangs einmal
+AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
+G:=SmallGroup(16,14);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,11);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,3);
+RMAXSUCH(G);time;
+G:=SmallGroup(32,27);
+RMAXSUCH(G);time;
+XMERKZAHL;WEGEZAHL;#14 wie auch bisher schon
+
+XSAMMEL=XSAMMEL1;
+XSAMMELVIEWER2(XSAMMEL);
+XSAMMELVIEWER3(XSAMMEL1);
+
+#hier suche ich warum # 
+XSAMMEL:=[];#nur anfangs einmal
+AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
+G:=SmallGroup(8,2);
+RMAXSUCH(G);time;
+G:=SmallGroup(16,4);
+RMAXSUCH(G);time;
+XMERKZAHL;WEGEZAHL;#14 wie auch bisher schon
+XSAMMELVIEWER0(XSAMMEL);
+
+#### hier nun los:
+ok zuerst muss ich mal phi^-1 wieder mit reinmachen, ok ist drin
