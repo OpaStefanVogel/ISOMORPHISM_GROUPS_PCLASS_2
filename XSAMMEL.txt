@@ -345,7 +345,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             Print("*\c");
             fi;
           if WEGEZAHL1=WEGEZAHL then  #W#
-            Add(NEUEWEGELISTE,WEGLI{[1..S]});
+            Add(NEUEWEGELISTE,[WEGLI{[1..S]},Reversed(HRESEXT{[1..S]})]);
             Print("\n??????"); 
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
@@ -763,6 +763,15 @@ GANZLOS:=function()
   SaveWorkspace("GAP_WORKSPACE_4431");
   end;
 #AUZAHL:=4;GANZLOS();
+
+WEGEVERGLEICHER:=function(WEG1,WEG2)
+
+  end;
+
+SEPARATOR:=function()
+  
+  end;
+  
 
 
 ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,

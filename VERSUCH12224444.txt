@@ -1423,7 +1423,6 @@ AKTUELLERTEST:=function()
   XSAMMEL1:=StructuralCopy(XSAMMEL);;
   ;
 
-
 XSAMMEL:=[];#nur anfangs einmal
 AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
 G:=SmallGroup(16,14);
@@ -1455,4 +1454,8 @@ ok zuerst muss ich mal phi^-1 wieder mit reinmachen, ok ist drin
 ok als nächstes gebe ich zu Beginn jedes neuen Teilwegebaumes ein ???? aus
 ok wenn das paarmal zuviel ist - macht nix, das fällt dann raus wenn phi^-1phi funktioniert
 ok dann dieses erste WEGLI nach ????? in eine neue Wegeliste aufheb...: NEUEWEGELISTE
-.. falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam kniffelig.
+ok falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam mit drinkniffelig.
+.. diese NEUEWEGELISTE tu ich erstmal separat auswerten... mit einem SEPARATOR
+   .. darin enthalten der angestrebte WEGEVERGLEICHER
+      .. dazu gleich das betreffende pcgs hinzu, das ist ja schon in Print dabei.
+      der müsste dann sogar unabhängig von pcgs funktionieren...
