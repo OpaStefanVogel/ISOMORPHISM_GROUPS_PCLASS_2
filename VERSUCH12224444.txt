@@ -1408,18 +1408,21 @@ ok na ok, hat ein brauchbares Ergebnis. fini bei WEGEZAHL*32=A
 also gänzlich neu: jetzt ohne WEGEBAUM:
 #W#
 #letzter Testablauf war:
-XSAMMEL:=[];#nur anfangs einmal
-AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
-G:=SmallGroup(16,14);
-RMAXSUCH(G);time;
-G:=SmallGroup(16,11);
-RMAXSUCH(G);time;
-G:=SmallGroup(16,3);
-RMAXSUCH(G);time;
-G:=SmallGroup(32,27);
-RMAXSUCH(G);time;
-XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
-XSAMMEL1:=StructuralCopy(XSAMMEL);;
+AKTUELLERTEST:=function()
+  XSAMMEL:=[];#nur anfangs einmal
+  AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+  G:=SmallGroup(16,14);
+  RMAXSUCH(G);time;
+  G:=SmallGroup(16,11);
+  RMAXSUCH(G);time;
+  G:=SmallGroup(16,3);
+  RMAXSUCH(G);time;
+  G:=SmallGroup(32,27);
+  RMAXSUCH(G);time;
+  XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
+  XSAMMEL1:=StructuralCopy(XSAMMEL);;
+  ;
+
 
 XSAMMEL:=[];#nur anfangs einmal
 AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
@@ -1449,5 +1452,7 @@ XSAMMELVIEWER0(XSAMMEL);
 
 #### hier nun los:
 ok zuerst muss ich mal phi^-1 wieder mit reinmachen, ok ist drin
-.. als nächstes gebe ich zu Beginn jedes neuen Teilwegebaumes ein ???? aus
-.. wenn das paarmal zuviel ist - macht nix, das fällt dann raus wenn phi^-1phi funktioniert
+ok als nächstes gebe ich zu Beginn jedes neuen Teilwegebaumes ein ???? aus
+ok wenn das paarmal zuviel ist - macht nix, das fällt dann raus wenn phi^-1phi funktioniert
+ok dann dieses erste WEGLI nach ????? in eine neue Wegeliste aufheb...: NEUEWEGELISTE
+.. falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam kniffelig.

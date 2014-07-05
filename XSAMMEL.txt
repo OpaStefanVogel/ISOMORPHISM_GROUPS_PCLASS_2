@@ -52,6 +52,8 @@ AUZAHL:=4;FAKT:=[];
 XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
 LETZTERABZWEIG:=0;
 
+NEUEWEGELISTE:=[];
+
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
 Commu:=function(a,b) return (b*a)^2; end;
@@ -342,7 +344,10 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             HRES0:=HRES0MERK;
             Print("*\c");
             fi;
-          if WEGEZAHL1=WEGEZAHL then Print("\n??????"); fi; #W#
+          if WEGEZAHL1=WEGEZAHL then  #W#
+            Add(NEUEWEGELISTE,WEGLI{[1..S]});
+            Print("\n??????"); 
+            fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
           if DBIT=1 then
@@ -452,7 +457,7 @@ RMAXSUCH:=function(C)
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
-  WEGEARRAY:=[];
+  WEGEARRAY:=[]; NEUEWEGELISTE:=[];
   QY13(C,1,1,XSAMMEL,AU);
 #XSAMMELVIEWER0(XSAMMEL);
 #Print("\n***XFUELL***");
