@@ -1449,3 +1449,5 @@ XSAMMELVIEWER0(XSAMMEL);
 
 #### hier nun los:
 ok zuerst muss ich mal phi^-1 wieder mit reinmachen, ok ist drin
+.. als nächstes gebe ich zu Beginn jedes neuen Teilwegebaumes ein ???? aus
+.. wenn das paarmal zuviel ist - macht nix, das fällt dann raus wenn phi^-1phi funktioniert

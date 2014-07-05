@@ -311,7 +311,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
   for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
     Add(HRES,ri,1);HRESEXT[S]:=ri;
-if S=1 then Print("\n******",ri," ",ri^2); fi;
+#W# if S=1 then Print("\n******",ri," ",ri^2); fi;
     if QY10(HRES,S,GR) then
       if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
@@ -342,6 +342,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             HRES0:=HRES0MERK;
             Print("*\c");
             fi;
+          if WEGEZAHL1=WEGEZAHL then Print("\n??????"); fi; #W#
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
           if DBIT=1 then
