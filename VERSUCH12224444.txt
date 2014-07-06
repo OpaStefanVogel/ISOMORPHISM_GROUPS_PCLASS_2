@@ -1460,7 +1460,8 @@ ok falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam mit drinknif
       .. dazu gleich das betreffende pcgs hinzu, das ist ja schon in Print dabei.
       .. dann local und los mit I=1..S
       .. dann Komplikation wegen [14] wie schon in WEGEDISP
-      ok die erste Hälfte von WEGEVERGLEICHER scheint geschafft
+      ok die erste Hälfte von WEGEVERGLEICHER scheint geschafft, da hat QY21 geholfen
+      .. jetzt rückzu mit WEG2...
       der müsste dann sogar unabhängig von pcgs funktionieren...
 
 WEGEVERGLEICHER(NEUEWEGELISTE[1],NEUEWEGELISTE[2]);
