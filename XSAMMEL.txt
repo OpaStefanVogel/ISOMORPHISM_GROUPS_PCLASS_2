@@ -765,7 +765,22 @@ GANZLOS:=function()
 #AUZAHL:=4;GANZLOS();
 
 WEGEVERGLEICHER:=function(WEG1,WEG2)
-
+  local S,HRES,T,PART,ZEIGER;
+  S:=Size(WEG1[1]);
+  HRES:=[];ZEIGER:=XSAMMEL;
+  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
+    HRES[T]:=WEG1[2][T];
+    HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[3][i],T)));
+    if IsBound(PART[5]) then PART:=PART[5]; fi;
+    if IsBound(PART[12]) then #Print("\007");
+      HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[10][i],T)));
+      PART:=PART[12];
+      fi;
+#Error("halt mal");
+    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
+    Print("\n",T," ",HRES,Size(PART[3]));
+    fi; od; od;
+  #for T in 
   end;
 
 SEPARATOR:=function()

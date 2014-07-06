@@ -1412,16 +1412,16 @@ AKTUELLERTEST:=function()
   XSAMMEL:=[];#nur anfangs einmal
   AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
   G:=SmallGroup(16,14);
-  RMAXSUCH(G);time;
+  RMAXSUCH(G);#time;
   G:=SmallGroup(16,11);
-  RMAXSUCH(G);time;
+  RMAXSUCH(G);#time;
   G:=SmallGroup(16,3);
-  RMAXSUCH(G);time;
+  RMAXSUCH(G);#time;
   G:=SmallGroup(32,27);
-  RMAXSUCH(G);time;
-  XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
+  RMAXSUCH(G);#time;
+  #XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
   XSAMMEL1:=StructuralCopy(XSAMMEL);;
-  ;
+  end;
 
 XSAMMEL:=[];#nur anfangs einmal
 AUZAHL:=0;DDDDBIT:=1;DBIT:=1;#ausfuehrliche Variante
@@ -1458,4 +1458,11 @@ ok falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam mit drinknif
 .. diese NEUEWEGELISTE tu ich erstmal separat auswerten... mit einem SEPARATOR
    .. darin enthalten der angestrebte WEGEVERGLEICHER
       .. dazu gleich das betreffende pcgs hinzu, das ist ja schon in Print dabei.
+      .. dann local und los mit I=1..S
+      .. dann Komplikation wegen [14] wie schon in WEGEDISP
+      ok die erste Hälfte von WEGEVERGLEICHER scheint geschafft
       der müsste dann sogar unabhängig von pcgs funktionieren...
+
+WEGEVERGLEICHER(NEUEWEGELISTE[1],NEUEWEGELISTE[2]);
+
+
