@@ -1509,6 +1509,18 @@ WEGEVERGLEICHER([LETZTEWEGELISTE[150][1],Reversed(LETZTEWEGELISTE[150][2])],[LET
 ok erstmalig sind jetzt die neuen ret soweit ok (insgesamt 3*false, je bei f5, f3 und f1)
 
 
+.. weiter beim ersten ret=true aufhör...
+.. und gleich mal das neue ret statt dem alten versuchen...
+   also wie war das mit dem laten RBIT
+   RBIT=6 wenn gar nicht drin
+   RBIT=2 wenn überhaupt drin
+   RBIT=3 wenn innerhalb des ersten Elements
+   RBIT=4 wenn innerhalb der ersten beiden Elemente
+   .. ich muss also H mit dem gefundenen pcgs vergleichen und entsprechend ret einstellen...
+      sieht machbar aus... Pause
+   ok mal probieren... ok juppp, größtenteils nur noch eine Zeile ok 
+   .. Size(LETZTEWEGELISTE)=77, da kann vielleicht noch was raus...
+      
 #das war hier der Ablauf
 LogTo("GAP_LOGFILE5.txt");
 AKTUELLERTEST();

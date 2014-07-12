@@ -130,18 +130,18 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
-  local k,kk,W,H,i,r,ret;
+  local k,kk,kkk,W,H,i,r,ret;
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
 #  if W=[ 1, 1, 1, 1, 325 ] then Error("halt da"); fi;
-  k:=0;
+  k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
   if LETZTEWEGELISTE<>[] then
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
     k:=k-1;
     Print(k);
-    i:=1;ret:=false;
-    while IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
+    i:=1;
+    while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
       r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
       kk:=0;
       while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
@@ -149,10 +149,17 @@ QY07L:=function(S)
 #      Print(kk,Reversed(r)[1]);
       Print(kk);
       if kk>k then ret:=true; fi;
-      i:=i+1; od; 
-    Print(ret);
+      i:=i+1; od;
+    i:=i-1;
+    kkk:=0;
+    while H{[1..kkk]}=LETZTEWEGELISTE[i][2]{[1..kkk]} do kkk:=kkk+1; od;
+    kkk:=kkk-1;
+    kkk:=kkk+2;
+    if ret=false then kkk:=S+1; fi;
+    Print(ret,kk,k,S,i,kkk);
     fi;
-  Add(LETZTEWEGELISTE,[W,H],1);
+  if ret=false then Add(LETZTEWEGELISTE,[W,H],1); fi;
+  return [ret,kk,k,S,i,kkk];
   end;
   
 
@@ -330,7 +337,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB;
+  orbi,ORB,STAB,RBITNEU;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
 #  RC:=RightTransversal(C,GR);
@@ -380,7 +387,8 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
-            QY07L(S);
+            RBITNEU:=QY07L(S);
+            RBIT:=RBITNEU[6];
             fi;
           if DBIT=1 then
             Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT{[1..S]},RBIT<=S," ");
