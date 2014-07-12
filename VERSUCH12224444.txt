@@ -1463,7 +1463,17 @@ ok so Schluss Aus, das hatte noch nicht richtig getroffen, dafür jetzt aber die
           .. wenn keine phi-Gleichheit, dann ab mit neuem pcgs in die LETZTEWEGELISTE
 .. soweit erstmal, das müsste es gewesen sein.
 WEGEVERGLEICHER([LETZTEWEGELISTE[32][1],Reversed(LETZTEWEGELISTE[32][2])],[LETZTEWEGELISTE[34][1],Reversed(LETZTEWEGELISTE[34][2])]);
-
+WEGEVERGLEICHER([LETZTEWEGELISTE[11][1],Reversed(LETZTEWEGELISTE[11][2])],
+[LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])]);
+WEGEVERGLEICHER([LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])],[LETZTEWEGELISTE[7][1],Reversed(LETZTEWEGELISTE[7][2])]);
+WEGEVERGLEICHER([LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])],[LETZTEWEGELISTE[8][1],Reversed(LETZTEWEGELISTE[8][2])]);
+WEGEVERGLEICHER([LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])],[LETZTEWEGELISTE[9][1],Reversed(LETZTEWEGELISTE[9][2])]);
+WEGEVERGLEICHER([LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])],[LETZTEWEGELISTE[10][1],Reversed(LETZTEWEGELISTE[10][2])]);
+WEGEVERGLEICHER([LETZTEWEGELISTE[6][1],Reversed(LETZTEWEGELISTE[6][2])],[LETZTEWEGELISTE[11][1],Reversed(LETZTEWEGELISTE[11][2])]);
+das noch???
+[ 1, 1, 1, 14, 7 ] 0 6 [ f5, f1, f4, f2, f3 ]false .30false
+[ 1, 1, 1, 3, 7 ] 0 6 [ f5, f1, f4, f3, f2 ]false .302false
+[ 1, 1, 1, 12, 5 ] 0 6 [ f5, f1, f4, f2*f3, f2 ]false .20203true
 
 #das war hier der Ablauf
 LogTo("GAP_LOGFILE5.txt");

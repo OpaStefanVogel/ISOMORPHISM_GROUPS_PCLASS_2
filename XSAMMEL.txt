@@ -145,8 +145,9 @@ QY07L:=function(S)
       r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])]);
       kk:=0;
       while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
+      kk:=kk-1;
       Print(kk);
-      if kk>=k then ret:=true; fi;
+      if kk>k then ret:=true; fi;
       i:=i+1; od; 
     Print(ret);
     fi;
