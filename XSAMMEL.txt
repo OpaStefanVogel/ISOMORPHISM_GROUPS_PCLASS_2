@@ -130,8 +130,26 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
+  local k,kk,W,H,i,r,ret;
   Print(".");
-  Add(LETZTEWEGELISTE,[WEGLI{[1..S]},HRESEXT{[1..S]}],1);
+  W:=WEGLI{[1..S]};
+  H:=HRESEXT{[1..S]};
+  k:=0;
+  if LETZTEWEGELISTE<>[] then
+    while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
+    k:=k-1;
+    Print(k);
+    i:=1;ret:=false;
+    while IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
+      r:=WEGEVERGLEICHER([W,HRESEXT{[1..S]}],LETZTEWEGELISTE[i]);
+      kk:=0;
+      while IsBound(H[kk]) and H{[1..kk]}=r{[1..kk]} do kk:=kk+1; od;
+      Print(kk);
+      if kk>=k then ret:=true; fi;
+      i:=i+1; od; 
+    Print(ret);
+    fi;
+  Add(LETZTEWEGELISTE,[W,HRESEXT{[1..S]}],1);
   end;
   
 
@@ -791,39 +809,39 @@ WEGEVERGLEICHER:=function(WEG1,WEG2)
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
     fi; od; od;
-  Print("\n",LETZTELISTE);
+#  Print("\n",LETZTELISTE);
   APP:=Size(LETZTELISTE)+1;
   ZEIGER:=XSAMMEL;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG2[1][T] then
     if IsBound(PART[5]) then 
       Add(LETZTELISTE,PART[4],APP);
-  Print("\n",PART[4]);
+#  Print("\n",PART[4]);
       PART:=PART[5]; 
       fi;
     if IsBound(PART[12]) then
       Add(LETZTELISTE,PART[11],APP);
-  Print("\n",PART[11]);
+#  Print("\n",PART[11]);
       PART:=PART[12];
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
     fi; od; od;
-  Print("\n",LETZTELISTE);
-#  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
-#    HRES[T]:=WEG1[2][T];
-#    HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[3][i],T)));
-#    if IsBound(PART[5]) then PART:=PART[5]; fi;
-#    if IsBound(PART[12]) then
-#      HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[10][i],T)));
-#      PART:=PART[12];
-#      fi;
-#    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
-#    Print("\n",T," ",HRES,Size(PART[3]));
-#    fi; od; od;
+#  Print("\n",LETZTELISTE);
+##  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
+##    HRES[T]:=WEG1[2][T];
+##    HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[3][i],T)));
+##    if IsBound(PART[5]) then PART:=PART[5]; fi;
+##    if IsBound(PART[12]) then
+##      HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[10][i],T)));
+##      PART:=PART[12];
+##      fi;
+##    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
+##    Print("\n",T," ",HRES,Size(PART[3]));
+##    fi; od; od;
   HRES:=StructuralCopy(WEG1[2]);
   for PHI in LETZTELISTE do 
     T:=Size(PHI);
     HRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(HRES{[S-T+1..S]},NZUI(PHI[i],T)));
-    Print("\n",HRES,PHI);
+#    Print("\n",HRES,PHI);
     od;
   return HRES;
   #for T in 
