@@ -53,7 +53,7 @@ XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
 LETZTERABZWEIG:=0;
 
 NEUEWEGELISTE:=[];
-LETZTEWEGELISTE:=[];VORLETZT:=0;
+LETZTEWEGELISTE:=[];VORLETZT:=0;WHALT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -134,7 +134,7 @@ QY07L:=function(S)
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
-#if W=[ 1, 1, 1, 1, 277 ] then Error("halt da"); fi;
+if W=WHALT then Error("halt da"); fi;
   k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
   if LETZTEWEGELISTE<>[] then
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
@@ -846,6 +846,9 @@ if PBIT<>0 then Print("\n",LETZTELISTE); fi;
       Add(LETZTELISTE,PART[4],APP);
 if PBIT<>0 then Print("\n",PART[4]); fi;
       PART:=PART[5]; 
+      if not(IsBound(PART[12])) then #nur wegen XSAMMELFERTIG rausnehmen
+        Add(LETZTELISTE,PART[10],APP);
+        fi;
       fi;
     if IsBound(PART[12]) then
       Add(LETZTELISTE,PART[11],APP);

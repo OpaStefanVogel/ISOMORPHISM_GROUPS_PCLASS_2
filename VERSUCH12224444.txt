@@ -1600,3 +1600,60 @@ RMAXSUCH(G);#time;
 XSAMMELFERTIG:=StructuralCopy(XSAMMEL);;
 VORLETZT:=0;AKTUELLERTEST(0,0);
 LogTo();
+
+-- weiter ohne dem XSAMMELFERTIG:
+VORLETZT:=1;AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(8);
+G:=SmallGroup(16,13);
+RMAXSUCH(G);#time;
+
+false[ f4, f1, f2, f3 ] -1 5 [ 1, 2, 5, 3 ] DONNERWETTER *.21false12415
+false[ f4, f1, f3, f2 ] -1 5 [ 1, 2, 1, 2 ] DONNERWETTER .211false12425
+false[ f4, f1, f2*f3, f2 ] 0 5 [ 1, 2, 4, 4 ] .12true21413
+true[ f4, f2, f1, f3 ] 0 3 [ 1, 2, 5, 3 ] .1111false11435
+false[ f4, f3, f1, f2 ] 0 5 [ 1, 1, 2, 2 ] .21false12415
+true[ f4, f3, f2, f1 ] 0 4 [ 1, 1, 2, 2 ] .211false12425
+false[ f4, f3, f1*f2, f1 ] 0 5 [ 1, 1, 1, 2 ] .1111111false11465
+false[ f4, f1*f3, f2, f1 ] 0 5 [ 1, 1, 3, 4 ] *.21false12415
+false[ f4, f1*f3, f1, f2 ] -1 5 [ 1, 1, 2, 4 ] DONNERWETTER *.200false02425
+false[ f4, f1*f3, f1*f2, f1 ] -1 5 [ 1, 1, 4, 2 ] DONNERWETTER .1111111111false11495
+true[ f4, f2*f3, f1, f2 ] 0 3 [ 1, 1, 3, 4 ] .11111111111false114105
+false[ f4, f1*f2, f1, f3 ] 0 5 [ 1, 1, 3, 3 ] .21false12415
+false[ f4, f1*f2, f3, f1 ] 0 5 [ 1, 1, 1, 4 ] .200false02425
+false[ f4, f1*f2, f1*f3, f1 ] 0 5 [ 1, 1, 4, 3 ] .13true31413
+false[ f4, f1*f2*f3, f2, f1 ] 0 5 [ 1, 2, 5, 4 ] .12true21413
+true[ f4, f1*f2*f3, f3, f1 ] 0 3 [ 1, 2, 1, 2 ] /12
+
+VORLETZT:=0;AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(8);
+G:=SmallGroup(16,13);
+RMAXSUCH(G);#time;
+
+false[ f4, f1, f2, f3 ] -1 5 [ 1, 2, 5, 3 ] DONNERWETTER *.22false22415
+false[ f4, f1, f3, f2 ] -1 5 [ 1, 2, 1, 2 ] DONNERWETTER .212false22425
+false[ f4, f1, f2*f3, f2 ] 0 5 [ 1, 2, 4, 4 ] .12true21413
+true[ f4, f2, f1, f3 ] 0 3 [ 1, 2, 5, 3 ] .1111false11435
+false[ f4, f3, f1, f2 ] 0 5 [ 1, 1, 2, 2 ] .21false12415
+false[ f4, f3, f2, f1 ] 0 5 [ 1, 1, 2, 2 ] .211false12425
+false[ f4, f3, f1*f2, f1 ] 0 5 [ 1, 1, 1, 2 ] .13true31413
+true[ f4, f1*f3, f2, f1 ] 0 3 [ 1, 1, 3, 4 ] .13true31413
+true[ f4, f2*f3, f1, f2 ] 0 3 [ 1, 1, 3, 4 ] .13true31413
+true[ f4, f1*f2, f1, f3 ] 0 3 [ 1, 1, 3, 3 ] .11112true21443
+true[ f4, f1*f2*f3, f2, f1 ] 0 3 [ 1, 2, 5, 4 ] /12
+
+.. es fehlen also glatt zwei DONNERWETTER. Wo sind die hin
+.. Auẞerdem was ist das, davon müsste doch das zweite true sein bei gleichem W.
+false[ f4, f3, f1, f2 ] 0 5 [ 1, 1, 2, 2 ] .21false12415
+false[ f4, f3, f2, f1 ] 0 5 [ 1, 1, 2, 2 ] .211false12425
+WEGEVERGLEICHER([W,Reversed(H)],LETZTEWEGELISTE[1],1);
+.. naja absolut gleicher Weg [ 1, 1, 2, 2 ], das muss ja true ergeben. 
+   Was da blos wieder nicht ging...
+.. hmpf na klar, in WEGEFINDER auch ein extra if not(IsBound(PART[12])) bei PHI^-1 rein...
+   GUTE NACHT
+   
+VORLETZT:=1;AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(16);XSAMMELVIEWER2(XSAMMEL);
+T(32);XSAMMELVIEWER3(XSAMMEL);
+T(64);XSAMMELVIEWER4(XSAMMEL);
+
+.. T(16) und T(32) stimmen jetzt und T(64) läuft, jetzt aber wirklich Gute Nacht
