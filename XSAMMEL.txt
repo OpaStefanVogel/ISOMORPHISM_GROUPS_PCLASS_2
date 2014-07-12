@@ -134,7 +134,7 @@ QY07L:=function(S)
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
-  if W=[ 1, 1, 1, 1, 325 ] then Error("halt da"); fi;
+#  if W=[ 1, 1, 1, 1, 325 ] then Error("halt da"); fi;
   k:=0;
   if LETZTEWEGELISTE<>[] then
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
@@ -142,10 +142,11 @@ QY07L:=function(S)
     Print(k);
     i:=1;ret:=false;
     while IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
-      r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])]);
+      r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
       kk:=0;
       while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
       kk:=kk-1;
+#      Print(kk,Reversed(r)[1]);
       Print(kk);
       if kk>k then ret:=true; fi;
       i:=i+1; od; 
@@ -795,11 +796,11 @@ GANZLOS:=function()
   end;
 #AUZAHL:=4;GANZLOS();
 
-WEGEVERGLEICHER:=function(WEG1,WEG2)
+WEGEVERGLEICHER:=function(WEG1,WEG2,PBIT)
   local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
   S:=Size(WEG1[1]);
   LETZTELISTE:=[];
-  ZEIGER:=XSAMMEL;
+  ZEIGER:=XSAMMELFERTIG;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
     if IsBound(PART[5]) then 
       Add(LETZTELISTE,PART[3]);
@@ -811,23 +812,23 @@ WEGEVERGLEICHER:=function(WEG1,WEG2)
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
     fi; od; od;
-#  Print("\n",LETZTELISTE);
+if PBIT<>0 then Print("\n",LETZTELISTE); fi;
   APP:=Size(LETZTELISTE)+1;
   ZEIGER:=XSAMMEL;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG2[1][T] then
     if IsBound(PART[5]) then 
       Add(LETZTELISTE,PART[4],APP);
-#  Print("\n",PART[4]);
+if PBIT<>0 then Print("\n",PART[4]); fi;
       PART:=PART[5]; 
       fi;
     if IsBound(PART[12]) then
       Add(LETZTELISTE,PART[11],APP);
-#  Print("\n",PART[11]);
+if PBIT<>0 then Print("\n",PART[11]); fi;
       PART:=PART[12];
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
     fi; od; od;
-#  Print("\n",LETZTELISTE);
+if PBIT<>0 then Print("\n",LETZTELISTE); fi;
 ##  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
 ##    HRES[T]:=WEG1[2][T];
 ##    HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[3][i],T)));
@@ -843,7 +844,7 @@ WEGEVERGLEICHER:=function(WEG1,WEG2)
   for PHI in LETZTELISTE do 
     T:=Size(PHI);
     HRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(HRES{[S-T+1..S]},NZUI(PHI[i],T)));
-#    Print("\n",HRES,PHI);
+if PBIT<>0 then Print("\n",HRES,PHI); fi;
     od;
   return HRES;
   #for T in 
