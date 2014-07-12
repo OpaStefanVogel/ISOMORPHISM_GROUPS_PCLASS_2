@@ -53,6 +53,7 @@ XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
 LETZTERABZWEIG:=0;
 
 NEUEWEGELISTE:=[];
+LETZTEWEGELISTE:=[];
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -128,6 +129,12 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   return WEGEARRAY[ZEIGER];
   end;
 
+QY07L:=function(S)
+  Print(".");
+  Add(LETZTEWEGELISTE,[WEGLI{[1..S]},HRESEXT{[1..S]}],1);
+  end;
+  
+
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
   local ISO;
   ISO:=PositionFirstComponent(ZEIGER,PNEU);
@@ -141,7 +148,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
         WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
-        XMERKZAHLZIELMERK,FAKTMERK;
+        XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -156,6 +163,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEARRAYMERK:=StructuralCopy(WEGEARRAY);
   XMERKZAHLZIELMERK:=XMERKZAHLZIEL;XMERKZAHLZIEL:=999999;
   FAKTMERK:=StructuralCopy(FAKT);
+  LETZTEWEGELISTEMERK:=StructuralCopy(LETZTEWEGELISTE);
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -170,6 +178,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   WEGEARRAY:=WEGEARRAYMERK;
   XMERKZAHLZIEL:=XMERKZAHLZIELMERK;
   FAKT:=FAKTMERK;
+  LETZTEWEGELISTE:=LETZTEWEGELISTEMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -349,7 +358,9 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             Print("\n??????"); 
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
-            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); fi;
+            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
+            QY07L(S);
+            fi;
           if DBIT=1 then
             Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT{[1..S]},RBIT<=S," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
@@ -457,7 +468,7 @@ RMAXSUCH:=function(C)
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
-  WEGEARRAY:=[]; NEUEWEGELISTE:=[];
+  WEGEARRAY:=[]; NEUEWEGELISTE:=[];LETZTEWEGELISTE:=[];
   QY13(C,1,1,XSAMMEL,AU);
 #XSAMMELVIEWER0(XSAMMEL);
 #Print("\n***XFUELL***");

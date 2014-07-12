@@ -1450,7 +1450,7 @@ ok falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam mit drinknif
 ok so Schluss Aus, das hatte noch nicht richtig getroffen, dafür jetzt aber die LETZTEWEGELISTE:
 .. WEGEVERGLEICHER ist gut, der wird zum Glück auch dafür mit gebraucht und geht noch besser ohne f
 .. und jetzt gehe ich so vor:
-  ok das erste pcgs kommt in die LETZTEWEGELISTE, ok auch gleich alle anderen mit, alle die auftreten.
+  ok das erste pcgs kommt in die LETZTEWEGELISTE, ok auch gleich komplett alle anderen mit, rückwärts.
   .. jedes nächstfolgende pcgs vergleiche ich mit dem letzten pcgs aus LETZTEẂEGELISTE
      .. wenn übereinstimmung in den ersten k Elementen besteht, dann 
         .. vergleiche ich über WEGEVERGLEICHER das neue pcgs 
