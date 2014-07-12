@@ -1462,6 +1462,7 @@ ok so Schluss Aus, das hatte noch nicht richtig getroffen, dafür jetzt aber die
              dann passendes (??? wie passend ist noch offen) return 
           .. wenn keine phi-Gleichheit, dann ab mit neuem pcgs in die LETZTEWEGELISTE
 .. soweit erstmal, das müsste es gewesen sein.
+WEGEVERGLEICHER([LETZTEWEGELISTE[32][1],Reversed(LETZTEWEGELISTE[32][2])],[LETZTEWEGELISTE[34][1],Reversed(LETZTEWEGELISTE[34][2])]);
 
 
 #das war hier der Ablauf
