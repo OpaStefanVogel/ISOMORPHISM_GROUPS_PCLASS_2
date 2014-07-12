@@ -1408,6 +1408,7 @@ ok na ok, hat ein brauchbares Ergebnis. fini bei WEGEZAHL*32=A
 also gänzlich neu: jetzt ohne WEGEBAUM:
 #W#
 #aktueller Testablauf ist:
+VORLETZT:=1;
 XSAMMEL:=[];#nur anfangs einmal
 AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
 G:=SmallGroup(16,14);
@@ -1420,10 +1421,11 @@ XSAMMEL1:=StructuralCopy(XSAMMEL);;
 G:=SmallGroup(32,27);
 RMAXSUCH(G);#time;
 XSAMMELFERTIG:=StructuralCopy(XSAMMEL);;
+VORLETZT:=0;
 
-AKTUELLERTEST:=function(DDDD)
+AKTUELLERTEST:=function(AU,DDDD)
   XSAMMEL:=StructuralCopy(XSAMMEL1);;
-  AUZAHL:=0;DDDDBIT:=DDDD;DBIT:=1;
+  AUZAHL:=AU;DDDDBIT:=DDDD;DBIT:=1;
   G:=SmallGroup(32,27);
   RMAXSUCH(G);#time;
   #XMERKZAHL;WEGEZAHL;#14 muss rauskommen und nicht 8
@@ -1507,10 +1509,20 @@ WEGEVERGLEICHER([LETZTEWEGELISTE[150][1],Reversed(LETZTEWEGELISTE[150][2])],[LET
 01true
 [ 1, 1, 1, 1, 325 ] -1 6 [ f3, f2, f4, f5, f1 ]false DONNERWETTER *.21false
 ok erstmalig sind jetzt die neuen ret soweit ok (insgesamt 3*false, je bei f5, f3 und f1)
+das hier mal überprüfen:
+[ 1, 1, 1, 48, 2 ] -1 6 [ f5, f2, f4, f1*f3, f1 ]false DONNERWETTER .21101false12546
+[ 1, 1, 3, 2, 1 ] 0 3 [ f5, f3, f1, f4, f2 ]true .1000101010false01596
+WEGEVERGLEICHER([[1,1,3,2,1],[G.2,G.4,G.1,G.3,G.5]],[[1,1,1,48,2],[G.1,G.1*G.3,G.4,G.2,G.5]],1);
+stimmt aber...
+und das???
+  [ [ 1, 1, 1, 1, 7 ], [ f5, f2*f3*f4, f3, f2, f1 ] ], 
+  [ [ 1, 1, 1, 1, 39 ], [ f5, f2*f3, f2*f4, f2, f1 ] ], 
+WEGEVERGLEICHER([[1,1,1,1,7],[G.1,G.2,G.3,G.2*G.3*G.4,G.5]],[[1,1,1,1,39],[G.1,G.2,G.2*G.4,G.2*G.3,G.5]],1);
+ist phi-gleich zur Stufe 2, erscheint aber in AKTUELLERTEST nur mit Stufe 1 
+.. da passt wohl auch XSAMMELFERTIG nicht mehr dazu...
 
-
-.. weiter beim ersten ret=true aufhör...
-.. und gleich mal das neue ret statt dem alten versuchen...
+ok weiter beim ersten ret=true aufhör... ok das ging eigentlich bisher ganz gut
+ok und gleich mal das neue ret statt dem alten versuchen...ok ging bisher auch gut
    also wie war das mit dem laten RBIT
    RBIT=6 wenn gar nicht drin
    RBIT=2 wenn überhaupt drin
@@ -1519,8 +1531,38 @@ ok erstmalig sind jetzt die neuen ret soweit ok (insgesamt 3*false, je bei f5, f
    .. ich muss also H mit dem gefundenen pcgs vergleichen und entsprechend ret einstellen...
       sieht machbar aus... Pause
    ok mal probieren... ok juppp, größtenteils nur noch eine Zeile ok 
-   .. Size(LETZTEWEGELISTE)=77, da kann vielleicht noch was raus...
-      
+.. Size(LETZTEWEGELISTE)=77, da kann vielleicht noch was raus...ja da noch was mach...
+.. und auch den XSAMMELFERTIG wieder raus, vohrher kann T(8) und so nicht gehen
+.. überhaupt wenn XSAMMELFERTIG nicht mehr passt, kommt was anderes raus.
+.. huuuuu es scheint, ich hab XSAMMELFERTIG wieder rausgebracht....
+   .. nee, f3 fehlt jetzt mal, angeblich soll das phi-gleich sein:
+[ [ 1, 1, 1, 1, 277 ], [ f3, f2, f4, f5, f1 ] ]
+[ [ 1, 1, 8, 1, 7 ], [ f5, f4, f1*f3, f1, f2 ] ], 
+WEGEVERGLEICHER([[1,1,1,1,277],[G.1,G.5,G.4,G.2,G.3]],[[1,1,8,1,7],[G.2,G.1,G.1*G.3,G.4,G.5]],1);
+da fehlt die [ 24, 16, 11, 17, 30 ] aus dem alten
+WEGEVERGLEICHER([[1,1,1,1,325],[G.1,G.5,G.4,G.2,G.3]],[[1,1,8,1,7],[G.2,G.1,G.1*G.3,G.4,G.5]],1);
+[ [ 1, 14, 4, 24, 16 ], [ 24, 16, 11, 17, 30 ] ]
+[ 2, 7, 4 ]
+[ 3, 10, 4, 8, 16 ]
+[ [ 1, 14, 4, 24, 16 ], [ 24, 16, 11, 17, 30 ], [ 3, 10, 4, 8, 16 ], [ 2, 7, 4 ] ]
+[ f1, f2*f4*f5, f4, f2*f3, f3 ][ 1, 14, 4, 24, 16 ]
+[ f2, f3, f1*f3*f4*f5, f1*f3, f5 ][ 24, 16, 11, 17, 30 ]
+[ f2*f3, f1*f5, f1*f3*f4*f5, f1*f3, f5 ][ 3, 10, 4, 8, 16 ]
+[ f2*f3, f1*f5, f1*f3, f4*f5, f5 ][ 2, 7, 4 ][ f2*f3, f1*f5, f1*f3, f4*f5, f5 ]
+ist aber definitiv nicht phi-gleich.
+Die erforderlichen Daten sind aber jetzt da:
+         (277) 5 [ 1, 9, 5, 1, 1 ] Pcgs([ f1, f5, f4, f2, f3 ]) Pcgs([ f1, f2*f4*f5, f4, f2*f3, f3 
+ ]) = ??????? [ 24, 16, 11, 17, 30 ][ 26, 29, 12, 3, 2 ][ 1, 14, 4, 24, 16 ][ 1, 30, 4, 24, 16 ]
+trotzdem noch phi-gleich...
+hab deshalb in WEGEFINDER noch ein extra if not(IsBound(PART[12])) rein
+--> jetzt scheint es endlich ohne XSAMMELFERTIG zu gehen
+--> ich hebe es mal in LOG6 auf
+ok XSAMMELFERTIG isT damit raus ..
+.. es fehlt jetzt zwar bei T(16) alles zu 4 [ 2, 2, 1, 1 ] 5 <=== [ 16, 13 ] (5) 
+   aber dem kann ich jetzt in Ruche nachkommen mit VORLETZT:=1;
+   also erastmal Feierabend 
+
+    
 #das war hier der Ablauf
 LogTo("GAP_LOGFILE5.txt");
 AKTUELLERTEST();
@@ -1540,4 +1582,21 @@ AGES;
 #stimmt bis auf einen einzigen Vergleich 1-3: Was könnte das sein.???
 WEGEVERGLEICHER(NEUEWEGELISTE[1],NEUEWEGELISTE[3]);
 #ergibt [ f2, f4, f3, f1, f5 ]->[ f2, f3, f5, f1, f4*f5 ] ok
+LogTo();
+
+LogTo("GAP_LOGFILE6.txt");
+VORLETZT:=1;
+XSAMMEL:=[];#nur anfangs einmal
+AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+G:=SmallGroup(16,14);
+RMAXSUCH(G);#time;
+G:=SmallGroup(16,11);
+RMAXSUCH(G);#time;
+G:=SmallGroup(16,3);
+RMAXSUCH(G);#time;
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+G:=SmallGroup(32,27);
+RMAXSUCH(G);#time;
+XSAMMELFERTIG:=StructuralCopy(XSAMMEL);;
+VORLETZT:=0;AKTUELLERTEST(0,0);
 LogTo();

@@ -39,7 +39,7 @@ FINBIT:=0;FIXBIT:=0;FIXFIX:=-1;PBIT:=0;
 HRES0:=[];HRES:=[];STEP:=0;CLIST:=[];R:=[];
 XSAMMEL:=[];
 XMERKZAHL:=0;XMERKZAHLVEKTOR:=[];COUNTER:=0;
-LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];;
+LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];HRESANF:=[];
 
 WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;WEGEARRAY:=[];
 ILIST:=[];RMERKER:=[];
@@ -53,7 +53,7 @@ XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
 LETZTERABZWEIG:=0;
 
 NEUEWEGELISTE:=[];
-LETZTEWEGELISTE:=[];
+LETZTEWEGELISTE:=[];VORLETZT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -134,7 +134,7 @@ QY07L:=function(S)
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
-#  if W=[ 1, 1, 1, 1, 325 ] then Error("halt da"); fi;
+#if W=[ 1, 1, 1, 1, 277 ] then Error("halt da"); fi;
   k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
   if LETZTEWEGELISTE<>[] then
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
@@ -152,7 +152,7 @@ QY07L:=function(S)
       i:=i+1; od;
     i:=i-1;
     kkk:=0;
-    while H{[1..kkk]}=LETZTEWEGELISTE[i][2]{[1..kkk]} do kkk:=kkk+1; od;
+    while H{[1..kkk]}=LETZTEWEGELISTE[1][2]{[1..kkk]} do kkk:=kkk+1; od;
     kkk:=kkk-1;
     kkk:=kkk+2;
     if ret=false then kkk:=S+1; fi;
@@ -176,7 +176,8 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
         WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
-        XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK;
+        XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK,
+        HRESEXTMERK,HRESANFMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -192,6 +193,8 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERKZAHLZIELMERK:=XMERKZAHLZIEL;XMERKZAHLZIEL:=999999;
   FAKTMERK:=StructuralCopy(FAKT);
   LETZTEWEGELISTEMERK:=StructuralCopy(LETZTEWEGELISTE);
+  HRESEXTMERK:=StructuralCopy(HRESEXT);
+  HRESANFMERK:=StructuralCopy(HRESANF);
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -207,6 +210,8 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERKZAHLZIEL:=XMERKZAHLZIELMERK;
   FAKT:=FAKTMERK;
   LETZTEWEGELISTE:=LETZTEWEGELISTEMERK;
+  HRESEXT:=HRESEXTMERK;
+  HRESANF:=HRESANFMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -286,12 +291,19 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
 
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
-  local POS,i,ii,ZMERK,ZSIZE;
+  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE;
   ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
   Add(ZEIGER,StructuralCopy(XM[1]),POS);
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
+        HRES2:=ZEIGER[POS][2];#alles aus XMISCH
+        if HRESANF=[] then HRESANF:=HRES2; fi;
+        HRES:=HRESANF;STUFE:=Size(HRES);
+        pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
+        pcgs2:=PcgsByPcSequenceNC(FamilyObj(HRES2[1]^0),List(HRES2));
+        ZEIGER[POS][11]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs,HRES2[j])));
+        ZEIGER[POS][10]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs2,HRES[j])));
   ZEIGER[POS][14]:=ZSIZE+1;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
@@ -388,10 +400,10 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
             RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
             RBITNEU:=QY07L(S);
-            RBIT:=RBITNEU[6];
+            if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
             fi;
           if DBIT=1 then
-            Print("\n",WEGLI{[1..S]}," ",ZR3MERK," ",RBIT," ",HRESEXT{[1..S]},RBIT<=S," ");
+            Print("\n",RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
@@ -497,7 +509,7 @@ RMAXSUCH:=function(C)
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
-  WEGEARRAY:=[]; NEUEWEGELISTE:=[];LETZTEWEGELISTE:=[];
+  WEGEARRAY:=[]; NEUEWEGELISTE:=[];LETZTEWEGELISTE:=[];HRESANF:=[];
   QY13(C,1,1,XSAMMEL,AU);
 #XSAMMELVIEWER0(XSAMMEL);
 #Print("\n***XFUELL***");
@@ -575,7 +587,10 @@ XSAMMELVIEWER0:=function(XSAMMEL)
     Print(i[2]," ");
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
-      Print(i[5][7]," ::::");
+      if IsBound(i[5][7]) then 
+        Print(i[5][7]," ::::");
+        else Print("= ??????? ",i[5][10],i[5][11]);
+        fi;
       Print(i[3],i[4]);
       else
         if IsBound(i[12]) then 
@@ -587,7 +602,7 @@ XSAMMELVIEWER0:=function(XSAMMEL)
           else 
             if IsBound(i[7]) then 
               Print("= ",i[7]," "); 
-              else Print("= ??? ");
+              else Print("= ??? ",i[10],i[11]);
               fi;
             fi;
         XSAMMELVIEWER0(i[6]);
@@ -808,11 +823,14 @@ WEGEVERGLEICHER:=function(WEG1,WEG2,PBIT)
   local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
   S:=Size(WEG1[1]);
   LETZTELISTE:=[];
-  ZEIGER:=XSAMMELFERTIG;
+  if VORLETZT=1 then ZEIGER:=XSAMMELFERTIG; else ZEIGER:=XSAMMEL; fi;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
     if IsBound(PART[5]) then 
       Add(LETZTELISTE,PART[3]);
       PART:=PART[5]; 
+      if not(IsBound(PART[12])) then #nur wegen XSAMMELFERTIG rausnehmen
+        Add(LETZTELISTE,PART[10]);
+        fi;
       fi;
     if IsBound(PART[12]) then
       Add(LETZTELISTE,PART[10]);
