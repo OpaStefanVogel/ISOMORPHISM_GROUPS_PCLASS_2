@@ -812,6 +812,7 @@ WEGEVERGLEICHER:=function(WEG1,WEG2)
   for PHI in LETZTELISTE do 
     T:=Size(PHI);
     HRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(HRES{[S-T+1..S]},NZUI(PHI[i],T)));
+    Print("\n",HRES,PHI);
     od;
   return HRES;
   #for T in 
