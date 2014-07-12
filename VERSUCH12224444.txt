@@ -1446,7 +1446,22 @@ ok falls nicht schon phiy^-1(phi(x)) = x ist. Jetzt wird es langsam mit drinknif
       der müsste dann sogar unabhängig von pcgs funktionieren...
       .. Vergleich 1-3 geht nicht, kleiner Hoffnungsschimmer: 
          könnte daran liegen, dass f4*f5 erst im zweiten Schritt als zu f5 gehörig erkannt wird.
-
++++++
+ok so Schluss Aus, das hatte noch nicht richtig getroffen, dafür jetzt aber die LETZTEWEGELISTE:
+.. WEGEVERGLEICHER ist gut, der wird zum Glück auch dafür mit gebraucht und geht noch besser ohne f
+.. und jetzt gehe ich so vor:
+  ok das erste pcgs kommt in die LETZTEWEGELISTE, ok auch gleich alle anderen mit, alle die auftreten.
+  .. jedes nächstfolgende pcgs vergleiche ich mit dem letzten pcgs aus LETZTEẂEGELISTE
+     .. wenn übereinstimmung in den ersten k Elementen besteht, dann 
+        .. vergleiche ich über WEGEVERGLEICHER das neue pcgs 
+           mit allen pcgs aus NEUEWEGELISTE 
+           für die die ersten k Elemente übereistimmen.
+           das kann vom Ende NEUEWEGELISTE aus geschehen
+           bis erstmalig nicht mehr k Anfangselemente übereinstimmen.
+          .. wenn wenigstens einmal phi-Gleichheit auftritt, 
+             dann passendes (??? wie passend ist noch offen) return 
+          .. wenn keine phi-Gleichheit, dann ab mit neuem pcgs in die LETZTEWEGELISTE
+.. soweit erstmal, das müsste es gewesen sein.
 
 
 #das war hier der Ablauf
