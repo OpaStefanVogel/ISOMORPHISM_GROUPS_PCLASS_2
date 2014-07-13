@@ -130,37 +130,29 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
-  local k,kk,kkk,W,H,i,r,ret;
+  local k,kk,W,H,i,r,ret,ii;
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
 if W=WHALT then Error("halt da"); fi;
-  k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
-  if LETZTEWEGELISTE<>[] then
+  ret:=false;k:=0;kk:=0;ii:=0;
+  for i in [1..Size(LETZTEWEGELISTE)] do if ret=false then
+    ii:=i;
+    k:=0;
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
     k:=k-1;
     Print(k);
-    i:=1;
-    while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
-      r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
-      kk:=0;
-      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
-#      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
-      kk:=kk-1;
-#      Print(kk,Reversed(r)[1]);
-      Print(kk);
-      if kk>k then ret:=true; fi;
-      i:=i+1; od;
-    i:=i-1;
-    kkk:=0;
-    while H{[1..kkk]}=LETZTEWEGELISTE[1][2]{[1..kkk]} do kkk:=kkk+1; od;
-    kkk:=kkk-1;
-    kkk:=kkk+2;
-    if ret=false then kkk:=S+1; fi;
-    Print(ret,kk,k,S,i,kkk);
-    fi;
+    r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
+    kk:=0;
+    while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
+    kk:=kk-1;
+    Print(kk);
+    if kk>k then ret:=true; fi;
+    fi; od;
+  if ret=false then k:=S; fi;
+  Print(ret,kk,k,S,ii,k+2);
   if ret=false then Add(LETZTEWEGELISTE,[W,H],1); fi;
-  return [ret,kk,k,S,i,kkk];
+  return [ret,kk,k,S,ii,k+2];
   end;
   
 
@@ -409,7 +401,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
             fi;
           if DBIT=1 then
-            Print("\n",Size(LLETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
+            Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!

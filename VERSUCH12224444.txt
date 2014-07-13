@@ -1859,4 +1859,18 @@ oder das phi-gleich funktioniert nicht
 .. der Wert (..) darf anders werden bei XSAMMELVIEWER weil das PWEG-PHI-gleich andere Reihenfolge bringen könnte
 ok ok ok ok ok ok ok ok also T(32) stimmt jetzt definitiv mit dem aus XSAMMEL.txt überein, aucH die (..)-Zahlen
 ok also gleich git und erst danach noch weng weiter mit <R/>
+.. das versuche ich jetzt mal,
+   ok zuerst ob das kkk rauskann, dafür nur k+2....ok kann raus
+   .. dann mach ich halt mal los mit dem
+      .. ich durchlaufe mit W die gesamte LETZTEWEGELISTE
+      .. setze bei jedem das k neu,
+      .. bestimme kk
+      .. wenn kk>k dann return true
+      .. also alles ganz einfach
+.. die unterschiedlichen (..) war wohl weil bei n=16 XSAMMEL.txt nicht aktuell ist...
+   wenn n=16 nicht ganz übereinstimmt, dann stimmt aber trotzdem n=32, also ist es wohl so.
+ok ok ok ok ok ok ok und schon ist das neue QY07L durch, T(32) passt. L1
+.. Potential für schnelles QY07L ist auch da, alle PHI zu je zwei zusammenfassen.
+UND FEIERABEND!!!!
+
 
