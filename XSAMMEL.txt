@@ -144,7 +144,8 @@ if W=WHALT then Error("halt da"); fi;
     while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
       r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
       kk:=0;
-      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
+      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
+#      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
       kk:=kk-1;
 #      Print(kk,Reversed(r)[1]);
       Print(kk);
@@ -362,10 +363,12 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     ORB:=Orbits(STAB,RC,OnSets);
     RC:=List(ORB,i->Representative(i));
     else STAB:=0; fi;
+### if S=2 then Print("\n******",ORB); fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
   for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
     Add(HRES,ri,1);HRESEXT[S]:=ri;
 #W# if S=1 then Print("\n******",ri," ",ri^2); fi;
+### if S=2 then Print("\n******",rj); fi;
     if QY10(HRES,S,GR) then
       if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
@@ -406,7 +409,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
             fi;
           if DBIT=1 then
-            Print("\n",RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
+            Print("\n",Size(LLETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
@@ -843,13 +846,13 @@ if PBIT<>0 then Print("\n",LETZTELISTE); fi;
   ZEIGER:=XSAMMEL;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG2[1][T] then
     Add(LETZTELISTE,PART[4],APP);
-    if IsBound(PART[5]) then 
 if PBIT<>0 then Print("\n",PART[4]); fi;
+    if IsBound(PART[5]) then 
       PART:=PART[5]; 
       fi;
     Add(LETZTELISTE,PART[11],APP);
-    if IsBound(PART[12]) then
 if PBIT<>0 then Print("\n",PART[11]); fi;
+    if IsBound(PART[12]) then
       PART:=PART[12];
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
