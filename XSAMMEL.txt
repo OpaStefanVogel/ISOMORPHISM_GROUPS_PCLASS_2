@@ -130,29 +130,37 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
-  local k,kk,W,H,i,r,ret,ii;
+  local k,kk,kkk,W,H,i,r,ret;
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
 if W=WHALT then Error("halt da"); fi;
-  ret:=false;k:=0;kk:=0;ii:=0;
-  for i in [1..Size(LETZTEWEGELISTE)] do if ret=false then
-    ii:=i;
-    k:=0;
+  k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
+  if LETZTEWEGELISTE<>[] then
     while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
     k:=k-1;
     Print(k);
-    r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
-    kk:=0;
-    while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
-    kk:=kk-1;
-    Print(kk);
-    if kk>k then ret:=true; fi;
-    fi; od;
-  if ret=false then k:=S; fi;
-  Print(ret,kk,k,S,ii,k+2);
+    i:=1;
+    while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
+      r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
+      kk:=0;
+      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
+#      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
+      kk:=kk-1;
+#      Print(kk,Reversed(r)[1]);
+      Print(kk);
+      if kk>k then ret:=true; fi;
+      i:=i+1; od;
+    i:=i-1;
+    kkk:=0;
+    while H{[1..kkk]}=LETZTEWEGELISTE[1][2]{[1..kkk]} do kkk:=kkk+1; od;
+    kkk:=kkk-1;
+    kkk:=kkk+2;
+    if ret=false then kkk:=S+1; fi;
+    Print(ret,kk,k,S,i,kkk);
+    fi;
   if ret=false then Add(LETZTEWEGELISTE,[W,H],1); fi;
-  return [ret,kk,k,S,ii,k+2];
+  return [ret,kk,k,S,i,kkk];
   end;
   
 
@@ -354,11 +362,12 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     STAB:=Stabilizer(AU,Set(GR),OnSets);
     ORB:=Orbits(STAB,RC,OnSets);
     RC:=List(ORB,i->Representative(i));
+Print("\n*****ORB*",S,ORB);
     else STAB:=0; fi;
-### if S=2 then Print("\n******",ORB); fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
   for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
     Add(HRES,ri,1);HRESEXT[S]:=ri;
+if S<=AUZAHL and AUZAHL>0 then Print("\n*****ri**",ri," ",ri^2); fi;
 #W# if S=1 then Print("\n******",ri," ",ri^2); fi;
 ### if S=2 then Print("\n******",rj); fi;
     if QY10(HRES,S,GR) then
@@ -401,7 +410,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
             fi;
           if DBIT=1 then
-            Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
+            Print("\n",Size(LLETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
@@ -882,7 +891,7 @@ PositionFirstComponentRepariert,QY12,Size,Group,
 StructuralCopy,PcElementByExponentsNC,PcgsByPcSequenceNC,
 ExponentsOfPcElement,RightTransversal,RightCosetsNC,
 QY10,QY11,QY08,QY21,QY15,QY14,QY13,QY09,
-XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI]);
+XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI,QY07L,WEGEVERGLEICHER]);
 
 
 #T(16);XSAMMELVIEWER2(XSAMMEL);

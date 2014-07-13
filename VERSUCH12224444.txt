@@ -1873,4 +1873,33 @@ ok ok ok ok ok ok ok und schon ist das neue QY07L durch, T(32) passt. L1
 .. Potential für schnelles QY07L ist auch da, alle PHI zu je zwei zusammenfassen.
 UND FEIERABEND!!!!
 
+noch weng aufheb:
+LogTo("GAP_LOGFILE_L1.txt");
+VORLETZT:=0;AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(32);time;
+XSAMMELVIEWER0(XSAMMEL);
+XSAMMELVIEWER3(XSAMMEL);
+XSAMMELVIEWER4(XSAMMEL);
+LogTo();
+
+
+##weiter jetzt
+nö 4587 wieder auf nur die letzten k aus LWL durchsuchen nicht, weil bei [32,25] ist ein Gegenbeispiel dabei i=29+1->8
+.. aha mit der Korrektur k für i=i und nicht i=1 berechnen werden es noch weniger auch bei [32,25]
+.. dann direkt weiter mit TEILWEGELISTE
+
+#Read...
+VORLETZT:=0;AUZAHL:=0;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(32);time;
+XSAMMELVIEWER4(XSAMMEL);
+
+[32,25] Frage ist hier f4*f5 in der selben Bahn wie f5?
+70true[ f4*f5, f4, f1*f2*f3, f2, f1 ] 0 2 [ 1, 2, 3, 15, 6 ] #/24
+26false[ f5, f4, f1*f2*f3, f2, f1 ] 0 7 [ 1, 2, 3, 15, 2 ] *.3022222222222222222222222211111111111
+
+um das rauszubekommen,AUZAHL:=2;
+VORLETZT:=0;AUZAHL:=2;DDDDBIT:=0;DBIT:=1;#kurze Variante
+T(32);time;
+XSAMMELVIEWER4(XSAMMEL);
+und danach sind f5 und f4*f5 nicht in der selben Bahn! Also alles zurückstell auf Version "nur gleiche k" durchsuchen.
 
