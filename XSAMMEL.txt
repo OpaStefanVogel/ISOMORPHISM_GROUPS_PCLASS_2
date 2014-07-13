@@ -298,7 +298,10 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
-        if HRESANF=[] then HRESANF:=HRES2; fi;
+        if HRESANF=[] then 
+          HRESANF:=HRES2;
+Print("*+*+*+*+*+* hier auf diesem Weg wird HANF gesetzt:",WEGLI); 
+          fi;
         HRES:=HRESANF;STUFE:=Size(HRES);
         pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
         pcgs2:=PcgsByPcSequenceNC(FamilyObj(HRES2[1]^0),List(HRES2));
@@ -823,17 +826,14 @@ WEGEVERGLEICHER:=function(WEG1,WEG2,PBIT)
   local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
   S:=Size(WEG1[1]);
   LETZTELISTE:=[];
-  if VORLETZT=1 then ZEIGER:=XSAMMELFERTIG; else ZEIGER:=XSAMMEL; fi;
+  ZEIGER:=XSAMMEL;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
+    Add(LETZTELISTE,PART[3]);
     if IsBound(PART[5]) then 
-      Add(LETZTELISTE,PART[3]);
       PART:=PART[5]; 
-      if not(IsBound(PART[12])) then #nur wegen XSAMMELFERTIG rausnehmen
-        Add(LETZTELISTE,PART[10]);
-        fi;
       fi;
+    Add(LETZTELISTE,PART[10]);
     if IsBound(PART[12]) then
-      Add(LETZTELISTE,PART[10]);
       PART:=PART[12];
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
@@ -842,16 +842,13 @@ if PBIT<>0 then Print("\n",LETZTELISTE); fi;
   APP:=Size(LETZTELISTE)+1;
   ZEIGER:=XSAMMEL;
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG2[1][T] then
+    Add(LETZTELISTE,PART[4],APP);
     if IsBound(PART[5]) then 
-      Add(LETZTELISTE,PART[4],APP);
 if PBIT<>0 then Print("\n",PART[4]); fi;
       PART:=PART[5]; 
-      if not(IsBound(PART[12])) then #nur wegen XSAMMELFERTIG rausnehmen
-        Add(LETZTELISTE,PART[10],APP);
-        fi;
       fi;
+    Add(LETZTELISTE,PART[11],APP);
     if IsBound(PART[12]) then
-      Add(LETZTELISTE,PART[11],APP);
 if PBIT<>0 then Print("\n",PART[11]); fi;
       PART:=PART[12];
       fi;
