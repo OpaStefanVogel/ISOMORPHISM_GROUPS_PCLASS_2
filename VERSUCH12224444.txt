@@ -1903,3 +1903,16 @@ T(32);time;
 XSAMMELVIEWER4(XSAMMEL);
 und danach sind f5 und f4*f5 nicht in der selben Bahn! Also alles zurückstell auf Version "nur gleiche k" durchsuchen.
 
+ok ist zurückgestellt, ab jetzt muss immer
+[ 3, 27, 5, 8, 11, 5, 14, 9, 11, 8, 7, 5, 5, 2, 5 ]165
+[ 20, 55, 40, 55, 92, 33, 60, 102, 68, 89, 64, 39, 33, 20, 27 ]
+[ 5, 14, 2, 7, 2, 2, 1 ]198
+[ 10, 32, 10, 147, 39, 51, 1 ]
+herauskommen.
+
+ok jetzt erst paar keinere Korrekturen wie 
+   ok kkk ganz raus
+   ok anstelle {[1..k]} nur [k] vergleichen bei while überall
+   ok WEGEBAUM mal deaktivieren wenigstens
+ok funktioniert soweit identisch, dann geht es jetzt an den 
+.. schnellen WEGEVERGLEICHER...

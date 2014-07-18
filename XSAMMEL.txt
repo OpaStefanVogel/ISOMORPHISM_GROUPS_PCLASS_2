@@ -54,6 +54,7 @@ LETZTERABZWEIG:=0;
 
 NEUEWEGELISTE:=[];
 LETZTEWEGELISTE:=[];VORLETZT:=0;WHALT:=0;
+LETZTEWEGEZAHLVEKTOR:=[];
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -130,37 +131,36 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
-  local k,kk,kkk,W,H,i,r,ret;
+  local k,kk,W,H,i,r,ret;
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
 if W=WHALT then Error("halt da"); fi;
-  k:=0;kk:=0;ret:=false;i:=0;kkk:=S+1;
+  k:=0;kk:=0;ret:=false;i:=0;
   if LETZTEWEGELISTE<>[] then
-    while H{[1..k]}=LETZTEWEGELISTE[1][2]{[1..k]} do k:=k+1; od;
+    k:=1;
+    while H[k]=LETZTEWEGELISTE[1][2][k] do k:=k+1; od;
     k:=k-1;
     Print(k);
     i:=1;
     while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
       r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
-      kk:=0;
-      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} and W{[1..kk]}=LETZTEWEGELISTE[i][1]{[1..kk]} do kk:=kk+1; od;
-#      while IsBound(H[kk]) and H{[1..kk]}=Reversed(r){[1..kk]} do kk:=kk+1; od;
+      kk:=1;
+      while IsBound(H[kk]) and H[kk]=Reversed(r)[kk] and W[kk]=LETZTEWEGELISTE[i][1][kk] do kk:=kk+1; od;
       kk:=kk-1;
 #      Print(kk,Reversed(r)[1]);
       Print(kk);
       if kk>k then ret:=true; fi;
       i:=i+1; od;
     i:=i-1;
-    kkk:=0;
-    while H{[1..kkk]}=LETZTEWEGELISTE[1][2]{[1..kkk]} do kkk:=kkk+1; od;
-    kkk:=kkk-1;
-    kkk:=kkk+2;
-    if ret=false then kkk:=S+1; fi;
-    Print(ret,kk,k,S,i,kkk);
     fi;
-  if ret=false then Add(LETZTEWEGELISTE,[W,H],1); fi;
-  return [ret,kk,k,S,i,kkk];
+  if ret=false then k:=S; fi;
+  Print(ret,kk,k,S,i,k+2);
+  if ret=false then 
+    Add(LETZTEWEGELISTE,[W,H],1); 
+    WEGEZAHL:=WEGEZAHL+1; 
+    fi;
+  return [ret,kk,k,S,i,k+2];
   end;
   
 
@@ -405,12 +405,12 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             Print("\n??????"); 
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
-            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
+#            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
             RBITNEU:=QY07L(S);
             if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
             fi;
           if DBIT=1 then
-            Print("\n",Size(LLETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
+            Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
@@ -431,7 +431,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
-  i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
+#  i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
   return RBIT;
   end;
 
@@ -533,15 +533,17 @@ RMAXSUCH:=function(C)
 ILIST:=[1,1];
 QQQY:=function(n)
   local C;
-  XMERKZAHLVEKTOR:=[];
+  XMERKZAHLVEKTOR:=[];LETZTEWEGEZAHLVEKTOR:=[];
   if ILIST[1]=1 then ILIST:=[1..NumberSmallGroups(n)]; fi;
   for inh in ILIST do
 Print("\n\ninh=",inh," ");
     C:=SmallGroup(n,inh);RMAXSUCH(C);
 Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
     XMERKZAHLVEKTOR[inh]:=XMERKZAHL;
+    LETZTEWEGEZAHLVEKTOR[inh]:=Size(LETZTEWEGELISTE);
     od;
   Print("\n",Compacted(XMERKZAHLVEKTOR),COUNTER);
+  Print("\n",Compacted(LETZTEWEGEZAHLVEKTOR));
   Print("\n");
   end;
 
