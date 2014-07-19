@@ -2031,3 +2031,6 @@ ok damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...ok ist so gu
            46370             91611                    TOTAL                                    
 .. na deutlich weniger, mal schauen was noch geht
 
+162790 mehr ist momentan nich, aber gut, da überleg ich nochmal
+2284340 für die [ 256, 56089 ]
+170340 für T(32) nachdem LETZTEWEGELISTE von 1 auf gefllt wird und anderes

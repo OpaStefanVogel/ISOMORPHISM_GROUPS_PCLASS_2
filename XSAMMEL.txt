@@ -54,6 +54,7 @@ LETZTERABZWEIG:=0;
 
 NEUEWEGELISTE:=[];
 LETZTEWEGELISTE:=[];VORLETZT:=0;WHALT:=0;
+LETZTEWEGEZAHL:=0;
 LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
 
 #Schnittstellen zu GAP
@@ -139,13 +140,13 @@ QY07L:=function(S)
     WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
 if W=WHALT then Error("halt da"); fi;
   k:=S+1;kk:=0;ret:=false;i:=0;
-  if LETZTEWEGELISTE<>[] then
+  if WEGEZAHL>0 then
     k:=1;
-    while H[k]=LETZTEWEGELISTE[1][2][k] do k:=k+1; od;
+    while H[k]=LETZTEWEGELISTE[WEGEZAHL][2][k] do k:=k+1; od;
     k:=k-1;
 #-    Print(k);
-    i:=1;
-    while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
+    i:=WEGEZAHL;
+    while ret=false and i>0 and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
       MRES:=List([1..S],j->PcElementByExponentsNC(LRES,LETZTEWEGELISTE[i][4][j]));
 #      Print("\n§ ",i," ",Size(LETZTEWEGELISTE)," ",MRES);
       kk:=1;
@@ -153,13 +154,13 @@ if W=WHALT then Error("halt da"); fi;
       kk:=kk-1;
 #-      Print(kk);
       if kk>k then ret:=true; fi;
-      i:=i+1; od;
-    i:=i-1;
+      i:=i-1; od;
+    i:=i+1;
     fi;
   if ret=false then
         pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
         NRES:=List([1..S],i->ExponentsOfPcElement(pcgs,Reversed(H)[i]));
-    Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
+    Add(LETZTEWEGELISTE,[W,H,k,NRES]); 
     WEGEZAHL:=WEGEZAHL+1;
     k:=S; 
     fi;
@@ -407,7 +408,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
 #-            Print("*\c");
             fi;
           if WEGEZAHL1=WEGEZAHL then  #W#
-            Add(NEUEWEGELISTE,[WEGLI{[1..S]},Reversed(HRESEXT{[1..S]})]);
+#-            Add(NEUEWEGELISTE,[WEGLI{[1..S]},Reversed(HRESEXT{[1..S]})]);
 #-            Print("\n??????"); 
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
@@ -549,7 +550,7 @@ Print("\n\ninh=",inh," \c");
     C:=SmallGroup(n,inh);RMAXSUCH(C);
 Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
     XMERKZAHLVEKTOR[inh]:=XMERKZAHL;
-    LETZTEWEGEZAHLVEKTOR[inh]:=Size(LETZTEWEGELISTE);
+    LETZTEWEGEZAHLVEKTOR[inh]:=WEGEZAHL;
     od;
   Print("\n",Compacted(XMERKZAHLVEKTOR),COUNTER);
   Print("\n",Compacted(LETZTEWEGEZAHLVEKTOR));
