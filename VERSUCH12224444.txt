@@ -1903,7 +1903,7 @@ T(32);time;
 XSAMMELVIEWER4(XSAMMEL);
 und danach sind f5 und f4*f5 nicht in der selben Bahn! Also alles zurückstell auf Version "nur gleiche k" durchsuchen.
 
-ok ist zurückgestellt, ab jetzt muss immer
+ok ist zurückgestellt, ab jetzt muss immer (inzwischen falsch)
 [ 3, 27, 5, 8, 11, 5, 14, 9, 11, 8, 7, 5, 5, 2, 5 ]165
 [ 20, 55, 40, 55, 92, 33, 60, 102, 68, 89, 64, 39, 33, 20, 27 ]
 [ 5, 14, 2, 7, 2, 2, 1 ]198
@@ -1962,3 +1962,12 @@ WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],1);
 Menschmenschmensch, da war bei =[8,3] doch i[10] und i[11] ungleich [1,2,4]
 jetzt läuf der r=MRES Vergleich durch!!!
 das war eine N durch!! Pause
+
+Ab jetzt gilt:
+[ 3, 27, 5, 8, 11, 5, 14, 9, 11, 8, 7, 5, 5, 2, 5 ]165
+[ 20, 55, 40, 55, 87, 33, 54, 89, 68, 83, 57, 39, 33, 20, 27 ]
+[ 5, 14, 2, 7, 2, 2, 1 ]198
+[ 10, 30, 10, 55, 38, 27, 1 ]
+
+ok auch das Desamt-PHI beim ersten LETZTEWEGELISTE-Eintrag scheint geklärt.
+.. damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...

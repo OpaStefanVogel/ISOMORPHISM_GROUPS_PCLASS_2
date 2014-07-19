@@ -131,7 +131,7 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
   end;
 
 QY07L:=function(S)
-  local k,kk,W,H,i,r,ret,pcgs,MRES,HELF;
+  local k,kk,W,H,i,r,ret,pcgs,MRES,HELF,NRES;
   HELF:=[1,2,4,8,16,32,64,128,256,512];
   Print(".");
   W:=WEGLI{[1..S]};
@@ -147,9 +147,7 @@ if W=WHALT then Error("halt da"); fi;
     while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
       if Reversed(H)<>WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0) then Error("HIN-UND ZURUECK"); fi;
       r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
-          if i<Size(LETZTEWEGELISTE) then
             MRES:=List([1..S],j->PcElementByExponentsNC(LRES,NZUI(LETZTEWEGELISTE[i][4][j],S)));
-            else MRES:=StructuralCopy(r); fi;
       Print("\n§ ",i," ",Size(LETZTEWEGELISTE)," ",r=MRES,r,MRES,"\c");
       if r<>MRES then Error("morgen"); fi;
       kk:=1;
@@ -167,7 +165,11 @@ if W=WHALT then Error("halt da"); fi;
       k:=S; 
       fi;
     else
-      Add(LETZTEWEGELISTE,[W,H,1,HELF{[1..S]}],1); 
+      WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
+          pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
+          NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
+      Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
+#      Add(LETZTEWEGELISTE,[W,H,1,HELF{[1..S]}],1); 
       WEGEZAHL:=1;
       k:=S; 
       fi;
