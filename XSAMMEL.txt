@@ -136,8 +136,11 @@ QY07L:=function(S)
   Print(".");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
+    WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
+    pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
+    NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
 if W=WHALT then Error("halt da"); fi;
-  k:=0;kk:=0;ret:=false;i:=0;
+  k:=S+1;kk:=0;ret:=false;i:=0;
   if LETZTEWEGELISTE<>[] then
     k:=1;
     while H[k]=LETZTEWEGELISTE[1][2][k] do k:=k+1; od;
@@ -145,11 +148,8 @@ if W=WHALT then Error("halt da"); fi;
     Print(k);
     i:=1;
     while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
-      if Reversed(H)<>WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0) then Error("HIN-UND ZURUECK"); fi;
-      r:=WEGEVERGLEICHER([W,Reversed(H)],[LETZTEWEGELISTE[i][1],Reversed(LETZTEWEGELISTE[i][2])],0);
-            MRES:=List([1..S],j->PcElementByExponentsNC(LRES,NZUI(LETZTEWEGELISTE[i][4][j],S)));
-      Print("\n§ ",i," ",Size(LETZTEWEGELISTE)," ",r=MRES,r,MRES,"\c");
-      if r<>MRES then Error("morgen"); fi;
+      MRES:=List([1..S],j->PcElementByExponentsNC(LRES,NZUI(LETZTEWEGELISTE[i][4][j],S)));
+#      Print("\n§ ",i," ",Size(LETZTEWEGELISTE)," ",MRES);
       kk:=1;
       while IsBound(H[kk]) and H[kk]=Reversed(MRES)[kk] and W[kk]=LETZTEWEGELISTE[i][1][kk] do kk:=kk+1; od;
       kk:=kk-1;
@@ -157,22 +157,14 @@ if W=WHALT then Error("halt da"); fi;
       if kk>k then ret:=true; fi;
       i:=i+1; od;
     i:=i-1;
-    if ret=false then
-          pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
-          NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
-      Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
-      WEGEZAHL:=WEGEZAHL+1;
-      k:=S; 
-      fi;
-    else
-      WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
-          pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
-          NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
-      Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
-#      Add(LETZTEWEGELISTE,[W,H,1,HELF{[1..S]}],1); 
-      WEGEZAHL:=1;
-      k:=S; 
-      fi;
+    fi;
+  if ret=false then
+        pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
+        NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
+    Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
+    WEGEZAHL:=WEGEZAHL+1;
+    k:=S; 
+    fi;
       
   Print(ret,kk,k,S,i,k+2);
   return [ret,kk,k,S,i,k+2];
@@ -852,54 +844,19 @@ WEGEVERGLEICHER:=function(WEG1,WEG2,PBIT)
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
-    Add(LETZTELISTE,StructuralCopy(PART[3]));
+#    Add(LETZTELISTE,StructuralCopy(PART[3]));
 LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
     if IsBound(PART[5]) then 
       PART:=PART[5]; 
       fi;
-    Add(LETZTELISTE,StructuralCopy(PART[10]));
+#    Add(LETZTELISTE,StructuralCopy(PART[10]));
 LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[10][i],T)));
     if IsBound(PART[12]) then
       PART:=PART[12];
       fi;
     if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
     fi; od; od;
-if PBIT<>0 then Print("\n",LETZTELISTE); fi;
-  APP:=Size(LETZTELISTE)+1;
-  ZEIGER:=XSAMMEL;
-  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG2[1][T] then
-    Add(LETZTELISTE,StructuralCopy(PART[4]),APP);
-if PBIT<>0 then Print("\n",PART[4]); fi;
-    if IsBound(PART[5]) then 
-      PART:=PART[5]; 
-      fi;
-    Add(LETZTELISTE,StructuralCopy(PART[11]),APP);
-if PBIT<>0 then Print("\n",PART[11]); fi;
-    if IsBound(PART[12]) then
-      PART:=PART[12];
-      fi;
-    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
-    fi; od; od;
-if PBIT<>0 then Print("\n",LETZTELISTE); fi;
-##  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
-##    HRES[T]:=WEG1[2][T];
-##    HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[3][i],T)));
-##    if IsBound(PART[5]) then PART:=PART[5]; fi;
-##    if IsBound(PART[12]) then
-##      HRES:=List([1..T],i->PcElementByExponentsNC(HRES,NZUI(PART[10][i],T)));
-##      PART:=PART[12];
-##      fi;
-##    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
-##    Print("\n",T," ",HRES,Size(PART[3]));
-##    fi; od; od;
-  HRES:=StructuralCopy(WEG1[2]);
-  for PHI in LETZTELISTE do 
-    T:=Size(PHI);
-#    Error("LLLLL");
-    HRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(HRES{[S-T+1..S]},NZUI(PHI[i],T)));
-if PBIT<>0 then Print("\n",HRES,PHI); fi;
-    od;
-  return HRES;
+  return LRES;
   end;
 
 SEPARATOR:=function()
