@@ -2070,3 +2070,46 @@ ok damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...ok ist so gu
    3924     4650   133450     8868   249726           QY13                                      
           148640            275700                    TOTAL                                     
 
+.. möglicherweise war aucH die schnelle Anfangsvariante eine von den fehlerhaften, egal, läuft jetzt.
+
+MemoryUsage(XSAMMEL);
+502244 mit IZUN NZUI
+gap> MemoryUsage(XSAMMEL);
+1506640 ohne IZUN NZUI, also muss das drinbleiben
+
+Zeitaufteilung der PcgsByPcSequenceNC
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                  
+   4552       70        0       62        0  GAP      PositionSorted                            
+   4046       80        0      260        0           DEEP_COPY_OBJ                             
+   2232       40       70       61       61           PositionFirstComponentRepariert           
+    272        0      430        5     1397           PcgsByPcSequenceNCMI                      
+   3102      450      370       72        1           XLEER                                     
+    316       10      850        6     1628           PcgsByPcSequenceNC15                      
+    605      380     1140      456     2348           XMISCH                                    
+   6032     2270        0      141        0  (oprt.)  PositionFirstComponent                    
+   6032      150     2270      141      141           QY08                                      
+    936       30     2400       18     4829           PcgsByPcSequenceNC07                      
+  71932     2330      150     2778        0           Commu                                     
+  31620     2560        0     8680        0           IZUN                                      
+   8480     2660       10     2745        0  GAP      Group                                     
+    158     1160     1660      428     3040           QY15                                      
+   2232       40     4330       43    11404           PcgsByPcSequenceNC14                      
+  71410     4940        0    15497        0           QY09                                      
+   8274     4580      470     7496      665           QY10                                      
+  90074     6330       40    14225        0  (oprt.)  Size                                      
+ 101063     7260        0    13812        0           NZUI                                      
+   2944     5530     2180     9405     4640           XFUELL                                    
+   5874     1260     6580     2557     5452           QY21                                      
+ 164853     9290        0    10476        0  (oprt.)  PcElementByExponentsNC                    
+   1814     3870     6950     5803    10584           WEGEVERGLEICHER                           
+    158     1860     9430     2028    20876           QY14                                      
+   5716      100    12050      111    24796           PcgsByPcSequenceNC11                      
+   3924    13690        0    32098        0  (oprt.)  RightTransversal                          
+   9632      280    17640      188    44939           PcgsByPcSequenceNC12                      
+   5716     1890    17460     2568    35199           QY11                                      
+   1814     2640    17750     6127    27117           QY07L                                     
+ 107778    20920        0    32031        0  (oprt.)  ExponentsOfPcElement                      
+  19126    37740        0    89159        0  (oprt.)  PcgsByPcSequenceNC                        
+   2544     6920    38480     7709    84459           QY12                                      
+   3924     3950   131200     8867   250100           QY13                                      
+          145280            276064                    TOTAL                                     
