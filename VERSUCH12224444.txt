@@ -258,9 +258,9 @@ XSAMMEL:=[];#nur anfangs einmal
 R:=[[1],[1,1],[2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
 R:=[[1],[1,1],[2,2,2],[2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
-R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
-R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
-R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);time;XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);time;XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
+R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2]];G:=PcgsOfR(R);IdSmallGroup(G);RMAXSUCH(G);time;XSAMMELVIEWER1(XSAMMEL);XMERKZAHL;WEGEZAHL;
 
 inh:=444444444;#unbedingt setzen, nicht 0 lassen!!!
 R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[4,4,4,4,4,4,4,4,4]];G:=PcgsOfR(R);RMAXSUCH(G);XMERKZAHL;WEGEZAHL;
@@ -1972,3 +1972,62 @@ Ab jetzt gilt:
 
 ok auch das Gesamt-PHI beim ersten LETZTEWEGELISTE-Eintrag scheint geklärt.
 ok damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...ok ist so gut wie durch ok L6
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                 
+   2232       40      110       61       61           PositionFirstComponentRepariert          
+   8529      250       20     1256        0           DEEP_COPY_OBJ                            
+  33384      730      100      601       11  GAP      PositionSorted                           
+   3102      590      370       72        1           XLEER                                    
+    605      380     1210      456     2341           XMISCH                                   
+    392     1580      590     2448      543  GAP      Stabilizer                               
+   8674     2380        0     2924        0  GAP      Group                                    
+   6042     2470       20      141        0  (oprt.)  PositionFirstComponent                   
+   6042      160     2470      141      141           QY08                                     
+  71940     2550      130     2778        0           Commu                                    
+    158     1240     1770      451     3071           QY15                                     
+   8296     2500      700     3307      664           QY10                                     
+  45365     3680        0    12546        0           IZUN                                     
+  71452     5240        0    15527        0           QY09                                     
+   5884     1550     6960     2561     5474           QY21                                     
+ 144348     9940        0     9307        0  (oprt.)  PcElementByExponentsNC                   
+   2944     7010     2980     9387     4765           XFUELL                                   
+ 143649    10730        0    19800        0           NZUI                                     
+   1818     3920     7540     5816    10604           WEGEVERGLEICHER                          
+   3932    11240      230    25228      340  (oprt.)  RightTransversal                         
+    158     1940    10300     2027    20802           QY14                                     
+ 128997    13900      200    12169       83  (oprt.)  Size                                     
+   5726     1800    18370     2607    35519           QY11                                     
+ 145981    25610        0    36697        0  (oprt.)  ExponentsOfPcElement                     
+   1818     3450    29250     5903    48595           QY07L                                    
+  21343    45340        0   101118        0  (oprt.)  PcgsByPcSequenceNC                       
+   2544     6370    40130     7712    84178           QY12                                     
+   3930    36380   141350    73890   251812           QY13                                     
+          202970            356945                    TOTAL                                    
+.. jetzt hole ich mal die Zeiten von ganz am Anfang
+
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                 
+   1028       10       20       14        0  GAP      PositionSorted                           
+    470       70       10       62       12           QY07NEU                                  
+    536      100        0       14        0           PositionFirstComponentRepariert          
+   1815      220        0       42        0  (oprt.)  PositionFirstComponent                   
+    105       50      180       57      117           QY15                                     
+   1821      200       90       42        1           XLEER                                    
+   1815       80      230       42       42           QY08                                     
+    538       80      520      115     1039           XMISCH                                   
+   9802      620        0      675        0  (oprt.)  PcElementByExponentsNC                   
+   2944      840        0     1067        0  GAP      Group                                    
+   1710      340      730      659      436           QY21MINI                                 
+  28728     1880        0     6178        0           QY09                                     
+   6331     2350        0     3473        0           QY10A                                    
+    105      380     2130      575     4486           QY14                                     
+  30215     2730        0     6087        0  (oprt.)  Size                                     
+   1262     4680        0    10530        0  (oprt.)  RightTransversal                         
+   1710      560     4640      876     9786           QY11A                                    
+   1821     3810     1430     6515     3108           XFUELL                                   
+  39126     7610        0    11297        0  (oprt.)  ExponentsOfPcElement                     
+   7741    14840        0    35338        0  (oprt.)  PcgsByPcSequenceNC                       
+   1431     2980    17450     4278    37664           QY12                                     
+   1262     1930    38230     3562    77053           QY13                                     
+              10               102                    OTHER                                    
+           46370             91611                    TOTAL                                    
+.. na deutlich weniger, mal schauen was noch geht
+

@@ -133,40 +133,38 @@ QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
 QY07L:=function(S)
   local k,kk,W,H,i,r,ret,pcgs,MRES,HELF,NRES;
   HELF:=[1,2,4,8,16,32,64,128,256,512];
-  Print(".");
+#-  Print(".\c");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
     WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
-    pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
-    NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
 if W=WHALT then Error("halt da"); fi;
   k:=S+1;kk:=0;ret:=false;i:=0;
   if LETZTEWEGELISTE<>[] then
     k:=1;
     while H[k]=LETZTEWEGELISTE[1][2][k] do k:=k+1; od;
     k:=k-1;
-    Print(k);
+#-    Print(k);
     i:=1;
     while ret=false and IsBound(LETZTEWEGELISTE[i]) and H{[1..k]}=LETZTEWEGELISTE[i][2]{[1..k]} do 
-      MRES:=List([1..S],j->PcElementByExponentsNC(LRES,NZUI(LETZTEWEGELISTE[i][4][j],S)));
+      MRES:=List([1..S],j->PcElementByExponentsNC(LRES,LETZTEWEGELISTE[i][4][j]));
 #      Print("\n§ ",i," ",Size(LETZTEWEGELISTE)," ",MRES);
       kk:=1;
       while IsBound(H[kk]) and H[kk]=Reversed(MRES)[kk] and W[kk]=LETZTEWEGELISTE[i][1][kk] do kk:=kk+1; od;
       kk:=kk-1;
-      Print(kk);
+#-      Print(kk);
       if kk>k then ret:=true; fi;
       i:=i+1; od;
     i:=i-1;
     fi;
   if ret=false then
         pcgs:=PcgsByPcSequenceNC(FamilyObj(LRES[1]),LRES);
-        NRES:=List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,Reversed(H)[i])));
+        NRES:=List([1..S],i->ExponentsOfPcElement(pcgs,Reversed(H)[i]));
     Add(LETZTEWEGELISTE,[W,H,k,NRES],1); 
     WEGEZAHL:=WEGEZAHL+1;
     k:=S; 
     fi;
       
-  Print(ret,kk,k,S,i,k+2);
+#-  Print(ret,kk,k,S,i,k+2);
   return [ret,kk,k,S,i,k+2];
   end;
   
@@ -308,7 +306,7 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
         if HRESANF=[] then 
           HRESANF:=HRES2;
-Print("*+*+*+*+*+* hier auf diesem Weg wird HANF gesetzt:",WEGLI); 
+#- Print("*+*+*+*+*+* hier auf diesem Weg wird HANF gesetzt:",WEGLI); 
           fi;
         HRES:=HRESANF;STUFE:=Size(HRES);
         pcgs:=PcgsByPcSequenceNC(FamilyObj(HRES[1]^0),List(HRES));
@@ -369,16 +367,17 @@ QY13:=function(C,S,nn,ZEIGER,AU)
     STAB:=Stabilizer(AU,Set(GR),OnSets);
     ORB:=Orbits(STAB,RC,OnSets);
     RC:=List(ORB,i->Representative(i));
-Print("\n*****ORB*",S,ORB);
+#-Print("\n*****ORB*",S,ORB);
     else STAB:=0; fi;
   if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
   for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
     Add(HRES,ri,1);HRESEXT[S]:=ri;
-if S<=AUZAHL and AUZAHL>0 then Print("\n*****ri**",ri," ",ri^2); fi;
+#-if S<=AUZAHL and AUZAHL>0 then Print("\n*****ri**",ri," ",ri^2); fi;
+if S=1 then Print(".\c"); fi;
 #W# if S=1 then Print("\n******",ri," ",ri^2); fi;
 ### if S=2 then Print("\n******",rj); fi;
     if QY10(HRES,S,GR) then
-      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
+#-      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
 #0#FAKT[S]:=Size(ORB[Position(RC,rj)]);
       PNEU:=QY11(HRES,S);
@@ -405,11 +404,11 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];
             HRES0:=HRES0MERK;
-            Print("*\c");
+#-            Print("*\c");
             fi;
           if WEGEZAHL1=WEGEZAHL then  #W#
             Add(NEUEWEGELISTE,[WEGLI{[1..S]},Reversed(HRESEXT{[1..S]})]);
-            Print("\n??????"); 
+#-            Print("\n??????"); 
             fi;
           if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
 #            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
@@ -430,7 +429,7 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
 #+++++++++
       if S=1 then 
         if XMERKZAHL1=XMERKZAHL and XMERKBIT=-1 then #and WEGEZAHL1<WEGEZAHL then
-          Print("#");
+#-          Print("#");
 #          Error("hier aber da"); 
           fi;
         fi;
@@ -521,7 +520,8 @@ XLEER:=function(XSAMMEL) #fuellt [7][8]
 
 RMAXSUCH:=function(C)
   local AU;
-  n:=Size(C);AU:=AutomorphismGroup(C);
+  n:=Size(C);
+  if AUZAHL>0 then AU:=AutomorphismGroup(C); else AU:=0; fi;
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
   #  XSAMMEL:=[];
   XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
@@ -545,7 +545,7 @@ QQQY:=function(n)
   XMERKZAHLVEKTOR:=[];LETZTEWEGEZAHLVEKTOR:=[];
   if ILIST[1]=1 then ILIST:=[1..NumberSmallGroups(n)]; fi;
   for inh in ILIST do
-Print("\n\ninh=",inh," ");
+Print("\n\ninh=",inh," \c");
     C:=SmallGroup(n,inh);RMAXSUCH(C);
 Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
     XMERKZAHLVEKTOR[inh]:=XMERKZAHL;
@@ -773,12 +773,12 @@ PARTZAHL:=function(XSAMMEL)
 WEGEDISP:=function(WEG,ZEIGER,S)
   local PART,ZEIG;
   for PART in ZEIGER do if PART[14]=WEG[S] then
-    Print("\n",UMKEHRLIST(PART[1]),PART[14]);
+#-    Print("\n",UMKEHRLIST(PART[1]),PART[14]);
     ZEIG:=PART;
     if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
-    Print("-->",UMKEHRLIST(ZEIG[1]));
+#-    Print("-->",UMKEHRLIST(ZEIG[1]));
     if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
-    Print("==>",UMKEHRLIST(ZEIG[1]));
+#-    Print("==>",UMKEHRLIST(ZEIG[1]));
     if S<Size(WEG) then ZEIG:=WEGEDISP(WEG,ZEIG[6],S+1); fi;
     fi; od;
   return ZEIG;
