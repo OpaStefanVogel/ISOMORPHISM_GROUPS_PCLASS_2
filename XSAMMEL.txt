@@ -41,7 +41,7 @@ XSAMMEL:=[];
 XMERKZAHL:=0;XMERKZAHLVEKTOR:=[];COUNTER:=0;
 LFDNR:=0;n:=1;nmax:=2048;HRESEXT:=[];HRESANF:=[];
 
-WEGLI:=[];WEGEBAUM:=[];WEGEZAHL:=0;WEGEARRAY:=[];
+WEGLI:=[];WEGEZAHL:=0;WEGEARRAY:=[];
 ILIST:=[];RMERKER:=[];
 RMAX:=0;RMAXSUCH:=IdFunc;
 inh:=0;
@@ -49,12 +49,10 @@ DDDDBIT:=0;DBIT:=0;
 PARTZ:=0;XMERKZAHLZIEL:=9999999;
 AUZAHL:=4;FAKT:=[];
 
-XMERKZAHL1:=0;WEGEZAHL1:=0;XMERKBIT:=0;
+
 LETZTERABZWEIG:=0;
 
-NEUEWEGELISTE:=[];
-LETZTEWEGELISTE:=[];VORLETZT:=0;WHALT:=0;
-LETZTEWEGEZAHL:=0;
+LETZTEWEGELISTE:=[];WHALT:=0;
 LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
 
 #Schnittstellen zu GAP
@@ -113,24 +111,6 @@ QY11:=function(HRES,S)#bestimmt PNEU aus HRES
   return PNEU;
   end;
 
-QY07:=function(WEGEBAUM,WEGMERKER,S)#fügt WEGMERKER,PNEU ein, wenn nicht drin
-  local i,j,ZEIGER;
-  ZEIGER:=WEGEBAUM;
-  for i in [1..S] do
-    j:=WEGMERKER[S+1-i];#WEGMERKER[i];#
-    if not IsBound(ZEIGER[j]) then
-      if i<S then ZEIGER[j]:=[]; else
-        WEGEZAHL:=WEGEZAHL+1; 
-        ZEIGER[j]:=WEGEZAHL;
-        WEGEARRAY[WEGEZAHL]:=S+1;
-        fi;
-      fi;
-    ZEIGER:=ZEIGER[j];
-    od;
-#Print("\n",WEGEBAUM);
-  return WEGEARRAY[ZEIGER];
-  end;
-
 QY07L:=function(S)
   local k,kk,W,H,i,r,ret,pcgs,MRES,HELF,NRES;
   HELF:=[1,2,4,8,16,32,64,128,256,512];
@@ -182,7 +162,7 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
         HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
-        WEGEBAUMMERK,WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
+        WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
         XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK,
         HRESEXTMERK,HRESANFMERK;
   #STEP,XMERKZAHL noch offen
@@ -193,7 +173,6 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   CLISTMERK:=List(CLIST);
   XMERKZAHLMERK:=XMERKZAHL;
   RM:=List(R);
-  WEGEBAUMMERK:=StructuralCopy(WEGEBAUM);
   WEGEZAHLMERK:=WEGEZAHL;
   WEGLIMERK:=StructuralCopy(WEGLI);
   WEGEARRAYMERK:=StructuralCopy(WEGEARRAY);
@@ -210,7 +189,6 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   CLIST:=CLISTMERK;
   XMERKZAHL:=XMERKZAHLMERK;
   R:=RM;
-  WEGEBAUM:=WEGEBAUMMERK;
   WEGEZAHL:=WEGEZAHLMERK;
   WEGLI:=WEGLIMERK;
   WEGEARRAY:=WEGEARRAYMERK;
@@ -362,24 +340,23 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   orbi,ORB,STAB,RBITNEU;
   RBIT:=0;RDRIN:=0;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
-#  RC:=RightTransversal(C,GR);
-  RC:=CosetDecomposition(C,GR);RC:=List(RC,i->Set(i));
+  RC:=RightTransversal(C,GR);
+#  RC:=CosetDecomposition(C,GR);RC:=List(RC,i->Set(i));
   if S<=AUZAHL then
     STAB:=Stabilizer(AU,Set(GR),OnSets);
     ORB:=Orbits(STAB,RC,OnSets);
     RC:=List(ORB,i->Representative(i));
 #-Print("\n*****ORB*",S,ORB);
     else STAB:=0; fi;
-  if S=AUZAHL+1 then WEGEBAUM:=[]; fi;
-  for rj in RC do if rj<>RC[1] and RDRIN>-1 then ri:=Representative(rj);
+  for rj in RC do if rj<>RC[1] and RDRIN>-1 then 
+    if AUZAHL>0 then ri:=Representative(rj); else ri:=rj; fi;
     Add(HRES,ri,1);HRESEXT[S]:=ri;
 #-if S<=AUZAHL and AUZAHL>0 then Print("\n*****ri**",ri," ",ri^2); fi;
-if S=1 then Print(".\c"); fi;
+    if S=1 then Print(".\c"); fi;
 #W# if S=1 then Print("\n******",ri," ",ri^2); fi;
 ### if S=2 then Print("\n******",rj); fi;
     if QY10(HRES,S,GR) then
 #-      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
-if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
 #0#FAKT[S]:=Size(ORB[Position(RC,rj)]);
       PNEU:=QY11(HRES,S);
       R[S]:=List(PNEU);
@@ -407,38 +384,22 @@ if S=1 then XMERKZAHL1:=XMERKZAHL; WEGEZAHL1:=WEGEZAHL; XMERKBIT:=0; fi;
             HRES0:=HRES0MERK;
 #-            Print("*\c");
             fi;
-          if WEGEZAHL1=WEGEZAHL then  #W#
-#-            Add(NEUEWEGELISTE,[WEGLI{[1..S]},Reversed(HRESEXT{[1..S]})]);
-#-            Print("\n??????"); 
-            fi;
-          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else
-#            RBIT:=QY07(WEGEBAUM,WEGLI{[1..S]},S); 
-            RBITNEU:=QY07L(S);
-            if VORLETZT=0 then RBIT:=RBITNEU[6]; fi;
+          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else 
+            RBIT:=QY07L(S)[6];
             fi;
           if DBIT=1 then
             Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
-          if XMERKZAHL=XMERKZAHLZIEL then RBIT:=0; fi;#besser kein RMAXSUCHREKURSIV!!!
           if DDDDBIT=1 then RBIT:=999999; fi;
           XMERKBIT:=-1;
 #0#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
-#+++++++++
-      if S=1 then 
-        if XMERKZAHL1=XMERKZAHL and XMERKBIT=-1 then #and WEGEZAHL1<WEGEZAHL then
-#-          Print("#");
-#          Error("hier aber da"); 
-          fi;
-        fi;
-#---------
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
-#  i:=WEGEZAHL;while i>0 and S<WEGEARRAY[i] do WEGEARRAY[i]:=S; i:=i-1; od;
   return RBIT;
   end;
 
@@ -525,8 +486,8 @@ RMAXSUCH:=function(C)
   if AUZAHL>0 then AU:=AutomorphismGroup(C); else AU:=0; fi;
   XMERK:=[];HRES:=[];STEP:=1;R:=[];WEGLI:=[];FAKT:=[];
   #  XSAMMEL:=[];
-  XMERKZAHL:=0;WEGEBAUM:=[];WEGEZAHL:=0;
-  WEGEARRAY:=[]; NEUEWEGELISTE:=[];LETZTEWEGELISTE:=[];HRESANF:=[];
+  XMERKZAHL:=0;WEGEZAHL:=0;
+  WEGEARRAY:=[];LETZTEWEGELISTE:=[];HRESANF:=[];
   QY13(C,1,1,XSAMMEL,AU);
 #XSAMMELVIEWER0(XSAMMEL);
 #Print("\n***XFUELL***");

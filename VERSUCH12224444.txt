@@ -1964,9 +1964,10 @@ jetzt läuf der r=MRES Vergleich durch!!!
 das war eine N durch!! Pause
 
 Ab jetzt gilt:
-[ 3,  27,  5,  8, 11,  5, 14,  9, 11,  8,  7,  5,  5,  2,  5 ]165
 # 21  22  23  24  25  26  27  28  29  30  31  32  33  34  35
+[ 3,  27,  5,  8, 11,  5, 14,  9, 11,  8,  7,  5,  5,  2,  5 ]165
 [ 20, 55, 40, 55, 87, 33, 54, 89, 68, 83, 57, 39, 33, 20, 27 ]
+
 [ 5, 14, 2, 7, 2, 2, 1 ]198
 [ 10, 30, 10, 55, 38, 27, 1 ]
 
@@ -2034,3 +2035,38 @@ ok damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...ok ist so gu
 162790 mehr ist momentan nich, aber gut, da überleg ich nochmal
 2284340 für die [ 256, 56089 ]
 170340 für T(32) nachdem LETZTEWEGELISTE von 1 auf gefllt wird und anderes
+
+.. oho, auf einmal ist QY13 nur noch 4390 statt vorher 36380. Was war das?
+   gut git sagt besser RightTransversal statt CosetDecomposition, also nehmen wir das.
+   jetzt nimmt die Sache Gestalt an:
+
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                  
+   4046      100       10      260        0           DEEP_COPY_OBJ                             
+   4552      120        0       62        0  GAP      PositionSorted                            
+   2232       60      130       61       61           PositionFirstComponentRepariert           
+   3102      530      390       72        1           XLEER                                     
+    605      360     1280      456     2343           XMISCH                                    
+   6032     2070        0      141        0  (oprt.)  PositionFirstComponent                    
+   6032      150     2070      141      141           QY08                                      
+   8480     2330       20     2744        0  GAP      Group                                     
+  71932     2400       40     2778        0           Commu                                     
+  31620     2530        0     8680        0           IZUN                                      
+    158     1260     1680      428     3033           QY15                                      
+  71410     5070        0    15497        0           QY09                                      
+   8274     4320      640     7500      665           QY10                                      
+  90074     6350      140    14228        0  (oprt.)  Size                                      
+ 101063     6880        0    13812        0           NZUI                                      
+   5874     1670     5690     2557     5453           QY21                                      
+   2944     5480     2330     9416     4643           XFUELL                                    
+ 164853     9760        0    10477        0  (oprt.)  PcElementByExponentsNC                    
+   1814     3880     7180     5803    10584           WEGEVERGLEICHER                           
+    158     2060    10340     2028    20832           QY14                                      
+   3924    14310        0    32098        0  (oprt.)  RightTransversal                          
+   5716     1850    17600     2569    35081           QY11                                      
+   1814     2650    17830     6127    27097           QY07L                                     
+ 107778    22830        0    32029        0  (oprt.)  ExponentsOfPcElement                      
+  19126    38740        0    89150        0  (oprt.)  PcgsByPcSequenceNC                        
+   2544     6230    40320     7708    84269           QY12                                      
+   3924     4650   133450     8868   249726           QY13                                      
+          148640            275700                    TOTAL                                     
+
