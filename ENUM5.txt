@@ -357,6 +357,20 @@ UQ:=List(FQ,j->Unique(List(j,i->DrT(i))));;List(UQ,i->Size(i));
 
 
 ###### neu mit Action
+DrT:=function(L)
+  return [
+    L[1]+L[7]+L[11]+L[13],
+    L[2]+L[7]+L[11]+L[14],
+    L[3]+L[7]+L[11]+L[15],
+    L[4]+L[7]+L[13]+L[14],
+    L[5]+L[7]+L[13]+L[15],
+    L[6]+L[7]+L[14]+L[15],
+    L[8]+L[11]+L[13]+L[14],
+    L[9]+L[11]+L[13]+L[15],
+    L[10]+L[11]+L[14]+L[15],
+    L[12]+L[13]+L[14]+L[15]];
+  end;
+
 n:=4;ORB:=[];
 G:=ElementaryAbelianGroup(2^n);
 a:=G.1;b:=G.2;c:=G.3;d:=G.4;
@@ -368,15 +382,56 @@ Size(P);
 V:=GF(2)^(2^n-1);
 ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
 Size(ORB[n]);
-QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i))))));;
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i))));;
 Size(QQP);List(QQP,i->Size(i));
 
 
+DrTT:=function(L)
+  return [
+    L[1]+L[7]+L[11]+L[13],
+    L[2]+L[7]+L[11]+L[14],
+    L[3]+L[7]+L[11]+L[15],
+    L[4]+L[7]+L[13]+L[14],
+    L[5]+L[7]+L[13]+L[15],
+    L[6]+L[7]+L[14]+L[15],
+    L[8]+L[11]+L[13]+L[14],
+    L[9]+L[11]+L[13]+L[15],
+    L[10]+L[11]+L[14]+L[15],
+    L[12]+L[13]+L[14]+L[15]];
+  end;
+Q:=Action(A,G);
+Size(Q);
+V:=GF(2)^(2^n-1);
+W:=GF(2)^(2^n);
+ORB[n]:=OrbitsDomain(Q,W,Permuted);;#schneller als Orbits
+Size(ORB[n]);
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i)))));;
+Size(QQP);List(QQP,i->Size(i));
+
+M:=Arrangements([0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],15);;
+ORB[n]:=OrbitsDomain(P,M,Permuted);;
+Size(ORB[n]);
+
+n:=5;ORB:=[];
+G:=ElementaryAbelianGroup(2^n);
+A:=AutomorphismGroup(G);
+P:=Action(A,G);
+Size(P);
+M:=Arrangements([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],31);;#dauertS
+Size(M);
+ORB[n]:=OrbitsDomain(P,M,Permuted);;
+Size(ORB[n]);
 
 
+Float(10^308/11^297);
+Float(10^309/11^296);
+Float(10^309/11^297);
 
+Float(10^308);
+Float(10^309);
 
-
+Float(11^296);
+Float(11^297);
 
 
 

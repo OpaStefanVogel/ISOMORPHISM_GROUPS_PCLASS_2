@@ -173,6 +173,7 @@ XSAMMEL512:=StructuralCopy(XSAMMEL);;
                8 [ 2, 2, 2, 2, 2, 2, 2, 2 ] 64 [128] 128 [ 256, 56089 ]
                  9 [ 256, 256, 256, 256, 256, 256, 256, 256, 255 ] 128 [128] 
 #einzeln erhalte ich aus 444444442 Error out of memory:
+#tritt auch genauso auf beim neuen QY07L, da lässt sich aber noch was machen bei LETZTEWEGELISTE:
 4 4 4 4 4 4 4 4 23........
 Gruppe [ 256, 55782 ] fehlt noch ....
 Gruppe [ 128, 2194 ] fehlt noch ...............................................................................................................................
@@ -182,6 +183,17 @@ Gruppe [ 128, 2164 ] jetzt drin ................................................
 Gruppe [ 256, 55782 ] jetzt drin
 Gruppe [ 256, 55969 ] fehlt noch ...............................................................................................................................................................................................................................................................
 Gruppe [ 256, 55969 ] jetzt drin .....................................gap: cannot extend the workspace any more!
+brk> WEGEZAHL;   
+1262239
+brk> MemoryUsage(LETZTEWEGELISTE);
+1793353495
+brk> MemoryUsage(XSAMMEL);        
+88101617
+brk> MemoryUsage(LETZTEWEGELISTE[100000]);
+1693
+
+
+
 #Prognose aus n=32:
 #44444
 #44442
@@ -198,11 +210,11 @@ for i1 in IS do i2:=i1; i3:=i1;
               for i8 in IS do
                 for i9 in IS do inh:=inh+1;
                   Print("\n",i1," ",i2," ",i3," ",i4," ",i5," ",i6," ",i7," ",i8," ",i9," \c");
-                  if [i1,i2,i3,i4,i5,i6,i7,i8,i9]<[4,4,4,4,1,...] then
+#                  if [i1,i2,i3,i4,i5,i6,i7,i8,i9]<[4,4,4,4,1,...] then
                     R:=[[1],[1,1],[2,2,2],[2,2,2,2],[2,2,2,2,2],[2,2,2,2,2,2],[2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2],[i1,i2,i3,i4,i5,i6,i7,i8,i9]];
                     G:=PcgsOfR(R);
                     RMAXSUCH(G);
-                    fi;
+#                    fi;
                   od;
                 od;
               od;
@@ -1964,11 +1976,22 @@ jetzt läuf der r=MRES Vergleich durch!!!
 das war eine N durch!! Pause
 
 Ab jetzt gilt:
+[ 1, 1 ]3
+[ 1, 1 ]
+# 2, 3, 4, 5
+[ 3, 3, 1, 1 ]11
+[ 3, 3, 1, 1 ]
+# 2, 3, 4
+[ 1, 7, 2 ]21
+[ 4, 11, 8 ]
+#10, 11,12, 13,14
+[ 4,  8, 2,  4, 1 ]40
+[ 6, 12, 4, 11, 1 ]
 # 21  22  23  24  25  26  27  28  29  30  31  32  33  34  35
 [ 3,  27,  5,  8, 11,  5, 14,  9, 11,  8,  7,  5,  5,  2,  5 ]165
 [ 20, 55, 40, 55, 87, 33, 54, 89, 68, 83, 57, 39, 33, 20, 27 ]
-
-[ 5, 14, 2, 7, 2, 2, 1 ]198
+# 45, 46, 47, 48, 49, 50, 51
+[  5, 14,  2,  7,  2,  2, 1 ]198
 [ 10, 30, 10, 55, 38, 27, 1 ]
 
 ok auch das Gesamt-PHI beim ersten LETZTEWEGELISTE-Eintrag scheint geklärt.
@@ -2113,3 +2136,94 @@ Zeitaufteilung der PcgsByPcSequenceNC
    2544     6920    38480     7709    84459           QY12                                      
    3924     3950   131200     8867   250100           QY13                                      
           145280            276064                    TOTAL                                     
+
+
+
+
+###zu anupq aus D4_2E/ANUPQ_Test.txt
+#n=64:
+LoadPackage("anupq");
+R1:=[[1],[2,2],[2,2,2],[2,2,2,2],
+[2,2,2,2,2],
+[2,2,2,2,2,2]];
+G1:=PcgsOfR(R1);
+R2:=[[1],[2,2],[2,2,2],[2,2,2,2],
+[2,2,2,2,2],
+[1,1,1,1,1,2]];
+G2:=PcgsOfR(R2);
+RMAXSUCH(G1);time;
+WOHINDAMIT(Reversed(GeneratorsOfGroup(G2)));
+IsIsomorphicPGroup(G1,G2);time;#aus ANUPQ-Package
+#2000:440
+
+
+
+#G=[128,2163]stark gemäßigt
+R1:=[[1],[2,2],[2,2,1],[2,2,1,1],
+[1,1,1,1,1],
+[1,1,14,14,14,1],
+[2,2,1,1,1,1,14]];
+G1:=PcgsOfR(R1);
+R2:=[[1],[2,2],[2,2,1],[2,2,1,1],
+[2,2,1,1,1],
+[1,1,1,1,1,1],
+[1,1,32,32,32,32,1]];
+G2:=PcgsOfR(R2);
+RMAXSUCH(G1);time;
+WOHINDAMIT(Reversed(GeneratorsOfGroup(G2)));
+IsIsomorphicPGroup(G1,G2);time;#aus ANUPQ-Package
+#22000:???
+
+#G=[128,2163] leicht gemäßigt
+R1:=[[1],[2,2],[2,2,2],[2,2,2,2],
+[2,2,1,16,16],
+[2,2,1,15,15,16],
+[2,2,16,1,16,1,1]];
+G1:=PcgsOfR(R1);
+R2:=[[1],[2,2],[2,2,2],[2,2,2,2],
+[2,2,1,16,16],
+[2,2,16,1,16,2],
+[2,2,1,15,15,15,1]];
+G2:=PcgsOfR(R2);
+RMAXSUCH(G1);time;
+RMAXSUCH(G2);time;#(muss ganz fix gehen)
+IsIsomorphicPGroup(G1,G2);time;#aus ANUPQ-Package
+#nix
+
+
+#neuer Versuch: LWL kürzer machen auf eventuell  nur 1:
+Suche:
+AUZAHL:=0;DDDDBIT:=0;DBIT:=0;#kurze Variante
+T(16);
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+G:=SmallGroup(32,49);
+XSAMMEL:=StructuralCopy(XSAMMEL1);;
+RMAXSUCH(G);#time;
+XSAMMELVIEWER0(XSAMMEL);
+LETZTEWEGELISTE;
+XMERKZAHL;Size(LETZTEWEGELISTE);
+
+T(32);#Ergebnis, bei mehreren inh werden nicht alle 31 Anfangselemente durchlaufen... erstmals bei [16,13];
+#dadurch zu kleine XMERKZAHL. hier jetzt das untersuchen:
+
+DBIT:=1;
+T(8);
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+G:=SmallGroup(16,13);
+XSAMMEL:=StructuralCopy(XSAMMEL1);;
+RMAXSUCH(G);#time;
+XSAMMELVIEWER0(XSAMMEL);
+LETZTEWEGELISTE;
+XMERKZAHL;Size(LETZTEWEGELISTE);
+
+1false[ f1, f4, f2, f3 ] -1 6 [ 1, 2, 6, 3 ] DONNERWETTER 
+2false[ f1, f4, f3, f2 ] -1 6 [ 1, 2, 2, 2 ] DONNERWETTER 
+3false[ f1, f4, f2*f3, f3 ] 0 6 [ 1, 2, 7, 3 ] .
+3true[ f2, f4, f1, f3 ] 0 2 [ 1, 2, 6, 3 ] ..
+4false[ f4, f1, f2, f3 ] 0 6 [ 1, 2, 9, 3 ] 
+5false[ f4, f1, f3, f2 ] 0 6 [ 1, 2, 3, 2 ] 
+6false[ f4, f1, f2*f3, f3 ] 0 6 [ 1, 2, 8, 3 ] 
+6true[ f4, f2, f1, f3 ] 0 3 [ 1, 2, 9, 3 ] 
+7false[ f4, f3, f1, f2 ] 0 6 [ 1, 1, 2, 2 ] 
+
+#da ist das if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; zuviel, ohne dem geht es!!!!

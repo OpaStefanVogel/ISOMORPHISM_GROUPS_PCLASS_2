@@ -1,11 +1,9 @@
-#Read("Desktop/GAP/PCLASS2/XSAMMEL.txt");#Rek.4432 den IV-Graph
+#Read("Desktop/GAP/PCLASS2/XSAMMEL.txt");#Raspberry Pi
+#Read("PCLASS2/XSAMMEL.txt");#asterix
 Read("Desktop/GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
+#Read("PCLASS2/PcgsOfR.txt");#asterix
 #Read("GAP/PCLASS2/MatrixOf.txt");#macht Mat aus R.
-
-#war vordem
-#Read("GAP/D4_2E/D4_2E_36");# 
-#Read("GAP/D4_1/D4_1_4");# 
-#SaveWorkspace("GAP/D4_2E/WORKSPACE_36");
+#SaveWorkspace("GAP_WORKSPACE_XSAMMEL");
 
 #jetzt bei [1..1] n=16 nur noch:
 #  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                                                                    
@@ -47,7 +45,7 @@ RMAX:=0;RMAXSUCH:=IdFunc;
 inh:=0;
 DDDDBIT:=0;DBIT:=0;
 PARTZ:=0;XMERKZAHLZIEL:=9999999;
-AUZAHL:=4;FAKT:=[];
+AUZAHL:=0;FAKT:=[];
 
 
 LETZTERABZWEIG:=0;
@@ -147,8 +145,9 @@ if W=WHALT then Error("halt da"); fi;
   if ret=false then
         pcgs:=PcgsByPcSequenceNC07(FamilyObj(LRES[1]),LRES);
         NRES:=List([1..S],i->ExponentsOfPcElement(pcgs,Reversed(H)[i]));
-    Add(LETZTEWEGELISTE,[W,H,k,NRES]); 
+#    Add(LETZTEWEGELISTE,[W,H,k,NRES]); 
     WEGEZAHL:=WEGEZAHL+1;
+    LETZTEWEGELISTE[WEGEZAHL]:=[W,H,k,NRES]; 
     k:=S; 
     fi;
       
@@ -344,8 +343,8 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU;
-  RBIT:=0;RDRIN:=0;
+  orbi,ORB,STAB,RBITNEU,WNUMB;
+  RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
 #  RC:=CosetDecomposition(C,GR);RC:=List(RC,i->Set(i));
@@ -391,15 +390,14 @@ QY13:=function(C,S,nn,ZEIGER,AU)
             HRES0:=HRES0MERK;
 #-            Print("*\c");
             fi;
-          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else 
+#          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else 
             RBIT:=QY07(S)[6];
-            fi;
+#            fi;
           if DBIT=1 then
             Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
             if ZR3MERK=-1 then Print("DONNERWETTER "); fi;
             fi;
           if DDDDBIT=1 then RBIT:=999999; fi;
-          XMERKBIT:=-1;
 #0#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
           fi; #(if 2*nn<n) 
       if RBIT<=S then RDRIN:=-1; fi;
@@ -407,6 +405,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
+  if WNUMBIT<>0 and WEGEZAHL>WNUMB+1 then WEGEZAHL:=WNUMB+1; fi;
   return RBIT;
   end;
 
@@ -506,6 +505,7 @@ RMAXSUCH:=function(C)
 #Print("\n***XLEER***");
    XLEER(XSAMMEL);
 #XSAMMELVIEWER0(XSAMMEL);
+Print(" <",WEGEZAHL,"> ",XMERKZAHL);
   end;
 
 ILIST:=[1,1];
