@@ -2246,7 +2246,7 @@ XMERKZAHL;Size(LETZTEWEGELISTE);
 
 #da ist das if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; zuviel, ohne dem geht es!!!!
 #und statt WEGEZAHL:=WNUMB+1; hatte ich WEGEZAHL:=WNUMB; eingegeben
-#gut dass ich das nocH rechtzeitig vor dem Verwerfen gesehen hab
+#gut dass ich das noch rechtzeitig vor dem Verwerfen gesehen hab
 
 #jetzt muss ich noch rausbekommen, warum geringfüfig mehr QY13 sind....
 #aha, das erste mal bei [16,2]
@@ -2264,4 +2264,44 @@ RMAXSUCH(G);#time;
 LETZTEWEGELISTE;
 #oha, ich muss nicht aus jedem QY13 einen pcgs aufheben sondern einen für jeden WEGLI{[1..K]}
 #ja, da geht noch was, WEGEZAHL=1 wäre ja auch zu einfach gewesen. Überlewge icH mir aber nicht jetzt
-#also halt.
+#also halt. Die zugehörigen Daten waren
+
+gap> XSAMMEL:=StructuralCopy(XSAMMEL1);;
+gap> WNUMBIT:=0;
+0
+gap> RMAXSUCH(G);
+?...???
+1false[ f3, f1, f4, f2 ] -1 6 [ 1, 1, 2, 2 ] DONNERWETTER ??
+2false[ f3, f4, f1, f2 ] 0 6 [ 1, 2, 3, 1 ] ?
+3false[ f3, f4, f2, f1 ] 0 6 [ 1, 2, 2, 1 ] ?
+4false[ f3, f4, f1*f2, f2 ] 0 6 [ 1, 2, 1, 2 ] ??
+4true[ f3, f1*f4, f4, f2 ] 0 3 [ 1, 1, 2, 2 ] .???
+4true[ f4, f2, f3, f1 ] 0 2 [ 1, 1, 2, 2 ] ......???
+4true[ f3*f4, f4, f1, f2 ] 0 2 [ 1, 2, 1, 2 ] ..... <4> 1
+gap> LETZTEWEGELISTE;
+[ [ [ 1, 1, 2, 2 ], [ f3, f1, f4, f2 ], 5, [ [ 1, 0, 1, 0 ], [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ] ] ], 
+  [ [ 1, 2, 3, 1 ], [ f3, f4, f1, f2 ], 1, [ [ 1, 0, 0, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 1 ], [ 0, 0, 0, 1 ] ] ], 
+  [ [ 1, 2, 2, 1 ], [ f3, f4, f2, f1 ], 2, [ [ 1, 0, 0, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ], [ 0, 1, 1, 1 ] ] ], 
+  [ [ 1, 2, 1, 2 ], [ f3, f4, f1*f2, f2 ], 2, [ [ 1, 0, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 0 ], [ 0, 1, 1, 1 ] ] ] ]
+gap> XSAMMEL:=StructuralCopy(XSAMMEL1);;
+gap> WNUMBIT:=1;
+1
+gap> RMAXSUCH(G);#time;
+?...???
+1false[ f3, f1, f4, f2 ] -1 6 [ 1, 1, 2, 2 ] DONNERWETTER ??
+2false[ f3, f4, f1, f2 ] 0 6 [ 1, 2, 3, 1 ] ?
+3false[ f3, f4, f2, f1 ] 0 6 [ 1, 2, 2, 1 ] ?
+4false[ f3, f4, f1*f2, f2 ] 0 6 [ 1, 2, 1, 2 ] ??
+4true[ f3, f1*f4, f4, f2 ] 0 3 [ 1, 1, 2, 2 ] .???
+4true[ f4, f2, f3, f1 ] 0 2 [ 1, 1, 2, 2 ] ......???
+4false[ f3*f4, f4, f1, f2 ] 0 6 [ 1, 2, 1, 2 ] ?
+4false[ f3*f4, f4, f2, f1 ] 0 6 [ 1, 2, 2, 2 ] ?
+4false[ f3*f4, f4, f1*f2, f2 ] 0 6 [ 1, 2, 3, 1 ] ??
+4false[ f3*f4, f1*f2, f4, f2 ] 0 6 [ 1, 1, 2, 2 ] ??
+4true[ f3*f4, f1*f2*f4, f4, f2 ] 0 3 [ 1, 1, 2, 2 ] ..... <1> 1
+gap> LETZTEWEGELISTE;
+[ [ [ 1, 1, 2, 2 ], [ f3, f1, f4, f2 ], 5, [ [ 1, 0, 1, 0 ], [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ] ] ], 
+  [ [ 1, 2, 1, 2 ], [ f3*f4, f4, f1, f2 ], 0, [ [ 1, 0, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 0 ], [ 0, 1, 1, 1 ] ] ], 
+  [ [ 1, 1, 2, 2 ], [ f3*f4, f1*f2, f4, f2 ], 1, [ [ 1, 0, 1, 0 ], [ 0, 1, 1, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ] ] ], 
+  [ [ 1, 2, 3, 1 ], [ f3*f4, f4, f1*f2, f2 ], 2, [ [ 1, 0, 0, 0 ], [ 0, 0, 1, 0 ], [ 0, 1, 1, 1 ], [ 0, 0, 0, 1 ] ] ] ]
+gap> 
