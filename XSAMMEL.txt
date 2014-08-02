@@ -1,6 +1,6 @@
 #Read("Desktop/GAP/PCLASS2/XSAMMEL.txt");#Raspberry Pi
 #Read("PCLASS2/XSAMMEL.txt");#asterix
-Read("Desktop/GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
+#Read("Desktop/GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
 #Read("PCLASS2/PcgsOfR.txt");#asterix
 #Read("GAP/PCLASS2/MatrixOf.txt");#macht Mat aus R.
 #SaveWorkspace("GAP_WORKSPACE_XSAMMEL");
@@ -344,6 +344,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
   orbi,ORB,STAB,RBITNEU,WNUMB;
+Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);

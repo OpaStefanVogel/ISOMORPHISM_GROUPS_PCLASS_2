@@ -1993,6 +1993,17 @@ Ab jetzt gilt:
 # 45, 46, 47, 48, 49, 50, 51
 [  5, 14,  2,  7,  2,  2, 1 ]198
 [ 10, 30, 10, 55, 38, 27, 1 ]
+#195..245
+[ 4, 64, 7, 17, 21, 7, 8, 5, 4, 5, 64, 20, 22, 14, 31, 11, 6, 6, 22, 4, 8, 
+  12, 10, 7, 14, 16, 6, 17, 19, 9, 13, 15, 2, 6, 10, 22, 11, 13, 10, 7, 17, 
+  21, 18, 11, 5, 12, 7, 2, 7, 7, 2, 6, 10, 1 ]893
+[ 60, 165, 120, 330, 498, 198, 473, 376, 144, 352, 324, 558, 432, 498, 1006, 
+  336, 234, 198, 1221, 120, 162, 600, 441, 653, 678, 562, 550, 1167, 993, 
+  688, 538, 965, 210, 386, 608, 1469, 749, 518, 278, 330, 1167, 1149, 1064, 
+  618, 443, 606, 222, 80, 397, 591, 156, 606, 573, 72 ]
+#260..267
+[ 6, 22, 2, 9, 4, 4, 3, 1 ]944
+[ 15, 60, 20, 165, 234, 168, 333, 1 ]
 
 ok auch das Gesamt-PHI beim ersten LETZTEWEGELISTE-Eintrag scheint geklärt.
 ok damit kann ich ja mal zum schnellen WEGEVERGLEICHER übergehen...ok ist so gut wie durch ok L6
@@ -2137,8 +2148,15 @@ Zeitaufteilung der PcgsByPcSequenceNC
    3924     3950   131200     8867   250100           QY13                                      
           145280            276064                    TOTAL                                     
 
-
-
+   4458    16120        0    36370        0  (oprt.)  RightTransversal     
+   9632      300    17410      188    44939           PcgsByPcSequenceNC12 
+   2144     1410    17550     3315    29158           QY07                 
+ 112600    22350        0    33474        0  (oprt.)  ExponentsOfPcElement 
+   6580     2200    20600     2983    40908           QY11                 
+  20248    39600        0    94404        0  (oprt.)  PcgsByPcSequenceNC   
+   2544     6710    38670     7708    84458           QY12                 
+   4458     4690   137890    10015   263873           QY13                 
+          152670            290992                    TOTAL                
 
 ###zu anupq aus D4_2E/ANUPQ_Test.txt
 #n=64:
@@ -2227,3 +2245,23 @@ XMERKZAHL;Size(LETZTEWEGELISTE);
 7false[ f4, f3, f1, f2 ] 0 6 [ 1, 1, 2, 2 ] 
 
 #da ist das if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; zuviel, ohne dem geht es!!!!
+#und statt WEGEZAHL:=WNUMB+1; hatte ich WEGEZAHL:=WNUMB; eingegeben
+#gut dass ich das nocH rechtzeitig vor dem Verwerfen gesehen hab
+
+#jetzt muss ich noch rausbekommen, warum geringfüfig mehr QY13 sind....
+#aha, das erste mal bei [16,2]
+DBIT:=1;
+T(8);
+XSAMMEL1:=StructuralCopy(XSAMMEL);;
+G:=SmallGroup(16,2);
+XSAMMEL:=StructuralCopy(XSAMMEL1);;
+WNUMBIT:=0;
+RMAXSUCH(G);
+LETZTEWEGELISTE;
+XSAMMEL:=StructuralCopy(XSAMMEL1);;
+WNUMBIT:=1;
+RMAXSUCH(G);#time;
+LETZTEWEGELISTE;
+#oha, ich muss nicht aus jedem QY13 einen pcgs aufheben sondern einen für jeden WEGLI{[1..K]}
+#ja, da geht noch was, WEGEZAHL=1 wäre ja auch zu einfach gewesen. Überlewge icH mir aber nicht jetzt
+#also halt.
