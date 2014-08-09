@@ -382,8 +382,47 @@ Size(P);
 V:=GF(2)^(2^n-1);
 ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
 Size(ORB[n]);
-QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i))));;
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i)))));;
 Size(QQP);List(QQP,i->Size(i));
+
+
+#Variante mit Einselement,geht auch
+DrFilt16:=function(L)
+  return 
+    L[8]=L[2]+L[3]+L[4]+L[5]+L[6]+L[7] and
+    L[12]=L[2]+L[3]+L[4]+L[9]+L[10]+L[11] and
+    L[14]=L[2]+L[5]+L[6]+L[9]+L[10]+L[13] and
+    L[15]=L[3]+L[5]+L[7]+L[9]+L[11]+L[13] and
+    L[16]=L[4]+L[6]+L[7]+L[10]+L[11]+L[13];
+  end;
+DrT16:=function(L)
+  return [
+    L[2]+L[8]+L[12]+L[14],
+    L[3]+L[8]+L[12]+L[15],
+    L[4]+L[8]+L[12]+L[16],
+    L[5]+L[8]+L[14]+L[15],
+    L[6]+L[8]+L[14]+L[16],
+    L[7]+L[8]+L[15]+L[16],
+    L[9]+L[12]+L[14]+L[15],
+    L[10]+L[12]+L[14]+L[16],
+    L[11]+L[12]+L[15]+L[16],
+    L[13]+L[14]+L[15]+L[16]];
+  end;
+n:=4;ORB:=[];
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a^0,a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+    c*d,a*c*d,b*c*d,a*b*c*d];
+A:=AutomorphismGroup(G);
+P:=Action(A,G);
+Size(P);
+V:=GF(2)^(2^n);
+ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
+Size(ORB[n]);
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT16(i)))));;
+Size(QQP);List(QQP,i->Size(i));
+FQ:=Filtered(ORB[n]{[1..46]},i->DrFilt16(i[1]));;
+Size(FQ);List(FQ,i->Size(i));
 
 
 DrTT:=function(L)
@@ -434,5 +473,122 @@ Float(11^296);
 Float(11^297);
 
 
-So, hier versuch ich mal das DrTDr hinzubekommen.
+So, hier versuch ich als nächstes mal das DrTDr hinzubekommen.
+NZUI:=function(n,S) return CoefficientsQadic(2^20+n,2){[1..S]}; end;
+NZUI(13,7);
+ Sum(NZUI(13,7));
 
+DrTDr:=function(d)
+  local i,INT,n,m,M,makt,j,k,SUM,MM;
+  n:=2^d;
+  m:=d*(d+1)/2;
+  makt:=1;
+  M:=NullMat(n-1,m);
+  for i in [1..n-1] do
+    INT:=NZUI(i,d);
+#    Print("\n",INT);
+    SUM:=Sum(INT);
+    if SUM<3 then
+      M[i][makt]:=1;
+      makt:=makt+1;
+      else
+        for j in [1..d] do if INT[j]=1 then
+          for k in [j..d] do if INT[k]=1 then
+            if IsOddInt(SUM) and j=k then
+              M[i][(k-1)*k/2+1]:=Z(2);
+              fi;
+            if j<k then
+              M[i][(k-1)*k/2+j+1]:=Z(2);
+#            Print("*",j,"-",k);
+              fi;
+            fi; od;
+          fi; od;
+        fi;
+#    Print(M[i]);
+    od;
+  return M;
+  end;
+M:=DrTDr(3);
+M:=DrTDr(4);
+M:=DrTDr(5);
+M:=DrTDr(6);
+M:=DrTDr(7);
+WirdDasNull:=function(M)
+  local i,j,flag;
+  MM:=TransposedMat(M)*M;
+  flag:=true;
+  for i in MM do for j in i do
+    if j<>0*Z(2) then flag:=false; fi;
+    od; od;
+  return flag;
+  end;
+WirdDasNull(DrTDr(3));
+WirdDasNull(DrTDr(4));
+WirdDasNull(DrTDr(5));
+WirdDasNull(DrTDr(6));
+WirdDasNull(DrTDr(7));
+WirdDasNull(DrTDr(8));
+WirdDasNull(DrTDr(9));
+for i in [1..100] do Print(i,WirdDasNull(DrTDr(i)),"\c"); od;
+
+# jetzt die generierte Matrix Dr
+z0:=0*Z(2); z1:=Z(2)^0;
+NZUID:=function(n,S) return CoefficientsQadic(2^20+n,2){[1..S]}; end;
+DrVektor:=[];k:=1;
+for i in [1..100] do
+  DrVektor[k]:=[0,i]; k:=k+1;
+  for j in [1..i-1] do
+    DrVektor[k]:=[j,i]; k:=k+1;
+    od; od;
+DrVektor;
+
+DM:=function(i,j)
+  local W1,W2,S;
+  W1:=NZUID(i,20);
+  S:=Sum(W1);
+  if IsOddInt(S) then
+    if DrVektor[j][1]=0 then 
+      if W1[DrVektor[j][2]]=1 then return z1; else return z0; fi;
+      else 
+        if W1[DrVektor[j][2]]=1 and W1[DrVektor[j][1]]=1 then return z1; else return z0; fi;
+        fi;
+    else
+      if DrVektor[j][1]=0 then 
+        return z0;
+        else 
+          if W1[DrVektor[j][2]]=1 and W1[DrVektor[j][1]]=1 then return z1; else return z0; fi;
+          fi;
+        fi;
+  end;
+
+for i in [1..1023] do
+  Print("\n",i," ");
+  for j in [1..99] do
+    if DM(i,j)=z0 then Print("0"); else Print("1"); fi;
+    od;
+  od;
+
+DrTDrTEST:=function(d)
+  local n,m,i,j,k,RET,SUM;
+  n:=2^d;
+  m:=d*(d+1)/2;
+  RET:=false;
+  for i in [1..m] do for j in [i..m ] do
+    SUM:=z0;
+    for k in [1..n-1] do
+      SUM:=SUM+DM(k,i)*DM(k,j);
+      od;
+    if SUM=z1 then Print("1");RET:=true; fi;
+    od; od;
+  return RET;
+  end;
+DrTDrTEST(2);
+DrTDrTEST(3);
+DrTDrTEST(4);
+DrTDrTEST(5);
+DrTDrTEST(6);
+DrTDrTEST(7);
+DrTDrTEST(8);
+
+
+  

@@ -343,8 +343,8 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU,WNUMB;
-Print("?\c");
+  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG;
+#Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
   RC:=RightTransversal(C,GR);
@@ -406,7 +406,20 @@ Print("?\c");
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
-  if WNUMBIT<>0 and WEGEZAHL>WNUMB+1 then WEGEZAHL:=WNUMB+1; fi;
+#  if WNUMBIT<>0 and WEGEZAHL>WNUMB+1 then WEGEZAHL:=WNUMB+1; fi;
+#if S=1 then Print("\n****************",WEGEZAHL,WNUMB); fi;
+  if S>1111 then
+    for i in [WEGEZAHL,WEGEZAHL-1..WNUMB+2] do
+      WEGEFLAG:=false;
+      for j in [i-1,i-2..WNUMB+1] do if WEGEFLAG=false then
+        if LETZTEWEGELISTE[i][1][S+1]=LETZTEWEGELISTE[j][1][S+1] then
+          Remove(LETZTEWEGELISTE,i);
+          WEGEZAHL:=WEGEZAHL-1;
+          WEGEFLAG:=true;
+          fi;
+        fi; od;
+      od;
+    fi;
   return RBIT;
   end;
 
