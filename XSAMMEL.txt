@@ -136,9 +136,7 @@ WEGEVERGLEICHER:=function(WEG1)
   end;
 
 QY07:=function(S)
-  local k,kk,W,H,i,r,ret,pcgs,MRES,HELF,NRES;
-  HELF:=[1,2,4,8,16,32,64,128,256,512];
-#-  Print(".\c");
+  local k,kk,W,H,i,r,ret,pcgs,MRES,NRES;
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
   WEGEVERGLEICHER([W,Reversed(H)]);
@@ -162,16 +160,15 @@ if W=WHALT then Error("halt da"); fi;
     i:=i+1;
     fi;
   if ret=false then
-        pcgs:=PcgsByPcSequenceNC07(FamilyObj(LRES[1]),LRES);
-        NRES:=List([1..S],i->ExponentsOfPcElement(pcgs,Reversed(H)[i]));
-#    Add(LETZTEWEGELISTE,[W,H,k,NRES]); 
+    pcgs:=PcgsByPcSequenceNC07(FamilyObj(LRES[1]),LRES);
+    NRES:=List([1..S],i->ExponentsOfPcElement(pcgs,Reversed(H)[i]));
     WEGEZAHL:=WEGEZAHL+1;
     LETZTEWEGELISTE[WEGEZAHL]:=[W,H,k,NRES]; 
     k:=S; 
     fi;
       
 #-  Print(ret,kk,k,S,i,k+2);
-  return [ret,kk,k,S,i,k+2];
+  return [ret,kk,k,S,i];
   end;
   
 
@@ -411,7 +408,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 #-            Print("*\c");
             fi;
 #          if ZR3MERK=0 and WEGEZAHL=0 then RBIT:=0; else 
-            RBIT:=QY07(S)[6];
+            RBIT:=QY07(S)[3]+2;
 #            fi;
           if DBIT=1 then
             Print("\n",Size(LETZTEWEGELISTE),RBIT<=S,HRESEXT{[1..S]}," ",ZR3MERK," ",RBIT," ",WEGLI{[1..S]}," ");
