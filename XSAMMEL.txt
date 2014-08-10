@@ -116,13 +116,32 @@ QY11:=function(HRES,S)#bestimmt PNEU aus HRES
   return PNEU;
   end;
 
+WEGEVERGLEICHER:=function(WEG1)
+  local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
+  S:=Size(WEG1[1]);
+  LETZTELISTE:=[];
+  ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
+  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
+    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
+    if IsBound(PART[5]) then 
+      PART:=PART[5]; 
+      fi;
+    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[10][i],T)));
+    if IsBound(PART[12]) then
+      PART:=PART[12];
+      fi;
+    ZEIGER:=PART[6];
+    fi; od; od;
+  return LRES;
+  end;
+
 QY07:=function(S)
   local k,kk,W,H,i,r,ret,pcgs,MRES,HELF,NRES;
   HELF:=[1,2,4,8,16,32,64,128,256,512];
 #-  Print(".\c");
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
-    WEGEVERGLEICHER([W,Reversed(H)],[W,Reversed(H)],0);
+  WEGEVERGLEICHER([W,Reversed(H)]);
 if W=WHALT then Error("halt da"); fi;
   k:=S+1;kk:=0;ret:=false;i:=0;
   if WEGEZAHL>0 then
@@ -820,32 +839,6 @@ GANZLOS:=function()
   SaveWorkspace("GAP_WORKSPACE_4431");
   end;
 #AUZAHL:=4;GANZLOS();
-
-WEGEVERGLEICHER:=function(WEG1,WEG2,PBIT)
-  local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
-  S:=Size(WEG1[1]);
-  LETZTELISTE:=[];
-  ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
-  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
-#    Add(LETZTELISTE,StructuralCopy(PART[3]));
-LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
-    if IsBound(PART[5]) then 
-      PART:=PART[5]; 
-      fi;
-#    Add(LETZTELISTE,StructuralCopy(PART[10]));
-LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[10][i],T)));
-    if IsBound(PART[12]) then
-      PART:=PART[12];
-      fi;
-    if IsBound(PART[6]) then ZEIGER:=PART[6]; fi;
-    fi; od; od;
-  return LRES;
-  end;
-
-SEPARATOR:=function()
-  
-  end;
-  
 
 
 ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,
