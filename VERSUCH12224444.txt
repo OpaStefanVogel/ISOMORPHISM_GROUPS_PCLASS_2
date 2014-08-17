@@ -2327,4 +2327,5 @@ gap>
 XSAMMEL:=[];
 G:=SmallGroup(32,25);
 RMAXSUCH(G);
+.. ist wohl vermutlich ab LETZTEWEGELISTE so.
 

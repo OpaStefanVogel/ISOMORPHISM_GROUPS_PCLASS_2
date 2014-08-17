@@ -371,18 +371,18 @@ DrT:=function(L)
     L[12]+L[13]+L[14]+L[15]];
   end;
 
-n:=4;ORB:=[];
+n:=4;ORB1:=[];
 G:=ElementaryAbelianGroup(2^n);
 a:=G.1;b:=G.2;c:=G.3;d:=G.4;
-L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
-    c*d,a*c*d,b*c*d,a*b*c*d];
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
 A:=AutomorphismGroup(G);
+Size(A);
 P:=Action(A,L);
 Size(P);
 V:=GF(2)^(2^n-1);
-ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
-Size(ORB[n]);
-QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i)))));;
+ORB1[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
+Size(ORB1[n]);
+QQP:=Set(List(ORB1[n],j->Set(List(j,i->DrT(i)))));;
 Size(QQP);List(QQP,i->Size(i));
 
 
@@ -411,15 +411,14 @@ DrT16:=function(L)
 n:=4;ORB:=[];
 G:=ElementaryAbelianGroup(2^n);
 a:=G.1;b:=G.2;c:=G.3;d:=G.4;
-L:=[a^0,a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
-    c*d,a*c*d,b*c*d,a*b*c*d];
+L:=[a^0,a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
 A:=AutomorphismGroup(G);
 P:=Action(A,G);
 Size(P);
 V:=GF(2)^(2^n);
 ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
 Size(ORB[n]);
-QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT16(i)))));;
+QQP:=Set(List(ORB[n]{[1..46]},j->Set(List(j,i->DrT16(i)))));;
 Size(QQP);List(QQP,i->Size(i));
 FQ:=Filtered(ORB[n]{[1..46]},i->DrFilt16(i[1]));;
 Size(FQ);List(FQ,i->Size(i));
@@ -473,7 +472,7 @@ Float(11^296);
 Float(11^297);
 
 
-So, hier versuch ich als nächstes mal das DrTDr hinzubekommen.
+###################So, hier versuch ich als nächstes mal das DrTDr hinzubekommen.
 NZUI:=function(n,S) return CoefficientsQadic(2^20+n,2){[1..S]}; end;
 NZUI(13,7);
  Sum(NZUI(13,7));
@@ -531,7 +530,7 @@ WirdDasNull(DrTDr(8));
 WirdDasNull(DrTDr(9));
 for i in [1..100] do Print(i,WirdDasNull(DrTDr(i)),"\c"); od;
 
-# jetzt die generierte Matrix Dr
+####+++###+++###+++### jetzt die generierte Matrix Dr
 z0:=0*Z(2); z1:=Z(2)^0;
 NZUID:=function(n,S) return CoefficientsQadic(2^20+n,2){[1..S]}; end;
 DrVektor:=[];k:=1;
@@ -589,6 +588,326 @@ DrTDrTEST(5);
 DrTDrTEST(6);
 DrTDrTEST(7);
 DrTDrTEST(8);
+DrTDrTEST(9);
+DrTDrTEST(10);
+DrTDrTEST(11);
+DrTDrTEST(12);
+DrTDrTEST(13);
+DrTDrTEST(14);
+DrTDrTEST(15);
+DrTDrTEST(16);
+
+DMmalVek:=function(vek)
+  local d,i,j,m,n,RET;
+  m:=Size(vek);
+  d:=DrVektor[m][2];
+  n:=2^d;
+  RET:=[];
+  for i in [1..n-1] do
+    RET[i]:=z0;
+    for j in [1..m] do
+      RET[i]:=RET[i]+DM(i,j)*vek[j];
+      od;
+    od;
+#  Error("Horror");
+  return RET;
+  end;
+
+Scount:=function(vek)
+  local i,SUM;
+  SUM:=0;
+  for i in [1..Size(vek)] do 
+    if vek[i]=z1 then SUM:=SUM+1; fi;
+    od;
+  return SUM;
+  end;
 
 
-  
+
+DM261:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z0,z0,z0,z0,z0]);Scount(last);
+DM260:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z1,z0,z0,z0,z0]);Scount(last);
+DM264:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z0,z0,z0,z1,z0,z0,z0,z1]);Scount(last);
+DM263:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z0,z0,z0,z0]);Scount(last);
+DM262:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0]);Scount(last);
+DM265:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0]);Scount(last);
+DM266:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1]);Scount(last);
+
+n:=5;ORB51:=[];
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+    c*d,a*c*d,b*c*d,a*b*c*d,
+    f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
+    c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f];
+A:=AutomorphismGroup(G);
+P:=Action(A,L);
+Size(P);
+ORB261:=Orbit(P,DM261,Permuted);;Size(last);
+ORB260:=Orbit(P,DM260,Permuted);;Size(last);
+ORB264:=Orbit(P,DM264,Permuted);;Size(last);
+ORB263:=Orbit(P,DM263,Permuted);;Size(last);
+ORB262:=Orbit(P,DM262,Permuted);;Size(last);
+ORB265:=Orbit(P,DM265,Permuted);;Size(last);
+ORB266:=Orbit(P,DM266,Permuted);;Size(last);
+
+
+DM2320:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z1,z0,z0,z0,z0,z0,z0,z0,z0,z0,z0]);Scount(last);
+DM2319:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z1,z0,z0,z0,z0,z1,z0,z0,z0,z0,z0]);Scount(last);
+DM2323:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z0,z0,z0,z0,z1,z0,z0,z0,z0,z1]);Scount(last);
+DM2322:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0,z1,z0,z0,z0,z0,z0]);Scount(last);
+DM2321:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0,z1,z1,z1,z0,z0,z0]);Scount(last);
+DM2324:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z1,z0,z0]);Scount(last);
+DM2327:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z0]);Scount(last);
+DM2325:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0]);Scount(last);
+DM2326:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1]);Scount(last);
+
+n:=6;
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;g:=G.6;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+    c*d,a*c*d,b*c*d,a*b*c*d,
+    f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
+    c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f,
+    g,a*g,b*g,a*b*g,c*g,a*c*g,b*c*g,a*b*c*g,d*g,a*d*g,b*d*g,a*b*d*g,
+    c*d*g,a*c*d*g,b*c*d*g,a*b*c*d*g,
+    f*g,a*f*g,b*f*g,a*b*f*g,c*f*g,a*c*f*g,b*c*f*g,a*b*c*f*g,d*f*g,a*d*f*g,b*d*f*g,a*b*d*f*g,
+    c*d*f*g,a*c*d*f*g,b*c*d*f*g,a*b*c*d*f*g];
+A:=AutomorphismGroup(G);
+P:=Action(A,L);
+Size(P);
+ORB2320:=Orbit(P,DM2320,Permuted);;Size(last);
+ORB2319:=Orbit(P,DM2319,Permuted);;Size(last);
+ORB2323:=Orbit(P,DM2323,Permuted);;Size(last);
+ORB2322:=Orbit(P,DM2322,Permuted);;Size(last);
+ORB2321:=Orbit(P,DM2321,Permuted);;Size(last);
+ORB2324:=Orbit(P,DM2324,Permuted);;Size(last);
+ORB2327:=Orbit(P,DM2327,Permuted);;Size(last);
+ORB2325:=Orbit(P,DM2325,Permuted);;Size(last);
+ORB2326:=Orbit(P,DM2326,Permuted);;Size(last);
+
+
+DM56083:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z1,z0,z0,z0,z0,z1,z0,z0,z0,z0,z0,z0,z0,z0,z0,z0,z0,z0]);Scount(last);
+DM56082:=DMmalVek([z1,z1,z0,z1,z0,z0,z1,z0,z0,z0,z1,z0,z0,z0,z0,z1,z0,z0,z0,z0,z0,z1,z0,z0,z0,z0,z0,z0]);Scount(last);
+DM56086:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0,z1,z0,z0,z0,z0,z0,z1,z0,z0,z0,z0,z0,z1]);Scount(last);
+DM56085:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0,z1,z1,z1,z0,z0,z0,z1,z0,z0,z0,z0,z0,z0]);Scount(last);
+DM56084:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z0,z0,z1,z1,z1,z0,z0,z0,z1,z1,z1,z0,z0,z0,z0]);Scount(last);
+DM56087:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z1,z0,z0,z1,z1,z1,z1,z0,z0,z0]);Scount(last);
+DM56090:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z0,z1,z1,z1,z1,z0,z0,z0]);Scount(last);
+DM56088:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z1,z1,z1,z1,z1,z0,z0]);Scount(last);
+DM56090:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z0,z0]);Scount(last);
+DM56089:=DMmalVek([z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1,z1]);Scount(last);
+
+n:=7;
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;g:=G.6;h:=G.7;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+    c*d,a*c*d,b*c*d,a*b*c*d,
+    f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
+    c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f,
+    g,a*g,b*g,a*b*g,c*g,a*c*g,b*c*g,a*b*c*g,d*g,a*d*g,b*d*g,a*b*d*g,
+    c*d*g,a*c*d*g,b*c*d*g,a*b*c*d*g,
+    f*g,a*f*g,b*f*g,a*b*f*g,c*f*g,a*c*f*g,b*c*f*g,a*b*c*f*g,d*f*g,a*d*f*g,b*d*f*g,a*b*d*f*g,
+    c*d*f*g,a*c*d*f*g,b*c*d*f*g,a*b*c*d*f*g,
+    h,a*h,b*h,a*b*h,c*h,a*c*h,b*c*h,a*b*c*h,d*h,a*d*h,b*d*h,a*b*d*h,
+    c*d*h,a*c*d*h,b*c*d*h,a*b*c*d*h,
+    f*h,a*f*h,b*f*h,a*b*f*h,c*f*h,a*c*f*h,b*c*f*h,a*b*c*f*h,d*f*h,a*d*f*h,b*d*f*h,a*b*d*f*h,
+    c*d*f*h,a*c*d*f*h,b*c*d*f*h,a*b*c*d*f*h,
+    g*h,a*g*h,b*g*h,a*b*g*h,c*g*h,a*c*g*h,b*c*g*h,a*b*c*g*h,d*g*h,a*d*g*h,b*d*g*h,a*b*d*g*h,
+    c*d*g*h,a*c*d*g*h,b*c*d*g*h,a*b*c*d*g*h,
+    f*g*h,a*f*g*h,b*f*g*h,a*b*f*g*h,c*f*g*h,a*c*f*g*h,b*c*f*g*h,a*b*c*f*g*h,d*f*g*h,a*d*f*g*h,b*d*f*g*h,a*b*d*f*g*h,
+    c*d*f*g*h,a*c*d*f*g*h,b*c*d*f*g*h,a*b*c*d*f*g*h];
+A:=AutomorphismGroup(G);Size(A);
+P:=Action(A,L);Size(P);
+ORB56083:=Orbit(P,DM56083,Permuted);;Size(last);
+ORB56082:=Orbit(P,DM56082,Permuted);;Size(last);
+ORB56086:=Orbit(P,DM56086,Permuted);;Size(last);
+ORB2322:=Orbit(P,DM2322,Permuted);;Size(last);
+ORB2321:=Orbit(P,DM2321,Permuted);;Size(last);
+ORB2324:=Orbit(P,DM2324,Permuted);;Size(last);
+ORB2327:=Orbit(P,DM2327,Permuted);;Size(last);
+ORB2325:=Orbit(P,DM2325,Permuted);;Size(last);
+ORB2326:=Orbit(P,DM2326,Permuted);;Size(last);
+
+#######------------+#################
+z0:=0*Z(2); z1:=Z(2)^0;
+DrT:=function(L)
+  return [
+    L[1]+L[7]+L[11]+L[13],
+    L[2]+L[7]+L[11]+L[14],
+    L[3]+L[7]+L[11]+L[15],
+    L[4]+L[7]+L[13]+L[14],
+    L[5]+L[7]+L[13]+L[15],
+    L[6]+L[7]+L[14]+L[15],
+    L[8]+L[11]+L[13]+L[14],
+    L[9]+L[11]+L[13]+L[15],
+    L[10]+L[11]+L[14]+L[15],
+    L[12]+L[13]+L[14]+L[15]];
+  end;
+DrFilt:=function(L)
+  return 
+    L[7]=L[1]+L[2]+L[3]+L[4]+L[5]+L[6] and
+    L[11]=L[1]+L[2]+L[3]+L[8]+L[9]+L[10] and
+    L[13]=L[1]+L[4]+L[5]+L[8]+L[9]+L[12] and
+    L[14]=L[2]+L[4]+L[6]+L[8]+L[10]+L[12] and
+    L[15]=L[3]+L[5]+L[6]+L[9]+L[10]+L[12];
+  end;
+
+n:=4;ORB:=[];
+G:=ElementaryAbelianGroup(2^n);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
+A:=AutomorphismGroup(G);
+Size(A);
+P:=Action(A,L);
+Size(P);
+V:=GF(2)^(2^n-1);
+ORB[n]:=OrbitsDomain(P,V,Permuted);;#schneller als Orbits
+Size(ORB[n]);
+QQP:=Set(List(ORB[n],j->Set(List(j,i->DrT(i)))));;List(QQP,i->Size(i));
+FQ:=Filtered(ORB[n],i->DrFilt(i[1]));;List(FQ,i->Size(i));
+
+
+
+
+---------------------------------------------------------
+also für No.27 da mach ich
+--------------------------
+dd:=4;#fuer Tabellenzeile TABLE1 d=4
+G:=ElementaryAbelianGroup(2^dd);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
+A:=Action(AutomorphismGroup(G),L);
+V:=GF(2)^(2^dd-1);#V enthält D als Teilraum
+BAHNEN:=OrbitsDomain(A,V,Permuted);;Size(BAHNEN);#komplett alle Bahnen von A
+
+
+#die Erweiterungsmatrix Erw
+Erw:=Z(2)*[
+  [1,0,0,0,0,0,0,0,0,0], #a^2
+  [0,1,0,0,0,0,0,0,0,0], #b^2
+  [0,0,1,0,0,0,0,0,0,0], #(ab)^2
+  [0,0,0,1,0,0,0,0,0,0], #c^2
+  [0,0,0,0,1,0,0,0,0,0], #(ac)^2
+  [0,0,0,0,0,1,0,0,0,0], #(bc)^2
+  [1,1,1,1,1,1,0,0,0,0], #(abc)^2=a^2*b^2*c^2*(ab)^2*(ac)^2*(bc)^2
+  [0,0,0,0,0,0,1,0,0,0], #d^2
+  [0,0,0,0,0,0,0,1,0,0], #(ad)^2
+  [0,0,0,0,0,0,0,0,1,0], #(bd)^2
+  [1,1,1,0,0,0,1,1,1,0], #(abd)^2=a^2*b^2*d^2*(ab)^2*(ad)^2*(bd)^2
+  [0,0,0,0,0,0,0,0,0,1], #(cd)^2
+  [1,0,0,1,1,0,1,1,0,1], #(acd)^2=a^2*c^2*d^2*(ac)^2*(ad)^2*(cd)^2
+  [0,1,0,1,0,1,1,0,1,1], #(bcd)^2=b^2*c^2*d^2*(bc)^2*(bd)^2*(cd)^2
+  [0,0,1,0,1,1,0,1,1,1] #(abcd)^2=(ab)^2*(ac)^2*(ad)^2*(bc)^2*(bd)^2*(cd)^2
+  ];;
+Erw_T:=TransposedMat(Erw);;
+
+
+#jetzŧ mit Erw die Bahnen von A auf D herausfiltern:
+BAHNEN_von_A_auf_D:=Filtered(BAHNEN,i->i[1]=Erw*i[1]{[1,2,3,4,5,6,8,9,10,12]});;
+List(BAHNEN_von_A_auf_D,i->Size(i));#Ergebnis: Bahnlaengen der Gruppen G
+
+
+#und durch Anwendung von Erw_T die Bahnen von A^T auf D bilden:
+BAHNEN_von_AT_auf_D:=Set(List(BAHNEN,j->Set(List(j,i->Erw_T*i))));;
+List(BAHNEN_von_AT_auf_D,i->Size(i));#Ergebnis: Bahnlaengen der Gruppen K
+
+
+
+
+----------------------------------------------------
+
+########Thema Boolsche Funktion
+z0:=0*Z(2); z1:=Z(2)^0;
+#z0:=0;z1:=1;
+FORTSETZ:=function(h,d);
+  if h=1 then return List([1..d],i->z0); fi;
+  if h=2 then if d>1 then return List([1..d],i->z0); else return [z1]; fi; fi;
+  if h=3 then return Concatenation([z1],List([1..d-1],i->z0)); fi;
+  if h=4 then if d=3 then return([z1,z0,z0]); else return Concatenation([z1],List([1..d-2],i->z0),[z1]); fi; fi;
+  if h=5 then if d=3 then return([z1,z1,z1]); else return Concatenation([z1],List([1..d-1],i->z0)); fi; fi;
+  if h=6 then return Concatenation([z1,z1,z1],List([1..d-3],i->z0)); fi;
+  if h>6 then return Concatenation([z1,z1,z1,z1],FORTSETZ(h-6,d-4)); fi;
+  end;
+for i in [1..2] do Print("\n",FORTSETZ(i,1)); od;
+for i in [1..4] do Print("\n",FORTSETZ(i,2)); od;
+for i in [1..5] do Print("\n",FORTSETZ(i,3)); od;
+for i in [1..7] do Print("\n",FORTSETZ(i,4)); od;
+for i in [1..8] do Print("\n",FORTSETZ(i,5)); od;
+for i in [1..10] do Print("\n",FORTSETZ(i,6)); od;
+for i in [1..11] do Print("\n",FORTSETZ(i,7)); od;
+
+VORGAENGER:=[
+ [1,1],
+ [1,2,2,2],
+ [1,3,3,4,4],
+ [1,3,3,4,5,5,5],
+ [1,3,3,5,6,6,7,7],
+ [1,3,3,5,6,6,7,8,8,8],
+ [1,3,3,5,6,6,7,9,9,10,10],
+ ];
+RMACHER:=function(h,d)
+  local R;
+  R:=[];
+  if d=1 then R:=[]; else R:=RMACHER(VORGAENGER[d][h],d-1); fi;
+  Add(R,FORTSETZ(h,d));
+  return R;
+  end;
+TEST1:=RMACHER;
+for i in [1..2] do Print("\n",TEST1(i,1)); od;
+for i in [1..4] do Print("\n",TEST1(i,2)); od;
+for i in [1..5] do Print("\n",TEST1(i,3)); od;
+for i in [1..7] do Print("\n",TEST1(i,4)); od;
+for i in [1..8] do Print("\n",TEST1(i,5)); od;
+for i in [1..10] do Print("\n",TEST1(i,6)); od;
+for i in [1..11] do Print("\n",TEST1(i,7)); od;
+
+#hierrein von oben DMmalVek und dazu DM und DrVektor, damm müsste schon gehen
+R:=RMACHER(3,3);
+D:=DMmalVek(Flat(RMACHER(8,5)));
+
+
+
+
+KZAHL:=function(VEKT)
+  local SUM,i;
+  SUM:=0;
+  for i in VEKT do if i=z1 then SUM:=SUM+1; fi; od;
+  return SUM;
+  end;
+KZAHL([z0,z1,z1,z0,z1,z0]);
+
+TEST1:=function(n,k) return KZAHL(DMmalVek(Flat(RMACHER(n,k)))); end; 
+
+TEST2:=function(h,d)
+  local R,ORB,A,V,n;
+  n:=d;
+  R:=DMmalVek(Flat(RMACHER(h,d)));
+  G:=ElementaryAbelianGroup(2^n);
+  if d=4 then
+    a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
+    fi;
+  if d=5 then
+    a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;
+    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+      c*d,a*c*d,b*c*d,a*b*c*d,
+      f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
+      c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f];
+    fi;
+  if d=6 then
+    a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;g:=G.6;
+    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
+      c*d,a*c*d,b*c*d,a*b*c*d,
+      f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
+      c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f,
+      g,a*g,b*g,a*b*g,c*g,a*c*g,b*c*g,a*b*c*g,d*g,a*d*g,b*d*g,a*b*d*g,
+      c*d*g,a*c*d*g,b*c*d*g,a*b*c*d*g,
+      f*g,a*f*g,b*f*g,a*b*f*g,c*f*g,a*c*f*g,b*c*f*g,a*b*c*f*g,d*f*g,a*d*f*g,b*d*f*g,a*b*d*f*g,
+      c*d*f*g,a*c*d*f*g,b*c*d*f*g,a*b*c*d*f*g];
+    fi;
+  A:=Action(AutomorphismGroup(G),L);
+  ORB:=Orbit(A,R,Permuted);;
+  return Size(ORB);
+  end;
+TEST1:=TEST2;
+
