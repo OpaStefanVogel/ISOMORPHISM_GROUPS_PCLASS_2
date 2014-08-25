@@ -916,7 +916,7 @@ TEST1:=TEST2;
 
 
 
-############### ab hier A*A^AT
+############### ab hier A*A^AT weil das auch eine Option ist
 G1:=(1,2);
 G2:=(1,2);
 A:=Group(G1,G2);
