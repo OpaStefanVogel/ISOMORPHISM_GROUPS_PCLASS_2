@@ -844,6 +844,10 @@ VORGAENGER:=[
  [1,3,3,5,6,6,7,7],
  [1,3,3,5,6,6,7,8,8,8],
  [1,3,3,5,6,6,7,9,9,10,10],
+ [1,3,3,5,6,6,7,9,9,10,11,11,11],
+ [1,3,3,5,6,6,7,9,9,10,12,12,13,13],
+ [1,3,3,5,6,6,7,9,9,10,12,12,13,14,14,14],
+ [1,3,3,5,6,6,7,9,9,10,12,12,13,15,15,16,16],
  ];
 RMACHER:=function(h,d)
   local R;
@@ -860,12 +864,13 @@ for i in [1..7] do Print("\n",TEST1(i,4)); od;
 for i in [1..8] do Print("\n",TEST1(i,5)); od;
 for i in [1..10] do Print("\n",TEST1(i,6)); od;
 for i in [1..11] do Print("\n",TEST1(i,7)); od;
+for i in [1..13] do Print("\n",TEST1(i,8)); od;
+for i in [1..14] do Print("\n",TEST1(i,9)); od;
+for i in [1..16] do Print("\n",TEST1(i,10)); od;
 
-#hierrein von oben DMmalVek und dazu DM und DrVektor, damm müsste schon gehen
+#hierrein von oben DMmalVek und dazu DM und DrVektor, dann müsste schon gehen
 R:=RMACHER(3,3);
 D:=DMmalVek(Flat(RMACHER(8,5)));
-
-
 
 
 KZAHL:=function(VEKT)
@@ -876,6 +881,24 @@ KZAHL:=function(VEKT)
   end;
 KZAHL([z0,z1,z1,z0,z1,z0]);
 
+LMACH:=function(G)
+  local GENS,BITS,i,j,n,S,RET,RT;
+  n:=Size(G);
+  GENS:=GeneratorsOfGroup(G);
+  S:=Size(GENS);
+  RET:=[];
+  for i in [1..n-1] do
+    BITS:=NZUID(i,S);
+    Print("\n",BITS);
+    RT:=Identity(G);
+    for j in [1..S] do
+      if BITS[j]=1 then RT:=RT*GENS[j]; fi;
+      od;
+    RET[i]:=RT;
+    od;
+  return RET;
+  end;
+
 TEST1:=function(n,k) return KZAHL(DMmalVek(Flat(RMACHER(n,k)))); end; 
 
 TEST2:=function(h,d)
@@ -883,31 +906,186 @@ TEST2:=function(h,d)
   n:=d;
   R:=DMmalVek(Flat(RMACHER(h,d)));
   G:=ElementaryAbelianGroup(2^n);
-  if d=4 then
-    a:=G.1;b:=G.2;c:=G.3;d:=G.4;
-    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
-    fi;
-  if d=5 then
-    a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;
-    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
-      c*d,a*c*d,b*c*d,a*b*c*d,
-      f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
-      c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f];
-    fi;
-  if d=6 then
-    a:=G.1;b:=G.2;c:=G.3;d:=G.4;f:=G.5;g:=G.6;
-    L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,
-      c*d,a*c*d,b*c*d,a*b*c*d,
-      f,a*f,b*f,a*b*f,c*f,a*c*f,b*c*f,a*b*c*f,d*f,a*d*f,b*d*f,a*b*d*f,
-      c*d*f,a*c*d*f,b*c*d*f,a*b*c*d*f,
-      g,a*g,b*g,a*b*g,c*g,a*c*g,b*c*g,a*b*c*g,d*g,a*d*g,b*d*g,a*b*d*g,
-      c*d*g,a*c*d*g,b*c*d*g,a*b*c*d*g,
-      f*g,a*f*g,b*f*g,a*b*f*g,c*f*g,a*c*f*g,b*c*f*g,a*b*c*f*g,d*f*g,a*d*f*g,b*d*f*g,a*b*d*f*g,
-      c*d*f*g,a*c*d*f*g,b*c*d*f*g,a*b*c*d*f*g];
-    fi;
+  L:=LMACH(G);
   A:=Action(AutomorphismGroup(G),L);
   ORB:=Orbit(A,R,Permuted);;
   return Size(ORB);
   end;
 TEST1:=TEST2;
+
+
+
+
+############### ab hier A*A^AT
+G1:=(1,2);
+G2:=(1,2);
+A:=Group(G1,G2);
+V:=GF(2)^3;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+for s in [0..2] do ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2]})=s);;Print(Size(ORBAB)," "); od;
+
+#d=3:
+G1:=(1,2)(5,6);
+G2:=(1,2,4)(3,6,5);
+A:=Group(G1,G2);
+V:=GF(2)^6;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+for s in [0..3] do ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4]})=s);;Print(Size(ORBAB)," "); od;
+
+#d=4:
+G1:=(1,2)(5,6)(8,9);
+G2:=(1,2,4,7)(3,6,10,8)(5,9);
+A:=Group(G1,G2);
+V:=GF(2)^10;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+for s in [0..4] do ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4,7]})=s);;Print(Size(ORBAB)," "); od;
+ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4,7]})=1);Print(ORBAB);
+List(ORBAB,i->Size(i));
+ORBABB:=List(ORBAB,i->Filtered(i,j->j[1]=z1));OPRINT4B(ORBABB);
+ORBAC:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4,7]})=2);Print(ORBAC);
+List(ORBAC,i->Size(i));
+ORBACC:=List(ORBAC,i->Filtered(i,j->j[1]=z1 and j[2]=z1));OPRINT4C(ORBACC);
+
+OPRINT4B:=function(W)
+  local i;
+  if IsList(W) then 
+    Print(" [ ");
+    if Size(W)=10 then 
+      OPRINT4B(W[3]);OPRINT4B(W[5]);OPRINT4B(W[8]);Print("-");
+      OPRINT4B(W[6]);OPRINT4B(W[9]);OPRINT4B(W[10]);
+      else for i in W do OPRINT4B(i); od; fi; 
+    Print(" ] ");  
+    else if W=z1 then Print("1"); else Print("0"); fi; fi;
+  end;
+OPRINT4C:=function(W)
+  local i;
+  if IsList(W) then 
+    Print(" [ ");
+    if Size(W)=10 then 
+      OPRINT4C(W[3]);Print("-");OPRINT4C(W[5]);OPRINT4C(W[8]);OPRINT4C(W[6]);OPRINT4C(W[9]);
+      Print("-");OPRINT4C(W[10]);
+      else for i in W do OPRINT4C(i); od; fi; 
+    Print(" ] ");  
+    else if W=z1 then Print("1"); else Print("0"); fi; fi;
+  end;
+ 
+#d=5:
+G1:=(1,2)(5,6)(8,9)(12,13);
+G2:=(1,2,4,7,11)(3,6,10,15,12)(5,9,14,8,13);
+A:=Group(G1,G2);
+V:=GF(2)^15;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+for s in [0..5] do ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4,7,11]})=s);;Print(Size(ORBAB)," "); od;
+
+#d=6:
+G1:=(1,2)(5,6)(8,9)(12,13)(17,18);
+G2:=(1,2,4,7,11,16)(3,6,10,15,21,17)(5,9,14,20,12,18)(8,13,19);
+A:=Group(G1,G2);
+V:=GF(2)^21;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+for s in [0..6] do ORBAB:=Filtered(ORB,i->KZAHL(i[1]{[1,2,4,7,11,16]})=s);;Print(Size(ORBAB)," "); od;
+  
+
+#d=7:
+G1:=(1,2)(5,6)(8,9)(12,13)(17,18)(23,24);
+G2:=(1,2,4,7,11,16,22)(3,6,10,15,21,28,23)(5,9,14,20,27,17,24);
+A:=Group(G1,G2);
+V:=GF(2)^28;
+ORB:=OrbitsDomain(A,V,Permuted);;
+Size(V);Size(ORB);
+ORBAB:=Filtered(ORB,i->i[1][1]=z0 and i[1][2]=z0 and i[1][4]=z0 and i[1][7]=z0 and i[1][11]=z0 and i[1][16]=z0 and i[1][22]=z0);Size(ORBAB);
+
+###dazu a->ab ac->abc hinzu
+#d=3:
+GZ:=Z(2)*[
+  [0,0,1,0,0,0],
+  [0,1,0,0,0,0],
+  [1,0,0,0,0,0],
+  [0,0,0,1,0,0],
+  [1,1,1,1,1,1],
+  [0,0,0,0,0,1]
+  ];
+#d=4:
+GZ:=Z(2)*[
+  [0,0,1,0,0,0,0,0,0,0],
+  [0,1,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,1,0,0,0,0,0,0],
+  [1,1,1,1,1,1,0,0,0,0],
+  [0,0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0],
+  [1,1,1,0,0,0,1,1,1,0],
+  [0,0,0,0,0,0,0,0,1,0],
+  [0,0,0,0,0,0,0,0,0,1]
+  ];
+#d=5:
+GZ:=Z(2)*[
+  [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+  [1,1,1,0,0,0,1,1,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+  [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+  ];
+GZ:=Z(2)*[ #a->ac
+  [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+  [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+  [1,1,1,0,0,0,1,1,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+  [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+  ];
+
+
+TESTER:=function(ORB)
+  local i,j,k,KLEINER,S,T,GESAMT,PROD,VEKT;
+  VEKT:=[];
+  S:=Size(ORB);
+  for i in [1..S] do
+    Print("\n",i);
+    KLEINER:=false;
+    T:=Size(ORB[i]);
+    for j in [1..T] do
+      PROD:=GZ*ORB[i][j];
+      for k in [1..S] do
+        if PROD in ORB[k] then 
+          Print(" ",k,"\c");
+          if k>i then VEKT[k]:=1; fi;
+          if k<i then VEKT[i]:=1; fi;
+          fi;
+        od;
+      od;
+    od;
+  GESAMT:=0;
+  for i in [1..S] do if not IsBound(VEKT[i]) then GESAMT:=GESAMT+1; fi; od;
+  Print("\n",GESAMT-1);
+  return VEKT;
+  end;
+TESTERG:=TESTER(ORB);
+ORBI:=[];for i in [1..Size(ORB)] do if not IsBound(TESTERG[i]) then Add(ORBI,ORB[i]); fi; od;
+Size(ORBI);
+Print(ORBI{[2..10]}[1]);
 
