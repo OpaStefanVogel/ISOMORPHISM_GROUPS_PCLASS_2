@@ -85,6 +85,7 @@ Q:=function(k,i,j,b,a) #x-b-a Fortsetzung
 
 H:=function(k,i,j,di) #k in der Mitte von i,j
   P[k]:=[P[i][1]+(P[j][1]-P[i][1])/di,P[i][2]+(P[j][2]-P[i][2])/di];
+  K[k]:=[];
   end;
 
 HPLOT:=function()
@@ -120,7 +121,8 @@ ErzeugeFedgeoCode:=function(D,dx)
     Print("s(P",REST_K[i][1],",P",REST_K[i][2],") "); 
     od;
   Print("\n\\geooff");
-  Print("\n\\fedoffgeoprint()");
+  Print("\n\\geoprint()");
+  Print("\n\\fedoff");
   end;
 
 
@@ -199,7 +201,6 @@ y:=-17.5;
 rech();
 
 
-
 los:=function()
   local xx,yy,hh,h;
   xx:=[72.5,72.6];
@@ -220,6 +221,18 @@ y:=-17.5;
   FULL_K:=[[42,50],[23,26]];
   REST_K:=[[46,51],[51,42],[41,46]];
   end;
+
+los();
+ErzeugeFedgeoCode(D,1);
+
+
+
+
+
+
+
+
+
 
 strokevar="blue";
 strokewidthvar="4";

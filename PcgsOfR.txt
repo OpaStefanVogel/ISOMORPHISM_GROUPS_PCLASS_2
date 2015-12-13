@@ -41,6 +41,11 @@ PcgsOfR:=function(R)
   #IdSmallGroup(G);
   end;
 
+#PcgsOfR([[1],[2,2],[2,2,2]]);
+#PcgsOfR([[1],[1,1],[2,2,2],[4,4,4,3]]);
+#PcgsOfR([[1],[1,1],[2,2,2],[4,4,4,3],[8,8,8,7,6]]);
+#PcgsOfR([[1],[2,4],[8,16,32]]);
+#IdSmallGroup(PcgsOfR([[1],[1,1],[1,1,1],[2,2,2,2],[4,4,4,4,5]]));
 
 Print ("     PcgsOfR.txt geladen\n");
 
