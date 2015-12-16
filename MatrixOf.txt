@@ -7,8 +7,12 @@ C1:=0;C2:=0;C3:=0;
 D1:=0;D2:=0;
 E1:=0;
 MatrixBit:=0;
-MatrixOf:=function(R)
-  local M;
+MatrixOf:=function(R0)
+  local M,R;
+  R:=StructuralCopy(R0);
+  for i in [1..Size(R)] do
+    for j in [1..Size(i)] do R[i][j]:=R[i][j]+1;
+      od; od;
   #a
   n:=1;M:=[[1]];I:=[1];
   for S in [1..Size(R)] do
@@ -88,6 +92,9 @@ M[j][j]:=M[x][E1];
       od; od;
     n:=n+n;
     od;
+  for i in [1..Size(M)] do
+    for j in [1..Size(i)] do M[i][j]:=M[i][j]-1;
+      od; od;
   return M;
   end;
 

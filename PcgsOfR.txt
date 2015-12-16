@@ -1,6 +1,10 @@
 #Read("GAP/PCLASS2/PcgsOfR.txt");
-PcgsOfR:=function(R)
-  local F,G,i,j,C,S,ELM,RE,REL,relorders,coll;
+PcgsOfR:=function(R0)
+  local F,G,i,j,C,S,ELM,R,RE,REL,relorders,coll;
+  R:=StructuralCopy(R0);
+  for i in [1..Size(R)] do
+    for j in [1..Size(i)] do R[i][j]:=R[i][j]+1;
+      od; od;
   S:=Size(R);
   F:=FreeGroup(S);
   ELM:=[Identity(F)];
@@ -24,7 +28,7 @@ PcgsOfR:=function(R)
       Add(REL,Comm(F.(S+1-j),F.(S+1-i))/(ELM[R[i][1]]*ELM[R[j][1]]*ELM[R[i][j+1]]));
       od;
     od;
-  relorders:=[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
+  relorders:=[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
   coll:=SingleCollector(F,relorders{[1..S]});
   for i in [1..S] do 
     SetPower(coll,S+1-i,RE[i][1]);
@@ -41,12 +45,10 @@ PcgsOfR:=function(R)
   #IdSmallGroup(G);
   end;
 
-#PcgsOfR([[1],[2,2],[2,2,2]]);
-#PcgsOfR([[1],[1,1],[2,2,2],[4,4,4,3]]);
-#PcgsOfR([[1],[1,1],[2,2,2],[4,4,4,3],[8,8,8,7,6]]);
-#PcgsOfR([[1],[2,4],[8,16,32]]);
-#IdSmallGroup(PcgsOfR([[1],[1,1],[1,1,1],[2,2,2,2],[4,4,4,4,5]]));
+#PcgsOfR([[0],[1,1],[1,1,1]]);
+#PcgsOfR([[0],[0,0],[1,1,1],[3,3,3,2]]);
+#PcgsOfR([[0],[0,0],[1,1,1],[3,3,3,2],[7,7,7,6,5]]);
+#PcgsOfR([[0],[1,3],[7,15,31]]);
+#IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[1,1,1,1],[3,3,3,3,4]]));
 
 Print ("     PcgsOfR.txt geladen\n");
-
-

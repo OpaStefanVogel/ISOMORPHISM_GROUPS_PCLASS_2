@@ -1,0 +1,34 @@
+Auf geht's
+<FILE id="X1" inhalt="R von 1...n auf 0...(n-1) umstellen">
+#
+R4:=function(V)
+  local i,R,V2;
+  V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+  R:=[[0],[0,0],[1,1,1]];
+  for i in [4..Size(V)+1] do Add(R,Nullvector(i)); od;
+  Add(R,V2);
+  return R;
+  end;
+
+R:=R4([0,0]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,1]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([1,1]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([1,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([2,3]);P:=PcgsOf(R);IdSmallGroup(P);
+
+R:=R4([0,0,0,0,0,0]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,0,0,1]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,0,0,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,0,2,3]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,0,1,1]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,0,1,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,0,1,1,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,1,1,1,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,1,1,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,0,1,2,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,1,1,1,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([0,1,1,2,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([1,1,1,2,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+R:=R4([1,1,1,1,2,2]);P:=PcgsOf(R);IdSmallGroup(P);
+  </FILE>
