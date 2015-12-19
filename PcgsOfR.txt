@@ -1,9 +1,10 @@
 #Read("GAP/PCLASS2/PcgsOfR.txt");
+#Read("PcgsOfR.txt");
 PcgsOfR:=function(R0)
   local F,G,i,j,C,S,ELM,R,RE,REL,relorders,coll;
   R:=StructuralCopy(R0);
   for i in [1..Size(R)] do
-    for j in [1..Size(i)] do R[i][j]:=R[i][j]+1;
+    for j in [1..Size(R[i])] do R[i][j]:=R[i][j]+1;
       od; od;
   S:=Size(R);
   F:=FreeGroup(S);
