@@ -1,5 +1,5 @@
 Auf geht's
-<FILE id="X1" inhalt="R von 1...n auf 0...(n-1) umstellen">
+<FILE id="P01" inhalt="R von 1...n auf 0...(n-1) umstellen">
 #
 Read("PcgsOfR.txt");
 R4:=function(V)
@@ -32,4 +32,67 @@ R:=R4([0,1,1,1,2,2]);P:=PcgsOfR(R);IdSmallGroup(P);
 R:=R4([0,1,1,2,2,2]);P:=PcgsOfR(R);IdSmallGroup(P);
 R:=R4([1,1,1,2,2,2]);P:=PcgsOfR(R);IdSmallGroup(P);
 R:=R4([1,1,1,1,2,2]);P:=PcgsOfR(R);IdSmallGroup(P);
+#Ergebnis: viele gleiche
+  </FILE>
+
+<FILE id="P02" inhalt="n=16 als 1:0">
+Read("XSAMMEL.txt");
+ClearProfile();
+ERG:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+for i1 in IS2 do 
+  for i2 in IS2 do
+    for i3 in IS do
+      for i4 in IS do
+        RT:=[i1+i3,i2+i4];
+        Print("\n",RT);
+        R:=R4(RT);
+        G:=PcgsOfR(R);
+        Print(IdSmallGroup(G),"\c");
+        NEU:=RMAXSUCH(G);
+        if NEU>0 then Add(ERG,RT); fi; 
+        od;
+      od;
+    od;
+  od;
+ERG;
+  </FILE>
+
+<FILE id="P03" inhalt="n=16,32 als 1:0 mit ListX">
+Read("XSAMMEL.txt");
+ClearProfile();
+FUN:=function(arg)
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R4(RT);
+  G:=PcgsOfR(R);
+  Print(IdSmallGroup(G),"\c");
+  NEU:=RMAXSUCH(G);
+  if NEU>0 then Add(ERG,RT); fi;
+  return [];
+  end;
+ 
+ERG:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+ListX(IS2,IS2,IS,IS,FUN);;ERG;
+ListX(IS2,IS2,IS2,IS,IS,IS,FUN);;ERG;
+ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN);;ERG;
+[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ], 
+  [ 0, 0, 0 ], [ 0, 1, 1 ], [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], 
+  [ 0, 2, 0 ], [ 1, 2, 1 ], [ 2, 2, 2 ] ]
+.. warum dauert das was schon drin ist so lange, das ist die momentane Schwachstelle
+  </FILE>
+
+<FILE id="P04" inhalt="schnelles RMAXSUCH wenn schon drin">
+Read("XSAMMEL.txt");
+ClearProfile();
+R:=R4([2,3]);P:=PcgsOfR(R);IdSmallGroup(P);
+#muss ich ja so machen dass mit dem R gesucht wird und nicht G bilden
+NEU:=RMAXSUCH(P);
+NEU:=RMAXSUCH(P);#da soll schon bei 0 Schluss sein
+.. danach kann ich auch die Sortierung innerhalb QY13 herausnehmen, das mit 1001 und so.
   </FILE>
