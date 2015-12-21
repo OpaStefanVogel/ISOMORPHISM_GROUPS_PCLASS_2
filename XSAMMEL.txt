@@ -388,7 +388,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
         RBIT:=QY13(C,S+1,2*nn,ZR[2],STAB); 
-        else 
+        else
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
             HRES0:=List(HRES);
@@ -536,6 +536,7 @@ RMAXSUCH:=function(C)
    XLEER(XSAMMEL);
 #XSAMMELVIEWER0(XSAMMEL);
 Print(" <",WEGEZAHL,"> ",XMERKZAHL);
+  return XMERKZAHL;
   end;
 
 ILIST:=[1,1];

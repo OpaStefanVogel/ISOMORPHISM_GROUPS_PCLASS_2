@@ -87,12 +87,72 @@ ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN);;ERG;
 .. warum dauert das was schon drin ist so lange, das ist die momentane Schwachstelle
   </FILE>
 
-<FILE id="P04" inhalt="schnelles RMAXSUCH wenn schon drin">
+<FILE id="P04" inhalt="RTT() als schnelles RMAXSUCH wenn schon drin, n=16,32,64">
 Read("XSAMMEL.txt");
 ClearProfile();
+R:=R4([1,2]);P:=PcgsOfR(R);IdSmallGroup(P);
 R:=R4([2,3]);P:=PcgsOfR(R);IdSmallGroup(P);
 #muss ich ja so machen dass mit dem R gesucht wird und nicht G bilden
 NEU:=RMAXSUCH(P);
 NEU:=RMAXSUCH(P);#da soll schon bei 0 Schluss sein
+#so, aus QY13 rausmach:
+PL:=Reversed(GeneratorsOfGroup(P));
+
+RTT:=function()
+  if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
+  ri:=PL[S];
+  Add(HRES,ri,1);HRESEXT[S]:=ri;#HRES;HRESEXT;
+  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  PNEU:=QY11(HRES,S);
+  R[S]:=List(PNEU);#R;
+  HRESMERK:=List(HRES);
+  n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
+  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];# WEGLI;
+    S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
+  if ZR3MERK=-1 then return -10000; else
+    if ZEIGER=[] then return 1; else return RTT()+1; fi;
+    fi;
+  end;
+
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+NEU:=RTT();
+
+FUN:=function(arg)
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R4(RT);RSIZE:=Size(R);
+  P:=PcgsOfR(R);
+  Print(IdSmallGroup(P),"\c");
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+  NEU:=RTT();Print(NEU);
+  if NEU<>RSIZE then RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
+
+ERG:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+ListX(IS2,IS2,IS,IS,FUN);;ERG;#16
+ListX(IS2,IS2,IS2,IS,IS,IS,FUN);;ERG;#32
+ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN);;ERG;#64
+ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN);;ERG;#128
+ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN);;ERG;#256
+ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN);;ERG;#512
+ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN);;ERG;#1024
+ok na, ganz ordentliches Ergebnis, reicht für heute: 3+3,2+6,3+11
+[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ], [ 0, 0, 0 ], 
+  [ 0, 1, 1 ], [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], [ 0, 2, 0 ], 
+  [ 1, 2, 1 ], [ 2, 2, 2 ], [ 0, 0, 0, 0 ], [ 0, 0, 0, 1 ], [ 0, 1, 1, 1 ], 
+  [ 0, 0, 0, 2 ], [ 0, 1, 1, 2 ], [ 0, 0, 2, 2 ], [ 0, 0, 2, 3 ], 
+  [ 0, 1, 2, 2 ], [ 1, 1, 2, 2 ], [ 0, 2, 0, 0 ], [ 0, 2, 0, 1 ], 
+  [ 1, 2, 1, 1 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 3 ] ]
+
 .. danach kann ich auch die Sortierung innerhalb QY13 herausnehmen, das mit 1001 und so.
+.. und auch ob sowas wie RTT() auch in QY13() rein muss.
   </FILE>
