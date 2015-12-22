@@ -334,10 +334,10 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   ISO:=QY08(ZEIGER,PNEU);
 ##Print("\nQY21:ISO=",ISO);
   if ISO=0 then
-    if 2*nn<n then 
-      Print("\nGruppe ",IdSmallGroup(Group(HRES))," fehlt noch \c");
+    if 2*nn<n then inh:=inh+1;
+ #     Print("\nGruppe ",IdSmallGroup(Group(HRES))," fehlt noch \c");
       RMAXSUCHREKURSIV(Group(HRES));
-      Print("\nGruppe ",IdSmallGroup(Group(HRES))," jetzt drin \c");
+ #     Print("\nGruppe ",IdSmallGroup(Group(HRES))," jetzt drin \c");
       fi;
       ISO:=QY08(ZEIGER,PNEU);
     fi;
@@ -388,7 +388,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
       if 2*nn<n then 
         RBIT:=QY13(C,S+1,2*nn,ZR[2],STAB); 
-        else
+        else #Print("\n",ZR3MERK);
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
             HRES0:=List(HRES);
@@ -447,7 +447,7 @@ XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht
       POS:=i;
       if not(IsInt(XSAMMEL[POS][2])) then
         if Size(Group(XSAMMEL[POS][2]))<512 then
-          XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));
+          XSAMMEL[POS][7]:=[Size(Group(XSAMMEL[POS][2])),inh]; #[IdSmallGroup(Group(XSAMMEL[POS][2]))[1],inh];
           else
 #Error("Wie kam inh=56092 hier rein? Weil f 2^Size(XSAMMEL[POS][1])<n gefehlt hat!");
 #Error("Wie kam inh=56092 hier rein? Jetzt ist inh=",inh);
