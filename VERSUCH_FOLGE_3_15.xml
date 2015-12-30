@@ -102,13 +102,13 @@ PL:=Reversed(GeneratorsOfGroup(P));
 RTT:=function()
   if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
   ri:=PL[S];
-  Add(HRES,ri,1);HRESEXT[S]:=ri;#HRES;HRESEXT;
-  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  Add(HRES,ri,1);HRESEXT[S]:=ri;
+#  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
   PNEU:=QY11(HRES,S);
-  R[S]:=List(PNEU);#R;
+  R[S]:=List(PNEU);
   HRESMERK:=List(HRES);
   n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
-  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];# WEGLI;
+  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
     S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
   if ZR3MERK=-1 then return -10000; else
     if ZEIGER=[] then return 1; else return RTT()+1; fi;
