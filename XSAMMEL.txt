@@ -296,12 +296,14 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
       od;
   end;
 
+Adder:=function(ZEIGER,XM1,POS) Add(ZEIGER,StructuralCopy(XM1),POS); end;
+
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE;
   ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
-  Add(ZEIGER,StructuralCopy(XM[1]),POS);
+  Adder(ZEIGER,StructuralCopy(XM[1]),POS);
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
@@ -317,12 +319,14 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   ZEIGER[POS][14]:=ZSIZE+1;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
+  if Size(XM)>16000 then Print("<\c"); fi;
   for i in [2..Size(XM)] do
     ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
-    Add(ZEIGER,StructuralCopy(XM[i]),ii);
+    Adder(ZEIGER,StructuralCopy(XM[i]),ii);
     ZEIGER[ii][5]:=ZMERK;
     ZEIGER[ii][14]:=ZSIZE+i;
     od;
+  if Size(XM)>16000 then Print(">\c"); fi;
   end;
 #QY16 und QY17 raus
 
@@ -850,7 +854,7 @@ PcgsByPcSequenceNC14,
 PcgsByPcSequenceNCMI,
 ExponentsOfPcElement,RightTransversal,RightCosetsNC,
 QY10,QY11,QY08,QY21,QY15,QY14,QY13,QY09,
-XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI,QY07,WEGEVERGLEICHER]);
+XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI,QY07,WEGEVERGLEICHER,Adder]);
 
 
 #T(16);XSAMMELVIEWER2(XSAMMEL);
