@@ -226,6 +226,14 @@ PARTZ:=0;PARTZAHL(XSAMMEL);PARTZ;#=Zeilenzahl bei XSAMMEL2
 WEG:=[1,2,2,4];PART:=WEGEDISP(WEG,XSAMMEL,1);#führt zur Zeile mit <== [16,4]
 ALLEWEGEDISP(PART,XSAMMEL,1);#ist aber noch nicht das erwartete, da muss noch mehr hinzu
 
+#zwischendurch: sind gleich
+XSAMMEL:=[];R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAMMEL);#16,4
+R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+NEU:=RTT();Print(NEU);
+.. RTT testet nur Stufe S, das muss noch erweitert werden beim Abzweige nach oben
   </FILE>
 
 <NACHLAD> #oben ändern
@@ -245,9 +253,8 @@ RTT:=function()
 #  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
   PNEU:=QY11(HRES,S);
   R[S]:=List(PNEU);
-  HRESMERK:=List(HRES);
   n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
-  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
+  HRES:=List(ZR[1]);ZR3MERK:=ZR[3];
     S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
   if ZR3MERK=-1 then return -10000; else
     if ZEIGER=[] then return 1; else return RTT()+1; fi;
