@@ -152,17 +152,23 @@ DisplayProfile();
 GasmanStatistics();
 
 ok na, ganz ordentliches Ergebnis, reicht für heute: 3+3,2+6,3+11
-[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ], [ 0, 0, 0 ], 
-  [ 0, 1, 1 ], [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], [ 0, 2, 0 ], 
-  [ 1, 2, 1 ], [ 2, 2, 2 ], [ 0, 0, 0, 0 ], [ 0, 0, 0, 1 ], [ 0, 1, 1, 1 ], 
+[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], 
+  [ 0, 2 ], [ 1, 2 ], [ 2, 3 ], 
+  [ 0, 0, 0 ], [ 0, 1, 1 ], 
+  [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], 
+  [ 0, 2, 0 ], [ 1, 2, 1 ], [ 2, 2, 2 ], 
+  [ 0, 0, 0, 0 ], [ 0, 0, 0, 1 ], [ 0, 1, 1, 1 ], 
   [ 0, 0, 0, 2 ], [ 0, 1, 1, 2 ], [ 0, 0, 2, 2 ], [ 0, 0, 2, 3 ], 
   [ 0, 1, 2, 2 ], [ 1, 1, 2, 2 ], [ 0, 2, 0, 0 ], [ 0, 2, 0, 1 ], 
   [ 1, 2, 1, 1 ], [ 2, 2, 2, 2 ], [ 2, 2, 2, 3 ], 
-  [ 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 1 ], [ 0, 1, 1, 1, 1 ], [ 0, 0, 0, 0, 2 ], 
-  [ 0, 0, 0, 1, 2 ], [ 0, 1, 1, 1, 2 ], [ 0, 0, 2, 2, 2 ], [ 0, 0, 2, 2, 3 ], 
+  [ 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 1 ], [ 0, 1, 1, 1, 1 ], 
+  [ 0, 0, 0, 0, 2 ], [ 0, 0, 0, 1, 2 ], [ 0, 1, 1, 1, 2 ], [ 0, 0, 2, 2, 2 ], [ 0, 0, 2, 2, 3 ], 
   [ 0, 1, 2, 2, 2 ], [ 1, 1, 2, 2, 2 ], [ 0, 2, 0, 0, 0 ], [ 0, 2, 0, 0, 1 ], 
-  [ 1, 2, 1, 1, 1 ], [ 2, 2, 2, 2, 2 ], [ 2, 2, 2, 2, 3 ] ] ]
-
+  [ 1, 2, 1, 1, 1 ], [ 2, 2, 2, 2, 2 ], [ 2, 2, 2, 2, 3 ] ]
+  ]
+  [ 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1 ], [ 0, 1, 1, 1, 1, 1 ], 
+  [ 0, 0, 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1, 2 ], [ 0, 1, 1, 1, 1, 2 ], [ 0, 0, 2, 2, 2, 2 ], [ 0, 0, 2, 2, 2, 3 ]
+  [ 0, 1, 2, 2, 2, 2 ], [ 1, 1, 2, 2, 2, 2 ], [ 0, 2, 0, 0, 0, 0 ], ...dann >2G
 #umgekehrt [1,0]
 ClearProfile();
 ERG:=[];XSAMMEL:=[];
@@ -226,6 +232,10 @@ PARTZ:=0;PARTZAHL(XSAMMEL);PARTZ;#=Zeilenzahl bei XSAMMEL2
 WEG:=[1,2,2,4];PART:=WEGEDISP(WEG,XSAMMEL,1);#führt zur Zeile mit <== [16,4]
 ALLEWEGEDISP(PART,XSAMMEL,1);#ist aber noch nicht das erwartete, da muss noch mehr hinzu
 
+#das hier findet RMAX aus dem WEGLI nach RMAXSUCH:
+PART:=WEGEDISP(WEGLI,XSAMMEL,1);
+RMAX:=[];PARTFIND(XSAMMEL,PART);RMAX;
+
 #zwischendurch: sind gleich
 XSAMMEL:=[];R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAMMEL);#16,4
 R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);
@@ -234,6 +244,7 @@ S:=1;nn:=1;HRES:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
 NEU:=RTT();Print(NEU);
 .. RTT testet nur Stufe S, das muss noch erweitert werden beim Abzweige nach oben
+
   </FILE>
 
 <NACHLAD> #oben ändern
