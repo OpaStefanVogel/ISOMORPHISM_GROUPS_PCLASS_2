@@ -147,6 +147,10 @@ ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN);;ERG;#128
 ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN);;ERG;#256
 ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN);;ERG;#512
 ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN);;ERG;#1024
+XSAMMELVIEWER4(XSAMMEL);
+DisplayProfile();
+GasmanStatistics();
+
 ok na, ganz ordentliches Ergebnis, reicht für heute: 3+3,2+6,3+11
 [ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ], [ 0, 0, 0 ], 
   [ 0, 1, 1 ], [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], [ 0, 2, 0 ], 
