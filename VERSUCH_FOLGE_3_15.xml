@@ -2,7 +2,7 @@ Auf geht's
 <FILE id="P01" inhalt="R von 1...n auf 0...(n-1) umstellen">
 #
 Read("PcgsOfR.txt");
-R4:=function(V)
+R4:=function(V)#neu
   local i,R,V2;
   V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
   R:=[[0],[0,0],[1,1,1]];
@@ -61,7 +61,7 @@ ERG;
 <FILE id="P03" inhalt="n=16,32 als 1:0 mit ListX">
 Read("XSAMMEL.txt");
 ClearProfile();
-FUN:=function(arg)
+FUN:=function(arg)#alt
   RT:=[];
   j:=Size(arg)/2;
   for i in [1..j] do
@@ -99,7 +99,7 @@ NEU:=RMAXSUCH(P);#da soll schon bei 0 Schluss sein
 #so, aus QY13 rausmach:
 PL:=Reversed(GeneratorsOfGroup(P));
 
-RTT:=function()
+RTT:=function()#neu
   if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
   ri:=PL[S];
   Add(HRES,ri,1);HRESEXT[S]:=ri;
@@ -119,7 +119,7 @@ S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
 NEU:=RTT();
 inh:=1;
-FUN:=function(arg)
+FUN:=function(arg)#neu
   RT:=[];
   j:=Size(arg)/2;
   for i in [1..j] do
@@ -177,8 +177,16 @@ IS:=[1,0];IS2:=[0,2];
   [ 0, 3, 0, 0 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 2 ], [ 1, 1, 1, 1, 1 ],
   [ 1, 1, 1, 1, 0 ], [ 1, 0, 0, 0, 0 ], [ 1, 1, 1, 1, 3 ], [ 1, 1, 1, 0, 3 ],
   [ 1, 0, 0, 0, 3 ], [ 1, 1, 3, 3, 3 ], [ 1, 1, 3, 3, 2 ], [ 1, 0, 3, 3, 3 ],
-  [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ] ...
-.. und dann bei [ 0, 3, 0, 0, 0 ] steckengelieben.
+  [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ] ..... und dann bei [ 0, 3, 0, 0, 0 ] steckengelieben.
+aber jetzt durch
+[ [ 1, 1 ], [ 1, 0 ], [ 0, 0 ], [ 1, 3 ], [ 0, 3 ], [ 3, 2 ], [ 1, 1, 1 ], 
+  [ 1, 0, 0 ], [ 1, 1, 3 ], [ 1, 0, 3 ], [ 0, 0, 3 ], [ 1, 3, 1 ], [ 0, 3, 0 ], [ 3, 3, 3 ], 
+  [ 1, 1, 1, 1 ], [ 1, 1, 1, 0 ], [ 1, 0, 0, 0 ], [ 1, 1, 1, 3 ], [ 1, 0, 0, 3 ], [ 1, 1, 3, 3 ], 
+  [ 1, 1, 3, 2 ], [ 1, 0, 3, 3 ], [ 0, 0, 3, 3 ], [ 1, 3, 1, 1 ], [ 1, 3, 1, 0 ], [ 0, 3, 0, 0 ], 
+  [ 3, 3, 3, 3 ], [ 3, 3, 3, 2 ], [ 1, 1, 1, 1, 1 ], [ 1, 1, 1, 1, 0 ], [ 1, 0, 0, 0, 0 ], 
+  [ 1, 1, 1, 1, 3 ], [ 1, 1, 1, 0, 3 ], [ 1, 0, 0, 0, 3 ], [ 1, 1, 3, 3, 3 ], [ 1, 1, 3, 3, 2 ], 
+  [ 1, 0, 3, 3, 3 ], [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ], [ 0, 3, 0, 0, 0 ], 
+  [ 3, 3, 3, 3, 3 ], [ 3, 3, 3, 3, 2 ] ]
 .. dauert auch alles zu lange, da war ich schon weiter (oder war das noch alt?)
 .. danach kann ich auch die Sortierung innerhalb QY13 herausnehmen, das mit 1001 und so.
 .. und auch ob sowas wie RTT() auch in QY13() rein muss.
@@ -192,8 +200,11 @@ ok aha, da hat die Umschaltung von IdSmallGroup auf inh nicht funktioniert
   .. muss ich später nochmal versuchen
 ok dann gap anders starten, mit
 #gap -g -g -s 2000000k -a 2000000k -m 2000000k -o 2000000k
-ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach miT return -RET
-.. bringt aber auch nichts, also jetzt definitiv Adder weitermachen
+ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach mit return -RET
+OK bringt aber auch nichts, also jetzt definitiv Adder weitermachen
+  ok und der ist erstmal raus, mit deuticher Verbesserung
+  ok da war doch tatsächlich was mit der Sortierung durcheinandergeraten,
+    ok jetzt wieder durchgängig alles PMAX abwärts
 
 außerdem
 #DisplayProfile();ClearProfile();
@@ -203,9 +214,14 @@ außerdem
   </FILE>
 
 <FILE id="P06" inhalt="wie hat das alles funktioniert">
-XSAMMEL:=[];R:=R4([2,3]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
-XSAMMEL:=[];R:=R4([1,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
-XSAMMEL:=[];R:=R4([0,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
+XSAMMEL:=[];R:=R4([2,3]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER0(XSAMMEL);#16,2
+XSAMMEL:=[];R:=R4([0,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER0(XSAMMEL);#16,3
+XSAMMEL:=[];R:=R4([1,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER0(XSAMMEL);#16,4
+#was schon so in XSAMMEL ist:
+PARTZ:=0;PARTZAHL(XSAMMEL);PARTZ;#=Zeilenzahl bei XSAMMEL2
+WEG:=[1,2,2,4];PART:=WEGEDISP(WEG,XSAMMEL,1);#führt zur Zeile mit <== [16,4]
+ALLEWEGEDISP(PART,XSAMMEL,1);#ist aber noch nicht das erwartete, da muss noch mehr hinzu
+
   </FILE>
 
 <NACHLAD> #oben ändern
