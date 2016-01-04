@@ -81,7 +81,7 @@ QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
 #  if RET=1 then RET:=10001; else
 #    if RET=2 then RET:=10002; else
 #      RET:=RET; fi; fi;
-  return -RET;
+  return RET;
   end;
 
 QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
@@ -280,11 +280,12 @@ QY12:=function(C,S,nn) #bestimmt XMERK
 QY14:=function() #bestimmt PMAX in XSAMMEL
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
   S:=Size(XMERK);
-    PMAX:=[];
-    for i in [1..Size(XMERK[S])] do
-      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
-      od;
-    pcgs:=XMERK[S][imax][2];
+    PMAX:=[];XMERK[S]:=SortedList(XMERK[S]);PMAX:=XMERK[S][1][1];
+#    for i in [1..Size(XMERK[S])] do
+#      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
+#      od;
+#    pcgs:=XMERK[S][imax][2];
+    pcgs:=XMERK[S][1][2];
     for i in [1..Size(XMERK[S])] do
       HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
       pcgs1:=PcgsByPcSequenceNC14(FamilyObj(HRES1[1]^0),HRES1);
@@ -300,10 +301,10 @@ Adder:=function(ZEIGER,XM1,POS) Add(ZEIGER,StructuralCopy(XM1),POS); end;
 
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
-  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE;
+  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,I1,I2,I3,XU;
   ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
-  Adder(ZEIGER,StructuralCopy(XM[1]),POS);
+  Adder(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
@@ -320,13 +321,41 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
   if Size(XM)>0 then Print("<\c"); fi;
-  for i in [2..Size(XM)] do
-    ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
-    Adder(ZEIGER,StructuralCopy(XM[i]),ii);
-    ZEIGER[ii][5]:=ZMERK;
-    ZEIGER[ii][14]:=ZSIZE+i;
-    od;
+#Error("Stop");
+  I1:=1;I2:=2;I3:=1;ZEIGERNEU:=[];
+  repeat
+    if I1<=Size(ZEIGER) and I2<=Size(XM) then
+      if ZEIGER[I1][1]<XM[I2][1] then
+        ZEIGERNEU[I3]:=ZEIGER[I1];
+        I1:=I1+1;I3:=I3+1;
+        else
+          ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
+          ZEIGERNEU[I3][5]:=ZMERK;
+          ZEIGERNEU[I3][14]:=ZSIZE+I2;
+          I2:=I2+1;I3:=I3+1;
+          fi; fi;
+    if I1<=Size(ZEIGER) and I2>Size(XM) then
+      ZEIGERNEU[I3]:=ZEIGER[I1];
+      I1:=I1+1;I3:=I3+1;
+      fi;
+    if I1>Size(ZEIGER) and I2<=Size(XM) then
+      ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
+      ZEIGERNEU[I3][5]:=ZMERK;
+      ZEIGERNEU[I3][14]:=ZSIZE+I2;
+      I2:=I2+1;I3:=I3+1;
+      fi;
+    until I1>Size(ZEIGER) and I2>Size(XM);
+#  for i in [2..Size(XM)] do
+#    ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
+#    Adder(ZEIGER,StructuralCopy(XM[i]),ii);#auch ohne StructuralCopy
+#    ZEIGER[ii][5]:=ZMERK;
+#    ZEIGER[ii][14]:=ZSIZE+i;
+#    od;
   if Size(XM)>0 then Print(">\c"); fi;
+Print("\n****\n",ZEIGER,"\n++++\n",ZEIGER=ZEIGERNEU,"\n",ZEIGERNEU,"\n#\n",XM);
+  for i in [1..Size(ZEIGERNEU)] do
+    ZEIGER[i]:=ZEIGERNEU[i];
+    od;
   end;
 #QY16 und QY17 raus
 
@@ -610,21 +639,20 @@ XSAMMELVIEWER0:=function(XSAMMEL)
     if IsBound(i[5]) then 
       Print(i[5][2]," "); 
       if IsBound(i[5][7]) then 
-        Print(i[5][7]," ::::");
+        Print(i[5][7]," : ");
         else Print("= ??????? ",i[5][10],i[5][11]);
         fi;
       Print(i[3],i[4]);
       else
-      Print(i[3],i[4]);
+        Print(i[3],i[4]);
         if IsBound(i[12]) then 
           if IsBound(i[12][7]) then 
-            Print("===> ",i[12][7]," "); 
+            Print("===> ",i[12][7]," ; ",i[10],i[11]);
             else Print("==-> ",i[12][2]," ");
             fi;
           else 
             if IsBound(i[7]) then 
               Print("= ",i[7]," "); 
-Print("///",i[10],i[11]);
               else Print("= ??? ",i[10],i[11]);
               fi;
             fi;
@@ -822,9 +850,8 @@ ALLEWEGEDISP:=function(PART,ZEIGER,S)
     Print("-->",UMKEHRLIST(ZEIG[1]));
     if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
     Print("==>",UMKEHRLIST(ZEIG[1]));
-    ZEIG:=ALLEWEGEDISP(PART,ZEIG[6],S+1);;
+    if IsBound(ZEIG[6]) then ALLEWEGEDISP(PART,ZEIG[6],S+1); fi;
     od;
-  return ZEIG;
   end;
   
 GANZLOS:=function()
