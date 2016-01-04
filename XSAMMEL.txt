@@ -516,8 +516,7 @@ if n=nmax and 2^STUFE=n then
 
 
 else
-
-  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[S-ii+1]; if IsBound(i[6]) then
+  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[ii]; if IsBound(i[6]) then
     if not IsBound(RMERKER[STUFE][i[7][2]]) then #nicht gleich [1] setzen!!!
       RMERKER[STUFE][i[7][2]]:=i; 
       i[10]:=List([1..STUFE],j->2^(j-1)); 
