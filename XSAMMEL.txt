@@ -78,10 +78,10 @@ NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
   RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
-  if RET=1 then RET:=10001; else
-    if RET=2 then RET:=10002; else
-      RET:=RET; fi; fi;
-  return RET;
+#  if RET=1 then RET:=10001; else
+#    if RET=2 then RET:=10002; else
+#      RET:=RET; fi; fi;
+  return -RET;
   end;
 
 QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
@@ -319,14 +319,14 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   ZEIGER[POS][14]:=ZSIZE+1;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
-  if Size(XM)>16000 then Print("<\c"); fi;
+  if Size(XM)>0 then Print("<\c"); fi;
   for i in [2..Size(XM)] do
     ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
     Adder(ZEIGER,StructuralCopy(XM[i]),ii);
     ZEIGER[ii][5]:=ZMERK;
     ZEIGER[ii][14]:=ZSIZE+i;
     od;
-  if Size(XM)>16000 then Print(">\c"); fi;
+  if Size(XM)>0 then Print(">\c"); fi;
   end;
 #QY16 und QY17 raus
 
@@ -451,7 +451,7 @@ XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht
       POS:=i;
       if not(IsInt(XSAMMEL[POS][2])) then
         if Size(Group(XSAMMEL[POS][2]))<512 then
-          XSAMMEL[POS][7]:=[IdSmallGroup(Group(XSAMMEL[POS][2]))[1],inh];#[Size(Group(XSAMMEL[POS][2])),inh];
+          XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));#[Size(Group(XSAMMEL[POS][2])),inh];
           else
 #Error("Wie kam inh=56092 hier rein? Weil f 2^Size(XSAMMEL[POS][1])<n gefehlt hat!");
 #Error("Wie kam inh=56092 hier rein? Jetzt ist inh=",inh);

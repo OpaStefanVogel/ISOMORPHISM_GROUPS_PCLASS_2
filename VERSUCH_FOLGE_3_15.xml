@@ -190,8 +190,66 @@ ERG:=[];XSAMMEL:=[];
 R:=R4([0,2,0,0]);P:=PcgsOfR(R);RMAXSUCH(P);
 ok aha, da hat die Umschaltung von IdSmallGroup auf inh nicht funktioniert
   .. muss ich später nochmal versuchen
+ok dann gap anders starten, mit
+#gap -g -g -s 2000000k -a 2000000k -m 2000000k -o 2000000k
+ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach miT return -RET
+.. bringt aber auch nichts, also jetzt definitiv Adder weitermachen
+
+außerdem
 #DisplayProfile();ClearProfile();
 #DisplayProfile();
 #GasmanStatistics();
 #GasmanLimits();
   </FILE>
+
+<FILE id="P06" inhalt="wie hat das alles funktioniert">
+XSAMMEL:=[];R:=R4([2,3]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
+XSAMMEL:=[];R:=R4([1,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
+XSAMMEL:=[];R:=R4([0,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
+  </FILE>
+
+<NACHLAD> #oben ändern
+R4:=function(V)
+  local i,R,V2;
+  V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+  R:=[[0],[0,0],[1,1,1]];
+  for i in [4..Size(V)+1] do Add(R,ListWithIdenticalEntries(i,0)); od;
+  Add(R,V2);
+  return R;
+  end;
+
+RTT:=function()
+  if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
+  ri:=PL[S];
+  Add(HRES,ri,1);HRESEXT[S]:=ri;
+#  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  PNEU:=QY11(HRES,S);
+  R[S]:=List(PNEU);
+  HRESMERK:=List(HRES);
+  n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
+  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
+    S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
+  if ZR3MERK=-1 then return -10000; else
+    if ZEIGER=[] then return 1; else return RTT()+1; fi;
+    fi;
+  end;
+
+FUN:=function(arg)
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R4(RT);RSIZE:=Size(R);
+  P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+  NEU:=RTT();Print(NEU);
+  if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
+
+  </NACHLAD>
