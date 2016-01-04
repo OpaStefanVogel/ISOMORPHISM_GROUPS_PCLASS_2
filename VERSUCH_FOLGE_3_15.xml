@@ -177,8 +177,16 @@ IS:=[1,0];IS2:=[0,2];
   [ 0, 3, 0, 0 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 2 ], [ 1, 1, 1, 1, 1 ],
   [ 1, 1, 1, 1, 0 ], [ 1, 0, 0, 0, 0 ], [ 1, 1, 1, 1, 3 ], [ 1, 1, 1, 0, 3 ],
   [ 1, 0, 0, 0, 3 ], [ 1, 1, 3, 3, 3 ], [ 1, 1, 3, 3, 2 ], [ 1, 0, 3, 3, 3 ],
-  [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ] ...
-.. und dann bei [ 0, 3, 0, 0, 0 ] steckengelieben.
+  [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ] ..... und dann bei [ 0, 3, 0, 0, 0 ] steckengelieben.
+aber jetzt durch
+[ [ 1, 1 ], [ 1, 0 ], [ 0, 0 ], [ 1, 3 ], [ 0, 3 ], [ 3, 2 ], [ 1, 1, 1 ], 
+  [ 1, 0, 0 ], [ 1, 1, 3 ], [ 1, 0, 3 ], [ 0, 0, 3 ], [ 1, 3, 1 ], [ 0, 3, 0 ], [ 3, 3, 3 ], 
+  [ 1, 1, 1, 1 ], [ 1, 1, 1, 0 ], [ 1, 0, 0, 0 ], [ 1, 1, 1, 3 ], [ 1, 0, 0, 3 ], [ 1, 1, 3, 3 ], 
+  [ 1, 1, 3, 2 ], [ 1, 0, 3, 3 ], [ 0, 0, 3, 3 ], [ 1, 3, 1, 1 ], [ 1, 3, 1, 0 ], [ 0, 3, 0, 0 ], 
+  [ 3, 3, 3, 3 ], [ 3, 3, 3, 2 ], [ 1, 1, 1, 1, 1 ], [ 1, 1, 1, 1, 0 ], [ 1, 0, 0, 0, 0 ], 
+  [ 1, 1, 1, 1, 3 ], [ 1, 1, 1, 0, 3 ], [ 1, 0, 0, 0, 3 ], [ 1, 1, 3, 3, 3 ], [ 1, 1, 3, 3, 2 ], 
+  [ 1, 0, 3, 3, 3 ], [ 0, 0, 3, 3, 3 ], [ 1, 3, 1, 1, 1 ], [ 1, 3, 1, 1, 0 ], [ 0, 3, 0, 0, 0 ], 
+  [ 3, 3, 3, 3, 3 ], [ 3, 3, 3, 3, 2 ] ]
 .. dauert auch alles zu lange, da war ich schon weiter (oder war das noch alt?)
 .. danach kann ich auch die Sortierung innerhalb QY13 herausnehmen, das mit 1001 und so.
 .. und auch ob sowas wie RTT() auch in QY13() rein muss.
@@ -192,8 +200,11 @@ ok aha, da hat die Umschaltung von IdSmallGroup auf inh nicht funktioniert
   .. muss ich später nochmal versuchen
 ok dann gap anders starten, mit
 #gap -g -g -s 2000000k -a 2000000k -m 2000000k -o 2000000k
-ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach miT return -RET
-.. bringt aber auch nichts, also jetzt definitiv Adder weitermachen
+ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach mit return -RET
+OK bringt aber auch nichts, also jetzt definitiv Adder weitermachen
+  ok und der ist erstmal raus, mit deuticher Verbesserung
+  ok da war doch tatsächlich was mit der Sortierung durcheinandergeraten,
+    ok jetzt wieder durchgängig alles PMAX abwärts
 
 außerdem
 #DisplayProfile();ClearProfile();

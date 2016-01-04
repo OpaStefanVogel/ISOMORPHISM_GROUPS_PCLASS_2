@@ -69,7 +69,7 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   #welches bei "nicht drin" Size(ZEIGER) ausgibt statt Add-Position 
   end;
 PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
-  return PositionSorted(ZEIGER,[PNEU]);
+  return PositionSorted(ZEIGER,[PNEU],function(x,y) return x>y; end);
   end;
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
@@ -280,12 +280,12 @@ QY12:=function(C,S,nn) #bestimmt XMERK
 QY14:=function() #bestimmt PMAX in XSAMMEL
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
   S:=Size(XMERK);
-    PMAX:=[];XMERK[S]:=SortedList(XMERK[S]);PMAX:=XMERK[S][1][1];
-#    for i in [1..Size(XMERK[S])] do
-#      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
-#      od;
-#    pcgs:=XMERK[S][imax][2];
-    pcgs:=XMERK[S][1][2];
+    PMAX:=[];#XMERK[S]:=SortedList(XMERK[S]);#PMAX:=XMERK[S][1][1];
+    for i in [1..Size(XMERK[S])] do
+      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
+      od;
+    pcgs:=XMERK[S][imax][2];
+#    pcgs:=XMERK[S][1][2];
     for i in [1..Size(XMERK[S])] do
       HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
       pcgs1:=PcgsByPcSequenceNC14(FamilyObj(HRES1[1]^0),HRES1);
@@ -300,8 +300,11 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
 Adder:=function(ZEIGER,XM1,POS) Add(ZEIGER,StructuralCopy(XM1),POS); end;
 
 #das neue kuerzere QY15, jetzt nur letzte Stufe
-QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
-  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,I1,I2,I3,XU;
+QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
+  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,
+  I1,I2,I3,XM,SIZE1,SIZE2;
+  Print("{\c");XM:=Reversed(SortedList(XU));Print("}\c");
+#Print("\n#\n",XM);
   ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
   Adder(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
@@ -321,11 +324,11 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
   if Size(XM)>0 then Print("<\c"); fi;
-#Error("Stop");
   I1:=1;I2:=2;I3:=1;ZEIGERNEU:=[];
+  SIZE1:=Size(ZEIGER);SIZE2:=Size(XM);
   repeat
-    if I1<=Size(ZEIGER) and I2<=Size(XM) then
-      if ZEIGER[I1][1]<XM[I2][1] then
+    if I1<=SIZE1 and I2<=SIZE2 then
+      if ZEIGER[I1][1]>XM[I2][1] then
         ZEIGERNEU[I3]:=ZEIGER[I1];
         I1:=I1+1;I3:=I3+1;
         else
@@ -334,17 +337,17 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
           ZEIGERNEU[I3][14]:=ZSIZE+I2;
           I2:=I2+1;I3:=I3+1;
           fi; fi;
-    if I1<=Size(ZEIGER) and I2>Size(XM) then
+    if I1<=SIZE1 and I2>SIZE2 then
       ZEIGERNEU[I3]:=ZEIGER[I1];
       I1:=I1+1;I3:=I3+1;
       fi;
-    if I1>Size(ZEIGER) and I2<=Size(XM) then
+    if I1>SIZE1 and I2<=SIZE2 then
       ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
       ZEIGERNEU[I3][5]:=ZMERK;
       ZEIGERNEU[I3][14]:=ZSIZE+I2;
       I2:=I2+1;I3:=I3+1;
       fi;
-    until I1>Size(ZEIGER) and I2>Size(XM);
+    until I1>SIZE1 and I2>SIZE2;
 #  for i in [2..Size(XM)] do
 #    ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
 #    Adder(ZEIGER,StructuralCopy(XM[i]),ii);#auch ohne StructuralCopy
@@ -352,7 +355,7 @@ QY15:=function(ZEIGER,XM) #packt XMERK in XSAMMEL rein
 #    ZEIGER[ii][14]:=ZSIZE+i;
 #    od;
   if Size(XM)>0 then Print(">\c"); fi;
-Print("\n****\n",ZEIGER,"\n++++\n",ZEIGER=ZEIGERNEU,"\n",ZEIGERNEU,"\n#\n",XM);
+#Print("\n****\n",ZEIGER,"\n++++\n",ZEIGER=ZEIGERNEU,"\n",ZEIGERNEU,"\n#\n",XM);
   for i in [1..Size(ZEIGERNEU)] do
     ZEIGER[i]:=ZEIGERNEU[i];
     od;
