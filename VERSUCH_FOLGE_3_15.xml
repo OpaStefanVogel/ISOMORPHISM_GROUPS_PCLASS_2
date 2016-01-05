@@ -247,6 +247,19 @@ NEU:=RTT();Print(NEU);
 
   </FILE>
 
+<FILE id="P07" inhalt="mit PNEU abwärts ist XSAMMEL keine sortierte Liste mehr">
+o. in QY09 wieder return -RET, aber jetzt auch in XMERK umdingsen.
+.. in QY15 XMERK aus P -P machen
+.. IsSortedList prüfen in QY08
+.. in UMKEHRLIST aus -P wieder P
+.. aha, PositionSortedRepariert wieder mit <
+los
+T(64) macht noch keinen Unterschied
+ClearProfile();
+XSAMMEL:=[];R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAMMEL);#16,4
+DisplayProfile();
+  </FILE>
+
 <NACHLAD> #oben ändern
 R4:=function(V)
   local i,R,V2;
