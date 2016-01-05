@@ -52,6 +52,7 @@ LETZTERABZWEIG:=0;
 
 LETZTEWEGELISTE:=[];WHALT:=0;
 LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
+HRES0SIZE:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -102,7 +103,7 @@ QY11:=function(HRES,S)#bestimmt PNEU aus HRES
 
 WEGEVERGLEICHER:=function(WEG1)
   local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
-  S:=Size(WEG1[1]);
+  S:=HRES0SIZE;
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
@@ -165,7 +166,7 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
-        HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
+        HRES0MERK,HRES0SIZEMERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
         WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
         XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK,
         HRESEXTMERK,HRESANFMERK;
@@ -174,6 +175,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERKMERK:=StructuralCopy(XMERK);
   HRESMERK:=List(HRES);
   HRES0MERK:=List(HRES0);
+  HRES0SIZEMERK:=HRES0SIZE;
   CLISTMERK:=List(CLIST);
   XMERKZAHLMERK:=XMERKZAHL;
   RM:=List(R);
@@ -190,6 +192,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERK:=XMERKMERK;
   HRES:=HRESMERK;
   HRES0:=HRES0MERK;
+  HRES0SIZE:=HRES0SIZEMERK;
   CLIST:=CLISTMERK;
   XMERKZAHL:=XMERKZAHLMERK;
   R:=RM;
@@ -222,7 +225,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
     for j in XMERK[S] do if ISO=0 and PNEU=j[1] then ISO:=j; fi; od;
     if ISO=0 then
       if IsBound(XMERK[S][1]) then p0:=XMERK[S][1][2]; else
-        p0:=PcgsByPcSequenceNC12(FamilyObj(HRES0[1]),HRES0{[Size(HRES0)-S+1..Size(HRES0)]});
+        p0:=PcgsByPcSequenceNC12(FamilyObj(HRES0[1]),HRES0{[HRES0SIZE-S+1..HRES0SIZE]});
         fi;
       APHI:=List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES[i])));
       if ZEILE[S]>1 and SPALTE[S]=1 and FIXFIX<>0 then
@@ -236,14 +239,14 @@ QY12:=function(C,S,nn) #bestimmt XMERK
           for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]))),2); od; #C
 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[HRES0SIZE-S+i]))));
           Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES1[i]))));
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n:",S," ",STEP,ISO); fi; STEP:=STEP+1;
           od;
         else 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[HRES0SIZE-S+i]))));
           Add(ISO,APHI);
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n.",S," ",STEP,ISO,"\c"); fi; STEP:=STEP+1;
@@ -261,13 +264,13 @@ QY12:=function(C,S,nn) #bestimmt XMERK
 
 QY14:=function() #bestimmt PMAX in XSAMMEL
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
-  S:=Size(XMERK);
+  S:=Size(XMERK);SMAX:=Size(XMERK[S]);
   PMAX:=[];
-  for i in [1..Size(XMERK[S])] do
+  for i in [1..SMAX] do
     if -XMERK[S][i][1]>-PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
     od;
   pcgs:=XMERK[S][imax][2];
-    for i in [1..Size(XMERK[S])] do
+    for i in [1..SMAX] do
       HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
       pcgs1:=PcgsByPcSequenceNC14(FamilyObj(HRES1[1]^0),HRES1);
       PNEU:=[QY09(ExponentsOfPcElement(pcgs1,HRES1[1]^2))];
@@ -326,8 +329,8 @@ QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
       I2:=I2+1;I3:=I3+1;
       fi;
     until I1>SIZE1 and I2>SIZE2;
-  if Size(XM)>0 then Print(">\c"); fi;
-  for i in [1..Size(ZEIGERNEU)] do
+  Print(">\c");
+  for i in [1..SIZE1+SIZE2-1] do
     ZEIGER[i]:=ZEIGERNEU[i];
     od;
   end;
@@ -366,7 +369,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG;
+  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE;
 #Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
@@ -398,11 +401,11 @@ QY13:=function(C,S,nn,ZEIGER,AU)
         else #Print("\n",ZR3MERK);
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
-            HRES0:=List(HRES);
-            CLIST:=[Identity(C)];
+            HRES0:=List(HRES);HRES0SIZE:=S;
+            CLIST:=[Identity(C)];CLISTSIZE:=1;
             for i in Reversed(HRES0) do
-              for j in [1..Size(CLIST)] do
-                Add(CLIST,i*CLIST[j]);
+              for j in [1..CLISTSIZE] do
+                Add(CLIST,i*CLIST[j]);CLISTSIZE:=CLISTSIZE+1;
                 od; od;
             XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
             QY12(C,1,1);
@@ -447,14 +450,15 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   end;
 
 XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
-  local i,S,POS;
+  local i,S,POS,GRP;
   S:=Size(XSAMMEL);
   for i in [1..S] do 
     if IsBound(XSAMMEL[i][6]) then 
       POS:=i;
       if not(IsInt(XSAMMEL[POS][2])) then
-        if Size(Group(XSAMMEL[POS][2]))<512 then
-          XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));#[Size(Group(XSAMMEL[POS][2])),inh];
+        GRP:=Group(XSAMMEL[POS][2]);
+        if Size(GRP)<512 then
+          XSAMMEL[POS][7]:=IdSmallGroup(GRP);
           else
 #Error("Wie kam inh=56092 hier rein? Weil f 2^Size(XSAMMEL[POS][1])<n gefehlt hat!");
 #Error("Wie kam inh=56092 hier rein? Jetzt ist inh=",inh);
@@ -516,11 +520,11 @@ fi;
 XLEER:=function(XSAMMEL) #fuellt [7][8]
   local i,S;
   S:=Size(XSAMMEL);
-  for i in [1..S] do if 2^Size(XSAMMEL[1][1])<=n then 
+  if S>0 then if 2^Size(XSAMMEL[1][1])<=n then for i in [1..S] do 
     if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
     XSAMMEL[i][2]:=i;
     if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
-    fi; od;
+    od; fi; fi;
   end;
 
 RMAXSUCH:=function(C)

@@ -327,6 +327,7 @@ gap> DisplayProfile();#Referenz 128 jetzt komplett ohne PositionFirstComponent
 169675*    40150        0  4909587        0           NZUI
  329213     4423    49641   434122  7740059           QY11
 9910155    73257       68   755049        0  (oprt.)  Size
+1188069    47772 <-    16   708428        0  (oprt.)  Size
  330264     4635    82442   373473  8689650           QY21
  601925      556    92094    23512  122007*           PcgsByPcSequenceNC14
 524472*   104108        0  7754008        0  (oprt.)  PcElementByExponentsNC
@@ -340,3 +341,4 @@ gap> DisplayProfile();#Referenz 128 jetzt komplett ohne PositionFirstComponent
   52925    38206   261849  2413734  348740*           QY12
  210267     6867  1081807   977203  909743*           QY13
          1098421           923442*                    TOTAL
+alle <- Markierung sind aktuelle Verbesserungen, Rest nicht mit aktualisiert
