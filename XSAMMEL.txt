@@ -177,7 +177,7 @@ if W=WHALT then Error("halt da"); fi;
 
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
   local ISO;
-  if VZ=-1 and not(IsSortedList(ZEIGER)) then Error("not IsSortedList"); fi;
+#  if VZ=-1 and not(IsSortedList(ZEIGER)) then Error("not IsSortedList"); fi;
   ISO:=PositionFirstComponent(ZEIGER,PNEU);
 #  ISO:=PositionFirstComponentRepariert(ZEIGER,PNEU);
   if not IsBound(ZEIGER[ISO]) then ISO:=0; else
@@ -309,7 +309,7 @@ Adder:=function(ZEIGER,XM1,POS) Add(ZEIGER,StructuralCopy(XM1),POS); end;
 QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
   local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,
   I1,I2,I3,XM,SIZE1,SIZE2;
-  Print("{\c");
+  Print("{\c",StringNumbers([LogInt(Size(XU),2)+11],128));
   XM:=XU;
 if VZ=-1 then XM:=SortedList(XM);Print("}\c"); else XM:=Reversed(SortedList(XM));Print("}\c"); fi;
 #Print("\n#\n",XM);
