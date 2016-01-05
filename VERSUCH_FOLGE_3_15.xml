@@ -256,8 +256,8 @@ o. in QY09 wieder return -RET, aber jetzt auch in XMERK umdingsen.
 los
 T(64) macht noch keinen Unterschied
 ClearProfile();
-XSAMMEL:=[];R:=R4([0,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAMMEL);#16,4
-DisplayProfile();
+XSAMMEL:=[];R:=R4([0,1,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAMMEL);#16,4
+DisplayProfile();VZ;
   </FILE>
 
 <NACHLAD> #oben ändern
@@ -304,3 +304,39 @@ ZEIGER:=XSAMMEL;;
   end;
 
   </NACHLAD>
+gap> DisplayProfile();#Referenz 128 jetzt komplett ohne PositionFirstComponent
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function
+   1962        1      203       76    39405           PcgsByPcSequenceNCMI
+   2102        1      241       82    40867           PcgsByPcSequenceNC15
+ 715188      939        3   161906        0           DEEP_COPY_OBJ
+ 664872     1014       22    18180        0  GAP      PositionSorted
+ 332436      299     1019    18180    18180           PositionFirstComponentRepariert
+ 331385      362     1315    15533    36245           QY08
+   2234      970     1269     5046    59742           XMISCH
+  19435     1598     1818      911        9           XLEER
+ 441656     3646        8   232302        0  GAP      Group
+  22939     3678     2555   324108    77871           XFUELL
+ 393744     7087     1912   894860   121754           QY10
+   1051     9039        1      184      236           Adder
+109593*    12634       71   818731        0           Commu
+  77967       71    13666     3045  1850094           PcgsByPcSequenceNC07
+8452912    24864        0  5515198        0           IZUN
+ 210267    31298        0  3437698        0  (oprt.)  RightTransversal
+109952*    31514        0  5715812        0           QY09
+ 329213      278    37956    12859  5743027           PcgsByPcSequenceNC11
+169675*    40150        0  4909587        0           NZUI
+ 329213     4423    49641   434122  7740059           QY11
+9910155    73257       68   755049        0  (oprt.)  Size
+ 330264     4635    82442   373473  8689650           QY21
+ 601925      556    92094    23512  122007*           PcgsByPcSequenceNC14
+524472*   104108        0  7754008        0  (oprt.)  PcElementByExponentsNC
+ 746464      827   104265    29158  146440*           PcgsByPcSequenceNC12
+199927*   141173        0  150012*        0  (oprt.)  ExponentsOfPcElement
+ 111854   136546    22756  1173109  2423687           WEGEVERGLEICHER
+   1051   111572    69166   769530   206209           QY15
+   1051    25156   170952  1548182  203355*           QY14
+1760657   248528        0  345400*        0  (oprt.)  PcgsByPcSequenceNC
+ 111854    33124   250634  4467574  112055*           QY07
+  52925    38206   261849  2413734  348740*           QY12
+ 210267     6867  1081807   977203  909743*           QY13
+         1098421           923442*                    TOTAL
