@@ -218,6 +218,7 @@ ok aha, da hat die Umschaltung von IdSmallGroup auf inh nicht funktioniert
   .. muss ich später nochmal versuchen
 ok dann gap anders starten, mit
 #gap -g -g -s 2000000k -a 2000000k -m 2000000k -o 2000000k
+#gap -g -s 1000000k -a 1000000k -m 1000000k -o 1000000k
 ok hab jetzt auch den Wechsel der Sortierreihenfolge einfach mit return -RET
 OK bringt aber auch nichts, also jetzt definitiv Adder weitermachen
   ok und der ist erstmal raus, mit deuticher Verbesserung
@@ -269,7 +270,7 @@ XSAMMEL:=[];R:=R4([0,1,1,1,1,1,1]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER4(XSAM
 DisplayProfile();VZ;
   </FILE>
 
-<FILE id="P07" inhalt="zu R die Diagonale bestimmen">
+<FILE id="P08" inhalt="zu R die Diagonale bestimmen">
 ok iter:=IteratorOfTuples( [0,1], 5 );
 ok Anzahl der Einsen je Tupel bestimmen
 ok wenn kleiner 3, dann Ergebnis aus Flat(R) holen
@@ -278,8 +279,8 @@ ok schließlich Collected
 ok funktioniert, es sind paar gleich
 
 DIAG:=function(R)#neu
-  local i,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM;
-  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
+  local i,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
   RET:=[];
   RF:=Flat(R);Add(RF,0,1);
 #  Print("\n",RF);
@@ -295,18 +296,20 @@ DIAG:=function(R)#neu
 #        Print(">3");
         X:=0*i;Y:=List(X);Z:=List(i);
         POS1:=Position(Z,1);
-        X[POS1]:=1;Z[POS1]:=0;
+        X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
         POS2:=Position(Z,1);
-        Y[POS2]:=1;Z[POS2]:=0;
+        Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
+        ZP:=IZUN(Reversed(Z));
 #        Print("\n  ",X);
 #        Print("\n  ",Y);
 #        Print("\n  ",Z);
 #        PROD:=PR(X)+PR(Y)+PR(Z)+PR(X+Y)+PR(X+Z)+PR(Y+Z);
-        PROD:=GM[PR(X)+1][PR(Y)+1];
-        PROD:=GM[PROD+1][PR(Z)+1];
-        PROD:=GM[PROD+1][PR(X+Y)+1];
-        PROD:=GM[PROD+1][PR(X+Z)+1];
-        PROD:=GM[PROD+1][PR(Y+Z)+1];
+#if PR(X)<>RET[XP+1] then Error(XP); fi;
+        PROD:=GM[RET[XP+1]+1][RET[YP+1]+1];
+        PROD:=GM[PROD+1][RET[ZP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+YP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+ZP+1]+1];
+        PROD:=GM[PROD+1][RET[YP+ZP+1]+1];
 #        Print(PROD);
         Add(RET,PROD);
 #        Print("\n  ",RET);
@@ -324,7 +327,7 @@ for i in ERG do Print("\n",i,Collected(DIAG(R4(i)))); od;
 [ 0, 1, 2, 2, 2 ][ [ 0, 64 ], [ 1, 32 ], [ 2, 32 ] ]
 [ 1, 1, 2, 2, 2 ][ [ 0, 48 ], [ 1, 48 ], [ 2, 16 ], [ 3, 16 ] ]=
 [ 1, 2, 1, 1, 1 ][ [ 0, 48 ], [ 1, 48 ], [ 2, 16 ], [ 3, 16 ] ]=
-[ 2, 2, 2, 2, 2 ][ [ 0, 48 ], [ 1, 16 ], [ 2, 48 ], [ 3, 16 ] ]
+[ 2, 2, 2, 2, 2 ][ [ 0, 48 ], [ 1, 16 ], [ 2, 48 ], [ 3, 16 ] ]=
 [ 2, 2, 2, 2, 3 ][ [ 0, 48 ], [ 1, 16 ], [ 2, 32 ], [ 3, 32 ] ]
 [ 0, 1, 1, 1, 2 ][ [ 0, 56 ], [ 1, 40 ], [ 2, 24 ], [ 3, 8 ] ]
 [ 0, 0, 0, 1, 2 ][ [ 0, 64 ], [ 1, 32 ], [ 2, 16 ], [ 3, 16 ] ]=
@@ -348,6 +351,98 @@ for i in ERG do Print("\n",i,Collected(DIAG(R4(i)))); od;
 [ 0, 0, 0, 0, 0, 2 ][ [ 0, 144 ], [ 1, 48 ], [ 2, 48 ], [ 3, 16 ] ]
 [ 0, 0, 2, 2, 2, 2 ][ [ 0, 160 ], [ 1, 32 ], [ 2, 32 ], [ 3, 32 ] ]=
 [ 0, 2, 0, 0, 0, 0 ][ [ 0, 160 ], [ 1, 32 ], [ 2, 32 ], [ 3, 32 ] ]=
+
+  </FILE>
+
+<FILE id="P08" inhalt="zu allen R die Diagonale bestimmen">
+.. jetzt alle R durchlaufen lassen
+los
+
+FUND:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  R:=R4(RT);D:=DIAG(R);;C:=Collected(D);#Print(C);
+  D:=List(C{[2..Size(C)]},i->i[2]);D:=SortedList(D);Add(D,C[1][2],1);
+  if not D in ERGD then Add(ERG,[RT,D]);Add(ERGD,D);Print("\n",RT,D); fi;
+# if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
+
+ClearProfile();
+IS:=[0,1];IS2:=[0,2];
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS,IS,FUND);;;Size(ERG);#16
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUND);;;Size(ERG);#32
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUND);;;Size(ERG);#64
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#128
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#256
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#512
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#1024
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#2048
+
+[ 0, 0 ][ 12, 4 ]
+[ 0, 1 ][ 8, 8 ]
+[ 1, 1 ][ 4, 12 ]
+[ 0, 2 ][ 8, 4, 4 ]
+[ 1, 2 ][ 4, 4, 8 ]
+[ 2, 3 ][ 4, 4, 4, 4 ]6
+[ 0, 0, 0 ][ 24, 8 ]
+[ 0, 1, 1 ][ 16, 16 ]
+[ 0, 0, 2 ][ 20, 4, 4, 4 ]
+[ 0, 1, 2 ][ 16, 8, 8 ]
+[ 1, 1, 2 ][ 12, 4, 4, 12 ]5
+[ 0, 0, 0, 0 ][ 48, 16 ]
+[ 0, 0, 0, 1 ][ 40, 24 ]
+[ 0, 1, 1, 1 ][ 32, 32 ]
+[ 0, 0, 0, 2 ][ 36, 4, 12, 12 ]
+[ 0, 1, 1, 2 ][ 28, 4, 12, 20 ]
+[ 0, 0, 2, 2 ][ 40, 8, 8, 8 ]
+[ 0, 0, 2, 3 ][ 32, 8, 8, 16 ]
+[ 0, 1, 2, 2 ][ 32, 16, 16 ]
+[ 1, 1, 2, 2 ][ 24, 8, 8, 24 ]
+[ 2, 2, 2, 3 ][ 24, 8, 16, 16 ]10
+[ 0, 0, 0, 0, 0 ][ 96, 32 ]
+[ 0, 0, 0, 0, 1 ][ 80, 48 ]
+[ 0, 1, 1, 1, 1 ][ 64, 64 ]
+[ 0, 0, 0, 0, 2 ][ 72, 8, 24, 24 ]
+[ 0, 0, 0, 1, 2 ][ 64, 16, 16, 32 ]
+[ 0, 1, 1, 1, 2 ][ 56, 8, 24, 40 ]
+[ 0, 0, 2, 2, 2 ][ 80, 16, 16, 16 ]
+[ 0, 1, 2, 2, 2 ][ 64, 32, 32 ]
+[ 1, 1, 2, 2, 2 ][ 48, 16, 16, 48 ]
+[ 2, 2, 2, 2, 3 ][ 48, 16, 32, 32 ]10
+[ 0, 0, 0, 0, 0, 0 ][ 192, 64 ]
+[ 0, 0, 0, 0, 0, 1 ][ 160, 96 ]
+[ 0, 1, 1, 1, 1, 1 ][ 128, 128 ]
+[ 0, 0, 0, 0, 0, 2 ][ 144, 16, 48, 48 ]
+[ 0, 0, 0, 0, 1, 2 ][ 128, 32, 32, 64 ]
+[ 0, 1, 1, 1, 1, 2 ][ 112, 16, 48, 80 ]
+[ 0, 0, 2, 2, 2, 2 ][ 160, 32, 32, 32 ]
+[ 0, 1, 2, 2, 2, 2 ][ 128, 64, 64 ]
+[ 1, 1, 2, 2, 2, 2 ][ 96, 32, 32, 96 ]
+[ 2, 2, 2, 2, 2, 3 ][ 96, 32, 64, 64 ]10
+[ 0, 0, 0, 0, 0, 0, 0 ][ 384, 128 ]
+[ 0, 0, 0, 0, 0, 0, 1 ][ 320, 192 ]
+[ 0, 1, 1, 1, 1, 1, 1 ][ 256, 256 ]
+[ 0, 0, 0, 0, 0, 0, 2 ][ 288, 32, 96, 96 ]
+[ 0, 0, 0, 0, 0, 1, 2 ][ 256, 64, 64, 128 ]
+[ 0, 1, 1, 1, 1, 1, 2 ][ 224, 32, 96, 160 ]
+[ 0, 0, 2, 2, 2, 2, 2 ][ 320, 64, 64, 64 ]
+[ 0, 1, 2, 2, 2, 2, 2 ][ 256, 128, 128 ]
+[ 1, 1, 2, 2, 2, 2, 2 ][ 192, 64, 64, 192 ]
+[ 2, 2, 2, 2, 2, 2, 3 ][ 192, 64, 128, 128 ]10
+[ 0, 0, 0, 0, 0, 0, 0, 0 ][ 768, 256 ]
+[ 0, 0, 0, 0, 0, 0, 0, 1 ][ 640, 384 ]
+[ 0, 1, 1, 1, 1, 1, 1, 1 ][ 512, 512 ]
+[ 0, 0, 0, 0, 0, 0, 0, 2 ][ 576, 64, 192, 192 ]
+[ 0, 0, 0, 0, 0, 0, 1, 2 ][ 512, 128, 128, 256 ]
+[ 0, 1, 1, 1, 1, 1, 1, 2 ][ 448, 64, 192, 320 ]
+[ 0, 0, 2, 2, 2, 2, 2, 2 ][ 640, 128, 128, 128 ]
+[ 0, 1, 2, 2, 2, 2, 2, 2 ][ 512, 256, 256 ]
+[ 1, 1, 2, 2, 2, 2, 2, 2 ][ 384, 128, 128, 384 ]
+[ 2, 2, 2, 2, 2, 2, 2, 3 ][ 384, 128, 256, 256 ]10
 
   </FILE>
 
@@ -394,7 +489,60 @@ ZEIGER:=XSAMMEL;;
   return [];
   end;
 
+DIAG:=function(R)#neu
+  local i,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
+  RET:=[];
+  RF:=Flat(R);Add(RF,0,1);
+#  Print("\n",RF);
+  S:=Size(R);
+  j:=1;
+  GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
+  for i in IteratorOfTuples( [0,1], S ) do
+#    Print("\n",i,IZUN(Reversed(i)));
+    if Sum(i)<3 then 
+#      Print("<3");
+      Add(RET,RF[j]);j:=j+1;
+      else 
+#        Print(">3");
+        X:=0*i;Y:=List(X);Z:=List(i);
+        POS1:=Position(Z,1);
+        X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
+        POS2:=Position(Z,1);
+        Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
+        ZP:=IZUN(Reversed(Z));
+#        Print("\n  ",X);
+#        Print("\n  ",Y);
+#        Print("\n  ",Z);
+#        PROD:=PR(X)+PR(Y)+PR(Z)+PR(X+Y)+PR(X+Z)+PR(Y+Z);
+#if PR(X)<>RET[XP+1] then Error(XP); fi;
+        PROD:=GM[RET[XP+1]+1][RET[YP+1]+1];
+        PROD:=GM[PROD+1][RET[ZP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+YP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+ZP+1]+1];
+        PROD:=GM[PROD+1][RET[YP+ZP+1]+1];
+#        Print(PROD);
+        Add(RET,PROD);
+#        Print("\n  ",RET);
+        fi;
+    od;
+  return RET;
+  end;
+  
+FUND:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  R:=R4(RT);D:=DIAG(R);;C:=Collected(D);#Print(C);
+  D:=List(C{[2..Size(C)]},i->i[2]);D:=SortedList(D);Add(D,C[1][2],1);
+  if not D in ERGD then Add(ERG,[RT,D]);Add(ERGD,D);Print("\n",RT,D); fi;
+# if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
   </NACHLAD>
+
 gap> DisplayProfile();#Referenz 128 jetzt komplett ohne PositionFirstComponent
   count  self/ms  chld/ms  stor/kb  chld/kb  package  function
    1962        1      203       76    39405           PcgsByPcSequenceNCMI
