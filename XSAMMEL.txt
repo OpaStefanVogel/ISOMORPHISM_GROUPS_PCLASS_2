@@ -1,8 +1,6 @@
-#Read("Desktop/GAP/PCLASS2/XSAMMEL.txt");#Raspberry Pi
-#Read("PCLASS2/XSAMMEL.txt");#asterix
-#Read("Desktop/GAP/PCLASS2/PcgsOfR.txt");#macht Mat aus R.
-#Read("PCLASS2/PcgsOfR.txt");#asterix
-#Read("GAP/PCLASS2/MatrixOf.txt");#macht Mat aus R.
+#Read("XSAMMEL.txt");
+#Read("PcgsOfR.txt");#macht aus R ein Pcgs
+#Read("MatrixOf.txt");#macht aus R eine Mat
 #SaveWorkspace("GAP_WORKSPACE_XSAMMEL");
 
 #jetzt bei [1..1] n=16 nur noch:
@@ -52,36 +50,24 @@ LETZTERABZWEIG:=0;
 
 LETZTEWEGELISTE:=[];WHALT:=0;
 LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
+HRES0SIZE:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
 Commu:=function(a,b) return (b*a)^2; end;
+
 PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
-  local DRINBIT,POS;
-  DRINBIT:=0;POS:=1;
-  while IsBound(ZEIGER[POS]) and DRINBIT=0 do
-    if PNEU>ZEIGER[POS][1] then POS:=POS+1;
-      else DRINBIT:=-1; fi;
-    od;
-#if POS<>PositionFirstComponent(ZEIGER,PNEU) then Error("778877"); fi;
-  return POS;
-#  return PositionFirstComponent(ZEIGER,PNEU);
-  #welches bei "nicht drin" Size(ZEIGER) ausgibt statt Add-Position 
+  return PositionSorted(ZEIGER,[PNEU]);
   end;
-PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
-  return PositionSorted(ZEIGER,[PNEU],function(x,y) return x>y; end);
-  end;
+
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 
-#Schnittstelle zur Ausgabe
+#
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
   RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
-#  if RET=1 then RET:=10001; else
-#    if RET=2 then RET:=10002; else
-#      RET:=RET; fi; fi;
-  return RET;
+  return -RET;
   end;
 
 QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
@@ -93,9 +79,6 @@ QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
         fi; 
       od;
     fi;
-#if S=2 and (HRES[1])^2=(HRES[1])^0 then RET:=false; fi;#wenn if, dann nur [[1],[2,2]...] in XSAMMEL rein, dafür längere Suche wenn G schon in XSAMMEL drin
-#if S=3 and (HRES[1]*HRES[3])^2=(HRES[1])^0 then RET:=false; fi;
-#if S=4 and (HRES[1]*HRES[2])^2=(HRES[1])^0 and (HRES[2]*HRES[3])^2<>(HRES[1])^0 then RET:=false; fi;
   return RET;
   end;
 
@@ -118,7 +101,7 @@ QY11:=function(HRES,S)#bestimmt PNEU aus HRES
 
 WEGEVERGLEICHER:=function(WEG1)
   local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
-  S:=Size(WEG1[1]);
+  S:=HRES0SIZE;
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
   for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
@@ -170,12 +153,10 @@ if W=WHALT then Error("halt da"); fi;
 #-  Print(ret,kk,k,S,i,k+2);
   return [ret,kk,k,S,i];
   end;
-  
 
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
   local ISO;
-  ISO:=PositionFirstComponent(ZEIGER,PNEU);
-#  ISO:=PositionFirstComponentRepariert(ZEIGER,PNEU);
+  ISO:=PositionFirstComponentRepariert(ZEIGER,PNEU);
   if not IsBound(ZEIGER[ISO]) then ISO:=0; else
     if ZEIGER[ISO][1]<>PNEU then ISO:=0; fi; fi;
   return ISO;
@@ -183,7 +164,7 @@ QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
 
 RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   local NMERK,XMERKMERK,HRESMERK,
-        HRES0MERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
+        HRES0MERK,HRES0SIZEMERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
         WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
         XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK,
         HRESEXTMERK,HRESANFMERK;
@@ -192,6 +173,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERKMERK:=StructuralCopy(XMERK);
   HRESMERK:=List(HRES);
   HRES0MERK:=List(HRES0);
+  HRES0SIZEMERK:=HRES0SIZE;
   CLISTMERK:=List(CLIST);
   XMERKZAHLMERK:=XMERKZAHL;
   RM:=List(R);
@@ -208,6 +190,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   XMERK:=XMERKMERK;
   HRES:=HRESMERK;
   HRES0:=HRES0MERK;
+  HRES0SIZE:=HRES0SIZEMERK;
   CLIST:=CLISTMERK;
   XMERKZAHL:=XMERKZAHLMERK;
   R:=RM;
@@ -240,7 +223,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
     for j in XMERK[S] do if ISO=0 and PNEU=j[1] then ISO:=j; fi; od;
     if ISO=0 then
       if IsBound(XMERK[S][1]) then p0:=XMERK[S][1][2]; else
-        p0:=PcgsByPcSequenceNC12(FamilyObj(HRES0[1]),HRES0{[Size(HRES0)-S+1..Size(HRES0)]});
+        p0:=PcgsByPcSequenceNC12(FamilyObj(HRES0[1]),HRES0{[HRES0SIZE-S+1..HRES0SIZE]});
         fi;
       APHI:=List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES[i])));
       if ZEILE[S]>1 and SPALTE[S]=1 and FIXFIX<>0 then
@@ -254,14 +237,14 @@ QY12:=function(C,S,nn) #bestimmt XMERK
           for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs, Commu(pcgs[1], pcgs[j]))),2); od; #C
 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[HRES0SIZE-S+i]))));
           Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(p0,HRES1[i]))));
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n:",S," ",STEP,ISO); fi; STEP:=STEP+1;
           od;
         else 
           ISO:=[List(PNEU),pcgs];
-          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[Size(HRES0)-S+i]))));
+          Add(ISO,List([1..S],i->IZUN(ExponentsOfPcElement(pcgs,HRES0[HRES0SIZE-S+i]))));
           Add(ISO,APHI);
           Add(XMERK[S],ISO);
           if PBIT<>0 then Print("\n.",S," ",STEP,ISO,"\c"); fi; STEP:=STEP+1;
@@ -279,14 +262,13 @@ QY12:=function(C,S,nn) #bestimmt XMERK
 
 QY14:=function() #bestimmt PMAX in XSAMMEL
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
-  S:=Size(XMERK);
-    PMAX:=[];#XMERK[S]:=SortedList(XMERK[S]);#PMAX:=XMERK[S][1][1];
-    for i in [1..Size(XMERK[S])] do
-      if XMERK[S][i][1]>PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
-      od;
-    pcgs:=XMERK[S][imax][2];
-#    pcgs:=XMERK[S][1][2];
-    for i in [1..Size(XMERK[S])] do
+  S:=Size(XMERK);SMAX:=Size(XMERK[S]);
+  PMAX:=[];
+  for i in [1..SMAX] do
+    if -XMERK[S][i][1]>-PMAX then imax:=i; PMAX:=XMERK[S][i][1]; fi;
+    od;
+  pcgs:=XMERK[S][imax][2];
+    for i in [1..SMAX] do
       HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
       pcgs1:=PcgsByPcSequenceNC14(FamilyObj(HRES1[1]^0),HRES1);
       PNEU:=[QY09(ExponentsOfPcElement(pcgs1,HRES1[1]^2))];
@@ -297,23 +279,20 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
       od;
   end;
 
-Adder:=function(ZEIGER,XM1,POS) Add(ZEIGER,StructuralCopy(XM1),POS); end;
-
 #das neue kuerzere QY15, jetzt nur letzte Stufe
 QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
   local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,
   I1,I2,I3,XM,SIZE1,SIZE2;
-  Print("{\c");XM:=Reversed(SortedList(XU));Print("}\c");
-#Print("\n#\n",XM);
+  Print(StringNumbers([LogInt(Size(XU),2)+11],128),"\c");
+  XM:=SortedList(XU);
   ZSIZE:=Size(ZEIGER);
   POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
-  Adder(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
+  Add(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
         if HRESANF=[] then 
           HRESANF:=HRES2;
-#- Print("*+*+*+*+*+* hier auf diesem Weg wird HANF gesetzt:",WEGLI); 
           fi;
         HRES:=HRESANF;STUFE:=Size(HRES);
         pcgs:=PcgsByPcSequenceNC15(FamilyObj(HRES[1]^0),List(HRES));
@@ -323,12 +302,12 @@ QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
   ZEIGER[POS][14]:=ZSIZE+1;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
-  if Size(XM)>0 then Print("<\c"); fi;
+  Print("<\c");
   I1:=1;I2:=2;I3:=1;ZEIGERNEU:=[];
   SIZE1:=Size(ZEIGER);SIZE2:=Size(XM);
   repeat
     if I1<=SIZE1 and I2<=SIZE2 then
-      if ZEIGER[I1][1]>XM[I2][1] then
+      if ZEIGER[I1][1]<XM[I2][1] then
         ZEIGERNEU[I3]:=ZEIGER[I1];
         I1:=I1+1;I3:=I3+1;
         else
@@ -348,15 +327,8 @@ QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
       I2:=I2+1;I3:=I3+1;
       fi;
     until I1>SIZE1 and I2>SIZE2;
-#  for i in [2..Size(XM)] do
-#    ii:=PositionFirstComponentRepariert(ZEIGER,XM[i][1]);
-#    Adder(ZEIGER,StructuralCopy(XM[i]),ii);#auch ohne StructuralCopy
-#    ZEIGER[ii][5]:=ZMERK;
-#    ZEIGER[ii][14]:=ZSIZE+i;
-#    od;
-  if Size(XM)>0 then Print(">\c"); fi;
-#Print("\n****\n",ZEIGER,"\n++++\n",ZEIGER=ZEIGERNEU,"\n",ZEIGERNEU,"\n#\n",XM);
-  for i in [1..Size(ZEIGERNEU)] do
+  Print(">\c");
+  for i in [1..SIZE1+SIZE2-1] do
     ZEIGER[i]:=ZEIGERNEU[i];
     od;
   end;
@@ -395,7 +367,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG;
+  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE;
 #Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
@@ -427,11 +399,11 @@ QY13:=function(C,S,nn,ZEIGER,AU)
         else #Print("\n",ZR3MERK);
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
-            HRES0:=List(HRES);
-            CLIST:=[Identity(C)];
+            HRES0:=List(HRES);HRES0SIZE:=S;
+            CLIST:=[Identity(C)];CLISTSIZE:=1;
             for i in Reversed(HRES0) do
-              for j in [1..Size(CLIST)] do
-                Add(CLIST,i*CLIST[j]);
+              for j in [1..CLISTSIZE] do
+                Add(CLIST,i*CLIST[j]);CLISTSIZE:=CLISTSIZE+1;
                 od; od;
             XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
             QY12(C,1,1);
@@ -476,14 +448,15 @@ QY13:=function(C,S,nn,ZEIGER,AU)
   end;
 
 XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
-  local i,S,POS;
+  local i,S,POS,GRP;
   S:=Size(XSAMMEL);
   for i in [1..S] do 
     if IsBound(XSAMMEL[i][6]) then 
       POS:=i;
       if not(IsInt(XSAMMEL[POS][2])) then
-        if Size(Group(XSAMMEL[POS][2]))<512 then
-          XSAMMEL[POS][7]:=IdSmallGroup(Group(XSAMMEL[POS][2]));#[Size(Group(XSAMMEL[POS][2])),inh];
+        GRP:=Group(XSAMMEL[POS][2]);
+        if Size(GRP)<512 then
+          XSAMMEL[POS][7]:=IdSmallGroup(GRP);
           else
 #Error("Wie kam inh=56092 hier rein? Weil f 2^Size(XSAMMEL[POS][1])<n gefehlt hat!");
 #Error("Wie kam inh=56092 hier rein? Jetzt ist inh=",inh);
@@ -499,7 +472,7 @@ XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht
 #XFUELL(XSAMMEL);
 XMISCH:=function(XSAMMEL,POSITION,STUFE)
   local i,ii,S,LEER,HRES,HRES2,pcgs,pcgs2;
-  S:=Size(XSAMMEL);
+  S:=Size(XSAMMEL);#Error(XSAMMEL);
   if not IsBound(RMERKER[STUFE]) then RMERKER[STUFE]:=[]; fi;
 
 if n=nmax and 2^STUFE=n then
@@ -517,6 +490,7 @@ if n=nmax and 2^STUFE=n then
 
 else
   for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[ii]; if IsBound(i[6]) then
+#Error("\n\n\n***********",i);
     if not IsBound(RMERKER[STUFE][i[7][2]]) then #nicht gleich [1] setzen!!!
       RMERKER[STUFE][i[7][2]]:=i; 
       i[10]:=List([1..STUFE],j->2^(j-1)); 
@@ -524,7 +498,7 @@ else
       else if not IsBound(i[12]) then
         i[12]:=RMERKER[STUFE][i[7][2]];
         HRES2:=i[2];
-        HRES:=i[12][2];
+        HRES:=i[12][2];#Error("22222");
         pcgs:=PcgsByPcSequenceNCMI(FamilyObj(HRES[1]^0),List(HRES));
         pcgs2:=PcgsByPcSequenceNCMI(FamilyObj(HRES2[1]^0),List(HRES2));
         i[11]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs,HRES2[j])));
@@ -544,11 +518,11 @@ fi;
 XLEER:=function(XSAMMEL) #fuellt [7][8]
   local i,S;
   S:=Size(XSAMMEL);
-  for i in [1..S] do if 2^Size(XSAMMEL[1][1])<=n then 
+  if S>0 then if 2^Size(XSAMMEL[1][1])<=n then for i in [1..S] do 
     if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
     XSAMMEL[i][2]:=i;
     if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
-    fi; od;
+    od; fi; fi;
   end;
 
 RMAXSUCH:=function(C)
@@ -609,12 +583,7 @@ Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
 #14                   anstelle Index in XSAMMEL für WEGEBAUM[.]
 
 UMKEHRLIST:=function(PNEU)
-  return List(PNEU,function(i)
-    if i=10002 then return 2; else
-      if i=10001 then return 1; else 
-        return i; fi; fi;
-    end);#XSAMMELVIEWER3(XSAMMEL);
-
+  return List(PNEU,function(i) return -i-1; end);
   end;
 
 
@@ -872,7 +841,7 @@ GANZLOS:=function()
 #AUZAHL:=4;GANZLOS();
 
 
-ProfileFunctions([QY07,PositionSorted,PositionFirstComponent,
+ProfileFunctions([QY07,PositionSorted,
 PositionFirstComponentRepariert,QY12,Size,Group,
 StructuralCopy,PcElementByExponentsNC,PcgsByPcSequenceNC,
 PcgsByPcSequenceNC11,
@@ -883,7 +852,7 @@ PcgsByPcSequenceNC14,
 PcgsByPcSequenceNCMI,
 ExponentsOfPcElement,RightTransversal,RightCosetsNC,
 QY10,QY11,QY08,QY21,QY15,QY14,QY13,QY09,
-XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI,QY07,WEGEVERGLEICHER,Adder]);
+XFUELL,XMISCH,XLEER,Commu,Stabilizer,Orbits,IZUN,NZUI,QY07,WEGEVERGLEICHER]);
 
 
 #T(16);XSAMMELVIEWER2(XSAMMEL);
