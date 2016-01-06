@@ -279,7 +279,7 @@ ok schließlich Collected
 ok funktioniert, es sind paar gleich
 
 DIAG:=function(R)#neu
-  local i,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+  local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
 #  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
   RET:=[];
   RF:=Flat(R);Add(RF,0,1);
@@ -299,7 +299,12 @@ DIAG:=function(R)#neu
         X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
         POS2:=Position(Z,1);
         Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
-        ZP:=IZUN(Reversed(Z));
+#        ZP:=IZUN(Reversed(Z));
+        ZP:=0;ii:=1;
+        for POS3 in [S,S-1..1] do 
+          if Z[POS3]=1 then ZP:=ZP+ii; fi;
+          ii:=ii+ii;
+          od;          
 #        Print("\n  ",X);
 #        Print("\n  ",Y);
 #        Print("\n  ",Z);
@@ -380,6 +385,7 @@ ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#128
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#256
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#512
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#1024
+ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#2048
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#2048
 
 [ 0, 0 ][ 12, 4 ]
