@@ -322,10 +322,13 @@ DIAG:=function(R)#neu
     od;
   return RET;
   end;
+
 R:=R4([0,0]);;D:=DIAG(R);;Collected(D);
 R:=R4([0,1]);;D:=DIAG(R);;Collected(D);
 R:=R4([1,1]);;D:=DIAG(R);;Collected(D);
+
 for i in ERG do Print("\n",i,Collected(DIAG(R4(i)))); od;
+
 [ 0, 0, 0, 0, 0 ][ [ 0, 96 ], [ 1, 32 ] ]
 [ 0, 0, 0, 0, 1 ][ [ 0, 80 ], [ 1, 48 ] ]
 [ 0, 1, 1, 1, 1 ][ [ 0, 64 ], [ 1, 64 ] ]
@@ -359,8 +362,8 @@ for i in ERG do Print("\n",i,Collected(DIAG(R4(i)))); od;
 
   </FILE>
 
-<FILE id="P08" inhalt="zu allen R die Diagonale bestimmen">
-.. jetzt alle R durchlaufen lassen
+<FILE id="P09" inhalt="zu allen R die Diagonale bestimmen">
+ok jetzt alle R durchlaufen lassen
 los
 
 FUND:=function(arg)#neu
@@ -385,7 +388,6 @@ ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#128
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#256
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#512
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#1024
-ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#2048
 ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUND);;;Size(ERG);#2048
 
 [ 0, 0 ][ 12, 4 ]
@@ -449,18 +451,81 @@ ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,
 [ 0, 1, 2, 2, 2, 2, 2, 2 ][ 512, 256, 256 ]
 [ 1, 1, 2, 2, 2, 2, 2, 2 ][ 384, 128, 128, 384 ]
 [ 2, 2, 2, 2, 2, 2, 2, 3 ][ 384, 128, 256, 256 ]10
-[ 0, 0, 0, 0, 0, 0, 0, 0, 0 ][ 1536, 512 ]
-[ 0, 0, 0, 0, 0, 0, 0, 0, 1 ][ 1280, 768 ]
-[ 0, 1, 1, 1, 1, 1, 1, 1, 1 ][ 1024, 1024 ]
-[ 0, 0, 0, 0, 0, 0, 0, 0, 2 ][ 1152, 128, 384, 384 ]
-[ 0, 0, 0, 0, 0, 0, 0, 1, 2 ][ 1024, 256, 256, 512 ]
-[ 0, 1, 1, 1, 1, 1, 1, 1, 2 ][ 896, 128, 384, 640 ]
-[ 0, 0, 2, 2, 2, 2, 2, 2, 2 ][ 1280, 256, 256, 256 ]
-[ 0, 1, 2, 2, 2, 2, 2, 2, 2 ][ 1024, 512, 512 ]
-[ 1, 1, 2, 2, 2, 2, 2, 2, 2 ][ 768, 256, 256, 768 ]
-[ 2, 2, 2, 2, 2, 2, 2, 2, 3 ][ 768, 256, 512, 512 ]10
 
   </FILE>
+
+<FILE id="P10" inhalt="Jetzt die R zu den Abzweigen bestimmen">
+.. R4 um das innere R erweitern
+.. eine Ausgangsliste für die inneren R
+.. erstmal nur ein Stockwerk, deshalb geht dafür die Kurzform mit R4 und ERG.
+.. deshalb von ERG zu ERG[S] übergehen
+.. und in 
+
+for RK in ERG[S] do R:=R4(RK);  
+
+R5:=function(R,V)#neu
+  local i,V2;
+  V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+  Add(R,V2);
+  return R;
+  end;
+
+R5(R4([0,1]),[0,0,0]);
+
+ERGS:=[];
+
+FUN5:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R5(R4(RI),RT);RSIZE:=Size(R);
+  P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+  NEU:=RTT();Print(NEU);
+  if NEU<>RSIZE then 
+    inh:=inh+1;
+    RMAXSUCH(P);
+    S:=Size(R);
+    Add(ERGS[S],[RI,RT]);
+    fi;
+  return [];
+  end;
+
+ClearProfile();
+ERGS:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+ERG:=[];ListX(IS2,IS2,IS,IS,FUN);;ERGS[4]:=ERG;;ERGS;#16;ERGS
+ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN);;ERGS[5]:=ERG;;ERGS;#32
+for RI in ERGS[4] do
+  Print("\n*******************",RI);
+  ListX(IS2,IS2,IS2,IS,IS,IS,FUN5);
+  od;ERGS;
+ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN);;ERGS[6]:=ERG;;ERGS;#64
+for RI in ERGS[5] do
+  if IsInt(RI[1]) then
+    Print("\n*******************",RI);
+    ListX(IS2,IS2,IS2,IS,IS,IS,FUN5);
+    fi;
+  od;ERGS;
+ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN);;ERGS[6]:=ERG;;ERGS;#128
+
+[ ,,, [ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ] ], 
+  [ [ 0, 0, 0 ], [ 0, 1, 1 ], [ 0, 0, 2 ], [ 0, 1, 2 ], [ 1, 1, 2 ], 
+      [ 0, 2, 0 ], [ 1, 2, 1 ], [ 2, 2, 2 ], [ [ 0, 1 ], [ 0, 1, 0 ] ], 
+      [ [ 0, 1 ], [ 1, 1, 1 ] ], [ [ 0, 1 ], [ 1, 1, 2 ] ], 
+      [ [ 0, 1 ], [ 0, 2, 0 ] ], [ [ 0, 1 ], [ 1, 2, 1 ] ], 
+      [ [ 0, 1 ], [ 2, 2, 3 ] ], [ [ 0, 1 ], [ 2, 3, 2 ] ], 
+      [ [ 1, 1 ], [ 1, 1, 2 ] ], [ [ 1, 1 ], [ 2, 2, 2 ] ], 
+      [ [ 0, 2 ], [ 1, 2, 3 ] ], [ [ 1, 2 ], [ 1, 2, 3 ] ] ] ]
+
+  </FILE>
+
 
 <NACHLAD> #oben ändern
 R4:=function(V)
@@ -506,7 +571,7 @@ ZEIGER:=XSAMMEL;;
   end;
 
 DIAG:=function(R)#neu
-  local i,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+  local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
 #  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
   RET:=[];
   RF:=Flat(R);Add(RF,0,1);
@@ -526,7 +591,12 @@ DIAG:=function(R)#neu
         X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
         POS2:=Position(Z,1);
         Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
-        ZP:=IZUN(Reversed(Z));
+#        ZP:=IZUN(Reversed(Z));
+        ZP:=0;ii:=1;
+        for POS3 in [S,S-1..1] do 
+          if Z[POS3]=1 then ZP:=ZP+ii; fi;
+          ii:=ii+ii;
+          od;          
 #        Print("\n  ",X);
 #        Print("\n  ",Y);
 #        Print("\n  ",Z);
