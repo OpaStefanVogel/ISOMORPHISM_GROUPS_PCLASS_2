@@ -455,27 +455,25 @@ ERG:=[];ERGD:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,
   </FILE>
 
 <FILE id="P10" inhalt="Jetzt die R zu den Abzweigen bestimmen">
-.. R4 um das innere R erweitern
-.. eine Ausgangsliste für die inneren R
-.. erstmal nur ein Stockwerk, deshalb geht dafür die Kurzform mit R4 und ERG.
-.. deshalb von ERG zu ERG[S] übergehen
-.. und in 
+ok R4 um das innere R erweitern
+ok eine Ausgangsliste für die inneren R
+ok erstmal nur ein Stockwerk, deshalb geht dafür die Kurzform mit R4 und ERG.
+ok deshalb von ERG zu ERG[S] übergehen
 
-for RK in ERG[S] do R:=R4(RK);  
-
-R5:=function(RI,V)#neu
-  local i,V2;
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  RI:=RIV[1];V:=RIV[2];
   V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
   if IsInt(RI[1]) then
     R:=R4(RI);
     else
-      R:=R5(RI[1],RI[2]);
+      R:=R5([RI[1],RI[2]]);
       fi;
   Add(R,V2);
   return R;
   end;
 
-R5([0,1],[0,0,0]);
+R5([[[0,1],[0,2,0]],[1,0,0,0]]);
 
 ERGS:=[];
 
@@ -486,7 +484,7 @@ FUN5:=function(arg)#neu
     Add(RT,arg[i]+arg[i+j]);
     od;
   Print("\n",RT);
-  R:=R5(RI,RT);RSIZE:=Size(R);
+  R:=R5([RI,RT]);RSIZE:=Size(R);
 #Print("???",R);
   P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
@@ -1023,13 +1021,14 @@ FUND:=function(arg)#neu
   return [];
   end;
 
-R5:=function(RI,V)
-  local i,V2;
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  RI:=RIV[1];V:=RIV[2];
   V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
   if IsInt(RI[1]) then
     R:=R4(RI);
     else
-      R:=R5(RI[1],RI[2]);
+      R:=R5([RI[1],RI[2]]);
       fi;
   Add(R,V2);
   return R;
@@ -1042,7 +1041,7 @@ FUN5:=function(arg)
     Add(RT,arg[i]+arg[i+j]);
     od;
   Print("\n",RT);
-  R:=R5(RI,RT);RSIZE:=Size(R);
+  R:=R5([RI,RT]);RSIZE:=Size(R);
 #Print("???",R);
   P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
