@@ -1185,7 +1185,7 @@ for RT in ERGS[5] do
 
   </FILE>
 
-<FILE id="P11" inhalt="Fortsetzung nach 128">
+<FILE id="P12" inhalt="Fortsetzung nach 128">
 nö da könnte ich Folgendes versuchen, wenn RTT nicht nur ja/nein ausgibt
     sondern auch wie der Anfang losgeht, dann würde als Anfang n=16 reichen
     und alle R die innerhalb RTT auf einen Anfang [0,0] führen, weglassen 
@@ -1196,6 +1196,57 @@ nö mal die IdSmallGroup() ergänzen und ob da was mit IS=[0,1],[1,0] geht
 nö ich muss herausfinden, ob Untergruppe R5([0,0]) drin ist 
     und das geht nur wenn schon in XSAMMEL drin
     das wollte ich aber umgehen, also Schluss hier.
+ok vielleicht das: wie oft RT[j]=1 und RT[k]=1 und RT[jok]=0 oder vertauscht.
+
+XORMAT:=MatrixOf([[0,],[0,0],[0,0,0],[0,0,0,0]]);
+D:=DIAG(R4([1,2]));
+COMPDIAG:=function(D)
+  local C,RET,i,j,k,l,QUAD1,QUAD2,SI,ii;
+  C:=Collected(D);SI:=Size(D);
+  for i in [2..Size(C)] do ii:=C[i][1];
+    QUAD1:=0;QUAD2:=0;
+    for j in [2..SI-1] do
+      for k in [j+1..SI] do
+        l:=XORMAT[j][k];
+        if l>j and l>k then
+          if 
+            (D[j]=ii and D[k]=ii and D[l]=0) or 
+            (D[j]=ii and D[k]=0 and D[l]=ii) or 
+            (D[j]=0 and D[k]=ii and D[l]=ii) then QUAD1:=QUAD1+1; fi; 
+          if 
+            D[j]>0 and D[k]>0 and D[l]>0 and 
+            D[j]<>D[k] and D[j]<>D[l] and D[k]<>D[l] then QUAD2:=QUAD2+1; fi; 
+#          Print("\n",QUAD," ",j," ",k," ",l);
+          fi;
+        od;
+      od;
+    C[i][2]:=[C[i][2],QUAD1,QUAD2];
+    od;
+  RET:=List(C{[2..Size(C)]},i->i[2]);
+  RET:=SortedList(RET);
+  Add(RET,C[1][2],1);
+  return RET;
+  end;
+COMPDIAG(D);
+
+R:=R4([0,0,0,0,0]);XORMAT:=MatrixOf(R);
+D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 0, 2, 1, 2 ] ]));;COMPDIAG(D);
+D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 1, 2, 0, 2 ] ]));;COMPDIAG(D);
+D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 1, 2, 0, 3 ] ]));;COMPDIAG(D);
+D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 1, 2, 1, 3 ] ]));;COMPDIAG(D);
+
+
+
+D:=DIAG(R5([[0,1],[0,0,2]]));COMPDIAG(D);
+GESAMTDIAG:=[];
+for RT in ERGS[4] do
+  R:=R5(RT);P:=PcgsOfR(R);
+  GESAMTDI:=COMPDIAG(DIAG(R5(RT)));
+  Add(GESAMTDIAG,GESAMTDI);
+  Print("\n",RT,GESAMTDI);
+  od;
+  LI:=Collected(SortedList(GESAMTDIAG));
+  List(LI,i->i[2]);
 
   </FILE>
 
