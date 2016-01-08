@@ -1,0 +1,184 @@
+#Read("DIAG.txt");
+
+R4:=function(V)
+  local i,R,V2;
+  V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+  R:=[[0],[0,0],[1,1,1]];
+  for i in [4..Size(V)+1] do Add(R,ListWithIdenticalEntries(i,0)); od;
+  Add(R,V2);
+  return R;
+  end;
+
+RTT:=function()
+  if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
+  ri:=PL[S];
+  Add(HRES,ri,1);HRESEXT[S]:=ri;
+#  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  PNEU:=QY11(HRES,S);
+  R[S]:=List(PNEU);
+  n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
+  HRES:=List(ZR[1]);ZR3MERK:=ZR[3];
+    S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
+  if ZR3MERK=-1 then return -10000; else
+    if ZEIGER=[] then return 1; else return RTT()+1; fi;
+    fi;
+  end;
+
+FUN:=function(arg)
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R4(RT);RSIZE:=Size(R);
+  P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+  NEU:=RTT();Print(NEU);
+  if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
+
+DIAG:=function(R)#neu
+  local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+  RET:=[];
+  RF:=Flat(R);Add(RF,0,1);
+  S:=Size(R);
+  j:=1;
+  for i in IteratorOfTuples( [0,1], S ) do
+    if Sum(i)<3 then 
+      Add(RET,RF[j]);j:=j+1;
+      else 
+        X:=0*i;Y:=List(X);Z:=List(i);
+        POS1:=Position(Z,1);
+        X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
+        POS2:=Position(Z,1);
+        Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
+        ZP:=0;ii:=1;
+        for POS3 in [S,S-1..1] do 
+          if Z[POS3]=1 then ZP:=ZP+ii; fi;
+          ii:=ii+ii;
+          od;          
+#        Print("\n  ",X);
+#        Print("\n  ",Y);
+#        Print("\n  ",Z);
+#        PROD:=PR(X)+PR(Y)+PR(Z)+PR(X+Y)+PR(X+Z)+PR(Y+Z);
+#if PR(X)<>RET[XP+1] then Error(XP); fi;
+        PROD:=GM[RET[XP+1]+1][RET[YP+1]+1];
+        PROD:=GM[PROD+1][RET[ZP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+YP+1]+1];
+        PROD:=GM[PROD+1][RET[XP+ZP+1]+1];
+        PROD:=GM[PROD+1][RET[YP+ZP+1]+1];
+#        Print(PROD);
+        Add(RET,PROD);
+#        Print("\n  ",RET);
+        fi;
+    od;
+  return RET;
+  end;
+  
+FUND:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  R:=R4(RT);D:=DIAG(R);;C:=Collected(D);#Print(C);
+  D:=List(C{[2..Size(C)]},i->i[2]);D:=SortedList(D);Add(D,C[1][2],1);
+  if not D in ERGD then Add(ERG,[RT,D]);Add(ERGD,D);Print("\n",RT,D); fi;
+# if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  return [];
+  end;
+
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  if IsInt(RIV[1]) then
+    R:=R4(RIV);
+    else
+      RI:=RIV[1];V:=RIV[2];
+      V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+      R:=R5(RI);
+      Add(R,V2);
+      fi;
+  return R;
+  end;
+
+FUN5:=function(arg)
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R5([RI,RT]);RSIZE:=Size(R);
+#Print("???",R);
+  P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
+ZEIGER:=XSAMMEL;;
+  NEU:=RTT();Print(NEU);
+  if NEU<>RSIZE then 
+    inh:=inh+1;
+    RMAXSUCH(P);
+    S:=Size(R);
+    Add(ERGS[S],[RI,RT]);
+    fi;
+  return [];
+  end;
+
+COMPDIAG:=function(D)#neu
+  local C,RET,i,j,k,l,QUAD1,QUAD2,SI,ii;
+  C:=Collected(D);SI:=Size(D);
+  for i in [2..Size(C)] do ii:=C[i][1];
+    QUAD1:=0;QUAD2:=0;
+    for j in [2..SI-1] do
+      for k in [j+1..SI] do
+        l:=XORMAT[j][k];
+        if l>j and l>k then
+          if 
+            (D[j]=ii and D[k]=ii and D[l]=0) or 
+            (D[j]=ii and D[k]=0 and D[l]=ii) or 
+            (D[j]=0 and D[k]=ii and D[l]=ii) then QUAD1:=QUAD1+1; fi; 
+          if 
+            D[j]>0 and D[k]>0 and D[l]>0 and 
+            D[j]<>D[k] and D[j]<>D[l] and D[k]<>D[l] then QUAD2:=QUAD2+1; fi; 
+#          Print("\n",QUAD," ",j," ",k," ",l);
+          fi;
+        od;
+      od;
+    C[i][2]:=[C[i][2],QUAD1,QUAD2];
+    od;
+  RET:=List(C{[2..Size(C)]},i->i[2]);
+  RET:=SortedList(RET);
+  Add(RET,C[1][2],1);
+  return RET;
+  end;
+
+FUN6:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+#  Print("\n",RT,RI);
+#  Print(".");
+  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
+  S:=Size(R);
+  RSIZE:=Size(R);
+  GESAMTDI:=COMPDIAG(DIAG(R));
+  if not (GESAMTDI in GESAMTDILIST) then Print("*\c");
+    Add(GESAMTDILIST,GESAMTDI);
+    if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
+    fi;
+  return [];
+  end;    
+
+
+ProfileFunctions([FUN6,R4,R5,DIAG,COMPDIAG,
+  Flat,Add]);
+ClearProfile();
+DisplayProfile();
