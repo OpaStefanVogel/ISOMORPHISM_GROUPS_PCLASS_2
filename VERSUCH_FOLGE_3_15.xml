@@ -1462,7 +1462,7 @@ ERG:=[];for RI in ERGS[7] do
  </FILE>
 
 <FILE id="P15" inhalt="jetzt halt mit IdSmallGroup()">
-.. das muss ja funktionieren...
+ok das muss ja funktionieren...
 
 IDLISTE:=[];
 FUN7:=function(arg)#neu
@@ -1488,6 +1488,7 @@ R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
+#IS:=[1,0];IS2:=[0,2];
 IDLISTE:=[];RI:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN7);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
 IDLISTE:=[];RI:=[];ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN7);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
 ERG:=[];for RI in ERGS[4] do
@@ -1932,6 +1933,113 @@ ERGS[8]:=[ [ 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1 ], [ 0, 1, 1, 1, 1, 1 ], [ 0
   [ [ [ [ [ 0, 1 ], [ 0, 1, 0 ] ], [ 1, 1, 1, 2 ] ], [ 1, 1, 1, 2, 2 ] ], [ 1, 1, 1, 3, 2, 2 ] ], 
   [ [ [ [ [ 0, 1 ], [ 0, 1, 0 ] ], [ 1, 2, 1, 1 ] ], [ 1, 2, 1, 1, 3 ] ], [ 1, 3, 1, 1, 2, 3 ] ] ];
 #23
+  </FILE>
+
+<FILE id="P16" inhalt="COMPDIAG weiter verbessern anhand vorhandenem ERGS">
+nö da muss ich 112 weiter verfeinern das zu 1 die 2 und nicht die 3 nee, hilft nix
+.. und bei 0001 sowohl die 1 als auch die 0 auswerten
+  .. dazu muss ich in C alle 3 Indizes reinbringen
+
+ERGST:=StructuralCopy(ERGS);;
+
+QUADMAT:=[];
+QUADMATMACH:=function()
+  local j,k,l,COL,fun;
+  QUADMAT:=[];
+  for j in [0..3] do
+    QUADMAT[j+1]:=[];
+    for k in [0..3] do
+      QUADMAT[j+1][k+1]:=[];
+      for l in [0..3] do
+        COL:=Collected([0,j,k,l]);fun:="******";
+        if COL[1][2]=4 then fun:=0; fi; #0000
+        if COL[1][2]=3 then fun:=[[COL[2][1],1]]; fi; #0001
+        if COL[1][2]=2 then #00xx
+          if COL[2][2]=2 then fun:=[[COL[2][1],2]]; fi; #0011
+          if COL[2][2]=1 then fun:=[[COL[2][1],3],[COL[3][1],3]]; fi; #0012
+          fi;
+        if COL[1][2]=1 then #0xxx
+          if COL[2][2]=3 then fun:=[[COL[2][1],4]]; fi; #0111
+          if COL[2][2]=2 then #0112,0113
+            if COL[3][1]=COL[2][1]+1 or COL[3][1]=COL[2][1]-2 then 
+              fun:=[[COL[2][1],5],[COL[3][1],6]]; else
+                fun:=[[COL[2][1],8],[COL[3][1],9]]; fi; fi;
+          if COL[2][2]=1 then #0122,0123
+            if COL[3][2]=2 then #0122
+              if COL[2][1]=COL[3][1]+1 or COL[2][1]=COL[3][1]-2 then 
+                fun:=[[COL[2][1],6],[COL[3][1],5]]; else
+                  fun:=[[COL[2][1],9],[COL[3][1],8]]; fi; fi;
+            if COL[3][2]=1 then fun:=[[1,7],[2,7],[3,7]]; fi; #0123
+            fi;
+          fi;
+        QUADMAT[j+1][k+1][l+1]:=fun;
+        Print("\n0 ",j," ",k," ",l," ",COL,"->",fun);
+        od;
+      od;
+    od;
+  end;QUADMATMACH();
+
+COMPDIAG:=function(D)#neu
+  local C,RET,i,j,k,jkl,l,QUAD1,QUAD2,SI,ii,fun;
+#Print(D,"\n");
+  C:=Collected(D);
+#Print(C,"\n");
+  SI:=Size(D);
+#Print(SI,"\n");
+  QUAD0:=0;QUAD:=[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
+  for jkl in JKLLISTE do
+#Print(jkl,"\n");
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+#Print(j," ",k," ",l,"\n");
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print(dj," ",dk," ",dl,"\n");
+    fun:=QUADMAT[dj+1][dk+1][dl+1];
+#Print(fun,"\n");
+    if fun=0 then QUAD0:=QUAD0+1; else
+      for i in fun do QUAD[i[1]][i[2]]:=QUAD[i[1]][i[2]]+1; od;
+      fi;
+    od;
+  RET:=List(C{[2..Size(C)]},i->[i[2],QUAD0,QUAD[i[1]]]);
+  RET:=SortedList(RET);
+  Add(RET,C[1][2],1);
+  return RET;
+  end;
+
+#erst das in Gang bringen
+JKLLISTEMACH(256);
+V1:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 2, 2, 3, 0 ] ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
+V2:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 0, 1, 2, 0 ] ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
+A1:=AutomorphismGroup(P1); Size(A1);
+A2:=AutomorphismGroup(P1); Size(A2);
+VG:=COMPDIAG(DIAG(V1));VH:=COMPDIAG(DIAG(V2));VG=VH;
+
+
+R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
+ClearProfile();
+ERGS:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN6);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
+JKLLISTEMACH(32);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN6);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
+ERG:=[];for RI in ERGST[4] do
+  Print("\n***",RI);
+  ListX(IS2,IS2,IS2,IS,IS,IS,FUN6);
+  od;Append(ERGS[5],ERG);ERGS[5];Size(ERGS[5]);19;
+JKLLISTEMACH(64);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN6);;ERGS[6]:=ERG;Size(ERG);14;#64
+ERG:=[];for RI in ERGST[5] do
+  Print("\n***",RI);
+  ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN6);
+  od;Append(ERGS[6],ERG);ERGS[6];Size(ERGS[6]);60;
+JKLLISTEMACH(128);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN6);;ERGS[7]:=ERG;Size(ERG);15;#128
+ERG:=[];for RI in ERGST[6] do
+  Print("\n***",RI);
+  ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN6);
+  od;Append(ERGS[7],ERG);ERGS[7];Size(ERGS[7]);158;
+JKLLISTEMACH(256);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN6);;ERGS[8]:=ERG;Size(ERG);15;#256
+ERG:=[];for RI in ERGST[7] do
+  Print("\n***",RI,"\c");
+  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN6);
+  od;Append(ERGS[8],ERG);ERGS[8];Size(ERGS[8]);442;
+
   </FILE>
 
 

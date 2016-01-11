@@ -205,8 +205,47 @@ COMPDIAG:=function(D)#neu
   return RET;
   end;
 
+FUN6:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+#  Print("\n",RT,RI);
+#  Print(".");
+  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
+  S:=Size(R);
+  RSIZE:=Size(R);
+  GESAMTDI:=COMPDIAG(DIAG(R));
+  if not (GESAMTDI in GESAMTDILIST) then
+    Add(GESAMTDILIST,GESAMTDI);
+    if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
+    Print("*",Size(ERG),"\c");
+    fi;
+  return [];
+  end;    
 
-ProfileFunctions([FUN6,R4,R5,DIAG,COMPDIAG,
+IDLISTE:=[];
+FUN7:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+#  Print("\n",RT,RI);
+#  Print(".");
+  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
+  P:=PcgsOfR(R);
+  ID:=IdSmallGroup(P)[2];
+  if not (IsBound(IDLISTE[ID])) then
+    IDLISTE[ID]:=1;
+    if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
+    Print("\n",RT,", #",Size(ERG)," ",ID,"\c");
+    else IDLISTE[ID]:=IDLISTE[ID]+1; fi;
+  return [];
+  end;    
+
+ProfileFunctions([Fun5,FUN6,FUN7,R4,R5,DIAG,COMPDIAG,
   Flat,Add,Size]);
 ClearProfile();
 DisplayProfile();
