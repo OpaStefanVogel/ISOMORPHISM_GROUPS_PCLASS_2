@@ -2042,6 +2042,38 @@ ERG:=[];for RI in ERGST[7] do
 
   </FILE>
 
+<FILE id="P17" inhalt="neuer Branch Folge_3_15">
+Read("PcgsOfR.txt");
+Read("MatrixOf.txt");
+Read("XSAMMEL.txt"); 
+Read("DIAG.txt");
+
+#Ablauf aus idP10, aber noch sowas wie FUN6 aus idP13 mach
+ClearProfile();
+ERGS:=[];XSAMMEL:=[];
+IS:=[0,1];IS2:=[0,2];
+
+ERG:=[];ListX(IS2,IS2,IS,IS,FUN);;ERGS[4]:=ERG;Size(ERG);6;#16
+ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
+for RI in ERGS[4] do
+  Print("\n******P17**********",RI);
+  ListX(IS2,IS2,IS2,IS,IS,IS,FUN5);
+  od;ERGS;Size(ERGS[5]);19;
+ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN);;ERGS[6]:=ERG;;ERGS;#64
+for RI in ERGS[5] do
+  Print("\n******P17**********",RI);
+  ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN5);
+  od;ERGS;
+ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN);;ERGS[7]:=ERG;;ERGS;#128
+SaveWorkspace("GAP128");
+for RI in ERGS[6] do
+  Print("\n******P17**********",RI);
+  ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN5);
+  od;ERGS;
+SaveWorkspace("GAP128-2");
+
+  </FILE>
+
 
 <NACHLAD> #oben ändern
 

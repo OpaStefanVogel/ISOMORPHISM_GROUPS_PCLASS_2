@@ -130,6 +130,7 @@ ZEIGER:=XSAMMEL;;
   return [];
   end;
 
+XORMAT:=MatrixOf([[0,],[0,0],[0,0,0],[0,0,0,0]]);
 JKLLISTE:=[];
 JKLLISTEMACH:=function(SI)
   local j,k,l;
