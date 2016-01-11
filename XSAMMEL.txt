@@ -393,6 +393,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 #W# if S=1 then Print("\n******",ri," ",ri^2); fi;
 ### if S=2 then Print("\n******",rj); fi;
     if QY10(HRES,S,GR) then
+#X#Print("\n",S," ");
 #-      if S=1 then Print("/",Size(RC)-Position(RC,rj)+1,"\c"); if DBIT=1 then Print("\n"); fi; fi;
 #0#FAKT[S]:=Size(ORB[Position(RC,rj)]);
       PNEU:=QY11(HRES,S);
@@ -430,8 +431,9 @@ QY13:=function(C,S,nn,ZEIGER,AU)
             fi;
           if DDDDBIT=1 then RBIT:=999999; fi;
 #0#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
-          fi; #(if 2*nn<n) 
-      if RBIT<=S then RDRIN:=-1; fi;
+          fi; #(if 2*nn<n)
+#X#Print("RBIT=",RBIT);
+      if RBIT>0 and RBIT<=S then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);

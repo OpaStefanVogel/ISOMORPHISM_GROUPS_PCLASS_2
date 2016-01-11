@@ -2048,8 +2048,10 @@ Read("MatrixOf.txt");
 Read("XSAMMEL.txt"); 
 Read("DIAG.txt");
 ok PMAX auf PMIN umgestellt
-.. RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
-
+ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
+  ok hab dafür RMAXSUCH vor if und dann QY13 noch etwas angepasst
+  ok alle zu 32 sind da wie auf dem Blatt: 9+4+2
+.. doch das mit RBIT>0 nochmal in früheren durchlaufen lassen, ob das Einfluss hat.
 
 FUN8:=function(arg)#neu
   RT:=[];
@@ -2100,7 +2102,7 @@ SaveWorkspace("GAP128-2");
 #erstes Ergebnis: es fehlen wieder paar, nur 12 von 15
 R:=[[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,0,0]];
 P:=PcgsOfR(R);IdSmallGroup(P);
-RMAXSUCH(R); #macht nur . <0> 00
+RMAXSUCH(P); #macht nur . <0> 00
 
 gap> XSAMMELVIEWER4(XSAMMEL);
 
