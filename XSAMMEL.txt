@@ -67,7 +67,7 @@ NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
   RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
-  return -RET;
+  return RET;
   end;
 
 QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
@@ -583,7 +583,7 @@ Print("\n[",WEGEZAHL,"] ",XMERKZAHL);
 #14                   anstelle Index in XSAMMEL für WEGEBAUM[.]
 
 UMKEHRLIST:=function(PNEU)
-  return List(PNEU,function(i) return -i-1; end);
+  return List(PNEU,function(i) return i-1; end);#-i-1;
   end;
 
 
