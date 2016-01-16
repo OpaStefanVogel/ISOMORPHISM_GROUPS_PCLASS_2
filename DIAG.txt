@@ -246,6 +246,27 @@ FUN7:=function(arg)#neu
   return [];
   end;    
 
+FUN8:=function(arg)#in idP17
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+  Print("\n",RT);
+  R:=R5([RI,RT]);RSIZE:=Size(R);
+#Print("???",R);
+  P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+  EINMALBIT:=-1;
+  if RMAXSUCH(P)>0 then 
+    inh:=inh+1;#muss aber vor RMAXSUCH hin oder?
+    S:=Size(R);
+    Add(ERGS[S],[RI,RT]);
+    fi;
+  EINMALBIT:=0;
+  return [];
+  end;
+
 ProfileFunctions([Fun5,FUN6,FUN7,R4,R5,DIAG,COMPDIAG,
   Flat,Add,Size]);
 ClearProfile();

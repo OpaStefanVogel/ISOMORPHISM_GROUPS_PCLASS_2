@@ -51,6 +51,7 @@ LETZTERABZWEIG:=0;
 LETZTEWEGELISTE:=[];WHALT:=0;
 LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
 HRES0SIZE:=0;
+EINMALBIT:=0;
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -173,7 +174,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
         HRES0MERK,HRES0SIZEMERK,CLISTMERK,XMERKZAHLMERK,WEGPOSMERK,RM,
         WEGEZAHLMERK,WEGLIMERK,WEGEARRAYMERK,
         XMERKZAHLZIELMERK,FAKTMERK,LETZTEWEGELISTEMERK,
-        HRESEXTMERK,HRESANFMERK;
+        HRESEXTMERK,HRESANFMERK,EINMALBITMERK;
   #STEP,XMERKZAHL noch offen
   NMERK:=n;
   XMERKMERK:=StructuralCopy(XMERK);
@@ -191,6 +192,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   LETZTEWEGELISTEMERK:=StructuralCopy(LETZTEWEGELISTE);
   HRESEXTMERK:=StructuralCopy(HRESEXT);
   HRESANFMERK:=StructuralCopy(HRESANF);
+  EINMALBITMERK:=EINMALBIT;
    RMAXSUCH(C);
   n:=NMERK;
   XMERK:=XMERKMERK;
@@ -208,6 +210,7 @@ RMAXSUCHREKURSIV:=function(C)#rekursiver Aufruf von RMAXSUCH
   LETZTEWEGELISTE:=LETZTEWEGELISTEMERK;
   HRESEXT:=HRESEXTMERK;
   HRESANF:=HRESANFMERK;
+  EINMALBIT:=EINMALBITMERK;
   end;
 
 QY12:=function(C,S,nn) #bestimmt XMERK
@@ -404,6 +407,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       if 2*nn<n then 
         RBIT:=QY13(C,S+1,2*nn,ZR[2],STAB); 
         else #Print("\n",ZR3MERK);
+          if EINMALBIT=-1 then if ZR3MERK=0 then EINMALBIT:=-2; else EINMALBIT:=-3; fi; else EINMALBIT:=-4; fi;
           if ZR3MERK<>0 then #RDRIN=0
             HRES0MERK:=List(HRES0);
             HRES0:=List(HRES);HRES0SIZE:=S;
@@ -433,7 +437,8 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 #0#          Print("\n^^^^",WEGLI," ",FAKT{[1..S]}," ",Size(STAB)," \c");
           fi; #(if 2*nn<n)
 #X#Print("RBIT=",RBIT);
-      if RBIT>0 and RBIT<=S then RDRIN:=-1; fi;
+      if EINMALBIT<>-2 and RBIT>0 and RBIT<=S then RDRIN:=-1; fi;
+      if EINMALBIT=-2 then RDRIN:=-1; fi;
       HRES:=List(HRESMERK);
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
