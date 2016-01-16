@@ -2056,9 +2056,39 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
 .. da geht es weiter mit DisplayProfile()
   .. als erstes die vielen Size, das muss an den zusätzlichen QY13 mit EINMALBIT liegen
     .. doch könnte ich auch R direkt in XSAMMEL aufsuchen... neu RINXS
+      .. und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
 
 .. doch das mit RBIT>0 nochmal in früheren durchlaufen lassen, ob das Einfluss hat.
 .. die ersten 4 oder 5 .... brauchen auch nicht sein...
+
+RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
+  local PNEU,ZEIG,RET;
+  RET:=ZEIGER;
+  PNEU:=R[S];
+#  Print(PNEU,S,Size(R));
+  if S<Size(R) then 
+    for ZEIG in ZEIGER do 
+#      Print(ZEIG[1]);
+      if UMKEHRLIST(ZEIG[1])=PNEU then
+        if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
+        if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
+        RET:=RINXS(R,ZEIG[6],S+1); 
+        fi;
+      od;
+    else
+      RET:=0;
+      for ZEIG in ZEIGER do 
+#        Print(ZEIG[1]);
+        if UMKEHRLIST(ZEIG[1])=PNEU then
+          RET:=-1;
+          fi;
+        od;
+      fi;
+  return RET;
+  end;
+ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,2,3]],XSAMMEL,1);
+ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,1,2,3]],XSAMMEL,1);
+ZEIG:=RINXS([[0],[0,0],[1,1,1],[2,2,2,3],[0,0,0,0,0]],XSAMMEL,1);
 
 FUN8:=function(arg)#neu-->DIAG.txt
   RT:=[];
@@ -2066,18 +2096,19 @@ FUN8:=function(arg)#neu-->DIAG.txt
   for i in [1..j] do
     Add(RT,arg[i]+arg[i+j]);
     od;
-  Print("\n",RT);
   R:=R5([RI,RT]);RSIZE:=Size(R);
-#Print("???",R);
-  P:=PcgsOfR(R);
+#Print("???",R,RINXS(R,XSAMMEL,1));
+  if RINXS(R,XSAMMEL,1)=0 then
+    Print("\n",RT);
+    P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
-  EINMALBIT:=-1;
-  if RMAXSUCH(P)>0 then 
-    inh:=inh+1;#muss aber vor RMAXSUCH hin oder?
+    inh:=inh+1;
+    EINMALBIT:=-1;
+    RMAXSUCH(P);Print("\c");
+    EINMALBIT:=0;
     S:=Size(R);
     Add(ERGS[S],[RI,RT]);
     fi;
-  EINMALBIT:=0;
   return [];
   end;
 
@@ -2085,6 +2116,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
+IS:=[0..3];IS2:=[0,0];
 
 ERG:=[];ListX(IS2,IS2,IS,IS,FUN);;ERGS[4]:=ERG;Size(ERG);6;#16
 ERGS[4]:=[[0,2],[1,2],[2,3]];
