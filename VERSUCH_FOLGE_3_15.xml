@@ -2054,12 +2054,15 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   ok die 64 auch, jetzt mit modifiziertem QY13() mit EINMALBIT.
   ok auch die 128 alles klar
 .. da geht es weiter mit DisplayProfile()
-  .. als erstes die vielen Size, das muss an den zusätzlichen QY13 mit EINMALBIT liegen
-    .. doch könnte ich auch R direkt in XSAMMEL aufsuchen... neu RINXS
-      .. und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
+  ok als erstes die vielen Size, das muss an den zusätzlichen QY13 mit EINMALBIT liegen
+    ok doch könnte ich auch R direkt in XSAMMEL aufsuchen... neu RINXS
+      ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
+    ok damit von 70 auf 14 ok
+  .. als nächstes ist dann das Array am dransten
 
 .. doch das mit RBIT>0 nochmal in früheren durchlaufen lassen, ob das Einfluss hat.
 .. die ersten 4 oder 5 .... brauchen auch nicht sein...
+.. RINXS nochmal schneller wenn ZEIG als fertiges Array
 
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
   local PNEU,ZEIG,RET;
@@ -2381,40 +2384,40 @@ gap> XSAMMELVIEWER4(XSAMMEL);
   </NACHLAD>
 
 gap> DisplayProfile();
-  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                     
- 727387      687        9    75676        0           DEEP_COPY_OBJ                
-   7870        9      753      307   140776           PcgsByPcSequenceNCMI         
- 114930      772      131     9808     3055  (oprt.)  Flat                         
-   8322        6     1198      325   151019           PcgsByPcSequenceNC15         
-   4161     1075     2552    42713   250952           QY15                         
-1592329     4542       12   981398        0           IZUN                         
-  59345       61     5249     2318  1184972           PcgsByPcSequenceNC14         
-8487212    12061      199   232072        0  GAP      PositionSorted               
-   4161     1820    13003   111256  1888537           QY14                         
-4243606     4858    12156   232072   232072           PositionFirstComponentRepari*
-4239445     5457    16978   198723   463689           QY08                         
-201752*    43364        0  9217697        0           QY09                         
- 577946      576    56677    22576  113337*           PcgsByPcSequenceNC07         
- 668024      686    61173    26094  113494*           PcgsByPcSequenceNC12         
-7363574    63351     6665  3948802   115056  GAP      Group                        
-878095*   100613      997  6516668        0           Commu                        
-264349*   105391        0  139587*     7637  (oprt.)  ExponentsOfPcElement         
- 159670    14226   109670   728365  176427*           QY12                         
-122521*   183131        0  156362*        0  (oprt.)  PcElementByExponentsNC       
-4231117     4648   300215   165278  507240*           PcgsByPcSequenceNC11         
-4235278    43186   294416  4104591  9818826           QY21                         
-802150*   361449     6120  173152*        0  (oprt.)  Add                          
-5611968   428163     2595  760546*    91485  (oprt.)  PcgsByPcSequenceNC           
- 612838    99888   339890  6634555  136000*           WEGEVERGLEICHER              
-4231117    41013   417119  2602908  673673*           QY11                         
-632265*   384483    83116  395813*  5385056           QY10                         
-3677560   470383    15710  629972*   631659  (oprt.)  RightTransversal             
-578002*   309511   229498  9431937  6773467           NZUI                         
- 612838    74204   627334  111154*  441493*           QY07                         
-106981*   626535   524074  144711*   215541           XMISCH                       
-198929*   669047   549044  9324974     5573           XLEER                        
-198925*   345354  1516332  134520*   154033           XFUELL                       
-432772*  2660961     2881  122037*   116249  (oprt.)  Size                         
-3677560   284292  2814147  341015*  292151*           QY13                         
-         7345803           365498*                    TOTAL                        
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                                      
+ 114930      314      113     9801     3055  (oprt.)  Flat                                                          
+ 604375      505       15    47600        0           DEEP_COPY_OBJ                                                 
+   7870       14      735      307   134789           PcgsByPcSequenceNCMI                                          
+   8322        8      766      325   147649           PcgsByPcSequenceNC15                                          
+ 424356     1485     1149    19891       33           XLEER                                                         
+   4161     1047     2161    42750   246781           QY15                                                          
+  25979     1471     2699    45393   206564           XMISCH                                                        
+1592329     4593        3   981398        0           IZUN                                                          
+2963050     5157       11    81020        0  GAP      PositionSorted                                                
+  59345       53     5623     2318  1175849           PcgsByPcSequenceNC14                                          
+1481525     1482     5208    81020    81020           PositionFirstComponentRepariert                               
+1477364     1800     6584    69251   161586           QY08                                                          
+1849096    13948     1552   928106    28892  GAP      Group                                                         
+   4161     2005    13890   111255  1879407           QY14                                                          
+ 420195    11029     5167  1045031   148312           XFUELL                                                        
+211007*    23646      210  1564895        0           Commu                                                         
+128038*    26871        0  6398953        0           QY09                                                          
+239201*    36197     1575  3019988    30070  (oprt.)  Size                                                          
+ 512735      500    46414    20028  9872921           PcgsByPcSequenceNC07                                          
+4199673    43126    11343  5411338   775436           QY10                                                          
+ 668024      964    62437    26094  112789*           PcgsByPcSequenceNC12                                          
+179787*    74795       39  103200*     6591  (oprt.)  ExponentsOfPcElement                                          
+ 920127    97846     3361  148444*   202210  (oprt.)  RightTransversal                                              
+1469022     1622   119525    57383  246704*           PcgsByPcSequenceNC11                                          
+ 159670    14568   110059   728358  175707*           QY12                                                          
+106918*   162362        0  137831*        0  (oprt.)  PcElementByExponentsNC                                        
+1473183    17593   144771  1643799  5252840           QY21                                                          
+1469022    18547   180759  1123007  344314*           QY11                                                          
+549301*   214353     3983  9449256        0  (oprt.)  Add                                                           
+2725602   232917     2442  472168*    69407  (oprt.)  PcgsByPcSequenceNC                                            
+ 548886    82297   312482  5948489  121902*           WEGEVERGLEICHER                                               
+434226*   227521   169871  7217714  5088587           NZUI                                                          
+ 548886    74168   569329  107980*  399355*           QY07                                                          
+ 920127    32050  1341205  4290008  139403*           QY13                                                          
+         1426854           147327*                    TOTAL                                                         
 alle <- Markierung sind aktuelle Verbesserungen, Rest nicht mit aktualisiert
