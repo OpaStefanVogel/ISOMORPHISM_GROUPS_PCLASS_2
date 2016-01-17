@@ -49,7 +49,7 @@ AUZAHL:=0;FAKT:=[];
 LETZTERABZWEIG:=0;
 
 LETZTEWEGELISTE:=[];WHALT:=0;
-LETZTEWEGEZAHLVEKTOR:=[];LRES:=[];
+LETZTEWEGEZAHLVEKTOR:=[];
 HRES0SIZE:=0;
 EINMALBIT:=0;
 
@@ -107,7 +107,7 @@ QY11:=function(HRES,S)#bestimmt PNEU aus HRES
   end;
 
 WEGEVERGLEICHER:=function(WEG1)
-  local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP;
+  local S,HRES,T,PART,ZEIGER,LETZTELISTE,PHI,APP,LRES;
   S:=HRES0SIZE;
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
@@ -126,10 +126,10 @@ WEGEVERGLEICHER:=function(WEG1)
   end;
 
 QY07:=function(S)
-  local k,kk,W,H,i,r,ret,pcgs,MRES,NRES;
+  local k,kk,W,H,i,r,ret,pcgs,LRES,MRES,NRES;
   W:=WEGLI{[1..S]};
   H:=HRESEXT{[1..S]};
-  WEGEVERGLEICHER([W,Reversed(H)]);
+  LRES:=WEGEVERGLEICHER([W,Reversed(H)]);
 if W=WHALT then Error("halt da"); fi;
   k:=S+1;kk:=0;ret:=false;i:=0;
   if WEGEZAHL>0 then
@@ -443,20 +443,6 @@ QY13:=function(C,S,nn,ZEIGER,AU)
       fi; #(if QY10(HRES,S,GR))
     Remove(HRES,1);
     fi; od; #(for ri in RC do if ri<>RC[1] and RDRIN>-1)
-#  if WNUMBIT<>0 and WEGEZAHL>WNUMB+1 then WEGEZAHL:=WNUMB+1; fi;
-#if S=1 then Print("\n****************",WEGEZAHL,WNUMB); fi;
-  if S>1111 then
-    for i in [WEGEZAHL,WEGEZAHL-1..WNUMB+2] do
-      WEGEFLAG:=false;
-      for j in [i-1,i-2..WNUMB+1] do if WEGEFLAG=false then
-        if LETZTEWEGELISTE[i][1][S+1]=LETZTEWEGELISTE[j][1][S+1] then
-          Remove(LETZTEWEGELISTE,i);
-          WEGEZAHL:=WEGEZAHL-1;
-          WEGEFLAG:=true;
-          fi;
-        fi; od;
-      od;
-    fi;
   return RBIT;
   end;
 
