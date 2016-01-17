@@ -288,7 +288,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
     inh:=inh+1;
-    EINMALBIT:=-1;
+    EINMALBIT:=0;
     RMAXSUCH(P);Print("\c");
     EINMALBIT:=0;
     S:=Size(R);

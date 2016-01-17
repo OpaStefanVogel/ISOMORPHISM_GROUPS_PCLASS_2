@@ -2106,7 +2106,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
     inh:=inh+1;
-    EINMALBIT:=-1;
+    EINMALBIT:=0;
     RMAXSUCH(P);Print("\c");
     EINMALBIT:=0;
     S:=Size(R);
@@ -2119,7 +2119,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
-IS:=[0..3];IS2:=[0,0];
+IS:=[0..3];IS2:=[0];
 
 ERG:=[];ListX(IS2,IS2,IS,IS,FUN);;ERGS[4]:=ERG;Size(ERG);6;#16
 ERGS[4]:=[[0,2],[1,2],[2,3]];
