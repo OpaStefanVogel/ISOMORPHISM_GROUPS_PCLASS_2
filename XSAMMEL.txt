@@ -112,7 +112,8 @@ WEGEVERGLEICHER:=function(WEG1)
   S:=HRES0SIZE;
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
-  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
+  for T in [1..S] do 
+    PART:= ZEIGER[WEG1[1][T]];
     LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
     if IsBound(PART[5]) then 
       PART:=PART[5]; 
@@ -122,7 +123,7 @@ WEGEVERGLEICHER:=function(WEG1)
       PART:=PART[12];
       fi;
     ZEIGER:=PART[6];
-    fi; od; od;
+    od;
   return LRES;
   end;
 
