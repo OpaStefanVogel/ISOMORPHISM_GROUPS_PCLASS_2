@@ -2068,6 +2068,10 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
     .. und [1] auch raus
     
 
+ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
+  ok nein, stimmt so, [0,1,0,0] ist 8. Dafür muss in PZUN Reversed raus!!
+  ok denn [0,0,0,0,0,3] soll 3 sein!!!
+  ok dagegen bei IZUN muss Reversed bleiben, damit NZUI Umkehrung ist.
 .. doch das mit RBIT>0 nochmal in früheren durchlaufen lassen, ob das Einfluss hat.
 .. die ersten 4 oder 5 .... brauchen auch nicht sein...
 .. RINXS nochmal schneller wenn ZEIG als fertiges Array
