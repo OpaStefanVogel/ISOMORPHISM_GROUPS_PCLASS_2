@@ -2059,10 +2059,20 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
       ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
     ok damit von 70 auf 14 ok
   .. als nächstes ist dann das Array am dransten
+    o. zuerst in QY15 mit PZUN die Position bestimmen.
+    .. dann durchlaufenlassen und bei Error Size durch Length ersetzen und IsBound()
+    .. wenn alles wieder läuft, dann kann QY08 komplett ersetzt werden durch PZUN.
+    .. wenn das auch funktioniert, in WEGVERGLEICHER das "for" raus.
+    .. dann müsste das neue array deutlich schneller gehen
+    .. anschließend vielleicht [14] rausmachen
+    .. und [1] auch raus
+    
 
 .. doch das mit RBIT>0 nochmal in früheren durchlaufen lassen, ob das Einfluss hat.
 .. die ersten 4 oder 5 .... brauchen auch nicht sein...
 .. RINXS nochmal schneller wenn ZEIG als fertiges Array
+.. in QY14 und drumherum XMERK als return übergeben
+.. paarmal XSAMMEL anstelle von XZEIG verwendet, das irritiert
 
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
   local PNEU,ZEIG,RET;

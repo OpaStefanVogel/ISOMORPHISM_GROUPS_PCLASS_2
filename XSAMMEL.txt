@@ -62,6 +62,7 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   end;
 
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
+PZUN:=function(L,S) return Iterated(Reversed(L{[3..S]}),function(a,b) return 4*a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 
 #
@@ -269,7 +270,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
     fi; od;
   end;
 
-QY14:=function() #bestimmt PMAX in XSAMMEL
+QY14:=function() #bestimmt PMAX in XMERK
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
   S:=Size(XMERK);SMAX:=Size(XMERK[S]);
   PMAX:=[];
@@ -286,17 +287,16 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
       XMERK[S][i][1]:=List(PNEU);
 #W#      Unbind(XMERK[S][i][4]);
       od;
+  return imax;
   end;
 
-#das neue kuerzere QY15, jetzt nur letzte Stufe
-QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
+#das noch neuere QY15, jetzt mit PZUN()
+QY15:=function(ZEIGER,XM,IPMIN) #packt XMERK in XSAMMEL rein
   local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,
   I1,I2,I3,XM,SIZE1,SIZE2;
-  Print(StringNumbers([LogInt(Size(XU),2)+11],128),"\c");
-  XM:=SortedList(XU);
-  ZSIZE:=Size(ZEIGER);
-  POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
-  Add(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
+  Print(StringNumbers([LogInt(Size(XM),2)+11],128),"\c");
+  POS:=PZUN(XM[IPMIN][1]);
+  ZEIGER[POS]:=XM[IPMIN];
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
@@ -308,40 +308,16 @@ QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
         pcgs2:=PcgsByPcSequenceNC15(FamilyObj(HRES2[1]^0),List(HRES2));
         ZEIGER[POS][11]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs,HRES2[j])));
         ZEIGER[POS][10]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs2,HRES[j])));
-  ZEIGER[POS][14]:=ZSIZE+1;
+  ZEIGER[POS][14]:=POS;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
-  Print("<\c");
-  I1:=1;I2:=2;I3:=1;ZEIGERNEU:=[];
-  SIZE1:=Size(ZEIGER);SIZE2:=Size(XM);
-  repeat
-    if I1<=SIZE1 and I2<=SIZE2 then
-      if ZEIGER[I1][1]<XM[I2][1] then
-        ZEIGERNEU[I3]:=ZEIGER[I1];
-        I1:=I1+1;I3:=I3+1;
-        else
-          ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
-          ZEIGERNEU[I3][5]:=ZMERK;
-          ZEIGERNEU[I3][14]:=ZSIZE+I2;
-          I2:=I2+1;I3:=I3+1;
-          fi; fi;
-    if I1<=SIZE1 and I2>SIZE2 then
-      ZEIGERNEU[I3]:=ZEIGER[I1];
-      I1:=I1+1;I3:=I3+1;
-      fi;
-    if I1>SIZE1 and I2<=SIZE2 then
-      ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
-      ZEIGERNEU[I3][5]:=ZMERK;
-      ZEIGERNEU[I3][14]:=ZSIZE+I2;
-      I2:=I2+1;I3:=I3+1;
-      fi;
-    until I1>SIZE1 and I2>SIZE2;
-  Print(">\c");
-  for i in [1..SIZE1+SIZE2-1] do
-    ZEIGER[i]:=ZEIGERNEU[i];
-    od;
+  for i in [1..Size(XM)] do if i<>IPMIN then
+    POS:=PZUN(XM[i][1]);
+    ZEIGER[POS]:=XM[i];
+    ZEIGER[POS][5]:=ZMERK;
+    ZEIGER[POS][14]:=POS;
+    fi; od;
   end;
-#QY16 und QY17 raus
 
 
 #das neue
@@ -376,7 +352,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE;
+  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE,IPMIN;
 #Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
@@ -418,8 +394,8 @@ QY13:=function(C,S,nn,ZEIGER,AU)
                 od; od;
             XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
             QY12(C,1,1);
-            QY14();
-            QY15(ZR[2],XMERK[S]);
+            IPMIN:=QY14();
+            QY15(ZR[2],XMERK[S],IPMIN);
             XMERKZAHL:=XMERKZAHL+1;
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];
