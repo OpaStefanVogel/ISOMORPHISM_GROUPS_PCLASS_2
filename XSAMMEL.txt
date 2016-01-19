@@ -162,11 +162,10 @@ if W=WHALT then Error("halt da"); fi;
   return [ret,kk,k,S,i];
   end;
 
-QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
+QY08:=function(ZEIGER,PNEU)#Position von PNEU in ZEIGER
   local ISO;
-  ISO:=PositionFirstComponentRepariert(ZEIGER,PNEU);
-  if not IsBound(ZEIGER[ISO]) then ISO:=0; else
-    if ZEIGER[ISO][1]<>PNEU then ISO:=0; fi; fi;
+  ISO:=PZUN(PNEU);
+  if not IsBound(ZEIGER[ISO]) then ISO:=0; fi;
   return ISO;
   end;
 

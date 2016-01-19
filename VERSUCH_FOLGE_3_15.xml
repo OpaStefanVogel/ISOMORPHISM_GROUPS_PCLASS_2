@@ -2061,7 +2061,7 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   .. als nächstes ist dann das Array am dransten
     o. zuerst in QY15 mit PZUN die Position bestimmen.
     .. dann durchlaufenlassen und bei Error Size durch Length ersetzen und IsBound()
-    .. wenn alles wieder läuft, dann kann QY08 komplett ersetzt werden durch PZUN.
+    o. wenn alles wieder läuft, dann kann QY08 komplett ersetzt werden durch PZUN.
     .. wenn das auch funktioniert, in WEGVERGLEICHER das "for" raus.
     .. dann müsste das neue array deutlich schneller gehen
     .. anschließend vielleicht [14] rausmachen
