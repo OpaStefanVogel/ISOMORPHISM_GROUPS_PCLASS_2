@@ -2075,9 +2075,10 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   .. auch RINXS kann noch auf Array zugeschnitten werden.
     o. dabei IS2 rausmach
     o. und FUN auch durch FUN8 ersetzen mit RI:=[]
-    .. schließlich RINXS selbst
+    o. schließlich RINXS selbst, eigentlich nur RET:=ZEIG machen
     .. TOTAL von auf
   .. ZEIG[6] gleich von [] auf die richtige Größe setzen.
+    .. TOTAL von auf
 .. nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
     
 
@@ -2099,9 +2100,10 @@ ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
 .. ob in der jetzigen Konstellation der WEGEVERGLEICHER noch nötig ist
   
 
+GLOBZEIG:=[];
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
   local PNEU,ZEIG,RET;
-  RET:=ZEIGER;
+  RET:=0;
   PNEU:=R[S];
 #  Print(PNEU,S,Size(R));
   if S<Size(R) then 
@@ -2114,11 +2116,10 @@ RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
         fi;
       od;
     else
-      RET:=0;
       for ZEIG in ZEIGER do 
 #        Print(ZEIG[1]);
         if UMKEHRLIST(ZEIG[1])=PNEU then
-          RET:=-1;
+          RET:=ZEIG;
           fi;
         od;
       fi;
@@ -2133,7 +2134,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
   if RI=[] then R:=R5(RT); else R:=R5([RI,RT]); fi;
   RSIZE:=Size(R);
 #Print("???",R,RINXS(R,XSAMMEL,1));
-  if RINXS(R,XSAMMEL,1)=0 then
+  if not (IsBound(GLOBZEIG[6][PZUN(RT)]) then
     Print("\n",RT,"\c");
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
@@ -2150,11 +2151,17 @@ ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0..3];
 
+R:=[[0],[0,0],[1,1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
+XSAMMELVIEWER4(XSAMMEL);
+GLOBZEIG:=RINXS(R);
+
 RI:=[];ListX(IS,IS,FUN8);Size(ERGS[4]);6;
 XSAMMELVIEWER4(XSAMMEL);
+
 ERGS[4]:=[[0,2],[1,2],[2,3]];
 ERGS[5]:=[];
 for RI in ERGS[4] do
+  GLOBZEIG:=GLOBZEIGFUN(RI);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[5]);15;
