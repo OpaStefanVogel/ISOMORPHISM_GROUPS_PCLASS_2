@@ -2100,41 +2100,30 @@ ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
 .. ob in der jetzigen Konstellation der WEGEVERGLEICHER noch nötig ist
   
 
-GLOBZEIG:=[];
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
-  local PNEU,ZEIG,RET;
+  local PNEU,RET,i;
   RET:=0;
   PNEU:=R[S];
+  i:=PZUN(PNEU);
 #  Print(PNEU,S,Size(R));
-  if S<Size(R) then 
-    for ZEIG in ZEIGER do 
-#      Print(ZEIG[1]);
-      if UMKEHRLIST(ZEIG[1])=PNEU then
-        if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
-        if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
-        RET:=RINXS(R,ZEIG[6],S+1); 
-        fi;
-      od;
-    else
-      for ZEIG in ZEIGER do 
-#        Print(ZEIG[1]);
-        if UMKEHRLIST(ZEIG[1])=PNEU then
-          RET:=ZEIG;
-          fi;
-        od;
-      fi;
+  if IsBound(ZEIGER[i]) then
+    RET:=ZEIGER[i];
+#    Print(RET[1]);
+    if S<Size(R) then RET:=RINXS(R,RET[6],S+1); fi;
+    fi;
   return RET;
   end;
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,1,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[2,2,2,3],[0,0,0,0,0]],XSAMMEL,1);
 
+GLOBZEIG:=[];
 FUN8:=function(arg)#neu-->DIAG.txt
   RT:=arg;
   if RI=[] then R:=R5(RT); else R:=R5([RI,RT]); fi;
   RSIZE:=Size(R);
 #Print("???",R,RINXS(R,XSAMMEL,1));
-  if not (IsBound(GLOBZEIG[6][PZUN(RT)]) then
+  if not (IsBound(GLOBZEIG[6][PZUN(RT)])) then
     Print("\n",RT,"\c");
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
