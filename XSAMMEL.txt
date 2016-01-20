@@ -141,7 +141,7 @@ if W=WHALT then Error("halt da"); fi;
 
 QY08:=function(ZEIGER,PNEU)#Position von PNEU in ZEIGER
   local ISO;
-  ISO:=PZUN(PNEU);
+  ISO:=PZUN(PNEU)+1;
   if not IsBound(ZEIGER[ISO]) then ISO:=0; fi;
   return ISO;
   end;
