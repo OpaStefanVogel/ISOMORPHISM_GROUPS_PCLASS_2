@@ -36,10 +36,12 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   end;
 
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
+IZUN:=function(L) return ConvertToBlistRep(List(L,i->i<>0)); end;
 PZUN:=function(L,S) return Iterated(L{[Minimum(3,S)..S]},function(a,b) return 4*a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
+NZUI:=function(L) return List(L,function(i) if i return 1; else return 0; fi; end); end;
 
-#
+
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
   RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
@@ -88,11 +90,11 @@ WEGEVERGLEICHER:=function(WEG1)
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
   for T in [1..S] do 
     PART:= ZEIGER[WEG1[1][T]];
-    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
+    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i])));
     if IsBound(PART[5]) then 
       PART:=PART[5]; 
       fi;
-    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[10][i],T)));
+    LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[10][i])));
     if IsBound(PART[12]) then
       PART:=PART[12];
       fi;
@@ -214,7 +216,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
         FIXBIT:=FIXFIX;
         for jj in [1..Size(XMERK[S])] do
           p1:=XMERK[S][jj][2];
-          HRES1:=List(APHI,i->PcElementByExponents(p1,NZUI(i,S)));
+          HRES1:=List(APHI,i->PcElementByExponents(p1,NZUI(i)));
 
           pcgs:=PcgsByPcSequenceNC12(FamilyObj(HRES1[1]),HRES1);
           PNEU:=[QY09(ExponentsOfPcElement(pcgs,HRES1[1]^2))];
@@ -253,7 +255,7 @@ QY14:=function() #bestimmt PMAX in XMERK
     od;
   pcgs:=XMERK[S][imax][2];
     for i in [1..SMAX] do
-      HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j],S)));
+      HRES1:=List([1..S],j->PcElementByExponents(pcgs,NZUI(XMERK[S][i][4][j])));
       pcgs1:=PcgsByPcSequenceNC14(FamilyObj(HRES1[1]^0),HRES1);
       PNEU:=[QY09(ExponentsOfPcElement(pcgs1,HRES1[1]^2))];
       for j in [2..S] do Add(PNEU,QY09(ExponentsOfPcElement( pcgs1, Commu(pcgs1[1], pcgs1[j]))),2); od; #C
@@ -310,11 +312,11 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
     fi;
   if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
     ISO:=ZEIGER[ISO];
-    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[3][i],S)));
+    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[3][i])));
     INDEX1:=ISO[14];
     if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
     if IsBound(ISO[12]) then #Print("\007");
-      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[10][i],S)));
+      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[10][i])));
       ISO:=ISO[12];
       fi;
     RGL:=ISO[1];

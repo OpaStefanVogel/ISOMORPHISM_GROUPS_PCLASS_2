@@ -2053,19 +2053,29 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   ok alle zu 32 sind da wie auf dem Blatt: 9+4+2
   ok die 64 auch, jetzt mit modifiziertem QY13() mit EINMALBIT.
   ok auch die 128 alles klar
-.. da geht es weiter mit DisplayProfile()
+.. da geht es weiter mit DisplayProfile(), stets TOTAL mit vergleichen
   ok als erstes die vielen Size, das muss an den zusätzlichen QY13 mit EINMALBIT liegen
     ok doch könnte ich auch R direkt in XSAMMEL aufsuchen... neu RINXS
-      ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
-    ok damit von 70 auf 14 ok
+      ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig. IS:=[0..3];IS2:=[0] geht auch.
+    ok damit TOTAL von 7345 auf 1426 ok
   .. als nächstes ist dann das Array am dransten
     o. zuerst in QY15 mit PZUN die Position bestimmen.
     .. dann durchlaufenlassen und bei Error Size durch Length ersetzen und IsBound()
+    .. TOTAL von auf
     o. wenn alles wieder läuft, dann kann QY08 komplett ersetzt werden durch PZUN.
+    .. TOTAL von auf
     o. wenn das auch funktioniert, in WEGVERGLEICHER das "for" raus.
     .. dann müsste das neue array deutlich schneller gehen
+    .. TOTAL von auf
     .. anschließend vielleicht [14] rausmachen
     .. und [1] auch raus
+  .. voraussichtlich ist danach NZUI dran...als BLIST vielleicht
+    o. mit ConvertToBlistRep()
+    .. TOTAL von auf
+  .. auch RINXS kann noch auf Array zugeschnitten werden.
+    .. dabei IS2 rausmach
+    .. TOTAL von auf
+.. nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
     
 
 ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
@@ -2077,6 +2087,14 @@ ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
 .. RINXS nochmal schneller wenn ZEIG als fertiges Array
 .. in QY14 und drumherum XMERK als return übergeben
 .. paarmal XSAMMEL anstelle von XZEIG verwendet, das irritiert
+.. Formatierungssachen:
+  .. in QY14 PMAX in PMIN und überall
+  .. Einrückungen in QY14 und QY15
+  .. LFDNR wird überhaupt nicht verwendet
+  .. XSAMMEL[i][9] ist auch nicht verwendet,
+  .. XSAMMEL[i][2]:=i ersetzen durch Unbind()
+.. ob in der jetzigen Konstellation der WEGEVERGLEICHER noch nötig ist
+  
 
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
   local PNEU,ZEIG,RET;
