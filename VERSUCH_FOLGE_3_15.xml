@@ -2080,6 +2080,9 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
     .. TOTAL von auf
   .. ZEIG[6] gleich von [] auf die richtige Größe setzen.
     .. TOTAL von auf
+  .. was schließlich auch noch ginge, klein und groß Phi zusammen zu 1phi
+    .. in dem Zusammenhang, ob Matrixmultiplikation dabei ist
+    .. TOTAL von auf
 .. nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
     
 

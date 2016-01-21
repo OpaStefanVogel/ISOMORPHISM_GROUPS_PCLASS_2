@@ -455,6 +455,7 @@ else
         pcgs2:=PcgsByPcSequenceNCMI(FamilyObj(HRES2[1]^0),List(HRES2));
         i[11]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs,HRES2[j])));
         i[10]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs2,HRES[j])));
+        Unbind(i[6]);
         fi; fi;
 #    Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ",
 #      i[1]," ",i[8]," [",ii,"..",ii+i[5]-1,"] ",i[7][2]);
@@ -644,14 +645,14 @@ XSAMMELVIEWER3:=function(XSAMMEL)
   local i,ii,S,LEER,STUFE;
   S:=Size(XSAMMEL);LEER:="                  ";
   STUFE:=Size(XSAMMEL[1][1]);
-  for ii in [1..S] do i:=XSAMMEL[ii]; if IsBound(i[6]) then
+  for ii in [1..S] do i:=XSAMMEL[ii]; if not IsBound(i[5]) then
     Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ");
     View(UMKEHRLIST(i[1]));
     Print(" ",i[8]," [",ii,"] ",Size(i[6])," ",i[7]);
     if IsBound(i[12]) then 
       Print(" *"); 
       else
-        if IsBound(i[6][1]) then XSAMMELVIEWER3(i[6]); fi;
+        if IsBound(i[6]) then XSAMMELVIEWER3(i[6]); fi;
         fi;
     fi; od;
   end;
@@ -661,12 +662,12 @@ XSAMMELVIEWER4:=function(XSAMMEL)#neu aus 3 ohne *
   local i,ii,S,LEER,STUFE;
   S:=Size(XSAMMEL);LEER:="                  ";
   STUFE:=Size(XSAMMEL[1][1]);
-  for ii in [1..S] do i:=XSAMMEL[ii]; if IsBound(i[6]) and not IsBound(i[12]) then 
+  for ii in [1..S] do i:=XSAMMEL[ii]; if not IsBound(i[5]) and not IsBound(i[12]) then 
     Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ");
     View(UMKEHRLIST(i[1]));
     Print(" ",i[8]," [",ii,"] ",Size(i[6])," ",i[7]);
     LETZTERABZWEIG:=i[6];
-    if IsBound(i[6][1]) then XSAMMELVIEWER4(i[6]); fi;
+    if IsBound(i[6]) then XSAMMELVIEWER4(i[6]); fi;
     fi; od;
   end;
 #XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
