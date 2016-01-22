@@ -62,6 +62,7 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   end;
 
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
+PZUN:=function(L,S) return Iterated(L{[Minimum(3,S)..S]},function(a,b) return 4*a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 
 #
@@ -161,11 +162,10 @@ if W=WHALT then Error("halt da"); fi;
   return [ret,kk,k,S,i];
   end;
 
-QY08:=function(ZEIGER,PNEU)#Position von PNEU in XSAMMEL
+QY08:=function(ZEIGER,PNEU,S)#Position von PNEU in XSAMMEL
   local ISO;
-  ISO:=PositionFirstComponentRepariert(ZEIGER,PNEU);
-  if not IsBound(ZEIGER[ISO]) then ISO:=0; else
-    if ZEIGER[ISO][1]<>PNEU then ISO:=0; fi; fi;
+  ISO:=PZUN(UMKEHRLIST(PNEU),S)+1;
+  if not IsBound(ZEIGER[ISO]) then ISO:=0; fi;
   return ISO;
   end;
 
@@ -269,7 +269,7 @@ QY12:=function(C,S,nn) #bestimmt XMERK
     fi; od;
   end;
 
-QY14:=function() #bestimmt PMAX in XSAMMEL
+QY14:=function() #bestimmt PMAX in XMERK
   local S,SMAX,PMAX,P,i,imax,HRES1,PNEU,pcgs,pcgs1,p0,exp,p1,j;
   S:=Size(XMERK);SMAX:=Size(XMERK[S]);
   PMAX:=[];
@@ -286,17 +286,16 @@ QY14:=function() #bestimmt PMAX in XSAMMEL
       XMERK[S][i][1]:=List(PNEU);
 #W#      Unbind(XMERK[S][i][4]);
       od;
+  imax:=1;#ist so nach der letzten Umformung
+  return imax;
   end;
 
-#das neue kuerzere QY15, jetzt nur letzte Stufe
-QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
-  local POS,i,ii,ZMERK,ZSIZE,HRES,HRES2,pcgs,pcgs2,STUFE,ZEIGERNEU,
-  I1,I2,I3,XM,SIZE1,SIZE2;
-  Print(StringNumbers([LogInt(Size(XU),2)+11],128),"\c");
-  XM:=SortedList(XU);
-  ZSIZE:=Size(ZEIGER);
-  POS:=PositionFirstComponentRepariert(ZEIGER,XM[1][1]);
-  Add(ZEIGER,XM[1],POS);#auch ohne StructuralCopy
+#das noch neuere QY15, jetzt mit PZUN()
+QY15:=function(ZEIGER,XM,IPMIN,S) #packt XMERK in XSAMMEL rein
+  local POS,i,ZMERK,HRES,HRES2,pcgs,pcgs2,STUFE;
+  Print(StringNumbers([LogInt(Size(XM),2)+11],128),"\c");
+  POS:=PZUN(UMKEHRLIST(XM[IPMIN][1]),S)+1;
+  ZEIGER[POS]:=XM[IPMIN];
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
@@ -308,47 +307,23 @@ QY15:=function(ZEIGER,XU) #packt XMERK in XSAMMEL rein
         pcgs2:=PcgsByPcSequenceNC15(FamilyObj(HRES2[1]^0),List(HRES2));
         ZEIGER[POS][11]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs,HRES2[j])));
         ZEIGER[POS][10]:=List([1..STUFE],j->IZUN(ExponentsOfPcElement(pcgs2,HRES[j])));
-  ZEIGER[POS][14]:=ZSIZE+1;
+  ZEIGER[POS][14]:=POS;
   ZMERK:=ZEIGER[POS];
   COUNTER:=COUNTER+1;
-  Print("<\c");
-  I1:=1;I2:=2;I3:=1;ZEIGERNEU:=[];
-  SIZE1:=Size(ZEIGER);SIZE2:=Size(XM);
-  repeat
-    if I1<=SIZE1 and I2<=SIZE2 then
-      if ZEIGER[I1][1]<XM[I2][1] then
-        ZEIGERNEU[I3]:=ZEIGER[I1];
-        I1:=I1+1;I3:=I3+1;
-        else
-          ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
-          ZEIGERNEU[I3][5]:=ZMERK;
-          ZEIGERNEU[I3][14]:=ZSIZE+I2;
-          I2:=I2+1;I3:=I3+1;
-          fi; fi;
-    if I1<=SIZE1 and I2>SIZE2 then
-      ZEIGERNEU[I3]:=ZEIGER[I1];
-      I1:=I1+1;I3:=I3+1;
-      fi;
-    if I1>SIZE1 and I2<=SIZE2 then
-      ZEIGERNEU[I3]:=StructuralCopy(XM[I2]);
-      ZEIGERNEU[I3][5]:=ZMERK;
-      ZEIGERNEU[I3][14]:=ZSIZE+I2;
-      I2:=I2+1;I3:=I3+1;
-      fi;
-    until I1>SIZE1 and I2>SIZE2;
-  Print(">\c");
-  for i in [1..SIZE1+SIZE2-1] do
-    ZEIGER[i]:=ZEIGERNEU[i];
-    od;
+  for i in [1..Size(XM)] do if i<>IPMIN then
+    POS:=PZUN(UMKEHRLIST(XM[i][1]),S)+1;
+    ZEIGER[POS]:=XM[i];
+    ZEIGER[POS][5]:=ZMERK;
+    ZEIGER[POS][14]:=POS;
+    fi; od;
   end;
-#QY16 und QY17 raus
 
 
 #das neue
 QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
   local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR;
   HRES:=List(HRESALT);NICHDRIN:=0;RET:=ZEIGER;RGL:=[];GNR:=0;
-  ISO:=QY08(ZEIGER,PNEU);
+  ISO:=QY08(ZEIGER,PNEU,S);
 ##Print("\nQY21:ISO=",ISO);
   if ISO=0 then
     if 2*nn<n then inh:=inh+1;
@@ -356,7 +331,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
       RMAXSUCHREKURSIV(Group(HRES));
       Print("\nGruppe ",IdSmallGroup(Group(HRES))," jetzt drin \c");
       fi;
-      ISO:=QY08(ZEIGER,PNEU);
+      ISO:=QY08(ZEIGER,PNEU,S);
     fi;
   if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
     ISO:=ZEIGER[ISO];
@@ -376,7 +351,7 @@ QY21:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
    
 QY13:=function(C,S,nn,ZEIGER,AU)
   local i,j,ri,RC,PNEU,GR,HRESMERK,RDRIN,HRES0MERK,ZR,RBIT,ZR3MERK,rj,
-  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE;
+  orbi,ORB,STAB,RBITNEU,WNUMB,WEGEFLAG,CLISTSIZE,IPMIN;
 #Print("?\c");
   RBIT:=0;RDRIN:=0;WNUMB:=WEGEZAHL;
   if HRES<>[] then GR:=Group(HRES); else GR:=Group(Identity(C)); fi;
@@ -418,8 +393,8 @@ QY13:=function(C,S,nn,ZEIGER,AU)
                 od; od;
             XMERK:=[];FIXBIT:=0;HRES:=[];STEP:=1;
             QY12(C,1,1);
-            QY14();
-            QY15(ZR[2],XMERK[S]);
+            IPMIN:=QY14();
+            QY15(ZR[2],XMERK[S],IPMIN,S);
             XMERKZAHL:=XMERKZAHL+1;
             ZR:=QY21(HRES0,S,nn,ZEIGER,PNEU);
             WEGLI[S]:=ZR[5];
@@ -449,8 +424,8 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
   local i,S,POS,GRP;
   S:=Size(XSAMMEL);
-  for i in [1..S] do 
-    if IsBound(XSAMMEL[i][6]) then 
+  for i in [1..S] do
+    if IsBound(XSAMMEL[i]) and IsBound(XSAMMEL[i][6]) then
       POS:=i;
       if not(IsInt(XSAMMEL[POS][2])) then
         GRP:=Group(XSAMMEL[POS][2]);
@@ -488,7 +463,7 @@ if n=nmax and 2^STUFE=n then
 
 
 else
-  for ii in [1..S] do if 2^STUFE<=n then i:=XSAMMEL[ii]; if IsBound(i[6]) then
+  for ii in [1..S] do if IsBound(XSAMMEL[ii]) and 2^STUFE<=n then i:=XSAMMEL[ii]; if IsBound(i[6]) then
 #Error("\n\n\n***********",i);
     if not IsBound(RMERKER[STUFE][i[7][2]]) then #nicht gleich [1] setzen!!!
       RMERKER[STUFE][i[7][2]]:=i; 
@@ -517,10 +492,12 @@ fi;
 XLEER:=function(XSAMMEL) #fuellt [7][8]
   local i,S;
   S:=Size(XSAMMEL);
-  if S>0 then if 2^Size(XSAMMEL[1][1])<=n then for i in [1..S] do 
-    if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
-    XSAMMEL[i][2]:=i;
-    if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
+  if S>0 then if 2^Size(XSAMMEL[S][1])<=n then for i in [1..S] do
+    if IsBound(XSAMMEL[i]) then
+      if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
+      XSAMMEL[i][2]:=i;
+      if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
+      fi;
     od; fi; fi;
   end;
 
@@ -707,17 +684,17 @@ XSAMMELVIEWER3:=function(XSAMMEL)
 XSAMMELVIEWER4:=function(XSAMMEL)#neu aus 3 ohne *
   local i,ii,S,LEER,STUFE;
   S:=Size(XSAMMEL);LEER:="                  ";
-  STUFE:=Size(XSAMMEL[1][1]);
-  for ii in [1..S] do i:=XSAMMEL[ii]; if IsBound(i[6]) and not IsBound(i[12]) then 
+  STUFE:=Size(XSAMMEL[S][1]);
+  for ii in [1..S] do if IsBound(XSAMMEL[ii]) then i:=XSAMMEL[ii]; if IsBound(i[6]) and not IsBound(i[12]) then 
     Print("\n",LEER{[1..2*Size(i[1])-2]}," ",STUFE," ");
     View(UMKEHRLIST(i[1]));
     Print(" ",i[8]," [",ii,"] ",Size(i[6])," ",i[7]);
     if IsBound(i[12]) then 
       Print(" *"); 
       else
-        if IsBound(i[6][1]) then LETZTERABZWEIG:=i[6]; XSAMMELVIEWER4(i[6]); fi;
+        if IsBound(i[6]) and i[6]<>[] then LETZTERABZWEIG:=i[6]; XSAMMELVIEWER4(i[6]); fi;
         fi;
-    fi; od;
+    fi; fi; od;
   end;
 #XSAMMELVIEWER4(XSAMMEL,[],1);Print("\n");
 
