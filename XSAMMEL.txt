@@ -52,6 +52,7 @@ LETZTEWEGELISTE:=[];WHALT:=0;
 LETZTEWEGEZAHLVEKTOR:=[];
 HRES0SIZE:=0;
 EINMALBIT:=0;
+NZUITAB:=[];
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -64,6 +65,8 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
 PZUN:=function(L,S) return Iterated(L{[Minimum(3,S)..S]},function(a,b) return 4*a+b; end); end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
+NZUI:=function(n,S) return NZUITAB[n+1]{[1..S]}; end;
+for i in [0..1023] do NZUITAB[i+1]:=CoefficientsQadic(1024+i,2); od;
 
 #
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
@@ -112,7 +115,6 @@ WEGEVERGLEICHER:=function(WEG1)
   S:=HRES0SIZE;
   LETZTELISTE:=[];
   ZEIGER:=XSAMMEL;LRES:=StructuralCopy(WEG1[2]);
-#  for T in [1..S] do for PART in ZEIGER do if PART[14]=WEG1[1][T] then
   for T in [1..S] do 
     PART:=ZEIGER[WEG1[1][T]];
     LRES{[S-T+1..S]}:=List([1..T],i->PcElementByExponentsNC(LRES{[S-T+1..S]},NZUI(PART[3][i],T)));
@@ -124,7 +126,6 @@ WEGEVERGLEICHER:=function(WEG1)
       PART:=PART[12];
       fi;
     ZEIGER:=PART[6];
-#    fi; od; od;
     od;
   return LRES;
   end;
