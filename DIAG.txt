@@ -247,52 +247,36 @@ FUN7:=function(arg)#neu
   end;    
 
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
-  local PNEU,ZEIG,RET;
-  RET:=ZEIGER;
+  local PNEU,RET,i;
+  RET:=0;
   PNEU:=R[S];
-#  Print(PNEU,S,Size(R));
-  if S<Size(R) then 
-    for ZEIG in ZEIGER do 
-#      Print(ZEIG[1]);
-      if UMKEHRLIST(ZEIG[1])=PNEU then
-        if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
-        if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
-        RET:=RINXS(R,ZEIG[6],S+1); 
-        fi;
-      od;
-    else
-      RET:=0;
-      for ZEIG in ZEIGER do 
-#        Print(ZEIG[1]);
-        if UMKEHRLIST(ZEIG[1])=PNEU then
-          RET:=-1;
-          fi;
-        od;
-      fi;
+  i:=PZUN(PNEU,S)+1;
+#  Print("XXXX",PNEU,S,Size(R));
+  if IsBound(ZEIGER[i]) then
+    RET:=ZEIGER[i];
+#    Print(RET[1]);
+    if Size(R)>S then RET:=RINXS(R,RET[6],S+1); fi;
+    fi;
+#  Print("****",RET);
   return RET;
   end;
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,1,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[2,2,2,3],[0,0,0,0,0]],XSAMMEL,1);
 
+GLOBZEIG:=[];
 FUN8:=function(arg)#neu-->DIAG.txt
-  RT:=[];
-  j:=Size(arg)/2;
-  for i in [1..j] do
-    Add(RT,arg[i]+arg[i+j]);
-    od;
-  R:=R5([RI,RT]);RSIZE:=Size(R);
+  RT:=arg;
+  if RI=[] then R:=R5(RT); else R:=R5([RI,RT]); fi;
+  RSIZE:=Size(R);
 #Print("???",R,RINXS(R,XSAMMEL,1));
-  if RINXS(R,XSAMMEL,1)=0 then
-    Print("\n",RT);
+  if not (IsBound(GLOBZEIG[6][PZUN(R[RSIZE],RSIZE)+1])) then
+    Print("\n",RT,"\c");
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
     inh:=inh+1;
-    EINMALBIT:=0;
     RMAXSUCH(P);Print("\c");
-    EINMALBIT:=0;
-    S:=Size(R);
-    Add(ERGS[S],[RI,RT]);
+    if RI=[] then Add(ERGS[RSIZE],RT); else Add(ERGS[RSIZE],[RI,RT]); fi;
     fi;
   return [];
   end;

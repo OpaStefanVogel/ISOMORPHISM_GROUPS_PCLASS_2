@@ -1,4 +1,4 @@
-Auf geht's
+<LOS>
 <FILE id="P01" inhalt="R von 1...n auf 0...(n-1) umstellen">
 #
 Read("PcgsOfR.txt");
@@ -133,7 +133,7 @@ PL:=Reversed(GeneratorsOfGroup(P));
 S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
   NEU:=RTT();Print(NEU);
-  if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+  if not NEU=RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
   return [];
   end;
 
@@ -238,7 +238,7 @@ XSAMMEL:=[];R:=R4([0,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER0(XSAMMEL);#16,3
 XSAMMEL:=[];R:=R4([1,2]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER0(XSAMMEL);#16,4
 #was schon so in XSAMMEL ist:
 PARTZ:=0;PARTZAHL(XSAMMEL);PARTZ;#=Zeilenzahl bei XSAMMEL2
-WEG:=[1,2,2,4];PART:=WEGEDISP(WEG,XSAMMEL,1);#führt zur Zeile mit <== [16,4]
+WEG:=[1,2,2,4];PART:=WEGEDISP(WEG,XSAMMEL,1);#führt zur Zeile mit &lt;== [16,4]
 ALLEWEGEDISP(PART,XSAMMEL,1);#ist aber noch nicht das erwartete, da muss noch mehr hinzu
 
 #das hier findet RMAX aus dem WEGLI nach RMAXSUCH:
@@ -289,8 +289,8 @@ DIAG:=function(R)#neu
   GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
   for i in IteratorOfTuples( [0,1], S ) do
 #    Print("\n",i,IZUN(Reversed(i)));
-    if Sum(i)<3 then 
-#      Print("<3");
+    if 3>=Sum(i) then 
+#      Print("&lt;3");
       Add(RET,RF[j]);j:=j+1;
       else 
 #        Print(">3");
@@ -309,7 +309,7 @@ DIAG:=function(R)#neu
 #        Print("\n  ",Y);
 #        Print("\n  ",Z);
 #        PROD:=PR(X)+PR(Y)+PR(Z)+PR(X+Y)+PR(X+Z)+PR(Y+Z);
-#if PR(X)<>RET[XP+1] then Error(XP); fi;
+#if not PR(X)=RET[XP+1] then Error(XP); fi;
         PROD:=GM[RET[XP+1]+1][RET[YP+1]+1];
         PROD:=GM[PROD+1][RET[ZP+1]+1];
         PROD:=GM[PROD+1][RET[XP+YP+1]+1];
@@ -375,7 +375,7 @@ FUND:=function(arg)#neu
   R:=R4(RT);D:=DIAG(R);;C:=Collected(D);#Print(C);
   D:=List(C{[2..Size(C)]},i->i[2]);D:=SortedList(D);Add(D,C[1][2],1);
   if not D in ERGD then Add(ERG,[RT,D]);Add(ERGD,D);Print("\n",RT,D); fi;
-# if NEU<>RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
+# if not NEU=RSIZE then inh:=inh+1;RMAXSUCH(P);Add(ERG,RT); fi;
   return [];
   end;
 
@@ -493,7 +493,7 @@ PL:=Reversed(GeneratorsOfGroup(P));
 S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
   NEU:=RTT();Print(NEU);
-  if NEU<>RSIZE then 
+  if not NEU=RSIZE then 
     inh:=inh+1;
     RMAXSUCH(P);
     S:=Size(R);
@@ -1215,7 +1215,7 @@ COMPDIAG:=function(D)
             (D[j]=0 and D[k]=ii and D[l]=ii) then QUAD1:=QUAD1+1; fi; 
           if 
             D[j]>0 and D[k]>0 and D[l]>0 and 
-            D[j]<>D[k] and D[j]<>D[l] and D[k]<>D[l] then QUAD2:=QUAD2+1; fi; 
+            not D[j]=D[k] and not D[j]=D[l] and not D[k]=D[l] then QUAD2:=QUAD2+1; fi; 
 #          Print("\n",QUAD," ",j," ",k," ",l);
           fi;
         od;
@@ -2053,19 +2053,35 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   ok alle zu 32 sind da wie auf dem Blatt: 9+4+2
   ok die 64 auch, jetzt mit modifiziertem QY13() mit EINMALBIT.
   ok auch die 128 alles klar
-.. da geht es weiter mit DisplayProfile()
+.. da geht es weiter mit DisplayProfile(), stets TOTAL mit vergleichen
   ok als erstes die vielen Size, das muss an den zusätzlichen QY13 mit EINMALBIT liegen
     ok doch könnte ich auch R direkt in XSAMMEL aufsuchen... neu RINXS
-      ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig.
-    ok damit von 70 auf 14 ok
+      ok und für RINXS geht nur Sortierung IS:=[0,1];IS2:=[0,2]; sonst phi nötig. IS:=[0..3];IS2:=[0] geht auch.
+    ok damit TOTAL von 7345 auf 1426 ok
   .. als nächstes ist dann das Array am dransten
-    o. zuerst in QY15 mit PZUN die Position bestimmen.
-    .. dann durchlaufenlassen und bei Error Size durch Length ersetzen und IsBound()
-    .. wenn alles wieder läuft, dann kann QY08 komplett ersetzt werden durch PZUN.
-    .. wenn das auch funktioniert, in WEGVERGLEICHER das "for" raus.
-    .. dann müsste das neue array deutlich schneller gehen
+    ok zuerst in QY15 mit PZUN die Position bestimmen.
+    ok dann durchlaufenlassen und bei Error Size durch Length ersetzen und IsBound()
+    ok es muss gleich mit QY08 komplett ersetzt werden durch PZUN.
+    ok TOTAL von 1426 auf 1380
+    ok wenn das auch funktioniert, in WEGVERGLEICHER das "for" raus.
+    ok dann müsste das neue array deutlich schneller gehen
+    ok TOTAL von 1380 auf 1319
     .. anschließend vielleicht [14] rausmachen
     .. und [1] auch raus
+  ok voraussichtlich ist danach NZUI dran...als BLIST vielleicht
+    nö mit ConvertToBlistRep()
+    ok was auch ginge NZUI als fertig vorgegebenes Array von Vektoren
+    ok TOTAL von 1319 auf 1174
+  ok auch RINXS kann noch auf Array zugeschnitten werden.
+    ok dabei IS2 rausmach
+    ok und FUN auch durch FUN8 ersetzen mit RI:=[]
+    ok schließlich RINXS selbst, eigentlich nur RET:=ZEIG machen
+  ok ZEIG[6] gleich von [] auf die richtige Größe setzen.
+    ok TOTAL von 1174 auf 
+  .. was schließlich auch noch ginge, klein und groß Phi zusammen zu 1phi
+    .. in dem Zusammenhang, ob Matrixmultiplikation dabei ist
+    .. TOTAL von auf
+.. nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
     
 
 ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
@@ -2077,91 +2093,102 @@ ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
 .. RINXS nochmal schneller wenn ZEIG als fertiges Array
 .. in QY14 und drumherum XMERK als return übergeben
 .. paarmal XSAMMEL anstelle von XZEIG verwendet, das irritiert
+.. Formatierungssachen:
+  .. in QY14 PMAX in PMIN und überall
+  .. Einrückungen in QY14 und QY15
+  .. LFDNR wird überhaupt nicht verwendet
+  .. XSAMMEL[i][9] ist auch nicht verwendet,
+  .. XSAMMEL[i][2]:=i ersetzen durch Unbind()
+.. ob in der jetzigen Konstellation der WEGEVERGLEICHER noch nötig ist
+.. Unbind(XSAMMEL[i][6]) wenn schon [12] ist
+
+PZUN([0,0,0,0,0],5);0;
+PZUN([0,0,0,0,3],5);3;
+PZUN([0,0,2,0,3],5);35;
+PZUN([3,3,3,3,3],5);4^3-1;
+NZUI(7,4);[1,1,1,0];
 
 RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
-  local PNEU,ZEIG,RET;
-  RET:=ZEIGER;
+  local PNEU,RET,i;
+  RET:=0;
   PNEU:=R[S];
-#  Print(PNEU,S,Size(R));
-  if S<Size(R) then 
-    for ZEIG in ZEIGER do 
-#      Print(ZEIG[1]);
-      if UMKEHRLIST(ZEIG[1])=PNEU then
-        if IsBound(ZEIG[5]) then ZEIG:=ZEIG[5]; fi;
-        if IsBound(ZEIG[12]) then ZEIG:=ZEIG[12]; fi;
-        RET:=RINXS(R,ZEIG[6],S+1); 
-        fi;
-      od;
-    else
-      RET:=0;
-      for ZEIG in ZEIGER do 
-#        Print(ZEIG[1]);
-        if UMKEHRLIST(ZEIG[1])=PNEU then
-          RET:=-1;
-          fi;
-        od;
-      fi;
+  i:=PZUN(PNEU,S)+1;
+#  Print("XXXX",PNEU,S,Size(R));
+  if IsBound(ZEIGER[i]) then
+    RET:=ZEIGER[i];
+#    Print(RET[1]);
+    if Size(R)>S then RET:=RINXS(R,RET[6],S+1); fi;
+    fi;
+#  Print("****",RET);
   return RET;
   end;
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,1,2,3]],XSAMMEL,1);
 ZEIG:=RINXS([[0],[0,0],[1,1,1],[2,2,2,3],[0,0,0,0,0]],XSAMMEL,1);
 
+GLOBZEIG:=[];
 FUN8:=function(arg)#neu-->DIAG.txt
-  RT:=[];
-  j:=Size(arg)/2;
-  for i in [1..j] do
-    Add(RT,arg[i]+arg[i+j]);
-    od;
-  R:=R5([RI,RT]);RSIZE:=Size(R);
+  RT:=arg;
+  if RI=[] then R:=R5(RT); else R:=R5([RI,RT]); fi;
+  RSIZE:=Size(R);
 #Print("???",R,RINXS(R,XSAMMEL,1));
-  if RINXS(R,XSAMMEL,1)=0 then
-    Print("\n",RT);
+  if not (IsBound(GLOBZEIG[6][PZUN(R[RSIZE],RSIZE)+1])) then
+    Print("\n",RT,"\c");
     P:=PcgsOfR(R);
 #  Print(IdSmallGroup(P),"\c");
     inh:=inh+1;
-    EINMALBIT:=0;
     RMAXSUCH(P);Print("\c");
-    EINMALBIT:=0;
-    S:=Size(R);
-    Add(ERGS[S],[RI,RT]);
+    if RI=[] then Add(ERGS[RSIZE],RT); else Add(ERGS[RSIZE],[RI,RT]); fi;
     fi;
   return [];
   end;
 
-#Ablauf aus idP10, aber noch sowas wie FUN6 aus idP13 mach
+#Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0,1];IS2:=[0,2];
-IS:=[0..3];IS2:=[0];
+IS:=[0..3];
 
-R:=([[0],[0,0],[1,1,1]]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
-R:=([[0],[0,0],[1,1,1],[0,0,0,2]]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
-R:=([[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,0,0]]);P:=PcgsOfR(R);RMAXSUCH(P);XSAMMELVIEWER2(XSAMMEL);
-
-ERG:=[];ListX(IS2,IS2,IS,IS,FUN);;ERGS[4]:=ERG;Size(ERG);7;#16
-ERGS[4]:=[[0,2],[1,2],[2,3]];
+R:=[[0],[0,0],[1,1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
 XSAMMELVIEWER4(XSAMMEL);
+R:=[[0],[0,0],[1,1,1]];GLOBZEIG:=RINXS(R,XSAMMEL,1);
+
+ERGS[3]:=[];
+ERGS[4]:=[];
+RI:=[];ListX(IS,IS,FUN8);Size(ERGS[4]);7;
+XSAMMELVIEWER2(XSAMMEL);
+XSAMMELVIEWER4(XSAMMEL);#123444
+
+ERGS[4]:=[[0,2],[1,2],[2,3]];
 ERGS[5]:=[];
 for RI in ERGS[4] do
-  Print("\n******P17**********",RI);
-  ListX(IS2,IS2,IS2,IS,IS,IS,FUN8);
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[5]);15;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
 ERGS[6]:=[];
 for RI in ERGS[5] do
-  Print("\n******P17**********",RI);
-  ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN8);
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[6]);54;
 XSAMMELVIEWER4(XSAMMEL);
 SaveWorkspace("GAP64-54");
 ERGS[7]:=[];
 for RI in ERGS[6] do
-  Print("\n******P17**********",RI);
-  ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN8);
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[7]);151;
 SaveWorkspace("GAP128-151");
+ERGS[8]:=[];
+for RI in ERGS[7] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[8]);433;
+SaveWorkspace("GAP256-433");
 
 #Ergebnis stimmt jetzt so wie gewollt: immer 64 oder 256 oder auch 1024 bei der 128
 gap> XSAMMELVIEWER4(XSAMMEL);
@@ -2402,40 +2429,39 @@ gap> XSAMMELVIEWER4(XSAMMEL);
   </NACHLAD>
 
 gap> DisplayProfile();
-  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                                                      
- 114930      314      113     9801     3055  (oprt.)  Flat                                                          
- 604375      505       15    47600        0           DEEP_COPY_OBJ                                                 
-   7870       14      735      307   134789           PcgsByPcSequenceNCMI                                          
-   8322        8      766      325   147649           PcgsByPcSequenceNC15                                          
- 424356     1485     1149    19891       33           XLEER                                                         
-   4161     1047     2161    42750   246781           QY15                                                          
-  25979     1471     2699    45393   206564           XMISCH                                                        
-1592329     4593        3   981398        0           IZUN                                                          
-2963050     5157       11    81020        0  GAP      PositionSorted                                                
-  59345       53     5623     2318  1175849           PcgsByPcSequenceNC14                                          
-1481525     1482     5208    81020    81020           PositionFirstComponentRepariert                               
-1477364     1800     6584    69251   161586           QY08                                                          
-1849096    13948     1552   928106    28892  GAP      Group                                                         
-   4161     2005    13890   111255  1879407           QY14                                                          
- 420195    11029     5167  1045031   148312           XFUELL                                                        
-211007*    23646      210  1564895        0           Commu                                                         
-128038*    26871        0  6398953        0           QY09                                                          
-239201*    36197     1575  3019988    30070  (oprt.)  Size                                                          
- 512735      500    46414    20028  9872921           PcgsByPcSequenceNC07                                          
-4199673    43126    11343  5411338   775436           QY10                                                          
- 668024      964    62437    26094  112789*           PcgsByPcSequenceNC12                                          
-179787*    74795       39  103200*     6591  (oprt.)  ExponentsOfPcElement                                          
- 920127    97846     3361  148444*   202210  (oprt.)  RightTransversal                                              
-1469022     1622   119525    57383  246704*           PcgsByPcSequenceNC11                                          
- 159670    14568   110059   728358  175707*           QY12                                                          
-106918*   162362        0  137831*        0  (oprt.)  PcElementByExponentsNC                                        
-1473183    17593   144771  1643799  5252840           QY21                                                          
-1469022    18547   180759  1123007  344314*           QY11                                                          
-549301*   214353     3983  9449256        0  (oprt.)  Add                                                           
-2725602   232917     2442  472168*    69407  (oprt.)  PcgsByPcSequenceNC                                            
- 548886    82297   312482  5948489  121902*           WEGEVERGLEICHER                                               
-434226*   227521   169871  7217714  5088587           NZUI                                                          
- 548886    74168   569329  107980*  399355*           QY07                                                          
- 920127    32050  1341205  4290008  139403*           QY13                                                          
-         1426854           147327*                    TOTAL                                                         
-alle <- Markierung sind aktuelle Verbesserungen, Rest nicht mit aktualisiert
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function
+ 114930      294      124     9806     3055  (oprt.)  Flat
+ 549128      623        0    34310        0           DEEP_COPY_OBJ
+   7870        9     1159      307   134795           PcgsByPcSequenceNCMI
+   8322       16     1281      325   147650           PcgsByPcSequenceNC15
+  25895     1628      664     1213       39           XLEER
+   4161     1338     2463   211470   232483           QY15
+1592329     4097       11   981398        0           IZUN
+  25895     1906     2277    45322   206575           XMISCH
+  59345       83     6715     2318  1175852           PcgsByPcSequenceNC14
+1476615     7066        0  1671116        0           QY08
+   4161     2135    12068   111255  1808745           QY14
+  25669    11193     4259  1020371   148234           XFUELL
+1847604    18156     2021   930800    28869  GAP      Group
+4974995    23400     1851  3020481    30054  (oprt.)  Size
+210981*    27307      467  1564703        0           Commu
+128021*    30904        0  6400005        0           QY09
+396645*    32928      590  2267146        0  (oprt.)  Add
+434207*    34762      777  4842868        0           NZUI
+ 512735      636    56173    20028  9872966           PcgsByPcSequenceNC07
+ 668024      745    60281    26094  112789*           PcgsByPcSequenceNC12
+1472452    23280    41931  1643228  4570628           QY21
+4198005    55495    12700  5408141   775314           QY10
+179770*    89820        0  103194*     6591  (oprt.)  ExponentsOfPcElement
+ 159670    14660   107422   728359  175575*           QY12
+ 919635   120510     4459  148394*   202153  (oprt.)  RightTransversal
+ 548886    55287    71722  5952777  6931961           WEGEVERGLEICHER
+1468291     2125   149022    57355  246635*           PcgsByPcSequenceNC11
+106916*   193246        0  137829*        0  (oprt.)  PcElementByExponentsNC
+1468291    24123   225719  1122031  344248*           QY11
+2724815   271475     2814  472091*    69394  (oprt.)  PcgsByPcSequenceNC
+ 548886    85508   332665  108021*  346816*           QY07
+ 919635    37997  1112237  4295249  133533*           QY13
+         1172752           139321*                    TOTAL
+alle «- Markierung sind aktuelle Verbesserungen, Rest nicht mit aktualisiert
+</LOS>
