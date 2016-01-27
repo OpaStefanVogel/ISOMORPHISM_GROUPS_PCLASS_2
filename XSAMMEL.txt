@@ -265,7 +265,8 @@ QY14:=function() #bestimmt PMAX in XMERK
       XMERK[S][i][1]:=List(PNEU);
 #W#      Unbind(XMERK[S][i][4]);
       od;
-  imax:=1;#ist so nach der letzten Umformung
+Print("\nQY14: ",imax,"\n",XMERK[S]);
+#  imax:=1;#ist so nach der letzten Umformung
   return imax;
   end;
 
@@ -406,6 +407,7 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
   local i,S,POS,GRP;
   S:=Size(XSAMMEL);
+XSAMMELVIEWER2(XSAMMEL);
   for i in [1..S] do
     if IsBound(XSAMMEL[i]) and IsBound(XSAMMEL[i][6]) then
       POS:=i;
