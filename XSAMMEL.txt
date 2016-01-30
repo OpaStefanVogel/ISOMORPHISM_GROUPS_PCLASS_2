@@ -144,7 +144,7 @@ if W=WHALT then Error("halt da"); fi;
 QY08:=function(ZEIGER,PNEU,S)#Position von PNEU in XSAMMEL
   local ISO;
   ISO:=PZUN(UMKEHRLIST(PNEU),S)+1;
-  if not IsBound(ZEIGER[ISO]) then ISO:=0; fi;
+  if not IsBound(ZEIGER[ISO]) or ZEIGER[ISO]=[] then ISO:=0; fi;
   return ISO;
   end;
 
@@ -265,8 +265,8 @@ QY14:=function() #bestimmt PMAX in XMERK
       XMERK[S][i][1]:=List(PNEU);
 #W#      Unbind(XMERK[S][i][4]);
       od;
-Print("\nQY14: ",imax,"\n",XMERK[S]);
-#  imax:=1;#ist so nach der letzten Umformung
+#Print("\nQY14: ",imax,"\n",XMERK[S]);
+  imax:=1;#ist so nach der letzten Umformung
   return imax;
   end;
 
@@ -275,11 +275,11 @@ QY15:=function(ZEIGER,XM,IPMIN,S) #packt XMERK in XSAMMEL rein
   local POS,i,ZMERK,HRES,HRES2,pcgs,pcgs2,STUFE;
   Print(StringNumbers([LogInt(Size(XM),2)+11],128),"\c");
   POS:=PZUN(UMKEHRLIST(XM[IPMIN][1]),S)+1;
-  if ZEIGER=[] and S>3 then #ZEIGER:=[];#ZEIGER:=EmptyPlist(QUADRATTYP^(S-2));
-#Print("\n?????????????????? neue Emptylist mit ", QUADRATTYP^(S-2),"\n");
+  if ZEIGER=[] and S>3 then 
+    ZEIGER[QUADRATTYP^(S-2)]:=[];#nur ausdehnen anstelle von EmptyPlist(QUADRATTYP^(S-2))
     fi;
   ZEIGER[POS]:=XM[IPMIN];
-  ZEIGER[POS][6]:=EmptyPlist(QUADRATTYP^(S-1));#[];
+  ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
         HRES2:=ZEIGER[POS][2];#alles aus XMISCH
         if HRESANF=[] then 
@@ -407,7 +407,6 @@ QY13:=function(C,S,nn,ZEIGER,AU)
 XFUELL:=function(XSAMMEL) #wenn [6] gleich <=== dann fuellt [7], falls [2] nicht int
   local i,S,POS,GRP;
   S:=Size(XSAMMEL);
-XSAMMELVIEWER2(XSAMMEL);
   for i in [1..S] do
     if IsBound(XSAMMEL[i]) and IsBound(XSAMMEL[i][6]) then
       POS:=i;
@@ -474,14 +473,14 @@ else
 fi;
   end;
 
-XLEER:=function(XSAMMEL) #fuellt [7][8]
+XLEER:=function(XSAMMEL,STUFE) #fuellt [7][8]
   local i,S;
   S:=Size(XSAMMEL);
-  if S>0 then if 2^Size(XSAMMEL[S][1])<=n then for i in [1..S] do
-    if IsBound(XSAMMEL[i]) then
+  if S>0 then if 2^STUFE<=n then for i in [1..S] do
+    if IsBound(XSAMMEL[i]) and XSAMMEL[i]<>[] then
       if not(IsInt(XSAMMEL[i][2])) then LFDNR:=LFDNR+1; fi; 
       XSAMMEL[i][2]:=i;
-      if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6]); fi;
+      if IsBound(XSAMMEL[i][6]) then XLEER(XSAMMEL[i][6],STUFE+1); fi;
       fi;
     od; fi; fi;
   end;
@@ -503,7 +502,7 @@ RMAXSUCH:=function(C)
    RMERKER:=[];XMISCH(XSAMMEL,[],1);
 #XSAMMELVIEWER0(XSAMMEL);
 #Print("\n***XLEER***");
-   XLEER(XSAMMEL);
+   XLEER(XSAMMEL,1);
 #XSAMMELVIEWER0(XSAMMEL);
 Print(" <",WEGEZAHL,"> ",XMERKZAHL);
   return XMERKZAHL;

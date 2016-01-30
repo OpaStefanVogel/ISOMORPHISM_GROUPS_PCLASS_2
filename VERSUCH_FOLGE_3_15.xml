@@ -2086,7 +2086,7 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
   .. was schließlich auch noch ginge, klein und groß Phi zusammen zu 1phi
     .. in dem Zusammenhang, ob Matrixmultiplikation dabei ist
     .. TOTAL von auf
-.. nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
+ok nächster Versuch auf 256 (oder 512 gar wenigstens den Anfang?) 
     
 
 ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
@@ -2152,8 +2152,8 @@ FUN8:=function(arg)#neu-->DIAG.txt
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0..3];
-R:=[[0],[0,0],[1,1,1], [ 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1 ], 
-  [ 0, 0, 0, 0, 1, 3 ] ];P:=PcgsOfR(R);RMAXSUCH(P);
+
+#R:=[[0],[0,0],[1,1,1], [ 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1 ], [ 0, 0, 0, 0, 1, 3 ] ];P:=PcgsOfR(R);RMAXSUCH(P);
 
 R:=[[0],[0,0],[1,1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
 XSAMMELVIEWER4(XSAMMEL);
