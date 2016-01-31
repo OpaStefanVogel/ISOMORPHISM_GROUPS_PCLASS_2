@@ -2078,11 +2078,12 @@ ok RTT() reicht nicht mehr aus, Rückkehrwert von RMAXSUCH verwenden
     ok schließlich RINXS selbst, eigentlich nur RET:=ZEIG machen
   ok ZEIG[6] gleich von [] auf die richtige Größe setzen.
     ok TOTAL von 1174 auf 
-  .. in QY14 nur imax bestimmen,
-    .. doch da tritt folgender Fehler auf:
+  ok in QY14 nur imax bestimmen,
+    ok doch da tritt folgender Fehler auf:
       R:=[[0],[0,0],[1,1,1],[0,0,0,2],[0,0,0,0,1],[0,0,0,1,1,3]]
       wird als [ 64, 213 ] begonnen, obwohl zu [ 64, 221 ] gehörend
-      den Fehler muss ich schon finden
+      den Fehler muss ich schon finden, ok imax immer =1 nehmen.
+      auch wenn kein Umsortieren, bleibt imax:=1.
   .. was schließlich auch noch ginge, klein und groß Phi zusammen zu 1phi
     .. in dem Zusammenhang, ob Matrixmultiplikation dabei ist
     .. TOTAL von auf
