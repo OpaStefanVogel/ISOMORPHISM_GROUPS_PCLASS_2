@@ -44,19 +44,26 @@ ZEIGER:=XSAMMEL;;
 
 DIAG:=function(R)#neu
   local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
   RET:=[];
   RF:=Flat(R);Add(RF,0,1);
+#  Print("\n",RF);
   S:=Size(R);
   j:=1;
+  GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
   for i in IteratorOfTuples( [0,1], S ) do
-    if Sum(i)<3 then 
+#    Print("\n",i,IZUN(Reversed(i)));
+    if 3>Sum(i) then 
+#      Print("&lt;3");
       Add(RET,RF[j]);j:=j+1;
       else 
+#        Print(">3");
         X:=0*i;Y:=List(X);Z:=List(i);
         POS1:=Position(Z,1);
         X[POS1]:=1;Z[POS1]:=0;XP:=2^(S-POS1);
         POS2:=Position(Z,1);
         Y[POS2]:=1;Z[POS2]:=0;YP:=2^(S-POS2);
+#        ZP:=IZUN(Reversed(Z));
         ZP:=0;ii:=1;
         for POS3 in [S,S-1..1] do 
           if Z[POS3]=1 then ZP:=ZP+ii; fi;
@@ -66,7 +73,7 @@ DIAG:=function(R)#neu
 #        Print("\n  ",Y);
 #        Print("\n  ",Z);
 #        PROD:=PR(X)+PR(Y)+PR(Z)+PR(X+Y)+PR(X+Z)+PR(Y+Z);
-#if PR(X)<>RET[XP+1] then Error(XP); fi;
+#if not PR(X)=RET[XP+1] then Error(XP); fi;
         PROD:=GM[RET[XP+1]+1][RET[YP+1]+1];
         PROD:=GM[PROD+1][RET[ZP+1]+1];
         PROD:=GM[PROD+1][RET[XP+YP+1]+1];
@@ -130,7 +137,7 @@ ZEIGER:=XSAMMEL;;
   return [];
   end;
 
-XORMAT:=MatrixOf([[0,],[0,0],[0,0,0],[0,0,0,0]]);
+XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]);
 JKLLISTE:=[];
 JKLLISTEMACH:=function(SI)
   local j,k,l;
@@ -187,7 +194,7 @@ COMPDIAG:=function(D)#neu
 #Print(C,"\n");
   SI:=Size(D);
 #Print(SI,"\n");
-  QUAD0:=0;QUAD:=[[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]];
+  QUAD0:=0;QUAD:=[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
   for jkl in JKLLISTE do
 #Print(jkl,"\n");
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
@@ -281,7 +288,9 @@ FUN8:=function(arg)#neu-->DIAG.txt
   return [];
   end;
 
-ProfileFunctions([Fun5,FUN6,FUN7,R4,R5,DIAG,COMPDIAG,
-  Flat,Add,Size]);
+ProfileFunctions([
+FUN5,FUN6,FUN7,R4,R5,DIAG,COMPDIAG,
+Add,T23,FUN9,COMPDIAG2,COMPDIAG3,SortedList,Collected,Size,Flat,
+MatrixOf]);
 ClearProfile();
 DisplayProfile();
