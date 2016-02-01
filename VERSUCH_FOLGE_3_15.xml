@@ -279,7 +279,8 @@ ok schließlich Collected
 ok funktioniert, es sind paar gleich
 
 DIAG:=function(R)#neu
-  local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,GM,XP,YP,ZP;
+  local i,ii,j,k,S,RET,RF,X,Y,Z,POS1,POS2,PROD,
+,XP,YP,ZP;
 #  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
   RET:=[];
   RF:=Flat(R);Add(RF,0,1);
@@ -1198,7 +1199,7 @@ nö ich muss herausfinden, ob Untergruppe R5([0,0]) drin ist
     das wollte ich aber umgehen, also Schluss hier.
 ok vielleicht das: wie oft RT[j]=1 und RT[k]=1 und RT[jok]=0 oder vertauscht.
 
-XORMAT:=MatrixOf([[0,],[0,0],[0,0,0],[0,0,0,0]]);
+XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]);
 D:=DIAG(R4([1,2]));
 COMPDIAG:=function(D)
   local C,RET,i,j,k,l,QUAD1,QUAD2,SI,ii;
@@ -1229,7 +1230,6 @@ COMPDIAG:=function(D)
   end;
 COMPDIAG(D);
 
-R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 0, 2, 1, 2 ] ]));;COMPDIAG(D);
 D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 1, 2, 0, 2 ] ]));;COMPDIAG(D);
 D:=DIAG(R5([ [ [ 0, 1, 1 ], [ 0, 0, 2, 1 ] ], [ 0, 1, 2, 0, 3 ] ]));;COMPDIAG(D);
@@ -1295,7 +1295,6 @@ FUN6:=function(arg)#neu
   return [];
   end;    
 
-R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
@@ -1941,6 +1940,7 @@ nö da muss ich 112 weiter verfeinern das zu 1 die 2 und nicht die 3 nee, hilft 
   .. dazu muss ich in C alle 3 Indizes reinbringen
 ok COMPDIAG3+FUN9 schaffen 432 von 433 ok
 .. anstelle von MM geht auch MM0
+  .. es müsste aber auch mod gehen statt MM
 
 ERGST:=StructuralCopy(ERGS);;
 
@@ -2033,7 +2033,7 @@ COMPDIAG3:=function(D)#neu
     if dj=0 and dk=0 and dl=0 then
       RET2:=0;
       for i1 in [1..SD] do
-        NK:=[D[MM[1][i1]],D[MM[j][i1]],D[MM[k][i1]],D[MM[l][i1]]];
+        NK:=[D[XORMAT[1][i1]],D[XORMAT[j][i1]],D[XORMAT[k][i1]],D[XORMAT[l][i1]]];
         if NK=[0,0,0,0] then RET2:=RET2+1; fi;
         od;
 #      RET2:=Collected(SortedList(RET2));
@@ -2055,7 +2055,6 @@ FUN9:=function(arg)#neu
 #  Print("\n",RT,RI);
 #  Print(".");
   if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
-  MM:=MatrixOf(R);
   S:=Size(R);
   RSIZE:=Size(R);
   GESAMTDI:=SortedList([COMPDIAG(DIAG(R)),
@@ -2080,7 +2079,6 @@ Add,T23,FUN9,COMPDIAG3,COMPDIAG,SortedList,Collected,Size,MatrixOf
 ]);
 
 #erst das in Gang bringen
-R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 JKLLISTEMACH(256);
 V1:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 2, 2, 3, 0 ] ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
 V2:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 0, 1, 2, 0 ] ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
@@ -2108,7 +2106,7 @@ MM:=MatrixOf(V2);;VH:=COMPDIAG3(DIAG(V2));VG=VH;
 MM:=MatrixOf(V2);;VL:=COMPDIAG3(T23(DIAG(V2)));VG=VL;
 #fehlt in COMPDIAG3:
 V1:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 3 ] ], [ 0, 0, 2, 1, 1, 1 ] ]);
-MM:=MatrixOf(V1);;VG3:=COMPDIAG3(DIAG(V1));VG:=COMPDIAG(DIAG(V1));
+VG3:=COMPDIAG3(DIAG(V1));VG:=COMPDIAG(DIAG(V1));
 MM0:=StructuralCopy(MM);;
 for VI in [1..Size(ERGS[8])] do
   Print("\n",VI," "); 
@@ -2125,9 +2123,10 @@ for VI in [1..Size(ERGS[8])] do
   od;
 #ergibt 393 also
 V2:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 2 ] ], [ 0, 1, 2, 0, 1, 1 ] ]);
+VH3:=COMPDIAG3(DIAG(V2));VH:=COMPDIAG(DIAG(V2));
+VH3=VG3;VH=VG;
 
 
-R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
