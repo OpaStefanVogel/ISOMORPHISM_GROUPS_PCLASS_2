@@ -289,7 +289,7 @@ DIAG:=function(R)#neu
   GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
   for i in IteratorOfTuples( [0,1], S ) do
 #    Print("\n",i,IZUN(Reversed(i)));
-    if 3>=Sum(i) then 
+    if 3>Sum(i) then 
 #      Print("&lt;3");
       Add(RET,RF[j]);j:=j+1;
       else 
@@ -1939,6 +1939,7 @@ ERGS[8]:=[ [ 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 1 ], [ 0, 1, 1, 1, 1, 1 ], [ 0
 nö da muss ich 112 weiter verfeinern das zu 1 die 2 und nicht die 3 nee, hilft nix
 .. und bei 0001 sowohl die 1 als auch die 0 auswerten
   .. dazu muss ich in C alle 3 Indizes reinbringen
+ok COMPDIAG3+FUN9 schaffen 432 von 433 ok
 
 ERGST:=StructuralCopy(ERGS);;
 
@@ -2005,39 +2006,133 @@ COMPDIAG:=function(D)#neu
   return RET;
   end;
 
+COMPDIAG2:=function(D)#neu
+  local C,RET,i,j,k,l,jkl,dj,dk,dl;
+  RET:=[];
+  for jkl in JKLLISTE do
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+#Print(j," ",k," ",l,"\n");
+    dj:=D[j];dk:=D[k];dl:=D[l];
+    Add(RET,SortedList([dj,dk,dl]));
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+    od;
+  RET:=Collected(SortedList(RET));
+  return RET;
+  end;
+
+COMPDIAG3:=function(D)#neu
+  local C,RET,i,j,k,l,jkl,dj,dk,dl,i1,j1,k1,l1,RET2,reti,reti2,NK,SD;
+  SD:=Size(D);
+  RET:=EmptyPlist(1000000);reti:=1;
+  for jkl in JKLLISTE do
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+#Print(j," ",k," ",l,"\n");
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#    Add(RET,SortedList([dj,dk,dl]));
+    if dj=0 and dk=0 and dl=0 then
+      RET2:=0;
+      for i1 in [1..SD] do
+        NK:=[D[MM[1][i1]],D[MM[j][i1]],D[MM[k][i1]],D[MM[l][i1]]];
+        if NK=[0,0,0,0] then RET2:=RET2+1; fi;
+        od;
+#      RET2:=Collected(SortedList(RET2));
+      RET[reti]:=RET2;reti:=reti+1;
+      fi;
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+    od;
+  RET:=Collected(SortedList(RET));
+  return RET;
+  end;
+
+GESAMTDILIST:=[];
+FUN9:=function(arg)#neu
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add(RT,arg[i]+arg[i+j]);
+    od;
+#  Print("\n",RT,RI);
+#  Print(".");
+  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
+  MM:=MatrixOf(R);
+  S:=Size(R);
+  RSIZE:=Size(R);
+  GESAMTDI:=SortedList([COMPDIAG(DIAG(R)),
+#    COMPDIAG3(DIAG(R)),
+#    COMPDIAG3(T23([0,1,3,2],DIAG(R))),
+#    COMPDIAG3(T23([0,2,1,3],DIAG(R))),
+#    COMPDIAG3(T23([0,2,3,1],DIAG(R))),
+#    COMPDIAG3(T23([0,3,1,2],DIAG(R))),
+    COMPDIAG3(T23([0,3,2,1],DIAG(R)))]);
+  if not (GESAMTDI in GESAMTDILIST) then
+    Add(GESAMTDILIST,GESAMTDI);
+    if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
+    Print("*",Size(ERG),"\c");
+    fi;
+  return [];
+  end;    
+
+T23:=function(TCON,D) return List(D,i->TCON[i+1]); end;
+
+ProfileFunctions([
+Add,T23,FUN9,COMPDIAG3,COMPDIAG,SortedList,Collected,Size,MatrixOf
+]);
+
 #erst das in Gang bringen
+R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 JKLLISTEMACH(256);
 V1:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 2, 2, 3, 0 ] ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
 V2:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 0, 1, 2, 0 ] ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
 A1:=AutomorphismGroup(P1); Size(A1);
 A2:=AutomorphismGroup(P1); Size(A2);
 VG:=COMPDIAG(DIAG(V1));VH:=COMPDIAG(DIAG(V2));VG=VH;
+VG:=COMPDIAG2(DIAG(V1));VH:=COMPDIAG2(DIAG(V2));VG=VH;
+MM:=MatrixOf(V1);;VG:=COMPDIAG3(DIAG(V1));
+MM:=MatrixOf(V2);;VH:=COMPDIAG3(DIAG(V2));VG=VH;
+VH:=COMPDIAG3(T23([0,1,3,2],DIAG(V2)));VG=VH;
+VH:=COMPDIAG3(T23([0,2,1,3],DIAG(V2)));VG=VH;
+VH:=COMPDIAG3(T23([0,2,3,1],DIAG(V2)));VG=VH;
+VH:=COMPDIAG3(T23([0,3,1,2],DIAG(V2)));VG=VH;
+VH:=COMPDIAG3(T23([0,3,2,1],DIAG(V2)));VG=VH;
+JKLLISTEMACH(16);
+V1:=R4([ 0,2 ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
+V2:=R5([ 0,1 ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
+A1:=AutomorphismGroup(P1); Size(A1);
+A2:=AutomorphismGroup(P1); Size(A2);
+VG:=COMPDIAG(DIAG(V1));VH:=COMPDIAG(DIAG(V2));VG=VH;
+Collected(DIAG(V1));Collected(DIAG(V2));
+VG:=COMPDIAG2(DIAG(V1));VH:=COMPDIAG2(DIAG(V2));VG=VH;
+MM:=MatrixOf(V1);;VG:=COMPDIAG3(DIAG(V1));
+MM:=MatrixOf(V2);;VH:=COMPDIAG3(DIAG(V2));VG=VH;
+MM:=MatrixOf(V2);;VL:=COMPDIAG3(T23(DIAG(V2)));VG=VL;
 
 
 R:=R4([0,0,0,0,0,0,0,0]);XORMAT:=MatrixOf(R);;XORMAT[2];
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[0,1];IS2:=[0,2];
-JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN6);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
-JKLLISTEMACH(32);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN6);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
-ERG:=[];for RI in ERGST[4] do
+#*1*2*3*4*5*6[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ] ]
+#JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN6);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
+JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
+JKLLISTEMACH(32);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
+ERG:=[];for RI in ERGS[4] do
   Print("\n***",RI);
-  ListX(IS2,IS2,IS2,IS,IS,IS,FUN6);
+  ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);
   od;Append(ERGS[5],ERG);ERGS[5];Size(ERGS[5]);19;
-JKLLISTEMACH(64);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN6);;ERGS[6]:=ERG;Size(ERG);14;#64
-ERG:=[];for RI in ERGST[5] do
+JKLLISTEMACH(64);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);;ERGS[6]:=ERG;Size(ERG);14;#64
+ERG:=[];for RI in ERGS[5] do
   Print("\n***",RI);
-  ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN6);
+  ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);
   od;Append(ERGS[6],ERG);ERGS[6];Size(ERGS[6]);60;
-JKLLISTEMACH(128);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN6);;ERGS[7]:=ERG;Size(ERG);15;#128
-ERG:=[];for RI in ERGST[6] do
-  Print("\n***",RI);
-  ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN6);
-  od;Append(ERGS[7],ERG);ERGS[7];Size(ERGS[7]);158;
-JKLLISTEMACH(256);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN6);;ERGS[8]:=ERG;Size(ERG);15;#256
-ERG:=[];for RI in ERGST[7] do
+JKLLISTEMACH(128);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN9);;ERGS[7]:=ERG;Size(ERG);15;#128
+ERG:=[];for RI in ERGS[6] do
   Print("\n***",RI,"\c");
-  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN6);
+  ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN9);
+  od;Append(ERGS[7],ERG);ERGS[7];Size(ERGS[7]);158;
+JKLLISTEMACH(256);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);;ERGS[8]:=ERG;Size(ERG);15;#256
+ERG:=[];for RI in ERGS[7] do
+  Print("\n***",RI,"\c");
+  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
   od;Append(ERGS[8],ERG);ERGS[8];Size(ERGS[8]);442;
 
   </FILE>
