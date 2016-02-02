@@ -1946,113 +1946,6 @@ ok bis 128 und die ersten 256 reicht das aktuelle COMPDIAG aus
   ok und funktioniert auch vom Anfang her bis 64 und langsam Anfang 128
   ok mit T23V dann auch 128 ganz, aber noch langsam
 
-
-ERGST:=StructuralCopy(ERGS);;
-
-QUADMAT:=[];
-QUADMATMACH:=function()
-  local j,k,l,COL,fun;
-  QUADMAT:=[];
-  for j in [0..3] do
-    QUADMAT[j+1]:=[];
-    for k in [0..3] do
-      QUADMAT[j+1][k+1]:=[];
-      for l in [0..3] do
-        COL:=Collected([0,j,k,l]);fun:="******";
-        if COL[1][2]=4 then fun:=0; fi;
-        if COL[1][2]=3 then fun:=[[COL[2][1],1]]; fi;
-        if COL[1][2]=2 then 
-          if COL[2][2]=2 then fun:=[[COL[2][1],2]]; fi;
-          if COL[2][2]=1 then fun:=[[COL[2][1],3],[COL[3][1],3]]; fi;
-          fi;
-        if COL[1][2]=1 then 
-          if COL[2][2]=3 then fun:=[[COL[2][1],4]]; fi;
-          if COL[2][2]=2 then fun:=[[COL[2][1],5],[COL[3][1],6]]; fi;
-          if COL[2][2]=1 then 
-            if COL[3][2]=2 then fun:=[[COL[2][1],6],[COL[3][1],5]]; fi;
-            if COL[3][2]=1 then fun:=[[1,7],[2,7],[3,7]]; fi;
-            fi;
-          fi;
-        QUADMAT[j+1][k+1][l+1]:=fun;
-        Print("\n0 ",j," ",k," ",l," ",COL,"->",fun);
-        od;
-      od;
-    od;
-  end;
-QUADMATMACH();
-
-COMPDIAG:=function(D)#neu
-  local C,RET,i,j,k,jkl,l,QUAD1,QUAD2,SI,ii,fun;
-#Print(D,"\n");
-  C:=Collected(D);
-#Print(C,"\n");
-  SI:=Size(D);
-#Print(SI,"\n");
-  QUAD0:=0;QUAD:=[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]];
-  for jkl in JKLLISTE do
-#Print(jkl,"\n");
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-#Print(j," ",k," ",l,"\n");
-    dj:=D[j];dk:=D[k];dl:=D[l];
-#Print(dj," ",dk," ",dl,"\n");
-    fun:=QUADMAT[dj+1][dk+1][dl+1];
-#Print(fun,"\n");
-    if fun=0 then QUAD0:=QUAD0+1; else
-      for i in fun do QUAD[i[1]][i[2]]:=QUAD[i[1]][i[2]]+1; od;
-      fi;
-    od;
-  RET:=List(C{[2..Size(C)]},i->[i[2],QUAD0,QUAD[i[1]]]);
-  RET:=SortedList(RET);
-  Add(RET,C[1][2],1);
-  return RET;
-  end;
-
-COMPDIAG2:=function(D)#neu
-  local C,RET,i,j,k,l,jkl,dj,dk,dl,i1,j1,k1,l1,RET2,reti,reti2,NK,SD;
-  SD:=Size(D);
-  RET:=EmptyPlist(1000000);reti:=1;
-  for j in [1..SD] do
-    dj:=D[j];
-#    Add(RET,SortedList([dj,dk,dl]));
-    if dj=0 then
-      RET2:=0;
-      for i1 in [1..SD] do
-        NK:=[D[XORMAT[1][i1]],D[XORMAT[j][i1]]];
-        if NK=[0,0] then RET2:=RET2+1; fi;
-        od;
-#      RET2:=Collected(SortedList(RET2));
-      RET[reti]:=RET2;reti:=reti+1;
-      fi;
-#Print("\n",jkl," ",dj," ",dk," ",dl);
-    od;
-  RET:=Collected(SortedList(RET));
-  return RET;
-  end;
-
-COMPDIAG3:=function(D)#neu
-  local C,RET,i,j,k,l,jkl,dj,dk,dl,i1,j1,k1,l1,RET2,reti,reti2,NK,SD;
-  SD:=Size(D);
-  RET:=EmptyPlist(1000000);reti:=1;
-  for jkl in JKLLISTE do
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-#Print(j," ",k," ",l,"\n");
-    dj:=D[j];dk:=D[k];dl:=D[l];
-#    Add(RET,SortedList([dj,dk,dl]));
-    if dj=0 and dk=0 and dl=0 then
-      RET2:=0;
-      for i1 in [1..SD] do
-        NK:=[D[XORMAT[1][i1]],D[XORMAT[j][i1]],D[XORMAT[k][i1]],D[XORMAT[l][i1]]];
-        if NK=[0,0,0,0] then RET2:=RET2+1; fi;
-        od;
-#      RET2:=Collected(SortedList(RET2));
-      RET[reti]:=RET2;reti:=reti+1;
-      fi;
-#Print("\n",jkl," ",dj," ",dk," ",dl);
-    od;
-  RET:=Collected(SortedList(RET));
-  return RET;
-  end;
-
 COMPDIAG4:=function(D)#neu
   local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
   SD:=Size(D);
@@ -2139,52 +2032,9 @@ FUN9:=function(arg)#neu
   return [];
   end;    
 
-
 ProfileFunctions([
-Add,T23,FUN9,COMPDIAG3,COMPDIAG,SortedList,Collected,Size,MatrixOf
+Add,T23,T23V,FUN9,COMPDIAG4,SortedList,Collected,Size,MatrixOf
 ]);
-
-#erst das in Gang bringen
-JKLLISTEMACH(256);
-V1:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 2, 2, 3, 0 ] ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
-V2:=R5([ [ 0, 1, 1, 1, 1 ], [ 0, 0, 0, 1, 2, 0 ] ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
-A1:=AutomorphismGroup(P1); Size(A1);
-A2:=AutomorphismGroup(P1); Size(A2);
-VG:=COMPDIAG(DIAG(V1));VH:=COMPDIAG(DIAG(V2));VG=VH;
-VG:=COMPDIAG2(DIAG(V1));VH:=COMPDIAG2(DIAG(V2));VG=VH;
-MM:=MatrixOf(V1);;VG:=COMPDIAG3(DIAG(V1));
-MM:=MatrixOf(V2);;VH:=COMPDIAG3(DIAG(V2));VG=VH;
-VH:=COMPDIAG3(T23([0,1,3,2],DIAG(V2)));VG=VH;
-VH:=COMPDIAG3(T23([0,2,1,3],DIAG(V2)));VG=VH;
-VH:=COMPDIAG3(T23([0,2,3,1],DIAG(V2)));VG=VH;
-VH:=COMPDIAG3(T23([0,3,1,2],DIAG(V2)));VG=VH;
-VH:=COMPDIAG3(T23([0,3,2,1],DIAG(V2)));VG=VH;
-JKLLISTEMACH(16);
-V1:=R4([ 0,2 ]); P1:=PcgsOfR(V1); IdSmallGroup(P1);
-V2:=R5([ 0,1 ]); P2:=PcgsOfR(V2); IdSmallGroup(P2);
-A1:=AutomorphismGroup(P1); Size(A1);
-A2:=AutomorphismGroup(P1); Size(A2);
-VG:=COMPDIAG(DIAG(V1));VH:=COMPDIAG(DIAG(V2));VG=VH;
-Collected(DIAG(V1));Collected(DIAG(V2));
-VG:=COMPDIAG2(DIAG(V1));VH:=COMPDIAG2(DIAG(V2));VG=VH;
-MM:=MatrixOf(V1);;VG:=COMPDIAG3(DIAG(V1));
-MM:=MatrixOf(V2);;VH:=COMPDIAG3(DIAG(V2));VG=VH;
-MM:=MatrixOf(V2);;VL:=COMPDIAG3(T23(DIAG(V2)));VG=VL;
-#fehlt in COMPDIAG3:
-JKLLISTEMACH(256);
-V1:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 3 ] ], [ 0, 0, 2, 1, 1, 1 ] ]);
-VG3:=COMPDIAG3(DIAG(V1));VG2:=COMPDIAG2(DIAG(V1));VG:=COMPDIAG(DIAG(V1));
-V2:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 2 ] ], [ 0, 1, 2, 0, 1, 1 ] ]);
-VH3:=COMPDIAG3(DIAG(V2));VH2:=COMPDIAG2(DIAG(V2));VH:=COMPDIAG(DIAG(V2));
-VH3=VG3;VH2=VG2;VH=VG;
-D:=DIAG(V1);DD:=DIAG(V2);
-for jkl in JKLLISTE do
-  j:=jkl[1];k:=jkl[2];l:=jkl[3];
-  if [D[j],D[k],D[l]]<>[DD[j],DD[k],DD[l]] then
-    Print("\n",jkl);
-    Print([D[j],D[k],D[l]],[DD[j],DD[k],DD[l]]);
-    fi;
-  od;
 
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
