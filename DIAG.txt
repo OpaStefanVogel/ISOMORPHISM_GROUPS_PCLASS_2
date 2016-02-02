@@ -147,7 +147,7 @@ JKLLISTEMACH:=function(SI)
       l:=XORMAT[j][k];
       if l>j and l>k then
         Add(JKLLISTE,[j,k,l]);
-        Print("\n",j," ",k," ",l);
+#        Print("\n",j," ",k," ",l);
         fi;
       od;
     od;
