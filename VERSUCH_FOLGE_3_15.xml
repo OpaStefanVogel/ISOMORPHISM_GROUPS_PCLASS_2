@@ -1944,6 +1944,7 @@ ok anstelle von MM geht auch MM0
 ok bis 128 und die ersten 256 reicht das aktuelle COMPDIAG aus
 .. neuer Versuch COMPDIAG4 und das schafft das eine von 432 zu 433
   ok und funktioniert auch vom Anfang her bis 64 und langsam Anfang 128
+  ok mit T23V dann auch 128 ganz, aber noch langsam
 
 
 ERGST:=StructuralCopy(ERGS);;
@@ -2062,9 +2063,9 @@ COMPDIAG4:=function(D)#neu
     dj:=D[j];dk:=D[k];dl:=D[l];
 #Print("\n",jkl," ",dj," ",dk," ",dl);
     RET2:=Collected([dj,dk,dl]);
-    Add(RET[j],RET2);
-    Add(RET[k],RET2);
-    Add(RET[l],RET2);
+    Add(RET[j],StructuralCopy(RET2));
+    Add(RET[k],StructuralCopy(RET2));
+    Add(RET[l],StructuralCopy(RET2));
     od;
   for i in [1..SD] do RET[i]:=Collected(RET[i]); od;
   RET:=Collected(RET);
@@ -2080,10 +2081,39 @@ VH4:=COMPDIAG4(DIAG(V2));IdSmallGroup(PcgsOfR(V2));
 VG4=VH4;Size(VG4);Size(VH4);
 VG4[2];VH4[2];
 
+T23:=function(TCON,D) return List(D,i->TCON[i+1]); end;
+T23V:=function(TCON,V)
+  local RET,j,k,l;
+  RET:=StructuralCopy(V);
+  for j in RET do if j[1]>[] then
+    for k in j[1] do
+      for l in k[1] do
+        l[1]:=TCON[l[1]+1];
+        od;
+      k[1]:=SortedList(k[1]);
+      od;
+    j[1]:=SortedList(j[1]);
+    fi; od;
+  RET:=SortedList(RET);
+  return RET;
+  end;
+
+VG4A:=T23V([0,1,3,2],VG4);
+V1:=R5([ 0, 2 ]);
+V1:=R5([ 0, 3 ]);
+JKLLISTEMACH(16);
+V:=COMPDIAG4(DIAG(V1));MIN:=V;;
+V;T23V([0,1,3,2],V);
+T23V([0,2,1,3],V);
+T23V([0,2,3,1],V);
+T23V([0,3,1,2],V);
+T23V([0,3,2,1],V);
+RET:=StructuralCopy(VG4);
 
 
 GESAMTDILIST:=[];
 FUN9:=function(arg)#neu
+  local MIN,V;
   RT:=[];
   j:=Size(arg)/2;
   for i in [1..j] do
@@ -2094,15 +2124,13 @@ FUN9:=function(arg)#neu
   if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
   S:=Size(R);
   RSIZE:=Size(R);
-  GESAMTDI:=SortedList([#COMPDIAG(DIAG(R))
-#     [2,COMPDIAG2(DIAG(R))],
-    COMPDIAG4(DIAG(R)),
-    COMPDIAG4(T23([0,1,3,2],DIAG(R))),
-    COMPDIAG4(T23([0,2,1,3],DIAG(R))),
-    COMPDIAG4(T23([0,2,3,1],DIAG(R))),
-    COMPDIAG4(T23([0,3,1,2],DIAG(R))),
-    COMPDIAG4(T23([0,3,2,1],DIAG(R)))
-    ]);
+  V:=COMPDIAG4(DIAG(R));MIN:=V;
+  MIN:=Minimum(MIN,T23V([0,1,3,2],V));
+  MIN:=Minimum(MIN,T23V([0,2,1,3],V));
+  MIN:=Minimum(MIN,T23V([0,2,3,1],V));
+  MIN:=Minimum(MIN,T23V([0,3,1,2],V));
+  MIN:=Minimum(MIN,T23V([0,3,2,1],V));
+  GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
     Add(GESAMTDILIST,GESAMTDI);
     if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
@@ -2111,7 +2139,6 @@ FUN9:=function(arg)#neu
   return [];
   end;    
 
-T23:=function(TCON,D) return List(D,i->TCON[i+1]); end;
 
 ProfileFunctions([
 Add,T23,FUN9,COMPDIAG3,COMPDIAG,SortedList,Collected,Size,MatrixOf
@@ -2167,7 +2194,7 @@ IS:=[0,1];IS2:=[0,2];
 JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
 JKLLISTEMACH(32);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);;ERGS[5]:=ERG;Size(ERG);8;#32;ERGS
 ERG:=[];for RI in ERGS[4] do
-  Print("\n***",RI);
+  Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);
   od;Append(ERGS[5],ERG);ERGS[5];Size(ERGS[5]);19;
 JKLLISTEMACH(64);;RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);;ERGS[6]:=ERG;Size(ERG);14;#64
