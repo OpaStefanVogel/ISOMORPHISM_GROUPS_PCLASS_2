@@ -2049,6 +2049,30 @@ COMPDIAG3:=function(D)#neu
   return RET;
   end;
 
+COMPDIAG4:=function(D)#neu
+  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
+  SD:=Size(D);
+  RET:=EmptyPlist(1000000);
+for i in [1..SD] do Print(i);
+  RET[i]:=[];reti:=1;
+  for jkl in JKLLISTE do if i in jkl then Print(";");
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+    RET2:=Collected([dj,dk,dl]);
+    RET[i][reti]:=RET2;reti:=reti+1;
+    fi; od;
+  RET[i]:=Collected(RET[i]);
+  od;
+  RET:=Collected(RET);
+  return RET;
+  end;
+V1:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 3 ] ], [ 0, 0, 2, 1, 1, 1 ] ]);
+V2:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 2 ] ], [ 0, 1, 2, 0, 1, 1 ] ]);
+JKLLISTEMACH(256);
+VG4:=COMPDIAG4(DIAG(V1));IdSmallGroup(PcgsOfR(V1)); 
+VH4:=COMPDIAG4(DIAG(V2));IdSmallGroup(PcgsOfR(V2));
+VG4=VH4;Size(VG4);Size(VH4);
 
 GESAMTDILIST:=[];
 FUN9:=function(arg)#neu
@@ -2118,12 +2142,13 @@ VG3:=COMPDIAG3(DIAG(V1));VG2:=COMPDIAG2(DIAG(V1));VG:=COMPDIAG(DIAG(V1));
 V2:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 2 ] ], [ 0, 1, 2, 0, 1, 1 ] ]);
 VH3:=COMPDIAG3(DIAG(V2));VH2:=COMPDIAG2(DIAG(V2));VH:=COMPDIAG(DIAG(V2));
 VH3=VG3;VH2=VG2;VH=VG;
-D:=DIAG(V1);
+D:=DIAG(V1);DD:=DIAG(V2);
 for jkl in JKLLISTE do
-  Print("\n",jkl);
   j:=jkl[1];k:=jkl[2];l:=jkl[3];
-  dj:=D[j];dk:=D[k];dl:=D[l];
-  Print(" ",dj," ",dk," ",dl);
+  if [D[j],D[k],D[l]]<>[DD[j],DD[k],DD[l]] then
+    Print("\n",jkl);
+    Print([D[j],D[k],D[l]],[DD[j],DD[k],DD[l]]);
+    fi;
   od;
 
 ClearProfile();
