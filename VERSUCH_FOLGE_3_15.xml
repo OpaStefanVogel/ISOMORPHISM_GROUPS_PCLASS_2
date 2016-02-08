@@ -460,7 +460,7 @@ ok eine Ausgangsliste für die inneren R
 ok erstmal nur ein Stockwerk, deshalb geht dafür die Kurzform mit R4 und ERG.
 ok deshalb von ERG zu ERG[S] übergehen
 
-R5:=function(RIV)#neu
+R5:=function(RIV)#
   local i,V2,RI,V;
   if IsInt(RIV[1]) then
     R:=R4(RIV);
@@ -1198,7 +1198,7 @@ nö ich muss herausfinden, ob Untergruppe R5([0,0]) drin ist
     das wollte ich aber umgehen, also Schluss hier.
 ok vielleicht das: wie oft RT[j]=1 und RT[k]=1 und RT[jok]=0 oder vertauscht.
 
-XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]]);;
+XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
 D:=DIAG(R4([1,2]));
 COMPDIAG:=function(D)
   local C,RET,i,j,k,l,QUAD1,QUAD2,SI,ii;
@@ -1950,6 +1950,7 @@ ok bis 128 und die ersten 256 reicht das aktuelle COMPDIAG aus
     ok dann DJDKDL und T23P, damit geht 128 locker durch
     ok und auch 256, passend zum mitlesen
     .. ob jetzt das for jkl in JKLLISTE die langsamste Stelle ist
+      ok ja
     .. das ginge ja rauszucompilieren
     .. und dabei DJDKDL dj j in ein := hinein
 ok  DIAG geht auch schneller zu machen 
@@ -1957,13 +1958,11 @@ ok  DIAG geht auch schneller zu machen
     ok dazu ERWIND
   ok damit ist DIAG verschwunden aus DisplayProfile() und 1/4 schneller.
   .. und das auch nur für die restlichen Diagonalelemente zu R[S]
-ok dsgl. auch nochmal für 3,4,6,7,9,10 ok läuft locker bis 1024
-  .. und dabei GESAMTDILIST nachschauen, was alles so auftritt.
+ok dsgl. auch nochmal für 3,4,6,7,9,10 ok läuft locker bis 16
+  ok und dabei GESAMTDILIST nachschauen, was alles so auftritt.
   .. und ob ein Zusammenhang zu AAB da
-  .. R5 muss dabei auch geändert werden
-  .. und T23P ist nicht in dem Umfang nötig
-.. R:=[[0],[1,1],[0,0,0]];P1:=PcgsOfR(R);CT1:=CharacterTable(P1);Display(CT1);
-   R:=[[0],[1,1],[1,1,1]];P2:=PcgsOfR(R);CT2:=CharacterTable(P2);Display(CT2);
+  o. R5 muss dabei auch geändert werden
+  ok und T23P ist nicht in dem Umfang nötig
 
 R2:=function(V)#neu
   local i,R,V2;
@@ -1984,10 +1983,25 @@ R4MERK:=function(V)#neu
   return R;
   end;
 
+R4:=R4MERK;
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  if IsInt(RIV[1]) then
+    R:=R4(RIV);
+    else
+      RI:=RIV[1];V:=RIV[2];
+      V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+      R:=R5(RI);
+      Add(R,V2);
+      fi;
+  return R;
+  end;
+
 ERWIND:=[];
-j:=1;k:=1;S:=11;
+j:=1;k:=1;S:=20;
 for i in IteratorOfTuples( [0,1], S ) do
-  Print("\n",i);
+   Print(".");
+#  Print("\n",i);
   if 3>Sum(i) then 
     ERWIND[k]:=j;j:=j+1;k:=k+1;
     else
@@ -2004,7 +2018,7 @@ for i in IteratorOfTuples( [0,1], S ) do
       ERWIND[k]:=[XP+1,YP+1,ZP+1,XP+YP+1,XP+ZP+1,YP+ZP+1];
       k:=k+1;
       fi;
-  Print(ERWIND[k-1]);
+#  Print(ERWIND[k-1]);
   od;
 
 DIAG:=function(R)#neu
@@ -2036,20 +2050,7 @@ DIAG:=function(R)#neu
   return RET;
   end;
 R:=[[0],[0,0],[1,1,1],[1,1,1,0],[0,0,0,2,3],[2,2,2,3,1,1]];
-DIAGN(R);
 DIAG(R);
-DIAGN(R)=DIAG(R);
-  66704    33076     6081  6282316   153742           DIAG                 
-  66704    65349     4677  1482040   108416           COMPDIAG4            
-  67104     1432   127743    36524  126157*           FUN9                 
-          129224           126529*                    TOTAL                
-R:=[[0],[1,1],[0,0,0]];P1:=PcgsOfR(R);CT1:=CharacterTable(P1);Display(CT1);
-#R:=[[0],[1,1],[0,0,1]];P1:=PcgsOfR(R);CT1:=CharacterTable(P1);Display(CT1);
-#R:=[[0],[1,1],[1,1,0]];P1:=PcgsOfR(R);CT1:=CharacterTable(P1);Display(CT1);
-R:=[[0],[1,1],[1,1,1]];P2:=PcgsOfR(R);CT2:=CharacterTable(P2);Display(CT2);
-for i in [3..4] do G:=SmallGroup(8,i); Display(CharacterTable(G)); od;
-for i in [3..4] do G:=SmallGroup(16,i); Display(CharacterTable(G)); od;
-for i in [10..14] do G:=SmallGroup(16,i); Display(CharacterTable(G)); od;
 
 DJDKDL:=[];FNRLISTE:=[];index:=0;
 for i in [0..3] do DJDKDL[i+1]:=[];
@@ -2076,7 +2077,7 @@ COMPDIAG4:=function(D)#neu
     RET[k][RET2]:=RET[k][RET2]+1;
     RET[l][RET2]:=RET[l][RET2]+1;
     od;
-  RET:=Collected(RET);
+  RET:=Collected(RET);Remove(RET,1);
   return RET;
   end;
 V1:=R5([ [ [ [ 0, 1, 1 ], [ 0, 1, 1, 2 ] ], [ 0, 1, 1, 2, 3 ] ], [ 0, 0, 2, 1, 1, 1 ] ]);
@@ -2188,7 +2189,11 @@ gap> DisplayProfile();
  713872  2668335    79520  305338*  1970420           COMPDIAG4                        
          3026239           995339*                    TOTAL                            
 
-#nochmal Folge 1,3,4,6,7...
+  </FILE>
+
+<FILE id="P17" inhalt="COMPDIAG für Folge 1,3,4,6,7...">
+#vorher P16 laden und dann das aktualisieren
+R4:=R2;
 R5:=function(RIV)#nur bei R2!!!
   local i,V2,RI,V;
   if IsInt(RIV[1]) then
@@ -2202,48 +2207,200 @@ R5:=function(RIV)#nur bei R2!!!
   return R;
   end;
 
+COMPDIAG4:=function(D)#neu
+  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
+  SD:=Size(D);
+  RET:=NullMat(SD,4);
+  for jkl in JKLLISTE do
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+#    RET2:=DJDKDL[dj+1][dk+1][dl+1];
+    RET2:=dj+dk+dl+1;
+    RET[j][RET2]:=RET[j][RET2]+1;
+    RET[k][RET2]:=RET[k][RET2]+1;
+    RET[l][RET2]:=RET[l][RET2]+1;
+    od;
+  RET:=Collected(RET);Remove(RET,1);
+  return RET;
+  end;
+
+FUN9:=function(arg)#neu
+  local MIN,V;
+  RT:=[];
+  j:=Size(arg)/2;
+  for i in [1..j] do
+    Add1(RT,arg[i]+arg[i+j]);
+    od;
+  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
+#  Print(".");
+  Print("\n",RI,RT,R,IdSmallGroup(PcgsOfR(R)));
+  S:=Size(R);
+  RSIZE:=Size(R);
+  V:=COMPDIAG4(DIAG(R));MIN:=V;
+  GESAMTDI:=MIN;
+  if not (GESAMTDI in GESAMTDILIST) then
+    Add(GESAMTDILIST,GESAMTDI);
+    if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
+    Print("*",Size(ERG),"\c");
+    Print(GESAMTDI);
+#    P:=PcgsOfR(R);
+#    if 9>S then Print("\n",IdSmallGroup(P),"\n"); fi;
+#    Print(ConjugacyClasses(P));
+#    CT:=CharacterTable(P);Display(CT);
+    fi;
+  return [];
+  end;    
+
+
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[1,0];IS2:=[0];R4:=R2;
 JKLLISTEMACH(8);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[3]:=ERG;Size(ERG);3;#16;ERGS
+
+[ [ [ [ 0, 0, 1, 2 ], 6 ], [ [ 0, 0, 3, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 3, 0 ], 4 ], [ [ 1, 0, 2, 0 ], 3 ] ], 
+  [ [ [ 0, 2, 1, 0 ], 2 ], [ [ 1, 2, 0, 0 ], 4 ], [ [ 2, 0, 1, 0 ], 1 ] ] ]
 JKLLISTEMACH(16);RI:=[];GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[3] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);
-  od;ERGS[4]:=ERG;Size(ERGS[4]);4;
+  od;ERGS[4]:=ERG;Size(ERGS[4]);4;GESAMTDILIST;
+[ [ [ [ 0, 0, 3, 4 ], 12 ], [ [ 1, 0, 6, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 7, 0 ], 2 ], [ [ 0, 2, 3, 2 ], 6 ], [ [ 1, 4, 2, 0 ], 6 ], [ [ 3, 0, 4, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 7, 0 ], 8 ], [ [ 3, 0, 4, 0 ], 7 ] ], 
+  [ [ [ 0, 4, 3, 0 ], 4 ], [ [ 3, 4, 0, 0 ], 8 ], [ [ 5, 0, 2, 0 ], 3 ] ] ]
 JKLLISTEMACH(32);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[4] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);
-  od;ERGS[5]:=ERG;Size(ERGS[5]);6;
+  od;ERGS[5]:=ERG;Size(ERGS[5]);6;GESAMTDILIST;
+[ [ [ [ 0, 2, 7, 6 ], 20 ], [ [ 1, 8, 6, 0 ], 10 ], [ [ 5, 0, 10, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 7, 8 ], 24 ], [ [ 3, 0, 12, 0 ], 7 ] ], 
+  [ [ [ 0, 0, 15, 0 ], 4 ], [ [ 0, 4, 7, 4 ], 12 ], [ [ 3, 8, 4, 0 ], 12 ], [ [ 7, 0, 8, 0 ], 3 ] ], 
+  [ [ [ 0, 6, 7, 2 ], 12 ], [ [ 5, 8, 2, 0 ], 18 ], [ [ 9, 0, 6, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 15, 0 ], 16 ], [ [ 7, 0, 8, 0 ], 15 ] ], 
+  [ [ [ 0, 8, 7, 0 ], 8 ], [ [ 7, 8, 0, 0 ], 16 ], [ [ 11, 0, 4, 0 ], 7 ] ] ]
 JKLLISTEMACH(64);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[5] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[6]:=ERG;Size(ERGS[6]);7;
+  od;ERGS[6]:=ERG;Size(ERGS[6]);7;GESAMTDILIST;
+[ [ [ [ 0, 0, 31, 0 ], 2 ], [ [ 0, 8, 15, 8 ], 30 ], [ [ 7, 16, 8, 0 ], 30 ], [ [ 15, 0, 16, 0 ], 1 ] ], 
+  [ [ [ 0, 4, 15, 12 ], 40 ], [ [ 3, 16, 12, 0 ], 20 ], [ [ 11, 0, 20, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 15, 16 ], 48 ], [ [ 7, 0, 24, 0 ], 15 ] ], 
+  [ [ [ 0, 0, 31, 0 ], 8 ], [ [ 0, 8, 15, 8 ], 24 ], [ [ 7, 16, 8, 0 ], 24 ], [ [ 15, 0, 16, 0 ], 7 ] ], 
+  [ [ [ 0, 12, 15, 4 ], 24 ], [ [ 11, 16, 4, 0 ], 36 ], [ [ 19, 0, 12, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 31, 0 ], 32 ], [ [ 15, 0, 16, 0 ], 31 ] ], 
+  [ [ [ 0, 16, 15, 0 ], 16 ], [ [ 15, 16, 0, 0 ], 32 ], [ [ 23, 0, 8, 0 ], 15 ] ] ]
 JKLLISTEMACH(128);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[6] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[7]:=ERG;Size(ERGS[7]);9;
+  od;ERGS[7]:=ERG;Size(ERGS[7]);9;GESAMTDILIST;
+[ [ [ [ 0, 20, 31, 12 ], 56 ], [ [ 19, 32, 12, 0 ], 70 ], [ [ 35, 0, 28, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 63, 0 ], 4 ], [ [ 0, 16, 31, 16 ], 60 ], [ [ 15, 32, 16, 0 ], 60 ], [ [ 31, 0, 32, 0 ], 3 ] ], 
+  [ [ [ 0, 12, 31, 20 ], 72 ], [ [ 11, 32, 20, 0 ], 54 ], [ [ 27, 0, 36, 0 ], 1 ] ], 
+  [ [ [ 0, 8, 31, 24 ], 80 ], [ [ 7, 32, 24, 0 ], 40 ], [ [ 23, 0, 40, 0 ], 7 ] ], 
+  [ [ [ 0, 0, 31, 32 ], 96 ], [ [ 15, 0, 48, 0 ], 31 ] ], 
+  [ [ [ 0, 0, 63, 0 ], 16 ], [ [ 0, 16, 31, 16 ], 48 ], [ [ 15, 32, 16, 0 ], 48 ], [ [ 31, 0, 32, 0 ], 15 ] ], 
+  [ [ [ 0, 24, 31, 8 ], 48 ], [ [ 23, 32, 8, 0 ], 72 ], [ [ 39, 0, 24, 0 ], 7 ] ], 
+  [ [ [ 0, 0, 63, 0 ], 64 ], [ [ 31, 0, 32, 0 ], 63 ] ], 
+  [ [ [ 0, 32, 31, 0 ], 32 ], [ [ 31, 32, 0, 0 ], 64 ], [ [ 47, 0, 16, 0 ], 31 ] ] ]
 JKLLISTEMACH(256);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[7] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[8]:=ERG;Size(ERGS[8]);10;
+  od;ERGS[8]:=ERG;Size(ERGS[8]);10;GESAMTDILIST;
+[ [ [ [ 0, 40, 63, 24 ], 112 ], [ [ 39, 64, 24, 0 ], 140 ], [ [ 71, 0, 56, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 127, 0 ], 2 ], [ [ 0, 32, 63, 32 ], 126 ], [ [ 31, 64, 32, 0 ], 126 ], [ [ 63, 0, 64, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 127, 0 ], 8 ], [ [ 0, 32, 63, 32 ], 120 ], [ [ 31, 64, 32, 0 ], 120 ], [ [ 63, 0, 64, 0 ], 7 ] ], 
+  [ [ [ 0, 24, 63, 40 ], 144 ], [ [ 23, 64, 40, 0 ], 108 ], [ [ 55, 0, 72, 0 ], 3 ] ], 
+  [ [ [ 0, 16, 63, 48 ], 160 ], [ [ 15, 64, 48, 0 ], 80 ], [ [ 47, 0, 80, 0 ], 15 ] ], 
+  [ [ [ 0, 0, 63, 64 ], 192 ], [ [ 31, 0, 96, 0 ], 63 ] ], 
+  [ [ [ 0, 0, 127, 0 ], 32 ], [ [ 0, 32, 63, 32 ], 96 ], [ [ 31, 64, 32, 0 ], 96 ], [ [ 63, 0, 64, 0 ], 31 ] ], 
+  [ [ [ 0, 48, 63, 16 ], 96 ], [ [ 47, 64, 16, 0 ], 144 ], [ [ 79, 0, 48, 0 ], 15 ] ], 
+  [ [ [ 0, 0, 127, 0 ], 128 ], [ [ 63, 0, 64, 0 ], 127 ] ], 
+  [ [ [ 0, 64, 63, 0 ], 64 ], [ [ 63, 64, 0, 0 ], 128 ], [ [ 95, 0, 32, 0 ], 63 ] ] ]
 JKLLISTEMACH(512);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[8] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[9]:=ERG;Size(ERGS[9]);12;
+  od;ERGS[9]:=ERG;Size(ERGS[9]);12;GESAMTDILIST;
+[ [ [ [ 0, 72, 127, 56 ], 240 ], [ [ 71, 128, 56, 0 ], 270 ], [ [ 135, 0, 120, 0 ], 1 ] ], 
+  [ [ [ 0, 80, 127, 48 ], 224 ], [ [ 79, 128, 48, 0 ], 280 ], [ [ 143, 0, 112, 0 ], 7 ] ], 
+  [ [ [ 0, 0, 255, 0 ], 4 ], [ [ 0, 64, 127, 64 ], 252 ], [ [ 63, 128, 64, 0 ], 252 ], [ [ 127, 0, 128, 0 ], 3 ] ], 
+  [ [ [ 0, 56, 127, 72 ], 272 ], [ [ 55, 128, 72, 0 ], 238 ], [ [ 119, 0, 136, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 255, 0 ], 16 ], [ [ 0, 64, 127, 64 ], 240 ], [ [ 63, 128, 64, 0 ], 240 ], [ [ 127, 0, 128, 0 ], 15 ] ], 
+  [ [ [ 0, 48, 127, 80 ], 288 ], [ [ 47, 128, 80, 0 ], 216 ], [ [ 111, 0, 144, 0 ], 7 ] ], 
+  [ [ [ 0, 32, 127, 96 ], 320 ], [ [ 31, 128, 96, 0 ], 160 ], [ [ 95, 0, 160, 0 ], 31 ] ], 
+  [ [ [ 0, 0, 127, 128 ], 384 ], [ [ 63, 0, 192, 0 ], 127 ] ], 
+  [ [ [ 0, 0, 255, 0 ], 64 ], [ [ 0, 64, 127, 64 ], 192 ], [ [ 63, 128, 64, 0 ], 192 ], [ [ 127, 0, 128, 0 ], 63 ] ], 
+  [ [ [ 0, 96, 127, 32 ], 192 ], [ [ 95, 128, 32, 0 ], 288 ], [ [ 159, 0, 96, 0 ], 31 ] ], 
+  [ [ [ 0, 0, 255, 0 ], 256 ], [ [ 127, 0, 128, 0 ], 255 ] ], 
+  [ [ [ 0, 128, 127, 0 ], 128 ], [ [ 127, 128, 0, 0 ], 256 ], [ [ 191, 0, 64, 0 ], 127 ] ] ]
 JKLLISTEMACH(1024);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[9] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[10]:=ERG;Size(ERGS[10]);13;
+  od;ERGS[10]:=ERG;Size(ERGS[10]);13;GESAMTDILIST;
+[ [ [ [ 0, 0, 511, 0 ], 2 ], [ [ 0, 128, 255, 128 ], 510 ], [ [ 127, 256, 128, 0 ], 510 ], [ [ 255, 0, 256, 0 ], 1 ] ], 
+  [ [ [ 0, 144, 255, 112 ], 480 ], [ [ 143, 256, 112, 0 ], 540 ], [ [ 271, 0, 240, 0 ], 3 ] ], 
+  [ [ [ 0, 160, 255, 96 ], 448 ], [ [ 159, 256, 96, 0 ], 560 ], [ [ 287, 0, 224, 0 ], 15 ] ], 
+  [ [ [ 0, 0, 511, 0 ], 8 ], [ [ 0, 128, 255, 128 ], 504 ], [ [ 127, 256, 128, 0 ], 504 ], [ [ 255, 0, 256, 0 ], 7 ] ],
+  [ [ [ 0, 112, 255, 144 ], 544 ], [ [ 111, 256, 144, 0 ], 476 ], [ [ 239, 0, 272, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 511, 0 ], 32 ], [ [ 0, 128, 255, 128 ], 480 ], [ [ 127, 256, 128, 0 ], 480 ], [ [ 255, 0, 256, 0 ], 31 ] ], 
+  [ [ [ 0, 96, 255, 160 ], 576 ], [ [ 95, 256, 160, 0 ], 432 ], [ [ 223, 0, 288, 0 ], 15 ] ], 
+  [ [ [ 0, 64, 255, 192 ], 640 ], [ [ 63, 256, 192, 0 ], 320 ], [ [ 191, 0, 320, 0 ], 63 ] ], 
+  [ [ [ 0, 0, 255, 256 ], 768 ], [ [ 127, 0, 384, 0 ], 255 ] ], 
+  [ [ [ 0, 0, 511, 0 ], 128 ], [ [ 0, 128, 255, 128 ], 384 ], [ [ 127, 256, 128, 0 ], 384 ], [ [ 255, 0, 256, 0 ], 127 ] ], 
+  [ [ [ 0, 192, 255, 64 ], 384 ], [ [ 191, 256, 64, 0 ], 576 ], [ [ 319, 0, 192, 0 ], 63 ] ], 
+  [ [ [ 0, 0, 511, 0 ], 512 ], [ [ 255, 0, 256, 0 ], 511 ] ], 
+  [ [ [ 0, 256, 255, 0 ], 256 ], [ [ 255, 256, 0, 0 ], 512 ], [ [ 383, 0, 128, 0 ], 255 ] ] ]
+JKLLISTEMACH(2048);;GESAMTDILIST:=[];ERG:=[];
+for RI in ERGS[10] do
+  Print("\n***",RI,"\c");
+  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
+  od;ERGS[11]:=ERG;Size(ERGS[11]);15;GESAMTDILIST;
+[ [ [ [ 0, 240, 511, 272 ], 1056 ], [ [ 239, 512, 272, 0 ], 990 ], [ [ 495, 0, 528, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 1023, 0 ], 4 ], [ [ 0, 256, 511, 256 ], 1020 ], [ [ 255, 512, 256, 0 ], 1020 ], [ [ 511, 0, 512, 0 ], 3 ] ], 
+  [ [ [ 0, 272, 511, 240 ], 992 ], [ [ 271, 512, 240, 0 ], 1054 ], [ [ 527, 0, 496, 0 ], 1 ] ], 
+  [ [ [ 0, 288, 511, 224 ], 960 ], [ [ 287, 512, 224, 0 ], 1080 ], [ [ 543, 0, 480, 0 ], 7 ] ], 
+  [ [ [ 0, 320, 511, 192 ], 896 ], [ [ 319, 512, 192, 0 ], 1120 ], [ [ 575, 0, 448, 0 ], 31 ] ], 
+  [ [ [ 0, 0, 1023, 0 ], 16 ], [ [ 0, 256, 511, 256 ], 1008 ], [ [ 255, 512, 256, 0 ], 1008 ], [ [ 511, 0, 512, 0 ], 15 ] ], 
+  [ [ [ 0, 224, 511, 288 ], 1088 ], [ [ 223, 512, 288, 0 ], 952 ], [ [ 479, 0, 544, 0 ], 7 ] ], 
+  [ [ [ 0, 0, 1023, 0 ], 64 ], [ [ 0, 256, 511, 256 ], 960 ], [ [ 255, 512, 256, 0 ], 960 ], [ [ 511, 0, 512, 0 ], 63 ] ], 
+  [ [ [ 0, 192, 511, 320 ], 1152 ], [ [ 191, 512, 320, 0 ], 864 ], [ [ 447, 0, 576, 0 ], 31 ] ], 
+  [ [ [ 0, 128, 511, 384 ], 1280 ], [ [ 127, 512, 384, 0 ], 640 ], [ [ 383, 0, 640, 0 ], 127 ] ], 
+  [ [ [ 0, 0, 511, 512 ], 1536 ], [ [ 255, 0, 768, 0 ], 511 ] ], 
+  [ [ [ 0, 0, 1023, 0 ], 256 ], [ [ 0, 256, 511, 256 ], 768 ], [ [ 255, 512, 256, 0 ], 768 ], [ [ 511, 0, 512, 0 ], 255 ] ], 
+  [ [ [ 0, 384, 511, 128 ], 768 ], [ [ 383, 512, 128, 0 ], 1152 ], [ [ 639, 0, 384, 0 ], 127 ] ], 
+  [ [ [ 0, 0, 1023, 0 ], 1024 ], [ [ 511, 0, 512, 0 ], 1023 ] ], 
+  [ [ [ 0, 512, 511, 0 ], 512 ], [ [ 511, 512, 0, 0 ], 1024 ], [ [ 767, 0, 256, 0 ], 511 ] ] ]
+JKLLISTEMACH(4096);;GESAMTDILIST:=[];ERG:=[];
+for RI in ERGS[11] do
+  Print("\n***",RI,"\c");
+  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
+  od;ERGS[12]:=ERG;Size(ERGS[12]);16;GESAMTDILIST;
+[ [ [ [ 0, 480, 1023, 544 ], 2112 ], [ [ 479, 1024, 544, 0 ], 1980 ], [ [ 991, 0, 1056, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 2 ], [ [ 0, 512, 1023, 512 ], 2046 ], [ [ 511, 1024, 512, 0 ], 2046 ], [ [ 1023, 0, 1024, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 8 ], [ [ 0, 512, 1023, 512 ], 2040 ], [ [ 511, 1024, 512, 0 ], 2040 ], [ [ 1023, 0, 1024, 0 ], 7 ] ], 
+  [ [ [ 0, 544, 1023, 480 ], 1984 ], [ [ 543, 1024, 480, 0 ], 2108 ], [ [ 1055, 0, 992, 0 ], 3 ] ], 
+  [ [ [ 0, 576, 1023, 448 ], 1920 ], [ [ 575, 1024, 448, 0 ], 2160 ], [ [ 1087, 0, 960, 0 ], 15 ] ], 
+  [ [ [ 0, 640, 1023, 384 ], 1792 ], [ [ 639, 1024, 384, 0 ], 2240 ], [ [ 1151, 0, 896, 0 ], 63 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 32 ], [ [ 0, 512, 1023, 512 ], 2016 ], [ [ 511, 1024, 512, 0 ], 2016 ], [ [ 1023, 0, 1024, 0 ], 31 ] ], 
+  [ [ [ 0, 448, 1023, 576 ], 2176 ], [ [ 447, 1024, 576, 0 ], 1904 ], [ [ 959, 0, 1088, 0 ], 15 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 128 ], [ [ 0, 512, 1023, 512 ], 1920 ], [ [ 511, 1024, 512, 0 ], 1920 ], [ [ 1023, 0, 1024, 0 ], 127 ] ], 
+  [ [ [ 0, 384, 1023, 640 ], 2304 ], [ [ 383, 1024, 640, 0 ], 1728 ], [ [ 895, 0, 1152, 0 ], 63 ] ], 
+  [ [ [ 0, 256, 1023, 768 ], 2560 ], [ [ 255, 1024, 768, 0 ], 1280 ], [ [ 767, 0, 1280, 0 ], 255 ] ], 
+  [ [ [ 0, 0, 1023, 1024 ], 3072 ], [ [ 511, 0, 1536, 0 ], 1023 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 512 ], [ [ 0, 512, 1023, 512 ], 1536 ], [ [ 511, 1024, 512, 0 ], 1536 ], [ [ 1023, 0, 1024, 0 ], 511 ] ], 
+  [ [ [ 0, 768, 1023, 256 ], 1536 ], [ [ 767, 1024, 256, 0 ], 2304 ], [ [ 1279, 0, 768, 0 ], 255 ] ], 
+  [ [ [ 0, 0, 2047, 0 ], 2048 ], [ [ 1023, 0, 1024, 0 ], 2047 ] ], 
+  [ [ [ 0, 1024, 1023, 0 ], 1024 ], [ [ 1023, 1024, 0, 0 ], 2048 ], [ [ 1535, 0, 512, 0 ], 1023 ] ] ]
   </FILE>
 
-<FILE id="P17" inhalt="neuer Branch Folge_3_15">
+<FILE id="P18" inhalt="neuer Branch Folge_3_15">
 Read("PcgsOfR.txt");
 Read("MatrixOf.txt");
 Read("XSAMMEL.txt"); 
