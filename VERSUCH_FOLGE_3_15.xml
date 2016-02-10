@@ -1964,7 +1964,12 @@ ok dsgl. auch nochmal für 3,4,6,7,9,10 ok läuft locker bis 16
   o. R5 muss dabei auch geändert werden
   ok und T23P ist nicht in dem Umfang nötig
 .. alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4*
-  .. noch besser mit reduziertem R
+  .. noch besser mit reduziertem R, sollte 10x schneller sein
+.. dann bei Folge 3,15,... Z2 herausteilen
+  .. obwohl das bei AAB dann nicht mehr geht... also eher nicht
+.. statt XORMAT Subspaces und Int(z) oder noch besser z=x*Z(2^n)+y*Z(2^n)
+  .. auch ShowAdditionTable(GF(4)) mit.
+.. nochmal ConjugacyClasses mit CharacterTable vergleichen.
 
 RRED:=function(V)#neu
   local i,R,V2;
@@ -2377,6 +2382,11 @@ for RI in ERGS[11] do
   [ [ [ 0, 768, 1023, 256 ], 1536 ], [ [ 767, 1024, 256, 0 ], 2304 ], [ [ 1279, 0, 768, 0 ], 255 ] ], 
   [ [ [ 0, 0, 2047, 0 ], 2048 ], [ [ 1023, 0, 1024, 0 ], 2047 ] ], 
   [ [ [ 0, 1024, 1023, 0 ], 1024 ], [ [ 1023, 1024, 0, 0 ], 2048 ], [ [ 1535, 0, 512, 0 ], 1023 ] ] ]
+#allgemein zu n fest, s=0,1,2...und innerhalb s läuft u=0..5
+xyz5:=[[0,2^(n-3)-(-1)^s*2^(n-2s-3),2^(n-2),2^(n-3)-(-1)^s*2^(n-2s-3)],2^(n-4s-3)*(4*16^s+(-1)^s*2*4^s)];
+#usw...4741
+
+
   </FILE>
 
 <FILE id="P18" inhalt="neuer Branch Folge_3_15">
