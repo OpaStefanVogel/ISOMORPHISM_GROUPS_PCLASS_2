@@ -2496,6 +2496,23 @@ COMPDIAG4:=function(D)#neu
 
   </FILE>
 
+<FILE id="P20" inhalt="Stabilizer">
+dd:=3; #fuer Tabellenzeile TABLE1 d=3
+G:=ElementaryAbelianGroup(2^dd);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c]; #erweiterte Basis für dd=3
+A:=Action(AutomorphismGroup(G),L);
+
+D2:=[1,1,0,0,0,0,0];
+S2:=Stabilizer(A,D2);
+RC:=RightTransversal(A,S2);
+AU:=AutomorphismGroup(A);
+STAB:=Stabilisateur(AU,Set(S2),OnSets);#ist Set nötig?
+ORB:=Orbits(STAB,RC,OnSets);
+RD:=List(ORB),i->Representative(Representative(i));
+List(RD,i->i(D2));
+  </FILE>
+
 <FILE id="P21" inhalt="neuer Branch Folge_3_15">
 Read("PcgsOfR.txt");
 Read("MatrixOf.txt");
