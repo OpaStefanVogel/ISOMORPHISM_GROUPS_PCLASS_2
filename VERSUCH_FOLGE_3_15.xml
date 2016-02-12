@@ -1964,20 +1964,21 @@ ok dsgl. auch nochmal für 3,4,6,7,9,10 ok läuft locker bis 16
   o. R5 muss dabei auch geändert werden
   ok und T23P ist nicht in dem Umfang nötig
 .. alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4*
-  .. noch besser mit reduziertem R, sollte 10x schneller sein
+  o. noch besser mit reduziertem R, sollte 10x schneller sein
+    ok Folge 3,4,6,7 geht damit, 512 auf'm RPI!!!
 .. dann bei Folge 3,15,... Z2 herausteilen
   .. obwohl das bei AAB dann nicht mehr geht... also eher nicht
 .. statt XORMAT Subspaces und Int(z) oder noch besser z=x*Z(2^n)+y*Z(2^n)
   .. auch ShowAdditionTable(GF(4)) mit.
 .. nochmal ConjugacyClasses mit CharacterTable vergleichen.
-.. auch das mit dem Stabilisateur nochmal testen
+ok auch das mit dem Stabilisateur nochmal testen
 .. nächstes File mit KANTENZUG
 
 RRED:=function(V)#neu
   local i,R,V2;
   V2:=List(V);
   R:=[[1]];
-  for i in [2..Size(V)-1] do Add(R,ListWithIdenticalEntries(i,0)); od;
+  for i in [2..Size(V)-1] do Add(R,ListWithIdenticalEntries(i,1)); od;
   Add(R,V2);
   return R;
   end;
@@ -1996,6 +1997,7 @@ R5:=function(RIV)#neu
       fi;
   return R;
   end;
+R5([[1,2,3,4],[5,6,7,8,9]]);
 
 ERWIND:=[];
 j:=1;k:=1;S:=10;
@@ -2193,6 +2195,8 @@ gap> DisplayProfile();
 
 <FILE id="P17" inhalt="COMPDIAG für Folge 1,3,4,6,7...">
 #vorher P16 laden und dann das aktualisieren
+
+
 COMPDIAG4:=function(D)#neu
   local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
   SD:=Size(D);
@@ -2220,7 +2224,8 @@ FUN9:=function(arg)#neu
     od;
   if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
 #  Print(".");
-  Print("\n",RI,RT,R,IdSmallGroup(PcgsOfR(R)));
+#  Print("\n",RI,RT,R,IdSmallGroup(PcgsOfR(R)));
+#  Print("\n",RI,RT,R);
   S:=Size(R);
   RSIZE:=Size(R);
   V:=COMPDIAG4(DIAG(R));MIN:=V;
@@ -2229,7 +2234,7 @@ FUN9:=function(arg)#neu
     Add(GESAMTDILIST,GESAMTDI);
     if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
     Print("*",Size(ERG),"\c");
-    Print(GESAMTDI);
+#    Print(GESAMTDI);
 #    P:=PcgsOfR(R);
 #    if 9>S then Print("\n",IdSmallGroup(P),"\n"); fi;
 #    Print(ConjugacyClasses(P));
@@ -2241,7 +2246,7 @@ FUN9:=function(arg)#neu
 
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[1,0];IS2:=[0];R4:=R2;
+IS:=[1,0];IS2:=[0];R4:=RRED;
 JKLLISTEMACH(8/2);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[3]:=ERG;Size(ERG);3;#16;ERGS
 
 [ [ [ [ 0, 0, 1, 2 ], 6 ], [ [ 0, 0, 3, 0 ], 1 ] ], 
