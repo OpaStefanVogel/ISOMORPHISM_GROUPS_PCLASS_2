@@ -1963,9 +1963,11 @@ ok dsgl. auch nochmal für 3,4,6,7,9,10 ok läuft locker bis 16
   .. und ob ein Zusammenhang zu AAB da
   o. R5 muss dabei auch geändert werden
   ok und T23P ist nicht in dem Umfang nötig
-.. alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4*
-  o. noch besser mit reduziertem R, sollte 10x schneller sein
+ok alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4* nö, sondern
+  ok noch besser mit reduziertem R, sollte 10x schneller sein
     ok Folge 3,4,6,7 geht damit, 512 auf'm RPI!!!
+    ok und auch 3,15,.. geht, 256 aufm' RPI!!!
+    ok TOTAL von 3026 auf 508, wenn das nichts ist!
 .. dann bei Folge 3,15,... Z2 herausteilen
   .. obwohl das bei AAB dann nicht mehr geht... also eher nicht
 .. statt XORMAT Subspaces und Int(z) oder noch besser z=x*Z(2^n)+y*Z(2^n)
@@ -2000,7 +2002,7 @@ R5:=function(RIV)#neu
 R5([[1,2,3,4],[5,6,7,8,9]]);
 
 ERWIND:=[];
-j:=1;k:=1;S:=10;
+j:=1;k:=1;S:=15;
 for i in IteratorOfTuples( [0,1], S ) do
    Print(".");
 #  Print("\n",i);
@@ -2070,7 +2072,7 @@ COMPDIAG4:=function(D)#neu
   local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
   SD:=Size(D);
   RET:=NullMat(SD,20);
-  for jkl in JKLLISTE4 do
+  for jkl in JKLLISTE do
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
     dj:=D[j];dk:=D[k];dl:=D[l];
 #Print("\n",jkl," ",dj," ",dk," ",dl);
@@ -2141,7 +2143,7 @@ FUN9:=function(arg)#neu
   end;    
 
 ProfileFunctions([
-Add,Add1,T23P,FUN9,DIAG,COMPDIAG4,SortedList,Collected,Collected1,Size,MatrixOf
+Add,Add1,T23P,FUN9,DIAG,R4,R5,COMPDIAG4,SortedList,Collected,Collected1,Size,MatrixOf
 ]);
 
 ClearProfile();
@@ -2178,18 +2180,21 @@ for RI in ERGS[8] do
 
 #zu 256:
 gap> DisplayProfile();
-  count  self/ms  chld/ms  stor/kb  chld/kb  package  function                         
-4283922     4712       67        0        0  (oprt.)  Size                             
-4210848     3528     1599   164486    49988           Add1                             
-3496960    10938     8441   820777   992634           R5                               
-576554*    26779        0  1568111        0  (oprt.)  Add                              
-6352464    18785     9952   575515   284921  (oprt.)  Flat                             
-3569360    30300        8  161378*        0           DEEP_COPY_OBJ                    
- 713872    72994     6001  1820381   150039  (oprt.)  Collected                        
-3569360   110785        0   974619        0  (oprt.)  SortedList                       
-3569360    79083   140943  469383*  171125*           T23P                             
- 713872  2668335    79520  305338*  1970420           COMPDIAG4                        
-         3026239           995339*                    TOTAL                            
+  count  self/ms  chld/ms  stor/kb  chld/kb  package  function             
+ 713872     1631      783   150582    22308           RRED                 
+4283922     4296       44        0        0  (oprt.)  Size                 
+4210848     4245     2128   164486    49988           Add1                 
+3496960     7076     3749   620005   198167           R5                   
+394826*    20193      323   521480        0  (oprt.)  Add                  
+4924720    13769     7095   388350   184549  (oprt.)  Flat                 
+3569360    33719        0  148820*        0           DEEP_COPY_OBJ        
+ 713872    29897     7673   787540   145610  (oprt.)  Collected            
+ 713872    15770    22880   584970   659916           DIAG                 
+3569360   121445        0   923215        0  (oprt.)  SortedList           
+ 713872   155043    37940  8251300   933150           COMPDIAG4            
+3569360    83631   155124  431884*  158052*           T23P                 
+ 714272    18064   490337   390476  704556*           FUN9                 
+          508779           708528*                    TOTAL                
 
   </FILE>
 
