@@ -1974,8 +1974,11 @@ ok alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4* nö, sondern
   .. auch ShowAdditionTable(GF(4)) mit.
 .. nochmal ConjugacyClasses mit CharacterTable vergleichen.
 ok auch das mit dem Stabilisateur nochmal testen
-.. nächstes File mit KANTENZUG
-
+ok nächstes File mit KANTENZUG
+ok die 1024 hat einen letzten kleinen Zuwachs, danach wäre K(2048)=K(1024) drin.
+.. Sum(DIAG) auch mit einbeziehen, da dürften auch etliche RI schneller sein
+o. in COMPDIAG4 die [0,x,y,z] in 0 bis 3 umwandeln
+  .. dann auch in 3,15...
 RRED:=function(V)#neu
   local i,R,V2;
   V2:=List(V);
@@ -2148,7 +2151,7 @@ Add,Add1,T23P,FUN9,DIAG,R4,R5,COMPDIAG4,SortedList,Collected,Collected1,Size,Mat
 
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0,1];IS2:=[0,2];R4:=RRED;
+IS:=[0..3];IS2:=[0];R4:=RRED;
 #*1*2*3*4*5*6[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 0, 2 ], [ 1, 2 ], [ 2, 3 ] ]
 JKLLISTEMACH(16/4);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[4]:=ERG;Size(ERG);6;#16;ERGS
 JKLLISTEMACH(32/4);GESAMTDILIST:=[];ERG:=[];
@@ -2177,6 +2180,15 @@ for RI in ERGS[8] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[9]:=ERG;Size(ERGS[9]);1122;
+SaveWorkspace("GAP512-1112-DIAG");
+JKLLISTEMACH(1024/4);;GESAMTDILIST:=[];ERG:=[];
+for RI in ERGS[9] do
+  Print("\n***",RI,"\c");
+  ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
+  od;ERGS[10]:=ERG;Size(ERGS[10]);2944;
+SaveWorkspace("GAP512-1112-DIAG");
+
+#PRI:=ERGS[6];for i in [1..Size(PRI)] do Print("\n",i," ",PRI[i]); od;
 
 #zu 256:
 gap> DisplayProfile();
@@ -2216,7 +2228,17 @@ COMPDIAG4:=function(D)#neu
     RET[k][RET2]:=RET[k][RET2]+1;
     RET[l][RET2]:=RET[l][RET2]+1;
     od;
-  RET:=Collected(RET);Remove(RET,1);
+  for i in [1..SD] do 
+#    Print("\n",i," ",SD," ",D[i]," ",RET[i]);
+    if D[i]=1 then
+      if RET[i][3]=SD/2-1 then D[i]:=3; fi;
+      else
+        if RET[i][2]=0 then D[i]:=2; fi;
+        fi;
+    od;
+#Print(D);
+#  Remove(D,1);#nicht mehr weil D[1]=z ist möglicherweise
+  RET:=Collected(List(D));
   return RET;
   end;
 
@@ -2230,7 +2252,7 @@ FUN9:=function(arg)#neu
   if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
 #  Print(".");
 #  Print("\n",RI,RT,R,IdSmallGroup(PcgsOfR(R)));
-  Print("\n",RI,RT,R);
+#  Print("\n",RI,RT,R);
   S:=Size(R);
   RSIZE:=Size(R);
   V:=COMPDIAG4(DIAG(R));MIN:=V;
@@ -2253,32 +2275,54 @@ ClearProfile();
 ERGS:=[];XSAMMEL:=[];
 IS:=[1,0];IS2:=[0];R4:=RRED;
 JKLLISTEMACH(8/2);RI:=[];GESAMTDILIST:=[];ERG:=[];ListX(IS2,IS2,IS,IS,FUN9);;ERGS[3]:=ERG;Size(ERG);3;#16;ERGS
-
-[ [ [ [ 0, 0, 1, 2 ], 6 ], [ [ 0, 0, 3, 0 ], 1 ] ], 
-  [ [ [ 0, 0, 3, 0 ], 4 ], [ [ 1, 0, 2, 0 ], 3 ] ], 
-  [ [ [ 0, 2, 1, 0 ], 2 ], [ [ 1, 2, 0, 0 ], 4 ], [ [ 2, 0, 1, 0 ], 1 ] ] ]
+[ [ [ 1, 3 ], [ 2, 1 ] ], 
+  [ [ 2, 2 ], [ 3, 2 ] ], 
+  [ [ 0, 2 ], [ 1, 1 ], [ 2, 1 ] ] ]
+[ [ [ [ 0, 0, 0, 1 ], 3 ] ],
+  [ [ [ 0, 0, 1, 0 ], 3 ] ], 
+  [ [ [ 0, 1, 0, 0 ], 3 ] ] ]
 JKLLISTEMACH(16/2);RI:=[];GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[3] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);
   od;ERGS[4]:=ERG;Size(ERGS[4]);4;GESAMTDILIST;
-[ [ [ [ 0, 0, 0, 1 ], 3 ] ], 
-  [ [ [ 0, 0, 1, 0 ], 3 ] ], 
-  [ [ [ 0, 1, 0, 0 ], 3 ] ] ]
+[ [ [ 1, 6 ], [ 2, 2 ] ], 
+  [ [ 0, 3 ], [ 1, 3 ], [ 2, 1 ], [ 3, 1 ] ], 
+  [ [ 2, 4 ], [ 3, 4 ] ], 
+  [ [ 0, 4 ], [ 1, 2 ], [ 2, 2 ] ] ]
+[ [ [ [ 0, 0, 1, 2 ], 6 ], [ [ 0, 0, 3, 0 ], 1 ] ], 
+  [ [ [ 0, 0, 3, 0 ], 1 ], [ [ 0, 1, 1, 1 ], 3 ], [ [ 0, 2, 1, 0 ], 3 ] ], 
+  [ [ [ 0, 0, 3, 0 ], 4 ], [ [ 1, 0, 2, 0 ], 3 ] ], 
+  [ [ [ 0, 2, 1, 0 ], 2 ], [ [ 1, 2, 0, 0 ], 4 ], [ [ 2, 0, 1, 0 ], 1 ] ] ]
 JKLLISTEMACH(32/2);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[4] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);
   od;ERGS[5]:=ERG;Size(ERGS[5]);6;GESAMTDILIST;
-[ [ [ [ 0, 1, 3, 3 ], 10 ], [ [ 0, 4, 3, 0 ], 5 ] ], [ [ [ 0, 0, 3, 4 ], 12 ], [ [ 1, 0, 6, 0 ], 3 ] ], 
+[ [ [ 0, 5 ], [ 1, 10 ], [ 2, 1 ] ], 
+  [ [ 1, 12 ], [ 2, 4 ] ], 
+  [ [ 0, 6 ], [ 1, 6 ], [ 2, 2 ], [ 3, 2 ] ], 
+  [ [ 0, 9 ], [ 1, 6 ], [ 2, 1 ] ], 
+  [ [ 2, 8 ], [ 3, 8 ] ], 
+  [ [ 0, 8 ], [ 1, 4 ], [ 2, 4 ] ] ]
+[ [ [ [ 0, 1, 3, 3 ], 10 ], [ [ 0, 4, 3, 0 ], 5 ] ], 
+  [ [ [ 0, 0, 3, 4 ], 12 ], [ [ 1, 0, 6, 0 ], 3 ] ], 
   [ [ [ 0, 0, 7, 0 ], 2 ], [ [ 0, 2, 3, 2 ], 6 ], [ [ 1, 4, 2, 0 ], 6 ], [ [ 3, 0, 4, 0 ], 1 ] ], 
-  [ [ [ 0, 3, 3, 1 ], 6 ], [ [ 2, 4, 1, 0 ], 9 ] ], [ [ [ 0, 0, 7, 0 ], 8 ], [ [ 3, 0, 4, 0 ], 7 ] ], 
+  [ [ [ 0, 3, 3, 1 ], 6 ], [ [ 2, 4, 1, 0 ], 9 ] ], 
+  [ [ [ 0, 0, 7, 0 ], 8 ], [ [ 3, 0, 4, 0 ], 7 ] ], 
   [ [ [ 0, 4, 3, 0 ], 4 ], [ [ 3, 4, 0, 0 ], 8 ], [ [ 5, 0, 2, 0 ], 3 ] ] ]
 JKLLISTEMACH(64/2);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[5] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[6]:=ERG;Size(ERGS[6]);7;GESAMTDILIST;
+[ [ [ 0, 15 ], [ 1, 15 ], [ 2, 1 ], [ 3, 1 ] ], 
+  [ [ 0, 10 ], [ 1, 20 ], [ 2, 2 ] ], 
+  [ [ 1, 24 ], [ 2, 8 ] ], 
+  [ [ 0, 12 ], [ 1, 12 ], [ 2, 4 ], [ 3, 4 ] ], 
+  [ [ 0, 18 ], [ 1, 12 ], [ 2, 2 ] ] , 
+  [ [ 2, 16 ], [ 3, 16 ] ], 
+  [ [ 0, 16 ], [ 1, 8 ], [ 2, 8 ] ] ]
 [ [ [ [ 0, 0, 15, 0 ], 1 ], [ [ 0, 4, 7, 4 ], 15 ], [ [ 3, 8, 4, 0 ], 15 ] ], 
   [ [ [ 0, 2, 7, 6 ], 20 ], [ [ 1, 8, 6, 0 ], 10 ], [ [ 5, 0, 10, 0 ], 1 ] ], 
   [ [ [ 0, 0, 7, 8 ], 24 ], [ [ 3, 0, 12, 0 ], 7 ] ], 
@@ -2291,6 +2335,15 @@ for RI in ERGS[6] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[7]:=ERG;Size(ERGS[7]);9;GESAMTDILIST;
+[ [ [ 0, 35 ], [ 1, 28 ], [ 2, 1 ] ], 
+  [ [ 0, 30 ], [ 1, 30 ], [ 2, 2 ], [ 3, 2 ] ], 
+  [ [ 0, 27 ], [ 1, 36 ], [ 2, 1 ] ], 
+  [ [ 0, 20 ], [ 1, 40 ], [ 2, 4 ] ], 
+  [ [ 1, 48 ], [ 2, 16 ] ], 
+  [ [ 0, 24 ], [ 1, 24 ], [ 2, 8 ], [ 3, 8 ] ], 
+  [ [ 0, 36 ], [ 1, 24 ], [ 2, 4 ] ], 
+  [ [ 2, 32 ], [ 3, 32 ] ], 
+  [ [ 0, 32 ], [ 1, 16 ], [ 2, 16 ] ] ]
 [ [ [ [ 0, 10, 15, 6 ], 28 ], [ [ 9, 16, 6, 0 ], 35 ] ], 
   [ [ [ 0, 0, 31, 0 ], 2 ], [ [ 0, 8, 15, 8 ], 30 ], [ [ 7, 16, 8, 0 ], 30 ], [ [ 15, 0, 16, 0 ], 1 ] ], 
   [ [ [ 0, 6, 15, 10 ], 36 ], [ [ 5, 16, 10, 0 ], 27 ] ], 
@@ -2305,6 +2358,16 @@ for RI in ERGS[7] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[8]:=ERG;Size(ERGS[8]);10;GESAMTDILIST;
+[ [ [ 0, 70 ], [ 1, 56 ], [ 2, 2 ] ], 
+  [ [ 0, 63 ], [ 1, 63 ], [ 2, 1 ], [ 3, 1 ] ], 
+  [ [ 0, 60 ], [ 1, 60 ], [ 2, 4 ], [ 3, 4 ] ], 
+  [ [ 0, 54 ], [ 1, 72 ], [ 2, 2 ] ], 
+  [ [ 0, 40 ], [ 1, 80 ], [ 2, 8 ] ], 
+  [ [ 1, 96 ], [ 2, 32 ] ], 
+  [ [ 0, 48 ], [ 1, 48 ], [ 2, 16 ], [ 3, 16 ] ], 
+  [ [ 0, 72 ], [ 1, 48 ], [ 2, 8 ] ], 
+  [ [ 2, 64 ], [ 3, 64 ] ], 
+  [ [ 0, 64 ], [ 1, 32 ], [ 2, 32 ] ] ]
 [ [ [ [ 0, 20, 31, 12 ], 56 ], [ [ 19, 32, 12, 0 ], 70 ], [ [ 35, 0, 28, 0 ], 1 ] ], 
   [ [ [ 0, 0, 63, 0 ], 1 ], [ [ 0, 16, 31, 16 ], 63 ], [ [ 15, 32, 16, 0 ], 63 ] ], 
   [ [ [ 0, 0, 63, 0 ], 4 ], [ [ 0, 16, 31, 16 ], 60 ], [ [ 15, 32, 16, 0 ], 60 ], [ [ 31, 0, 32, 0 ], 3 ] ], 
@@ -2418,8 +2481,18 @@ KANTENZUG:=function(d,z)
           Add(R,Concatenation(LWIE(4*s,1),LWIE(d-4*s,0))); fi;
         if u=2 then R:=KANTENZUG(d-1,z);
           Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-1,0))); fi;
-        if u=3 then R:=KANTENZUG(d-1,z+1);
-          Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-2,0),[1])); fi;
+        if u=3 then 
+          if z+1=a[d-1] then 
+            R:=KANTENZUG(d-1,z);
+            Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-2,0),[1]));
+            else if z=a[d-1] then
+              R:=KANTENZUG(d-1,z);
+              Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-1,0)));
+              else 
+                R:=KANTENZUG(d-1,z+1);
+                Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-2,0),[1]));  
+                fi; fi;
+          fi;
         if u=4 then R:=KANTENZUG(d-1,z+1);
           Add(R,Concatenation(LWIE(4*s+1,1),LWIE(d-4*s-1,0))); fi;
         if u=5 then R:=KANTENZUG(d-1,z);
@@ -2433,7 +2506,7 @@ KANTENZUG(2,1);
 
 
 ERWIND:=[];
-j:=1;k:=1;S:=20;
+j:=1;k:=1;S:=15;
 for i in IteratorOfTuples( [0,1], S ) do
    Print(".");
 #  Print("\n",i);
@@ -2501,16 +2574,34 @@ COMPDIAG4:=function(D)#neu
     RET[k][RET2]:=RET[k][RET2]+1;
     RET[l][RET2]:=RET[l][RET2]+1;
     od;
-  RET:=Collected(RET);Remove(RET,1);
+  for i in [1..SD] do 
+#    Print("\n",i," ",SD," ",D[i]," ",RET[i]);
+    if D[i]=1 then
+      if RET[i][3]=SD/2-1 then D[i]:=3; fi;
+      else
+        if RET[i][2]=0 then D[i]:=2; fi;
+        fi;
+    od;
+#Print(D);
+#  Remove(D,1);#nicht mehr weil D[1]=z ist möglicherweise
+  RET:=Collected(List(D));
   return RET;
   end;
 JKLLISTEMACH(16/2);
-COMPDIAG4(DIAG(KANTENZUG(3,4)));
+COMPDIAG4(DIAG(KANTENZUG(3,2)));
 JKLLISTEMACH(32/2);
-COMPDIAG4(DIAG(KANTENZUG(4,4)));
+COMPDIAG4(DIAG(KANTENZUG(4,2)));
 JKLLISTEMACH(64/2);
-COMPDIAG4(DIAG(KANTENZUG(5,4)));
+COMPDIAG4(DIAG(KANTENZUG(5,2)));
+JKLLISTEMACH(1024/2);
+COMPDIAG4(DIAG(KANTENZUG(9,8)));
+512 512 1 [ 0, 0, 255, 0 ]
+[ [ [ [ 0, 0, 255, 0 ], 1 ], 16 ], 
+  [ [ [ 0, 64, 127, 64 ], 1 ], 240 ], 
+  [ [ [ 63, 128, 64, 0 ], 0 ], 240 ], 
+  [ [ [ 127, 0, 128, 0 ], 0 ], 15 ] ]
 
+XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]]);;
 XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
 
 JKLLISTE:=[];
@@ -2529,13 +2620,25 @@ JKLLISTEMACH:=function(SI)
   end;
 
 d:=1;repeat
+  ERG:=[];
+  for z in [1..a[d]] do
+    SUMM:=Sum(DIAG(KANTENZUG(d,z)));
+    Add(ERG,SUMM);
+    Print("\n",d," ",z," ",SUMM);
+    od;
+  Print("\n",d," ",Collected(ERG));
+  d:=d+1;
+  Print("\n");
+  until d=20;
+  
+d:=1;repeat
   JKLLISTEMACH(2^d);
   for z in [1..a[d]] do
-    Print("\n",d," ",z," ",COMPDIAG4(DIAG(KANTENZUG(d,z))));
+    ERG:=COMPDIAG4(DIAG(KANTENZUG(d,z)));
+    Print("\n",d," ",z," ",ERG);
     od;
   d:=d+1;
-  until 1=0;
-  
+  until d=10;
   </FILE>
 
 <FILE id="P20" inhalt="Stabilizer">
@@ -2545,15 +2648,57 @@ a:=G.1;b:=G.2;c:=G.3;
 L:=[a,b,a*b,c,a*c,b*c,a*b*c];
 A:=Action(AutomorphismGroup(G),L);
 
-D2:=[1,1,0,0,0,0,0];
+D2:=[1,1,2,0,0,0,0];
 S2:=Stabilizer(A,D2,Permuted);
+  List(S2,i->Permuted([1..7],i));
+[ [ 1, 2, 3, 4, 5, 6, 7 ], [ 1, 2, 3, 5, 4, 7, 6 ], [ 1, 2, 3, 7, 6, 5, 4 ], [ 1, 2, 3, 6, 7, 4, 5 ], 
+  [ 2, 1, 3, 4, 6, 5, 7 ], [ 2, 1, 3, 6, 4, 7, 5 ], [ 2, 1, 3, 7, 5, 6, 4 ], [ 2, 1, 3, 5, 7, 4, 6 ] ]
 RC:=RightCosets(A,S2);
+[ 1, 1, 2, 0, 0, 0, 0 ], 
+[ 0, 0, 2, 1, 0, 0, 1 ], 2
+[ 0, 0, 2, 0, 1, 1, 0 ], 2
+[ 2, 1, 1, 0, 0, 0, 0 ], 2
+[ 2, 0, 0, 1, 1, 0, 0 ], 3
+[ 2, 0, 0, 0, 0, 1, 1 ], 3
+[ 0, 2, 0, 1, 0, 1, 0 ], 3
+[ 1, 2, 1, 0, 0, 0, 0 ], 2
+[ 0, 2, 0, 0, 1, 0, 1 ], 3
+[ 0, 1, 0, 1, 0, 2, 0 ], 4
+[ 0, 0, 1, 0, 1, 2, 0 ], 3
+[ 1, 0, 0, 0, 0, 2, 1 ], 4
+[ 0, 0, 1, 2, 0, 0, 1 ], 3
+[ 0, 1, 0, 2, 0, 1, 0 ], 4
+[ 1, 0, 0, 2, 1, 0, 0 ], 4
+[ 0, 0, 1, 1, 0, 0, 2 ], 3
+[ 0, 1, 0, 0, 1, 0, 2 ], 4
+[ 1, 0, 0, 0, 0, 1, 2 ], 4
+[ 1, 0, 0, 1, 2, 0, 0 ], 4
+[ 0, 1, 0, 0, 2, 0, 1 ], 4
+[ 0, 0, 1, 0, 2, 1, 0 ] ]3
 RC:=List(RC,i->Set(i));
+  List(RC,i->Permuted(D2,i[1]));
 AU:=AutomorphismGroup(A);
 STAB:=Stabilizer(AU,Set(S2),OnSets);
+gap> List(STAB);                     
+[ [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (1,4)(3,6), (2,3)(4,6,5,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> 
+    [ (2,7)(3,6), (1,5,2,6)(4,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,4)(3,5), (1,3)(4,5,6,7) ], 
+  [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,6)(3,7), (1,3)(4,5,6,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> 
+    [ (1,7)(3,5), (1,5,2,6)(4,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,5)(3,4), (1,7,2,4)(5,6) ], 
+  [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (1,5)(3,7), (1,7,2,4)(5,6) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> 
+    [ (1,5)(3,7), (2,3)(4,6,5,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (1,6)(3,4), (2,3)(4,7,5,6) ], 
+  [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (1,6)(3,4), (1,4,2,7)(5,6) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> 
+    [ (1,7)(3,5), (2,3)(4,7,5,6) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,6)(3,7), (1,4,2,7)(5,6) ], 
+  [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (1,4)(3,6), (1,6,2,5)(4,7) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> 
+    [ (2,5)(3,4), (1,3)(4,7,6,5) ], [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,4)(3,5), (1,6,2,5)(4,7) ], 
+  [ (1,4)(3,6), (2,3)(4,6,5,7) ] -> [ (2,7)(3,6), (1,3)(4,7,6,5) ] ]
 ORB:=Orbits(STAB,RC,OnSets);
 RD:=List(ORB,i->Representative(Representative(i)));
 List(RD,i->Permuted(D2,i));
+List(RC,i->Permuted(D2,i[1]));
+ORB1:=Orbit(STAB,RC[2],OnSets);
+List(ORB1,i->Permuted(D2,i[1]));
+
+RC:=[ 
   </FILE>
 
 <FILE id="P21" inhalt="neuer Branch Folge_3_15">
