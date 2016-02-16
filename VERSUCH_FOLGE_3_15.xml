@@ -1981,6 +1981,7 @@ nö Sum(DIAG) auch mit einbeziehen, da dürften auch etliche RI schneller sein n
   .. also damit als erstes los, TOTAL könnte auf die Hälfte gehen...
 o. in COMPDIAG4 die [0,x,y,z] in 0 bis 3 umwandeln
   .. dann auch in 3,15...
+  o. und nach neuem System y^2=(xy)^2 usw. prüfen
 .. die phi und PHI müssen dem Anschein nach irgendwie Reversed() werden
 o. danach natürlich auf DIAG anwenden, 
   .. um von XSAMMEL aus zu den markierten Elementen zu kommen
@@ -2239,7 +2240,7 @@ COMPDIAG4:=function(D)#neu
   for i in [1..SD] do 
 #    Print("\n",i," ",SD," ",D[i]," ",RET[i]);
     if D[i]=1 then
-      if RET[i][3]=SD/2-1 then D[i]:=3; fi;
+      if RET[i][2]=0 and RET[i][4]=0 then D[i]:=3; fi;
       else
         if RET[i][2]=0 then D[i]:=2; fi;
         fi;
@@ -2568,46 +2569,7 @@ DIAG:=function(R)#neu
 R:=KANTENZUG(3,4);
 DIAG(R);
 
-COMPDIAG4:=function(D)#neu
-  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD;
-  SD:=Size(D);
-  RET:=NullMat(SD,4);
-  for jkl in JKLLISTE do
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-    dj:=D[j];dk:=D[k];dl:=D[l];
-#Print("\n",jkl," ",dj," ",dk," ",dl);
-#    RET2:=DJDKDL[dj+1][dk+1][dl+1];
-    RET2:=dj+dk+dl+1;
-    RET[j][RET2]:=RET[j][RET2]+1;
-    RET[k][RET2]:=RET[k][RET2]+1;
-    RET[l][RET2]:=RET[l][RET2]+1;
-    od;
-  for i in [1..SD] do 
-#    Print("\n",i," ",SD," ",D[i]," ",RET[i]);
-    if D[i]=1 then
-      if RET[i][3]=SD/2-1 then D[i]:=3; fi;
-      else
-        if RET[i][2]=0 then D[i]:=2; fi;
-        fi;
-    od;
-#Print(D);
-#  Remove(D,1);#nicht mehr weil D[1]=z ist möglicherweise
-  RET:=Collected(List(D));
-  return RET;
-  end;
-JKLLISTEMACH(16/2);
-COMPDIAG4(DIAG(KANTENZUG(3,2)));
-JKLLISTEMACH(32/2);
-COMPDIAG4(DIAG(KANTENZUG(4,2)));
-JKLLISTEMACH(64/2);
-COMPDIAG4(DIAG(KANTENZUG(5,2)));
-JKLLISTEMACH(1024/2);
-COMPDIAG4(DIAG(KANTENZUG(9,8)));
-512 512 1 [ 0, 0, 255, 0 ]
-[ [ [ [ 0, 0, 255, 0 ], 1 ], 16 ], 
-  [ [ [ 0, 64, 127, 64 ], 1 ], 240 ], 
-  [ [ [ 63, 128, 64, 0 ], 0 ], 240 ], 
-  [ [ [ 127, 0, 128, 0 ], 0 ], 15 ] ]
+#COMPDIAG4 aus P17
 
 XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]]);;
 XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
