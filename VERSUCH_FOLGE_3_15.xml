@@ -1976,9 +1976,17 @@ ok alles nochmal laufen lassen mit j:=2*jkl[1];...bzw 4* nö, sondern
 ok auch das mit dem Stabilisateur nochmal testen
 ok nächstes File mit KANTENZUG
 ok die 1024 hat einen letzten kleinen Zuwachs, danach wäre K(2048)=K(1024) drin.
-.. Sum(DIAG) auch mit einbeziehen, da dürften auch etliche RI schneller sein
+nö Sum(DIAG) auch mit einbeziehen, da dürften auch etliche RI schneller sein nö, hat ja in 3,15... nicht so die Wirkung
+.. die vielen T23P vermeiden, indem diese mit in GESAMTDILISTE hinein
+  .. also damit als erstes los, TOTAL könnte auf die Hälfte gehen...
 o. in COMPDIAG4 die [0,x,y,z] in 0 bis 3 umwandeln
   .. dann auch in 3,15...
+.. die phi und PHI müssen dem Anschein nach irgendwie Reversed() werden
+o. danach natürlich auf DIAG anwenden, 
+  .. um von XSAMMEL aus zu den markierten Elementen zu kommen
+  .. dann kann JKLLISTE aus COMPDIAG4 raus
+.. ob sich die markierten Elemente auch bei XOR verknüpfen...
+
 RRED:=function(V)#neu
   local i,R,V2;
   V2:=List(V);
@@ -2131,14 +2139,14 @@ FUN9:=function(arg)#neu
   S:=Size(R);
   RSIZE:=Size(R);
   V:=COMPDIAG4(DIAG(R));MIN:=V;
-  MIN:=Minimum(MIN,T23P(P23,V));
-  MIN:=Minimum(MIN,T23P(P12,V));
-  MIN:=Minimum(MIN,T23P(P12*P23,V));
-  MIN:=Minimum(MIN,T23P(P23*P12,V));
-  MIN:=Minimum(MIN,T23P(P12*P23*P12,V));
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
     Add(GESAMTDILIST,GESAMTDI);
+    GV:=T23P(P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=T23P(P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=T23P(P12*P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=T23P(P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=T23P(P12*P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
     if RI=[] then Add (ERG,RT); else Add(ERG,[RI,RT]); fi;
     Print("*",Size(ERG),"\c");
     fi;
@@ -2286,10 +2294,10 @@ for RI in ERGS[3] do
   Print("\n***",RI,"\c");
   ListX(IS2,IS2,IS2,IS,IS,IS,FUN9);
   od;ERGS[4]:=ERG;Size(ERGS[4]);4;GESAMTDILIST;
-[ [ [ 1, 6 ], [ 2, 2 ] ], 
-  [ [ 0, 3 ], [ 1, 3 ], [ 2, 1 ], [ 3, 1 ] ], 
-  [ [ 2, 4 ], [ 3, 4 ] ], 
-  [ [ 0, 4 ], [ 1, 2 ], [ 2, 2 ] ] ]
+[ [ [ 1, 6 ], [ 2, 2 ] ], #A
+  [ [ 0, 3 ], [ 1, 3 ], [ 2, 1 ], [ 3, 1 ] ], #D
+  [ [ 2, 4 ], [ 3, 4 ] ], #C
+  [ [ 0, 4 ], [ 1, 2 ], [ 2, 2 ] ] ] #B
 [ [ [ [ 0, 0, 1, 2 ], 6 ], [ [ 0, 0, 3, 0 ], 1 ] ], 
   [ [ [ 0, 0, 3, 0 ], 1 ], [ [ 0, 1, 1, 1 ], 3 ], [ [ 0, 2, 1, 0 ], 3 ] ], 
   [ [ [ 0, 0, 3, 0 ], 4 ], [ [ 1, 0, 2, 0 ], 3 ] ], 
