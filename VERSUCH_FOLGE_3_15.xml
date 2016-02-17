@@ -2248,7 +2248,9 @@ COMPDIAG4:=function(D)#neu
 #Print(D);
 #  Remove(D,1);#nicht mehr weil D[1]=z ist möglicherweise
   RET:=Collected(List(D));
-  return RET;
+  RET2:=[0,0,0,0];
+  for i in RET do RET2[RET[i][1]+1]:=RET[i][2];
+  return RET2;
   end;
 
 FUN9:=function(arg)#neu
@@ -2513,9 +2515,11 @@ d:=1;repeat
   until d=20;
   
 d:=1;repeat
-  JKLLISTEMACH(2^d);
+  JKLLISTEMACH(2^d);GESAMTDILIST:[];
   for z in [1..a[d]] do
     ERG:=COMPDIAG4(DIAG(KANTENZUG(d,z)));
+    if ERG in GESAMTDILIST then Error("Stop");
+    Add(GESAMTDILIST,ERG);
     Print("\n",d," ",z," ",ERG);
     od;
   d:=d+1;
