@@ -2386,7 +2386,7 @@ u:           [0,x]:                      [1,x]:                  [2] [3]
 ..
 
 a:=[];
-for i in [1..30] do a[i]:=i+Int(i/2); od;
+for i in [1..1000] do a[i]:=i+Int(i/2); od;
 
 KANTENZUG:=function(d,z)
   local s,u,R,LWIE;
@@ -2526,7 +2526,7 @@ d:=1;repeat
   until d=10;
 
 d:=1;repeat
-  Print(d," ");
+  Print("\n------------");
   ERG:=[];
   for z in [1..a[d]] do
     ERGZ:=[0,0,0,0];
@@ -2538,49 +2538,54 @@ d:=1;repeat
     ERGZ[2]:= p*(1*16^s-(-1)^s*1*4^s);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*0;
-    endif
+    fi;
   if u=2 then
     p:=2^(d-4*s-3);
     ERGZ[1]:= p*(4*16^s+(-1)^s*2*4^s-2);
     ERGZ[2]:= p*(4*16^s-(-1)^s*2*4^s);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*0;
-    endif
+    fi;
   if u=1 then
     p:=2^(d-4*s-2);
     ERGZ[1]:= p*(2*16^s-2);
     ERGZ[2]:= p*(2*16^s-2);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*2;
-    endif
+    fi;
   if u=5 then
     p:=2^(d-4*s-5);
     ERGZ[1]:= p*(16*16^s+(-1)^s*4*4^s-2);
     ERGZ[2]:= p*(16*16^s-(-1)^s*4*4^s);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*0;
-    endif
+    fi;
   if u=4 then
     p:=2^(d-4*s-4);
     ERGZ[1]:= p*(8*16^s-2);
     ERGZ[2]:= p*(8*16^s-2);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*2;
-    endif
+    fi;
   if u=3 then
     p:=2^(d-4*s-3);
     ERGZ[1]:= p*(4*16^s-(-1)^s*2*4^s-2);
     ERGZ[2]:= p*(4*16^s+(-1)^s*2*4^s);
     ERGZ[3]:= p*2;
     ERGZ[4]:= p*0;
-    endif
-    ERGZ:=SortedList(ERGZ);
-    if ERGZ in ERG then Error("Stop");
+    fi;
+    ERGZ:=Reversed(SortedList(ERGZ));
+    if ERGZ[4]=0 then Remove(ERGZ); fi;
+    if ERGZ[3]=0 then Remove(ERGZ); fi;
+    if ERGZ[2]=0 then Remove(ERGZ); fi;
+    if ERGZ in ERG then Error("Stop"); fi;
     Add(ERG,ERGZ);
-    Print("\n",d," ",z," ",ERG);
+    Print("\n",d," ",z," ",ERGZ);
     od;
   d:=d+1;
-  until d=100;
+#  until d=10;
+#  until d=100;
+  until d=400;
 
   </FILE>
 
