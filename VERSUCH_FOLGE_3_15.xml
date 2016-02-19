@@ -2515,15 +2515,15 @@ d:=1;repeat
   until d=20;
   
 d:=1;repeat
-  JKLLISTEMACH(2^d);GESAMTDILIST:[];
+  JKLLISTEMACH(2^d);GESAMTDILIST:=[];
   for z in [1..a[d]] do
     ERG:=COMPDIAG4(DIAG(KANTENZUG(d,z)));
-    if ERG in GESAMTDILIST then Error("Stop");
+    if ERG in GESAMTDILIST then Error("Stop"); fi;
     Add(GESAMTDILIST,ERG);
     Print("\n",d," ",z," ",ERG);
     od;
   d:=d+1;
-  until d=10;
+  until d=14;
 
 d:=1;repeat
   Print("\n------------");
