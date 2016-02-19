@@ -2249,7 +2249,7 @@ COMPDIAG4:=function(D)#neu
 #Print(D);
 #  Remove(D,1);#nicht mehr weil D[1]=z ist möglicherweise
   RET:=Collected(List(D));
-  RET:=SortedList(List(RET,i->i[2]));
+  RET:=Reversed(SortedList(List(RET,i->i[2])));
   return RET;
   end;
 
