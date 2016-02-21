@@ -2700,6 +2700,30 @@ ok müsste in QY09 nicht auch Reversed stehen? Ganz zuvor nochmal prüfen!!
 .. ob in der jetzigen Konstellation der WEGEVERGLEICHER noch nötig ist
 .. Unbind(XSAMMEL[i][6]) wenn schon [12] ist
 
+R4:=function(V)#neu
+  local i,R,V2;
+  V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+  R:=[[0],[0,0],[1,1,1]];
+  for i in [4..Size(V)+1] do Add(R,ListWithIdenticalEntries(i,0)); od;
+  Add(R,V2);
+  return R;
+  end;
+R4([1,1]);
+
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  if IsInt(RIV[1]) then
+    R:=R4(RIV);
+    else
+      RI:=RIV[1];V:=RIV[2];
+      V2:=List(V);Add(V2,V2[1],1);Add(V2,V2[1],1);
+      R:=R5(RI);
+      Add(R,V2);
+      fi;
+  return R;
+  end;
+R5([1,1]);
+
 PZUN([0,0,0,0,0],5);0;
 PZUN([0,0,0,0,3],5);3;
 PZUN([0,0,2,0,3],5);35;
@@ -2744,7 +2768,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 #Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0..3];
+IS:=[0..3];#[0..3];
 
 #R:=[[0],[0,0],[1,1,1], [ 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1 ], [ 0, 0, 0, 0, 1, 3 ] ];P:=PcgsOfR(R);RMAXSUCH(P);
 
