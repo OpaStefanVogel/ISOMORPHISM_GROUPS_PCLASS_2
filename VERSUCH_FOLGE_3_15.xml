@@ -2768,7 +2768,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 #Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0..3];#[0..3];
+IS:=[0..3];
 
 #R:=[[0],[0,0],[1,1,1], [ 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1 ], [ 0, 0, 0, 0, 1, 3 ] ];P:=PcgsOfR(R);RMAXSUCH(P);
 
@@ -3069,6 +3069,132 @@ gap> XSAMMELVIEWER4(XSAMMEL);
 
   </FILE>
 
+<FILE id="P21" inhalt="und daraus nochmal Folge_3_4_6_7">
+Read("PcgsOfR.txt");
+Read("MatrixOf.txt");
+Read("XSAMMEL.txt"); #in der Variante ohne S=2, S=3, S=4...
+Read("DIAG.txt");
+.. mit der Absicht, die Markierung mit reinzubringen
+
+R4:=function(V)#neu
+  local i,R,V2;
+  V2:=List(V);Add(V2,V2[1],1);#Add(V2,V2[1],1);
+  R:=[[0],[1,1]];
+  for i in [3..Size(V)] do Add(R,ListWithIdenticalEntries(i,1)); od;
+  Add(R,V2);
+  return R;
+  end;
+R4([1,1]);
+R4([1,1,1]);
+R4([1,1,1,1]);
+
+R5:=function(RIV)#neu
+  local i,V2,RI,V;
+  if IsInt(RIV[1]) then
+    R:=R4(RIV);
+    else
+      RI:=RIV[1];V:=RIV[2];
+      V2:=List(V);Add(V2,V2[1],1);#Add(V2,V2[1],1);
+      R:=R5(RI);
+      Add(R,V2);
+      fi;
+  return R;
+  end;
+R5([1,1]);
+
+RINXS:=function(R,ZEIGER,S)#ohne phi ob R in XSAMMEL ist
+  local PNEU,RET,i;
+  RET:=0;
+  PNEU:=R[S];
+  i:=PZUN(PNEU,S)+1;
+#  Print("XXXX",PNEU,S,Size(R));
+  if IsBound(ZEIGER[i]) then
+    RET:=ZEIGER[i];
+#    Print(RET[1]);
+    if Size(R)>S then RET:=RINXS(R,RET[6],S+1); fi;
+    fi;
+#  Print("****",RET);
+  return RET;
+  end;
+
+GLOBZEIG:=[];
+FUN8:=function(arg)#neu-->DIAG.txt
+  RT:=arg;
+  if RI=[] then R:=R5(RT); else R:=R5([RI,RT]); fi;
+  RSIZE:=Size(R);
+#Print("???",R,RINXS(R,XSAMMEL,1));
+  if not (IsBound(GLOBZEIG[6][PZUN(R[RSIZE],RSIZE)+1])) then
+    Print("\n",RT,"\c");
+    P:=PcgsOfR(R);
+#  Print(IdSmallGroup(P),"\c");
+    inh:=inh+1;
+    RMAXSUCH(P);Print("\c");
+    if RI=[] then Add(ERGS[RSIZE],RT); else Add(ERGS[RSIZE],[RI,RT]); fi;
+    fi;
+  return [];
+  end;
+
+#Ablauf aus idP10 und sowas wie FUN6 aus idP13
+ClearProfile();
+ERGS:=[];XSAMMEL:=[];
+IS:=[1,0];
+
+#R:=[[0],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
+R:=[[0],[1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
+XSAMMELVIEWER4(XSAMMEL);
+R:=[[0],[1,1]];GLOBZEIG:=RINXS(R,XSAMMEL,1);
+
+R:=R5([1,1]);P:=PcgsOfR(R);RMAXSUCH(P);
+R:=R5([1,0]);P:=PcgsOfR(R);RMAXSUCH(P);
+R:=R5([0,1]);P:=PcgsOfR(R);RMAXSUCH(P);
+R:=R5([0,0]);P:=PcgsOfR(R);RMAXSUCH(P);
+XSAMMELVIEWER4(XSAMMEL);
+
+ERGS[2]:=[];
+ERGS[3]:=[];
+RI:=[];ListX(IS,IS,FUN8);Size(ERGS[3]);7;
+XSAMMELVIEWER2(XSAMMEL);
+XSAMMELVIEWER4(XSAMMEL);#123444
+
+ERGS[4]:=[];
+for RI in ERGS[3] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[5]);15;
+XSAMMELVIEWER2(XSAMMEL);
+XSAMMELVIEWER4(XSAMMEL);
+ERGS[6]:=[];
+for RI in ERGS[5] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[6]);54;
+XSAMMELVIEWER4(XSAMMEL);
+SaveWorkspace("GAP64-54");
+ERGS[7]:=[];
+for RI in ERGS[6] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[7]);151;
+SaveWorkspace("GAP128-151");
+ERGS[8]:=[];
+for RI in ERGS[7] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[8]);433;
+SaveWorkspace("GAP256-433");
+ERGS[9]:=[];
+for RI in ERGS[8] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[9]);1112;
+SaveWorkspace("GAP512-1112");
+
+  </FILE>
 
 <NACHLAD> #oben ändern
 
