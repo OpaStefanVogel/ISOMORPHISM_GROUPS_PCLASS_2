@@ -2104,10 +2104,10 @@ Collected1:=function(L) return Collected(L); end;
 COMPDIAG5:=function(D,flag)#neu
   local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD,DD,DDD,D0,D1,D2,GLEI;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=[0,0,0,0];
+  GLEI:=ListWithIdenticalEntries(SD,0);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]); 
-    DDD[i]:=List(BITLIST0[D[i]+1]); 
+    DDD[i]:=List(BITLIST0[D[i]+1]);
     od;
   RET:=NullMat(SD,20);
   for jkl in JKLLISTE do
@@ -2119,28 +2119,31 @@ COMPDIAG5:=function(D,flag)#neu
     RET[k][RET2]:=RET[k][RET2]+1;
     RET[l][RET2]:=RET[l][RET2]+1;
     for i in [1..3] do
-#      if DDD[j][i]=1 and DDD[k][i]=DDD[l][i] then DD[j][i]:=1; fi;
-#      if DDD[j][i]=0 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=0; fi;
-#      if DDD[k][i]=1 and DDD[j][i]=DDD[l][i] then DD[k][i]:=1; fi;
-#      if DDD[k][i]=0 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=0; fi;
-#      if DDD[l][i]=1 and DDD[k][i]=DDD[j][i] then DD[l][i]:=1; fi;
-#      if DDD[l][i]=0 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=0; fi;
-      if DDD[j][i]=0 and DDD[k][i]=DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
-      if DDD[j][i]=1 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
-      if DDD[k][i]=0 and DDD[j][i]=DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
-      if DDD[k][i]=1 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
-      if DDD[l][i]=0 and DDD[k][i]=DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
-      if DDD[l][i]=1 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
+      if DDD[j][i]=1 and DDD[k][i]=DDD[l][i] then DD[j][i]:=1; fi;
+      if DDD[j][i]=0 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=0; fi;
+      if DDD[k][i]=1 and DDD[j][i]=DDD[l][i] then DD[k][i]:=1; fi;
+      if DDD[k][i]=0 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=0; fi;
+      if DDD[l][i]=1 and DDD[k][i]=DDD[j][i] then DD[l][i]:=1; fi;
+      if DDD[l][i]=0 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=0; fi;
+#      if DDD[j][i]=0 and DDD[k][i]=DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
+#      if DDD[j][i]=1 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
+#      if DDD[k][i]=0 and DDD[j][i]=DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
+#      if DDD[k][i]=1 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
+#      if DDD[l][i]=0 and DDD[k][i]=DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
+#      if DDD[l][i]=1 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
       od;
-    if dj=dk and dk=dl and dl=dj then GLEI[dj+1]:=GLEI[dj+1]+1; fi; 
+    if dj=dk and dk=dl and dl=dj then 
+      GLEI[i]:=GLEI[i]+1;
+      GLEI[j]:=GLEI[j]+1;
+      GLEI[k]:=GLEI[k]+1;
+      fi; 
     od;
-  GLEI:=SortedList(GLEI);
+  GLEI:=Collected(GLEI);
 #Print("\n--",DD);
   for i in [1..SD] do 
     D0[i]:=DD[i][1];
     D1[i]:=DD[i][2];
     D2[i]:=DD[i][3];
-#    if D0[i]=0 and D1[i]=0 and D2[i]=0 then GLEI:=GLEI+1; fi;
     od;
   if flag=1 then
     Print("\n  ",D0);
