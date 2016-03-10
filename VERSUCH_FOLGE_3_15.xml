@@ -2106,7 +2106,7 @@ COMPDIAG5:=function(D,flag)#neu
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   GLEI:=ListWithIdenticalEntries(SD,0);
   for i in [1..SD] do 
-    DD[i]:=List(BITLIST2[D[i]+1]); 
+    DD[i]:=List(BITLIST2[D[i]+1]);
     DDD[i]:=List(BITLIST0[D[i]+1]);
     od;
   RET:=NullMat(SD,20);
@@ -2276,8 +2276,9 @@ for i in [1..Size(ERGS[JJ])] do
     fi;
   Add(GESAMTDILIST,CMPD);
   od;
+F64:=Reversed([ [ 10, 5, 1 ], [ 12, 4 ], [ 6, 6, 2, 2 ], [ 9, 6, 1 ], [ 8, 8 ], [ 8, 4, 4 ], [16]]);#zu JJ:=6;
 F64:=Reversed([ [ 35, 28, 1 ], [ 30, 30, 2, 2 ], [ 36, 27, 1 ], [ 40, 20, 4 ], [ 48, 16 ], 
-  [ 24, 24, 8, 8 ], [ 36, 24, 4 ], [ 32, 32 ], [ 32, 16, 16 ] , [64]]);
+  [ 24, 24, 8, 8 ], [ 36, 24, 4 ], [ 32, 32 ], [ 32, 16, 16 ] , [64]]);#zu JJ:=8;
 SLGDL:=List(GESAMTDILIST,i->i[1]));;
 SLGDL:=List(SLGDL,i->SortedList(List(i,j->Position(F64,j)-1)));
 SLGDL:=SortedList(SLGDL);
