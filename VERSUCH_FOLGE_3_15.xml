@@ -2102,40 +2102,44 @@ BITLIST0:=[[0,0,0],[1,0,1],[0,1,1],[1,1,0]];
 BITLIST2:=[[2,2,2],[3,2,3],[2,3,3],[3,3,2]];
 Collected1:=function(L) return Collected(L); end;
 COMPDIAG5:=function(D,flag)#neu
-  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD,DD,DDD,D0,D1,D2,GLEI;
+  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD,DD,DDD,D0,D1,D2,GLEI,
+  Dji,Dki,Dli;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   GLEI:=ListWithIdenticalEntries(SD,0);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
     DDD[i]:=List(BITLIST0[D[i]+1]);
     od;
-  RET:=NullMat(SD,20);
+##  RET:=NullMat(SD,20);
   for jkl in JKLLISTE do
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
     dj:=D[j];dk:=D[k];dl:=D[l];
+    Dji:=DDD[j][i];
+    Dki:=DDD[k][i];
+    Dli:=DDD[l][i];
 #Print("\n",jkl," ",dj," ",dk," ",dl);
-    RET2:=DJDKDL[dj+1][dk+1][dl+1];
-    RET[j][RET2]:=RET[j][RET2]+1;
-    RET[k][RET2]:=RET[k][RET2]+1;
-    RET[l][RET2]:=RET[l][RET2]+1;
+##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
+##    RET[j][RET2]:=RET[j][RET2]+1;
+##    RET[k][RET2]:=RET[k][RET2]+1;
+##    RET[l][RET2]:=RET[l][RET2]+1;
     for i in [1..3] do
-      if DDD[j][i]=1 and DDD[k][i]=DDD[l][i] then DD[j][i]:=1; fi;
-      if DDD[j][i]=0 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=0; fi;
-      if DDD[k][i]=1 and DDD[j][i]=DDD[l][i] then DD[k][i]:=1; fi;
-      if DDD[k][i]=0 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=0; fi;
-      if DDD[l][i]=1 and DDD[k][i]=DDD[j][i] then DD[l][i]:=1; fi;
-      if DDD[l][i]=0 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=0; fi;
-#      if DDD[j][i]=0 and DDD[k][i]=DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
-#      if DDD[j][i]=1 and DDD[k][i]<>DDD[l][i] then DD[j][i]:=DD[j][i]+2; fi;
-#      if DDD[k][i]=0 and DDD[j][i]=DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
-#      if DDD[k][i]=1 and DDD[j][i]<>DDD[l][i] then DD[k][i]:=DD[k][i]+2; fi;
-#      if DDD[l][i]=0 and DDD[k][i]=DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
-#      if DDD[l][i]=1 and DDD[k][i]<>DDD[j][i] then DD[l][i]:=DD[l][i]+2; fi;
+      if Dji=1 and Dki=Dli then DD[j][i]:=1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli then DD[k][i]:=1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji then DD[l][i]:=1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+#      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dki=1 and Dji<>Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
+#      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
       od;
     if dj=dk and dk=dl and dl=dj then 
-      GLEI[i]:=GLEI[i]+1;
       GLEI[j]:=GLEI[j]+1;
       GLEI[k]:=GLEI[k]+1;
+      GLEI[l]:=GLEI[l]+1;
       fi; 
     od;
   GLEI:=Collected(GLEI);
@@ -2192,6 +2196,7 @@ FUN9:=function(arg)#neu
   S:=Size(R);
   RSIZE:=Size(R);
   V:=COMPDIAG4(DIAG(R));MIN:=V;
+#  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
     Add(GESAMTDILIST,GESAMTDI);
@@ -2207,7 +2212,7 @@ FUN9:=function(arg)#neu
   end;    
 
 ProfileFunctions([
-Add,Add1,T23P,FUN9,DIAG,R4,R5,COMPDIAG4,SortedList,Collected,Collected1,Size,MatrixOf
+Add,Add1,T23P,FUN9,DIAG,R4,R5,COMPDIAG4,COMPDIAG5,SortedList,Collected,Collected1,Size,MatrixOf
 ]);
 
 ClearProfile();
@@ -2224,18 +2229,6 @@ for RI in ERGS[5] do
   Print("\n***",Position(ERGS[5],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS,IS,IS,IS,FUN9);
   od;ERGS[6]:=ERG;Size(ERGS[6]);60;
-gap> COMPDIAG5(DIAG(R5(ERGS[6][18])),1);
-
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1 ]
-  [ 2, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0 ]
-  [ 2, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1 ][ [ [ 9, 6, 1 ], [ 9, 6, 1 ], [ 9, 6, 1 ] ], [ 6, 3, 3, 3, 1 ], 
-  0 ]
-gap> COMPDIAG5(DIAG(R5(ERGS[6][35])),1);
-
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1 ]
-  [ 2, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0 ]
-  [ 2, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1 ][ [ [ 9, 6, 1 ], [ 9, 6, 1 ], [ 9, 6, 1 ] ], [ 6, 3, 3, 3, 1 ], 
-  0 ]
 JKLLISTEMACH(128/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[6] do
   Print("\n***",Position(ERGS[6],RI),RI,"\c");
@@ -2246,6 +2239,7 @@ for RI in ERGS[7] do
   Print("\n***",Position(ERGS[7],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[8]:=ERG;Size(ERGS[8]);442;
+DisplayProfile();
 SaveWorkspace("GAP256-433-DIAG");
 JKLLISTEMACH(512/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[8] do
@@ -2258,7 +2252,7 @@ for RI in ERGS[9] do
   Print("\n***",Position(ERGS[9],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[10]:=ERG;Size(ERGS[10]);2944;
-SaveWorkspace("GAP512-1112-DIAG");
+SaveWorkspace("GAP1024-2944-DIAG");
 
 GESAMTDILIST:=[];JJ:=8;
 for i in [1..Size(ERGS[JJ])] do
@@ -2276,58 +2270,29 @@ for i in [1..Size(ERGS[JJ])] do
     fi;
   Add(GESAMTDILIST,CMPD);
   od;
+F64:=Reversed([ [ 6, 2 ], [ 3, 3, 1, 1 ], [ 4, 4 ], [ 4, 2, 2 ], [8] ]);#zu JJ:=6;
 F64:=Reversed([ [ 10, 5, 1 ], [ 12, 4 ], [ 6, 6, 2, 2 ], [ 9, 6, 1 ], [ 8, 8 ], [ 8, 4, 4 ], [16]]);#zu JJ:=6;
+[ [ [ 0, 1, 1 ], 1 ], [ [ 0, 2, 2 ], 1 ], [ [ 0, 3, 3 ], 1 ], 
+  [ [ 0, 4, 4 ], 1 ], [ [ 0, 5, 5 ], 1 ], [ [ 0, 6, 6 ], 1 ], 
+  [ [ 1, 1, 1 ], 2 ], [ [ 1, 1, 2 ], 1 ], [ [ 1, 1, 3 ], 1 ], 
+  [ [ 1, 1, 4 ], 1 ], [ [ 1, 2, 4 ], 1 ], [ [ 1, 2, 5 ], 1 ], 
+  [ [ 1, 3, 3 ], 2 ], [ [ 1, 3, 4 ], 2 ], [ [ 1, 3, 6 ], 1 ], 
+  [ [ 1, 4, 4 ], 4 ], [ [ 1, 4, 5 ], 1 ], [ [ 1, 4, 6 ], 2 ], 
+  [ [ 1, 5, 5 ], 1 ], [ [ 1, 5, 6 ], 1 ], [ [ 1, 6, 6 ], 1 ], 
+  [ [ 2, 2, 2 ], 1 ], [ [ 2, 3, 3 ], 1 ], [ [ 2, 3, 6 ], 1 ], 
+  [ [ 2, 4, 4 ], 2 ], [ [ 2, 4, 5 ], 1 ], [ [ 2, 6, 6 ], 1 ], 
+  [ [ 3, 3, 3 ], 2 ], [ [ 3, 3, 4 ], 2 ], [ [ 3, 3, 5 ], 1 ], 
+  [ [ 3, 3, 6 ], 1 ], [ [ 3, 4, 4 ], 4 ], [ [ 3, 4, 5 ], 1 ], 
+  [ [ 3, 4, 6 ], 2 ], [ [ 3, 5, 5 ], 1 ], [ [ 3, 5, 6 ], 1 ], 
+  [ [ 3, 6, 6 ], 1 ], [ [ 4, 4, 4 ], 2 ], [ [ 4, 4, 5 ], 2 ], 
+  [ [ 4, 4, 6 ], 2 ], [ [ 4, 5, 6 ], 1 ], [ [ 4, 6, 6 ], 1 ], 
+  [ [ 6, 6, 6 ], 1 ] ]
 F64:=Reversed([ [ 35, 28, 1 ], [ 30, 30, 2, 2 ], [ 36, 27, 1 ], [ 40, 20, 4 ], [ 48, 16 ], 
   [ 24, 24, 8, 8 ], [ 36, 24, 4 ], [ 32, 32 ], [ 32, 16, 16 ] , [64]]);#zu JJ:=8;
-SLGDL:=List(GESAMTDILIST,i->i[1]));;
+SLGDL:=List(GESAMTDILIST,i->i[1]);;
 SLGDL:=List(SLGDL,i->SortedList(List(i,j->Position(F64,j)-1)));
 SLGDL:=SortedList(SLGDL);
 for i in [1..Size(SLGDL)] do Print("\n",i,SLGDL[i]); od;
-
-58 55
-66 63
-216 213
-233 227
-256 237
-257 240
-264 247
-308 183
-409 323
-gap> SLGDL[55];
-[ 3, 9, 9 ]
-gap> SLGDL[66];
-[ 3, 9, 9 ]
-gap> SLGDL[216];
-[ 8, 9, 9 ]
-gap> SLGDL[233];
-[ 8, 9, 9 ]
-gap> SLGDL[256];
-[ 9, 9, 9 ]
-gap> SLGDL[257];
-[ 7, 8, 9 ]
-gap> SLGDL[264];
-[ 7, 8, 9 ]
-gap> SLGDL[308];
-[ 3, 7, 7 ]
-gap> SLGDL[409];
-[ 7, 7, 8 ]
-COMPDIAG5(DIAG(R5(ERG[55])),1);
-COMPDIAG5(DIAG(R5(ERG[58])),1);
-58 55
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0,
-  0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1 ]
-  [ 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1 ]
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0,
-  0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0 ]
-
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0,
-  0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0 ]
-  [ 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
-  0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0 ]
-  [ 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0,
-  0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0 ]
-COMPDIAG5(DIAG(R5(ERGS[8][62])),0);
 #PRI:=ERGS[6];for i in [1..Size(PRI)] do Print("\n",i," ",PRI[i]); od;
 
 #zu 256:
@@ -3187,8 +3152,7 @@ gap> XSAMMELVIEWER4(XSAMMEL);
              7 [ 1, 1, 1, 2, 3, 1, 2 ] 8 [439] 0 [ 128, 2288 ]
            6 [ 1, 1, 1, 2, 3, 1 ] 8 [110] 1024 [ 64, 222 ]
          5 [ 1, 1, 1, 2, 3 ] 4 [28] 256 [ 32, 33 ]
-         5 [ 1, 1, 1, 3, 2 ] 4 [31] 256 [ 32, 24 ]XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
-
+         5 [ 1, 1, 1, 3, 2 ] 4 [31] 256 [ 32, 24 ]
            6 [ 1, 1, 1, 3, 2, 3 ] 4 [124] 1024 [ 64, 200 ]
         4 [ 1, 1, 1, 2 ] 4 [3] 64 [ 16, 4 ]
          5 [ 0, 0, 0, 1, 1 ] 4 [6] 256 [ 32, 23 ]
