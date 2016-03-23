@@ -2114,15 +2114,15 @@ COMPDIAG5:=function(D,flag)#neu
   for jkl in JKLLISTE do
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
     dj:=D[j];dk:=D[k];dl:=D[l];
-    Dji:=DDD[j][i];
-    Dki:=DDD[k][i];
-    Dli:=DDD[l][i];
 #Print("\n",jkl," ",dj," ",dk," ",dl);
 ##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
 ##    RET[j][RET2]:=RET[j][RET2]+1;
 ##    RET[k][RET2]:=RET[k][RET2]+1;
 ##    RET[l][RET2]:=RET[l][RET2]+1;
     for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
       if Dji=1 and Dki=Dli then DD[j][i]:=1; fi;
       if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
       if Dki=1 and Dji=Dli then DD[k][i]:=1; fi;
