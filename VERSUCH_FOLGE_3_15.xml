@@ -2103,9 +2103,9 @@ BITLIST2:=[[2,2,2],[3,2,3],[2,3,3],[3,3,2]];
 Collected1:=function(L) return Collected(L); end;
 COMPDIAG5:=function(D,flag)#neu
   local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD,DD,DDD,D0,D1,D2,GLEI,
-  Dji,Dki,Dli;
+  Dji,Dki,Dli,anzj,anzk,anzl;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=ListWithIdenticalEntries(SD,0);
+  GLEI:=NullMat(SD,4);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
     DDD[i]:=List(BITLIST0[D[i]+1]);
@@ -2119,10 +2119,14 @@ COMPDIAG5:=function(D,flag)#neu
 ##    RET[j][RET2]:=RET[j][RET2]+1;
 ##    RET[k][RET2]:=RET[k][RET2]+1;
 ##    RET[l][RET2]:=RET[l][RET2]+1;
+    anzj:=0; anzk:=0; anzl:=0;
     for i in [1..3] do
       Dji:=DDD[j][i];
       Dki:=DDD[k][i];
       Dli:=DDD[l][i];
+      if Dki=Dli then anzj:=anzj+1; fi;
+      if Dji=Dli then anzk:=anzk+1; fi;
+      if Dki=Dli then anzl:=anzl+1; fi;
       if Dji=1 and Dki=Dli then DD[j][i]:=1; fi;
       if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
       if Dki=1 and Dji=Dli then DD[k][i]:=1; fi;
@@ -2136,13 +2140,11 @@ COMPDIAG5:=function(D,flag)#neu
 #      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
 #      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
       od;
-    if dj=dk and dk=dl and dl=dj then 
-      GLEI[j]:=GLEI[j]+1;
-      GLEI[k]:=GLEI[k]+1;
-      GLEI[l]:=GLEI[l]+1;
-      fi; 
+    GLEI[j][anzj+1]:=GLEI[j][anzj+1]+1;
+    GLEI[k][anzk+1]:=GLEI[k][anzk+1]+1;
+    GLEI[l][anzl+1]:=GLEI[l][anzl+1]+1;
     od;
-  GLEI:=Collected(GLEI);
+  GLEI:=SortedList(Collected(GLEI));
 #Print("\n--",DD);
   for i in [1..SD] do 
     D0[i]:=DD[i][1];
