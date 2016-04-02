@@ -2110,19 +2110,11 @@ COMPDIAG5:=function(D,flag)#neu
   anzj100,anzk100,anzl100;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   GLEI:=NullMat(SD,16);
-  for i in [1..SD] do 
-    DD[i]:=List(BITLIST2[D[i]+1]);
-    DDD[i]:=List(BITLIST0[D[i]+1]);
-    od;
-##  RET:=NullMat(SD,20);
+  for i in [1..SD] do DDD[i]:=List(BITLIST0[D[i]+1]); od;
   for jkl in JKLLISTE do
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
     dj:=D[j];dk:=D[k];dl:=D[l];
 #Print("\n",jkl," ",dj," ",dk," ",dl);
-##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
-##    RET[j][RET2]:=RET[j][RET2]+1;
-##    RET[k][RET2]:=RET[k][RET2]+1;
-##    RET[l][RET2]:=RET[l][RET2]+1;
     anzj011:=0; anzk011:=0; anzl011:=0;
     anzj000:=0; anzk000:=0; anzl000:=0;
     anzj111:=0; anzk111:=0; anzl111:=0;
@@ -2131,27 +2123,15 @@ COMPDIAG5:=function(D,flag)#neu
       Dji:=DDD[j][i];
       Dki:=DDD[k][i];
       Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; anzj111:=anzj111+1; fi;
-      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; anzj100:=anzj100+1; fi;
-      if Dji=0 and Dki=Dli and Dki=1 then anzj011:=anzj011+1; fi;
-      if Dji=0 and Dki=Dli and Dki=0 then anzj000:=anzj000+1; fi;
-      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
-      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; anzk111:=anzk111+1; fi;
-      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; anzk100:=anzk100+1; fi;
-      if Dki=0 and Dji=Dli and Dji=1 then anzk011:=anzk011+1; fi;
-      if Dki=0 and Dji=Dli and Dji=0 then anzk000:=anzk000+1; fi;
-      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
-      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; anzl111:=anzl111+1; fi;
-      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; anzl100:=anzl100+1; fi;
-      if Dli=0 and Dki=Dji and Dki=1 then anzl011:=anzl011+1; fi;
-      if Dli=0 and Dki=Dji and Dki=0 then anzl000:=anzl000+1; fi;
-      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
-#      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
-#      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
-#      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
-#      if Dki=1 and Dji<>Dli then DD[k][i]:=DD[k][i]+2; fi;
-#      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
-#      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
+      if Dji=0 then
+        if Dki=0 then
+          if Dli=0 then anzj000:=anzj000+1;anzk000:=anzk000+1;anzl000:=anzl000+1;
+            else anzl100:=anzl100+1; fi;
+          else if Dli=0 then anzk100:=anzk100+1; else anzj011:=anzj011+1; fi; fi;
+        else if Dki=0 then if Dli=0 then anzj100:=anzj100+1; else anzk011:=anzk011+1; fi;
+          else if Dli=0 then anzl011:=anzl011+1; 
+            else anzj111:=anzj111+1; anzk111:=anzk111+1; anzl111:=anzl111+1;
+              fi; fi; fi;
       od;
     GLEI[j][anzj011+1]:=GLEI[j][anzj011+1]+1;
     GLEI[k][anzk011+1]:=GLEI[k][anzk011+1]+1;
@@ -2167,27 +2147,7 @@ COMPDIAG5:=function(D,flag)#neu
     GLEI[l][anzl100+13]:=GLEI[l][anzl100+13]+1;
     od;
   GLEI:=SortedList(Collected(GLEI));
-#Print("\n--",DD);
-  for i in [1..SD] do 
-    D0[i]:=DD[i][1];
-    D1[i]:=DD[i][2];
-    D2[i]:=DD[i][3];
-    od;
-  if flag=1 then
-    Print("\n  ",D0);
-    Print("\n  ",D1);
-    Print("\n  ",D2);
-    fi;
-  D0:=Reversed(SortedList(List(Collected(List(D0)),i->i[2])));
-  D1:=Reversed(SortedList(List(Collected(List(D1)),i->i[2])));
-  D2:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
-  DD:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
-#Print("\n  ",D0);
-#Print("\n  ",D1);
-#Print("\n  ",D2);
-#Print("\n  ",DD);
-# RET:=Collected(RET);#Remove(RET,1);
-  RET:=[SortedList([D0,D1,D2]),DD,GLEI];
+  RET:=GLEI;#SortedList([D0,D1,D2]),DD,
 #Print(RET);
   return StructuralCopy(RET);
   end;
@@ -2259,27 +2219,28 @@ for RI in ERGS[6] do
   Print("\n***",Position(ERGS[6],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[7]:=ERG;Size(ERGS[7]);158;
+PrintTo("GAP128-151-ERGS.txt",ERGS);
 JKLLISTEMACH(256/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[7] do
   Print("\n***",Position(ERGS[7],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[8]:=ERG;Size(ERGS[8]);442;
 DisplayProfile();
-SaveWorkspace("GAP256-433-DIAG");
+PrintTo("GAP256-433-ERGS.txt",ERGS);
 JKLLISTEMACH(512/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[8] do
   Print("\n***",Position(ERGS[8],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[9]:=ERG;Size(ERGS[9]);1122;
-SaveWorkspace("GAP512-1112-DIAG");
+PrintTo("GAP512-1112-ERGS.txt",ERGS);
 JKLLISTEMACH(1024/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[9] do
   Print("\n***",Position(ERGS[9],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
-  od;ERGS[10]:=ERG;Size(ERGS[10]);2944;
-SaveWorkspace("GAP1024-2944-DIAG");
+  od;ERGS[10]:=ERG;Size(ERGS[10]);2945;
+PrintTo("GAP1024-2933-ERGS.txt",ERGS);
 
-GESAMTDILIST:=[];JJ:=6;
+GESAMTDILIST:=[];JJ:=8;
 for i in [1..Size(ERGS[JJ])] do
 #  Print("\n",i,ERGS[JJ][i]);
   D:=DIAG(R5(ERGS[JJ][i]));
