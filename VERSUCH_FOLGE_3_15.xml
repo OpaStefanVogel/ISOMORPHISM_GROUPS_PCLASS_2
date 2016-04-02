@@ -2102,10 +2102,14 @@ BITLIST0:=[[0,0,0],[1,0,1],[0,1,1],[1,1,0]];
 BITLIST2:=[[2,2,2],[3,2,3],[2,3,3],[3,3,2]];
 Collected1:=function(L) return Collected(L); end;
 COMPDIAG5:=function(D,flag)#neu
-  local RET,i,j,k,l,jkl,dj,dk,dl,RET2,reti,SD,DD,DDD,D0,D1,D2,GLEI,
-  Dji,Dki,Dli,anzj0,anzk0,anzl0,anzj1,anzk1,anzl1;
+  local RET,i,j,k,l,jkl,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
+  Dji,Dki,Dli,
+  anzj011,anzk011,anzl011,
+  anzj000,anzk000,anzl000,
+  anzj111,anzk111,anzl111,
+  anzj100,anzk100,anzl100;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=NullMat(SD,8);
+  GLEI:=NullMat(SD,16);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
     DDD[i]:=List(BITLIST0[D[i]+1]);
@@ -2119,18 +2123,29 @@ COMPDIAG5:=function(D,flag)#neu
 ##    RET[j][RET2]:=RET[j][RET2]+1;
 ##    RET[k][RET2]:=RET[k][RET2]+1;
 ##    RET[l][RET2]:=RET[l][RET2]+1;
-    anzj0:=0; anzk0:=0; anzl0:=0;
-    anzj1:=0; anzk1:=0; anzl1:=0;
+    anzj011:=0; anzk011:=0; anzl011:=0;
+    anzj000:=0; anzk000:=0; anzl000:=0;
+    anzj111:=0; anzk111:=0; anzl111:=0;
+    anzj100:=0; anzk100:=0; anzl100:=0;
     for i in [1..3] do
       Dji:=DDD[j][i];
       Dki:=DDD[k][i];
       Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli then DD[j][i]:=1; anzj1:=anzj1+1; fi;
-      if Dji=0 and Dki<>Dli then DD[j][i]:=0; anzj0:=anzj0+1; fi;
-      if Dki=1 and Dji=Dli then DD[k][i]:=1; anzk1:=anzk1+1; fi;
-      if Dki=0 and Dji<>Dli then DD[k][i]:=0; anzk0:=anzk0+1; fi;
-      if Dli=1 and Dki=Dji then DD[l][i]:=1; anzl1:=anzl1+1; fi;
-      if Dli=0 and Dki<>Dji then DD[l][i]:=0; anzl0:=anzl0+1; fi;
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; anzj111:=anzj111+1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; anzj100:=anzj100+1; fi;
+      if Dji=0 and Dki=Dli and Dki=1 then anzj011:=anzj011+1; fi;
+      if Dji=0 and Dki=Dli and Dki=0 then anzj000:=anzj000+1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; anzk111:=anzk111+1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; anzk100:=anzk100+1; fi;
+      if Dki=0 and Dji=Dli and Dji=1 then anzk011:=anzk011+1; fi;
+      if Dki=0 and Dji=Dli and Dji=0 then anzk000:=anzk000+1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; anzl111:=anzl111+1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; anzl100:=anzl100+1; fi;
+      if Dli=0 and Dki=Dji and Dki=1 then anzl011:=anzl011+1; fi;
+      if Dli=0 and Dki=Dji and Dki=0 then anzl000:=anzl000+1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
 #      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
 #      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
 #      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
@@ -2138,12 +2153,18 @@ COMPDIAG5:=function(D,flag)#neu
 #      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
 #      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
       od;
-    GLEI[j][anzj0+1]:=GLEI[j][anzj0+1]+1;
-    GLEI[k][anzk0+1]:=GLEI[k][anzk0+1]+1;
-    GLEI[l][anzl0+1]:=GLEI[l][anzl0+1]+1;
-    GLEI[j][anzj1+5]:=GLEI[j][anzj1+5]+1;
-    GLEI[k][anzk1+5]:=GLEI[k][anzk1+5]+1;
-    GLEI[l][anzl1+5]:=GLEI[l][anzl1+5]+1;
+    GLEI[j][anzj011+1]:=GLEI[j][anzj011+1]+1;
+    GLEI[k][anzk011+1]:=GLEI[k][anzk011+1]+1;
+    GLEI[l][anzl011+1]:=GLEI[l][anzl011+1]+1;
+    GLEI[j][anzj000+5]:=GLEI[j][anzj000+5]+1;
+    GLEI[k][anzk000+5]:=GLEI[k][anzk000+5]+1;
+    GLEI[l][anzl000+5]:=GLEI[l][anzl000+5]+1;
+    GLEI[j][anzj111+9]:=GLEI[j][anzj111+9]+1;
+    GLEI[k][anzk111+9]:=GLEI[k][anzk111+9]+1;
+    GLEI[l][anzl111+9]:=GLEI[l][anzl111+9]+1;
+    GLEI[j][anzj100+13]:=GLEI[j][anzj100+13]+1;
+    GLEI[k][anzk100+13]:=GLEI[k][anzk100+13]+1;
+    GLEI[l][anzl100+13]:=GLEI[l][anzl100+13]+1;
     od;
   GLEI:=SortedList(Collected(GLEI));
 #Print("\n--",DD);
@@ -2198,24 +2219,25 @@ FUN9:=function(arg)#neu
 #  Print("\n",RT);
   S:=Size(R);
   RSIZE:=Size(R);
-  V:=COMPDIAG4(DIAG(R));MIN:=V;
-#  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
+#  V:=COMPDIAG4(DIAG(R));MIN:=V;
+  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
     Add(GESAMTDILIST,GESAMTDI);
-    GV:=T23P(P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+#    GV:=T23P(P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+#    GV:=T23P(P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+#    GV:=T23P(P12*P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+#    GV:=T23P(P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+#    GV:=T23P(P12*P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
     if RI=[] then Add(ERG,RT); else Add(ERG,[RI,RT]); fi;
     Print("*",Size(ERG),"\c");
     fi;
   return [];
-  end;    
-
+  end;
+      
+#DIAGC:=DIAG;COMPDIAG4C:=COMPDIAG4;COMPDIAG5C:=COMPDIAG5;
 ProfileFunctions([
-Add,Add1,T23P,FUN9,DIAG,R4,R5,COMPDIAG4,COMPDIAG5,SortedList,Collected,Collected1,Size,MatrixOf
+Add,Add1,T23P,FUN9,DIAG,DIAGC,R4,R5,COMPDIAG4,COMPDIAG5,COMPDIAG4C,COMPDIAG5C,SortedList,Collected,Collected1,Size,MatrixOf
 ]);
 
 ClearProfile();
@@ -2257,7 +2279,7 @@ for RI in ERGS[9] do
   od;ERGS[10]:=ERG;Size(ERGS[10]);2944;
 SaveWorkspace("GAP1024-2944-DIAG");
 
-GESAMTDILIST:=[];JJ:=8;
+GESAMTDILIST:=[];JJ:=6;
 for i in [1..Size(ERGS[JJ])] do
 #  Print("\n",i,ERGS[JJ][i]);
   D:=DIAG(R5(ERGS[JJ][i]));
