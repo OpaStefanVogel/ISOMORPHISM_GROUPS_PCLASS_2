@@ -2226,23 +2226,24 @@ for RI in ERGS[7] do
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[8]:=ERG;Size(ERGS[8]);442;
 DisplayProfile();
-PrintTo("GAP256-433-ERGS.txt",ERGS);
+PrintTo("GAP256-433-ERGS.txt","ERGSP:=",ERGS,";");
 JKLLISTEMACH(512/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[8] do
   Print("\n***",Position(ERGS[8],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[9]:=ERG;Size(ERGS[9]);1122;
-PrintTo("GAP512-1112-ERGS.txt",ERGS);
+PrintTo("GAP512-1112-ERGS.txt","ERGSP:=",ERGS,";");
 JKLLISTEMACH(1024/4);;GESAMTDILIST:=[];ERG:=[];
 for RI in ERGS[9] do
   Print("\n***",Position(ERGS[9],RI),RI,"\c");
   ListX(IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS2,IS,IS,IS,IS,IS,IS,IS,IS,FUN9);
   od;ERGS[10]:=ERG;Size(ERGS[10]);2945;
-PrintTo("GAP1024-2933-ERGS.txt",ERGS);
+PrintTo("GAP1024-2933-ERGS.txt","ERGSP:=",ERGS,";");
 
-GESAMTDILIST:=[];JJ:=8;
+Read("/home/pi/GAP512-1112-ERGS.txt");ERGS:=StructuralCopy(ERGSP);;
+GESAMTDILIST:=[];JJ:=9;
 for i in [1..Size(ERGS[JJ])] do
-#  Print("\n",i,ERGS[JJ][i]);
+  Print("\n",i,ERGS[JJ][i]);
   D:=DIAG(R5(ERGS[JJ][i]));
 #  Print("\n",i,D);
   CMPD:=COMPDIAG5(D,0);
@@ -2256,6 +2257,10 @@ for i in [1..Size(ERGS[JJ])] do
     fi;
   Add(GESAMTDILIST,CMPD);
   od;
+  COMPDIAG5(DIAG(R5(ERGS[JJ][786])),1);
+  COMPDIAG5(DIAG(R5(ERGS[JJ][874])),1);
+  D:=DIAG(R5(ERGS[JJ][i]));
+
 F64:=Reversed([ [ 6, 2 ], [ 3, 3, 1, 1 ], [ 4, 4 ], [ 4, 2, 2 ], [8] ]);#zu JJ:=6;
 F64:=Reversed([ [ 10, 5, 1 ], [ 12, 4 ], [ 6, 6, 2, 2 ], [ 9, 6, 1 ], [ 8, 8 ], [ 8, 4, 4 ], [16]]);#zu JJ:=6;
 #1=B, 2=C, 3=F, 4=D, 5=A, 6=G
