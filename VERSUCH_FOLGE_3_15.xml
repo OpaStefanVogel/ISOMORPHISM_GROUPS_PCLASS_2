@@ -2659,11 +2659,12 @@ d:=1;repeat
 #zum Vergleichen von ??-------- mit --------??
 FORTSETZUNG8:=function(KANTZ)
   local i,S,RET;
-  RET:=StructuralCopy(KANZ);
-  S:=Size(KANZ);
+  RET:=StructuralCopy(KANTZ);
+  S:=Size(KANTZ);
   for i in [S+1..S+8] do
-    Add(RET,ListWithIdenticalEntries(i,1);
+    Add(RET,ListWithIdenticalEntries(i,1));
     od;
+  return RET;
   end;
   
 FORTSETZUNG8([[0],[1,1],[0,0,0]]);
@@ -2673,22 +2674,23 @@ FORTSETZUNG8([[0],[1,1],[0,0,0]]);
 #[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1]]
 
 d:=1;repeat
-  JKLLISTEMACH(2^d);GESAMTDILIST:=[];
+  JKLLISTEMACH(2^(d+8));GESAMTDILIST:=[];
   for z in [1..a[d]] do
     ERG:=COMPDIAG4(DIAG(KANTENZUG(d+8,z+12)));
     ERG2:=COMPDIAG4(DIAG(FORTSETZUNG8(KANTENZUG(d,z))));
-    Print("\n",d," ",z," ",ERG=ERG2," ",ERG," ",ERG2,);
+    Print("\n",d," ",z," ",ERG=ERG2," ",ERG," ",ERG2);
     od;
   d:=d+1;
   until d=6;
 
 FORTSETZUNG4:=function(KANTZ)
   local i,S,RET;
-  RET:=StructuralCopy(KANZ);
-  S:=Size(KANZ);
+  RET:=StructuralCopy(KANTZ);
+  S:=Size(KANTZ);
   for i in [S+1..S+4] do
-    Add(RET,ListWithIdenticalEntries(i,1);
+    Add(RET,ListWithIdenticalEntries(i,1));
     od;
+  return RET;
   end;
   
 FORTSETZUNG4([[0],[1,1],[0,0,0]]);
@@ -2696,15 +2698,15 @@ FORTSETZUNG4([[0],[1,1],[0,0,0]]);
 #[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1]]
 
 d:=1;repeat
-  JKLLISTEMACH(2^d);GESAMTDILIST:=[];
+  JKLLISTEMACH(2^(d+4));GESAMTDILIST:=[];
   for z in [1..a[d]] do
     ERG:=COMPDIAG4(DIAG(KANTENZUG(d+4,z+6)));
-    ERG2:=COMPDIAG4(DIAG(FORTSETZUNG8(KANTENZUG(d,z))));
-    Print("\n",d," ",z," ",ERG=ERG2," ",ERG," ",ERG2,);
+    ERG2:=COMPDIAG4(DIAG(FORTSETZUNG4(KANTENZUG(d,z))));
+    Print("\n",d," ",z," ",ERG=ERG2," ",ERG," ",ERG2);
     od;
   d:=d+1;
   until d=10;
-###Ende FORTSETZUNG
+###Ende FORTSETZUNG, FORTSETZUNG4 reicht schon
 
 d:=1;repeat
   Print("\n------------");
