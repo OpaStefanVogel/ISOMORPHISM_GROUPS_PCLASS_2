@@ -3871,6 +3871,106 @@ for RI in ERGS[8] do
 SaveWorkspace("GAP512-1112");
 
   </FILE>
+  
+<FILE id="P22" inhalt="abwechselnde Fortsetzung 00 111 0000">
+#COMPDIAG4 aus P17
+#DIAG und ERWIND aus P18
+RF:=function(L) #<--------------------------
+  local RET,i;
+  RET:=[];
+  for i in [1..Size(L)] do
+    Add(RET,ListWithIdenticalEntries(i,L[i]));
+    od;
+  return RET;
+  end;
+JKLLISTEMACH(8/2);
+R:=RF([1,0]);D:=DIAG(R);COMPDIAG4(D);
+R:=RF([1,1]);D:=DIAG(R);COMPDIAG4(D);
+JKLLISTEMACH(16/2);
+R:=RF([1,0,0]);D:=DIAG(R);COMPDIAG4(D);
+R:=RF([1,0,1]);D:=DIAG(R);COMPDIAG4(D);
+R:=RF([1,1,0]);D:=DIAG(R);COMPDIAG4(D);
+R:=RF([1,1,1]);D:=DIAG(R);COMPDIAG4(D);
+JKLLISTEMACH(32/2);#d=4
+R:=RF([1,0,0,0]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,0,0,1]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,0,1,0]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,0,1,1]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,1,0,0]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,1,0,1]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,1,1,0]);;D:=DIAG(R);;COMPDIAG4(D);
+R:=RF([1,1,1,1]);;D:=DIAG(R);;COMPDIAG4(D);
+for d in [1..12] do
+  JKLLISTEMACH(2^d);
+  for it in IteratorOfTuples([0,1],d) do
+    R:=RF(it);
+    D:=DIAG(R);
+    C:=COMPDIAG4(D);
+    if C[Size(C)]=1 then
+      Print("\n",d,it,C,"\c");
+      fi;
+    od;
+  od;
+
+1[ 1 ][ 1, 1 ]
+2[ 1, 0 ][ 2, 1, 1 ]
+2[ 1, 1 ][ 3, 1 ]
+3[ 1, 0, 1 ][ 3, 3, 1, 1 ]
+3[ 1, 1, 0 ][ 3, 3, 1, 1 ]
+4[ 1, 0, 1, 0 ][ 9, 6, 1 ]
+4[ 1, 0, 1, 1 ][ 10, 5, 1 ]
+4[ 1, 1, 1, 0 ][ 10, 5, 1 ]
+4[ 1, 1, 1, 1 ][ 10, 5, 1 ]
+5[ 1, 0, 1, 0, 1 ][ 15, 15, 1, 1 ]
+5[ 1, 0, 1, 1, 0 ][ 15, 15, 1, 1 ]
+5[ 1, 1, 0, 1, 0 ][ 15, 15, 1, 1 ]
+5[ 1, 1, 0, 1, 1 ][ 15, 15, 1, 1 ]
+5[ 1, 1, 1, 0, 1 ][ 15, 15, 1, 1 ]
+5[ 1, 1, 1, 1, 1 ][ 15, 15, 1, 1 ]
+6[ 1, 0, 1, 0, 1, 0 ][ 35, 28, 1 ]
+6[ 1, 0, 1, 0, 1, 1 ][ 36, 27, 1 ]
+6[ 1, 0, 1, 1, 1, 0 ][ 36, 27, 1 ]
+6[ 1, 0, 1, 1, 1, 1 ][ 36, 27, 1 ]
+6[ 1, 1, 1, 0, 1, 0 ][ 36, 27, 1 ]
+6[ 1, 1, 1, 0, 1, 1 ][ 35, 28, 1 ]
+6[ 1, 1, 1, 1, 1, 0 ][ 36, 27, 1 ]
+6[ 1, 1, 1, 1, 1, 1 ][ 35, 28, 1 ]
+1 4  1 1  1,1  3 1  3,1  4 1  1 2  4 1  1
+
+GESAMTLLIST:=[[1]];
+for d in [1..12] do
+  JKLLISTEMACH(2^d);
+  for it in IteratorOfTuples([0,1],d) do if it{[1..Size(it)-1]} in GESAMTLLIST then
+    R:=RF(it);
+    D:=DIAG(R);
+    C:=COMPDIAG4(D);
+    if C[Size(C)]=1 then
+      Add(GESAMTLLIST,it);
+      Print("\n",d,it,C,"\c");
+      fi;
+    fi; od;
+  od;
+
+2[ 1, 0 ][ 2, 1, 1 ]
+2[ 1, 1 ][ 3, 1 ]
+3[ 1, 0, 1 ][ 3, 3, 1, 1 ]
+3[ 1, 1, 0 ][ 3, 3, 1, 1 ]
+4[ 1, 0, 1, 0 ][ 9, 6, 1 ]
+4[ 1, 0, 1, 1 ][ 10, 5, 1 ]
+5[ 1, 0, 1, 0, 1 ][ 15, 15, 1, 1 ]
+5[ 1, 0, 1, 1, 0 ][ 15, 15, 1, 1 ]
+6[ 1, 0, 1, 0, 1, 0 ][ 35, 28, 1 ]
+6[ 1, 0, 1, 0, 1, 1 ][ 36, 27, 1 ]
+7[ 1, 0, 1, 0, 1, 0, 1 ][ 63, 63, 1, 1 ]
+7[ 1, 0, 1, 0, 1, 1, 0 ][ 63, 63, 1, 1 ]
+8[ 1, 0, 1, 0, 1, 0, 1, 0 ][ 135, 120, 1 ]
+8[ 1, 0, 1, 0, 1, 0, 1, 1 ][ 136, 119, 1 ]
+9[ 1, 0, 1, 0, 1, 0, 1, 0, 1 ][ 255, 255, 1, 1 ]
+9[ 1, 0, 1, 0, 1, 0, 1, 1, 0 ][ 255, 255, 1, 1 ]
+10[ 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 ][ 527, 496, 1 ]
+10[ 1, 0, 1, 0, 1, 0, 1, 0, 1, 1 ][ 528, 495, 1 ]
+
+  </FILE>
 
 <NACHLAD> #oben ändern
 
