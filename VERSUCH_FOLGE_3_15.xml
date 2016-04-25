@@ -2081,7 +2081,7 @@ for i in [0..3] do DJDKDL[i+1]:=[];
     od;
   od;
 
-COMPDIAG4:=function(D)
+COMPDIAG4_15:=function(D)
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD;
   SD:=Size(D);
   RET:=NullMat(SD,20);
@@ -2221,7 +2221,7 @@ FUN9:=function(arg)#neu
 #  Print("\n",RT);
   S:=Size(R);
   RSIZE:=Size(R);
-  V:=COMPDIAG4(DIAG(R));MIN:=V;
+  V:=COMPDIAG4_15(DIAG(R));MIN:=V;
 #  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
@@ -2237,9 +2237,9 @@ FUN9:=function(arg)#neu
   return [];
   end;
       
-#DIAGC:=DIAG;COMPDIAG4C:=COMPDIAG4;COMPDIAG5C:=COMPDIAG5;
+#DIAGC:=DIAG;COMPDIAG4C:=COMPDIAG4_15;COMPDIAG5C:=COMPDIAG5;
 ProfileFunctions([
-Add,Add1,T23P,FUN9,DIAG,DIAGC,R4,R5,COMPDIAG4,COMPDIAG5,COMPDIAG4C,COMPDIAG5C,SortedList,Collected,Collected1,Size,MatrixOf
+Add,Add1,T23P,FUN9,DIAG,DIAGC,R4,R5,COMPDIAG4_15,COMPDIAG5,COMPDIAG4C,COMPDIAG5C,SortedList,Collected,Collected1,Size,MatrixOf
 ]);
 
 ClearProfile();
@@ -2292,9 +2292,9 @@ for i in [1..Size(ERGS[JJ])] do
   if CMPD in GESAMTDILIST then
     j:=Position(GESAMTDILIST,CMPD);
     Print("\n",i," ",j);
-    COMPDIAG4(DIAG(R5(ERGS[JJ][i])),0);
+    COMPDIAG4_15(DIAG(R5(ERGS[JJ][i])),0);
     Print("\n");
-    COMPDIAG4(DIAG(R5(ERGS[JJ][j])),0);
+    COMPDIAG4_15(DIAG(R5(ERGS[JJ][j])),0);
     fi;
   Add(GESAMTDILIST,CMPD);
   od;
