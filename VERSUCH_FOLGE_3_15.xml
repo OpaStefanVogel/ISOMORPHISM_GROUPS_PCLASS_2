@@ -4177,7 +4177,8 @@ COMPDIAG7:=function(D,flag)#neu
     Print("\n  ",D1);
     Print("\n  ",D2);
     fi;
-  RET:=[SortedList([COMPDIAG6(D0),COMPDIAG6(D1),COMPDIAG6(D2)]),RET,GLEI];#DD muss bei 1122 dabei sein, D0,D1,D2 nicht
+#  RET:=[SortedList([COMPDIAG6(D0),COMPDIAG6(D1),COMPDIAG6(D2)]),RET,GLEI];#DD muss bei 1122 dabei sein, D0,D1,D2 nicht
+  RET:=[SortedList([COMPDIAG4_SPEZ(D0),COMPDIAG4_SPEZ(D1),COMPDIAG4_SPEZ(D2)]),RET,GLEI];#DD muss bei 1122 dabei sein, D0,D1,D2 nicht
 #Print(RET);
   return StructuralCopy(RET);
   end;
@@ -4209,19 +4210,18 @@ a  b ab  c ac bc abc
 3  1  0  1  1  0  0  1133
 0  1  0  0  0  1  2  224
 
-d:=3;GESAMTFLATLIST:=[];
+d:=5;GESAMTFLATLIST:=[];
 for RFLAT in IteratorOfTuples([0..1],d*(d+1)/2) do
   R:=[];
   for i in [1..d] do
     R[i]:=RFLAT{[(i-1)*i/2+1..i*(i+1)/2]};
     od;
   D:=DIAG(R);
-  C:=COMPDIAG4_SPEZ(D);Add(GESAMTFLATLIST,[C]);
+  C:=COMPDIAG4_SPEZ(D);Add(GESAMTFLATLIST,C);
   Print("\n",R,C);
   od; 
 Collected(GESAMTFLATLIST);
-MTAB[d]:=List(Collected(GESAMTFLATLIST),i->i[1]));
- 
+MTAB[d]:=List(Collected(GESAMTFLATLIST),i->i[1]);
 
 
 
