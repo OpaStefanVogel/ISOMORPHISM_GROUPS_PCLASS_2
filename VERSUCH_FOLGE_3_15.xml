@@ -3997,8 +3997,10 @@ for d in [1..12] do
     .. da lasse ich mal das ganze D durch IteratorOfTuples([0..3],2^d) laufen...
     .. Frage ist ob 3 identische Untergruppenserien zu verschiedenen Gruppen führen kann,
       und wenn ja, was den Unterschied ausmacht.
+      ok ja, führt zu unterschiedlichen Gruppen,
+      .. als neuen Unterschied zerlege ich [9,6,1] noch weiter in [[9,x,y,z],...]
 
-COMPDIAG4:=function(D)#neu
+COMPDIAG4_SPEZ:=function(D)#neu
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,DD;
   SD:=Size(D);DD:=[];
   for i in [1..SD] do DD[i]:=D[i]+2; od;
@@ -4014,12 +4016,23 @@ COMPDIAG4:=function(D)#neu
     if dl=1 and dk=dj then DD[l]:=1; fi;
     if dl=0 and dk<>dj then DD[l]:=0; fi;
     od;
-  RET:=Collected(List(DD));
-  RET:=Reversed(SortedList(List(RET,i->i[2])));
+#  das war alt:
+#  RET:=Collected(List(DD));
+#  RET:=Reversed(SortedList(List(RET,i->i[2])));
+#  jetzt neu:
+  RET:=[[0],[0],[1],[0]];SDD:=1;
+  repeat
+#    Print("\n",RET,DD);
+    for i in [1..4] do Add(RET[i],RET[i][1],1); od;
+    for j in [SDD+1..2*SDD] do RET[DD[j]+1][1]:=RET[DD[j]+1][1]+1; od;
+    SDD:=2*SDD;
+    until SDD=SD;
   return RET;
   end;
 
 COMPDIAG4(DIAG(KANTENZUG(4,6)));
+COMPDIAG4_15(DIAG(KANTENZUG(4,6)));
+COMPDIAG4_SPEZ(DIAG(KANTENZUG(4,6)));
 
 COMPDIAG6:=function(D)#neu
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,SSD,DD;
@@ -4196,6 +4209,19 @@ a  b ab  c ac bc abc
 3  1  0  1  1  0  0  1133
 0  1  0  0  0  1  2  224
 
+d:=3;GESAMTFLATLIST:=[];
+for RFLAT in IteratorOfTuples([0..1],d*(d+1)/2) do
+  R:=[];
+  for i in [1..d] do
+    R[i]:=RFLAT{[(i-1)*i/2+1..i*(i+1)/2]};
+    od;
+  D:=DIAG(R);
+  C:=COMPDIAG4_SPEZ(D);Add(GESAMTFLATLIST,[C]);
+  Print("\n",R,C);
+  od; 
+Collected(GESAMTFLATLIST);
+MTAB[d]:=List(Collected(GESAMTFLATLIST),i->i[1]));
+ 
 
 
 
