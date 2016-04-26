@@ -2604,10 +2604,10 @@ FUN9:=function(arg)#neu
 #  Print("\n",RI,RT,R);
   S:=Size(R);
   RSIZE:=Size(R);
-  GESAMTDU:=COMPDIAG6(DIAG(R));Print("+\c");
-  if not (GESAMTDU in GESAMTDULIST) then Print("#\c");
-    Add(GESAMTDULIST,GESAMTDU);
-    fi;
+#  GESAMTDU:=COMPDIAG6(DIAG(R));Print("+\c");
+#  if not (GESAMTDU in GESAMTDULIST) then Print("#\c");
+#    Add(GESAMTDULIST,GESAMTDU);
+#    fi;
   V:=COMPDIAG4(DIAG(R));MIN:=V;
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
@@ -2785,7 +2785,7 @@ KANTENZUG(2,1);
 
 
 ERWIND:=[];
-j:=1;k:=1;S:=15;
+j:=1;k:=1;S:=12;
 for i in IteratorOfTuples( [0,1], S ) do
    Print(".");
 #  Print("\n",i);
@@ -3985,6 +3985,8 @@ for d in [1..12] do
 
 <FILE id="P23" inhalt="ob Untergruppenserien selektieren">
 #alle Read aus P21
+#JKLLISTMACH aus P18
+#MTAB auch aus P18
 #alles aus P16 und P17
 .. jetzt die Untergruppenserien, ob die selektieren
   ok eine einzige JKLLISTE teilweise auslesen
@@ -4030,10 +4032,6 @@ COMPDIAG4_SPEZ:=function(D)#neu
   return RET;
   end;
 
-COMPDIAG4(DIAG(KANTENZUG(4,6)));
-COMPDIAG4_15(DIAG(KANTENZUG(4,6)));
-COMPDIAG4_SPEZ(DIAG(KANTENZUG(4,6)));
-
 COMPDIAG6:=function(D)#neu
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,SSD,DD;
   SD:=Size(D);DD:=[];
@@ -4048,6 +4046,10 @@ COMPDIAG6:=function(D)#neu
   return RET;
   end;
 
+COMPDIAG4(DIAG(KANTENZUG(4,6)));
+COMPDIAG4_15(DIAG(KANTENZUG(4,6)));
+COMPDIAG4_SPEZ(DIAG(KANTENZUG(4,6)));
+COMPDIAG5(DIAG(KANTENZUG(4,6)),1);
 COMPDIAG6(DIAG(KANTENZUG(4,6)));
 
 [ [ 1, 1 ], [ 1, 2 ], [ 1, 3 ] ]
@@ -4161,10 +4163,10 @@ COMPDIAG7:=function(D,flag)#neu
   D2:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
   DD:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
   RET:=StructuralCopy([SortedList([D0,D1,D2]),DD]);
-#Print("\n  ",D0);
-#Print("\n  ",D1);
-#Print("\n  ",D2);
-#Print("\n  ",DD);
+Print("\n  ",D0);
+Print("\n  ",D1);
+Print("\n  ",D2);
+Print("\n  ",DD);
 # RET:=Collected(RET);#Remove(RET,1);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
@@ -4195,11 +4197,15 @@ for RFLAT in IteratorOfTuples([0..3],d*(d+1)/2) do
   od;
 
 for i in GESAMTFLATLIST do for j in GESAMTFLATLIST do
-  if i[2][1]=j[2][1] and (i[2][2]<>j[2][2] or i[2][3]<>j[2][3]) then Print("\n***",i,j); fi;
+  if i[2][1]=j[2][1] and (i[2][2]<>j[2][2] or i[2][3]<>j[2][3]) then 
+    Print("\n***",i[1]);COMPDIAG7(DIAG(i[1]),1);
+    Print("\n###",j[1]);COMPDIAG7(DIAG(j[1]),1);
+    Print("\n");
+    fi;
   od; od;
 
 R=[[3],[2,0],[3,3,1]]
-R=[[3],[2,0],[3,3,1]]
+R=[[3],[2,0],[3,1,3]]
 
 a  b ab  c ac bc abc
 1  0  0  1  1  3  0  1133
@@ -4207,8 +4213,8 @@ a  b ab  c ac bc abc
 0  1  0  2  0  1  0  224
 
 1  0  0  1  1  3  0  1133
-3  1  0  1  1  0  0  1133
-0  1  0  0  0  1  2  224
+3  1  0  1  0  1  0  1133
+0  1  0  0  1  0  2  224
 
 d:=5;GESAMTFLATLIST:=[];
 for RFLAT in IteratorOfTuples([0..1],d*(d+1)/2) do
@@ -4223,8 +4229,78 @@ for RFLAT in IteratorOfTuples([0..1],d*(d+1)/2) do
 Collected(GESAMTFLATLIST);
 MTAB[d]:=List(Collected(GESAMTFLATLIST),i->i[1]);
 
+COMPDIAG7(DIAG([[3],[2,0],[3,3,1]]),1)[1]<>
+COMPDIAG7(DIAG([[3],[2,0],[3,1,3]]),1)[1];#das stimmt jetzt, aber
+COMPDIAG7(DIAG([ [ 0 ], [ 3, 2 ], [ 3, 1, 3 ] ]),1)[1];#[32,31]
+COMPDIAG7(DIAG([ [ 0 ], [ 3, 2 ], [ 3, 0, 1 ] ]),1)[1];#[32,30]
+PcgsOfR([ [0],[0,0],[ 0,0,0 ], [ 3,3,3, 2 ], [ 3,3,3, 1, 3 ] ]);
+PcgsOfR([ [0],[0,0],[ 0,0,0 ], [ 3,3,3, 2 ], [ 3,3,3, 0, 1 ] ]);
+COMPDIAG5(DIAG([[3],[2,0],[3,3,1]]),1);
+COMPDIAG5(DIAG([[3],[2,0],[3,1,3]]),1);
+COMPDIAG5(DIAG([[0],[3,2],[3,1,3]]),1);
+COMPDIAG5(DIAG([[0],[3,2],[3,0,1]]),1);
+COMPDIAG4_15(DIAG([[3],[2,0],[3,3,1]]));
+COMPDIAG4_15(DIAG([[3],[2,0],[3,1,3]]));
+COMPDIAG4_15(DIAG([[0],[3,2],[3,1,3]]));
+COMPDIAG4_15(DIAG([[0],[3,2],[3,0,1]]));
 
+R1:=[[0],[0,1],[2,0,3]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,1],[2,2,2,0,3]]));
+R2:=[[0],[0,2],[1,0,0]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,2],[1,1,1,0,0]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
 
+R1:=[[0],[0,2],[3,0,1]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,2],[3,3,3,0,1]]));
+R2:=[[0],[2,0],[1,0,3]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[2,2,2,0],[1,1,1,0,3]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
+
+  </FILE>
+
+<FILE id="P23" inhalt="Bahnen des Stabilisators">
+ok erstmal das aus No.28 reaktivieren
+ok damit paar von den letzten Vergleiche nochmal, sie funktionieren!!!
+
+dd:=3;
+G:=ElementaryAbelianGroup(2^dd);
+a:=G.1;b:=G.2;c:=G.3;#d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c];
+A:=Action(AutomorphismGroup(G),L);
+
+STEST:=function(x,y,z)
+  S:=Stabilizer(A,x,Permuted);
+  B:=Orbit(S,y,Permuted);
+  Print(List(B),"\n");
+  Print(Size(B),"\n");
+  return (z in B);
+  end;
+
+R1:=[[0],[0,1],[2,0,3]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,1],[2,2,2,0,3]]));
+R2:=[[0],[0,2],[1,0,0]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,2],[1,1,1,0,0]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
+x:=[0,0,1,1,0,0,2];y:=[0,0,1,2,0,0,1];z:=[0,0,1,0,2,1,0];STEST(x,y,z);
+x:=[0,0,1,1,0,0,2];y:=[0,0,1,2,0,0,1];z:=[0,2,0,1,0,1,0];STEST(x,y,z);
+
+R1:=[[0],[0,2],[3,0,1]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,2],[3,3,3,0,1]]));
+R2:=[[0],[2,0],[1,0,3]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[2,2,2,0],[1,1,1,0,3]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
+x:=[0,2,0,1,0,1,0];y:=[0,0,1,1,0,0,2];z:=[0,1,0,2,0,1,0];STEST(x,y,z);
+x:=[0,2,0,1,0,1,0];y:=[0,0,1,1,0,0,2];z:=[0,1,0,1,0,2,0];STEST(x,y,z);
+
+R1:=[[0],[0,2],[3,0,1]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,2],[3,3,3,0,1]]));
+R2:=[[0],[1,0],[3,0,2]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[1,1,1,0],[3,3,3,0,2]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
+x:=[0,2,0,1,0,1,0];y:=[0,0,1,1,0,0,2];z:=[0,1,0,1,0,2,0];STEST(x,y,z);
+x:=[0,2,0,1,0,1,0];y:=[0,0,1,1,0,0,2];z:=[0,1,0,2,0,1,0];STEST(x,y,z);
+
+R1:=[[0],[0,1],[0,2,3]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[0,0,0,1],[0,0,0,2,3]]));
+R2:=[[0],[2,0],[0,3,1]];IdSmallGroup(PcgsOfR([[0],[0,0],[0,0,0],[2,2,2,0],[0,0,0,3,1]]));
+COMPDIAG5(DIAG(R1),1);
+COMPDIAG5(DIAG(R2),1);
+x:=[0,0,2,0,1,1,0];y:=[0,0,1,0,2,1,0];z:=[0,1,0,0,1,0,2];STEST(x,y,z);
+x:=[0,0,2,0,1,1,0];y:=[0,0,1,0,2,1,0];z:=[0,1,0,2,0,1,0];STEST(x,y,z);
 
   </FILE>
 
