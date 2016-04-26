@@ -4259,6 +4259,10 @@ COMPDIAG5(DIAG(R2),1);
 <FILE id="P23" inhalt="Bahnen des Stabilisators">
 ok erstmal das aus No.28 reaktivieren
 ok damit paar von den letzten Vergleiche nochmal, sie funktionieren!!!
+.. als nächstes mal direkt von KANTENZUG(3,1) ausgehen...
+  ok das siehT sehr gut aus...
+  .. nur noch [1,1,3] ist doppelt...
+   
 
 dd:=3;
 G:=ElementaryAbelianGroup(2^dd);
@@ -4301,6 +4305,27 @@ COMPDIAG5(DIAG(R1),1);
 COMPDIAG5(DIAG(R2),1);
 x:=[0,0,2,0,1,1,0];y:=[0,0,1,0,2,1,0];z:=[0,1,0,0,1,0,2];STEST(x,y,z);
 x:=[0,0,2,0,1,1,0];y:=[0,0,1,0,2,1,0];z:=[0,1,0,2,0,1,0];STEST(x,y,z);
+
+#das waren die 19 aus P16:
+[ [ [ 0, 1, 1 ], 1 ], [ [ 0, 2, 2 ], 1 ], [ [ 0, 3, 3 ], 1 ], 
+  [ [ 0, 4, 4 ], 1 ], [ [ 1, 1, 1 ], 2 ], [ [ 1, 1, 2 ], 1 ], 
+  [ [ 1, 1, 3 ], 1 ], [ [ 1, 2, 3 ], 1 ], [ [ 1, 2, 4 ], 1 ], 
+  [ [ 1, 3, 3 ], 2 ], [ [ 1, 3, 4 ], 1 ], [ [ 1, 4, 4 ], 1 ], 
+  [ [ 2, 2, 2 ], 1 ], [ [ 2, 3, 3 ], 1 ], [ [ 2, 3, 4 ], 1 ], 
+  [ [ 3, 3, 3 ], 1 ], [ [ 3, 3, 4 ], 1 ] ]
+
+x:=DIAG(KANTENZUG(3,1));
+x:=Remove(x,1);
+ORBAX:=Orbit(A,x,Permuted);Size(ORBAX);
+STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
+ORB:=Orbits(STABAX,ORBAX,Permuted);Size(ORB);
+Add(x,0,1);
+y:=List(ORB[1][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 0, 1, 1 ]
+y:=List(ORB[2][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 1 ]1
+y:=List(ORB[3][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 2 ]
+y:=List(ORB[4][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
+y:=List(ORB[5][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 1 ]2
+y:=List(ORB[6][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 
   </FILE>
 
