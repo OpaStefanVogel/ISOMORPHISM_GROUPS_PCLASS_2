@@ -3826,12 +3826,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 #Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[1,0];
-
-#R:=[[0],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
-R:=[[0],[1,1]];P:=PcgsOfR(R);RMAXSUCH(P);
-XSAMMELVIEWER4(XSAMMEL);
-R:=[[0],[1,1]];GLOBZEIG:=RINXS(R,XSAMMEL,1);
+IS:=[0,1];
 
 R:=R5([1,1]);P:=PcgsOfR(R);RMAXSUCH(P);
 R:=R5([1,0]);P:=PcgsOfR(R);RMAXSUCH(P);
@@ -3839,7 +3834,7 @@ R:=R5([0,1]);P:=PcgsOfR(R);RMAXSUCH(P);
 R:=R5([0,0]);P:=PcgsOfR(R);RMAXSUCH(P);
 XSAMMELVIEWER4(XSAMMEL);
 
-ERGS[3]:=[[1,1],[0,1],[0,0]];
+ERGS[3]:=[[0,0],[0,1],[1,1]];
 ERGS[4]:=[];
 for RI in ERGS[3] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
@@ -3848,6 +3843,8 @@ for RI in ERGS[3] do
   od;ERGS;Size(ERGS[4]);4;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
+ERGS[4];
+
 ERGS[5]:=[];
 for RI in ERGS[4] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
@@ -3855,28 +3852,27 @@ for RI in ERGS[4] do
   ListX(IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[5]);6;
 XSAMMELVIEWER4(XSAMMEL);
-SaveWorkspace("GAP64-54");
 ERGS[6]:=[];
 for RI in ERGS[5] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[6]);7;
-SaveWorkspace("GAP128-151");
+XSAMMELVIEWER4(XSAMMEL);
 ERGS[7]:=[];
 for RI in ERGS[6] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[7]);9;
-SaveWorkspace("GAP256-433");
+XSAMMELVIEWER4(XSAMMEL);
 ERGS[8]:=[];
 for RI in ERGS[7] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[8]);10;
-SaveWorkspace("GAP512-1112");
+XSAMMELVIEWER4(XSAMMEL);
 
   </FILE>
   
