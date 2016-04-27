@@ -4329,6 +4329,60 @@ y:=List(ORB[6][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 
   </FILE>
 
+<FILE id="P24" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
+R011:=function(d,k)
+  local RET,j;
+  RET:=[];j:=1;
+  for i in [1..d-1] do
+    Add(RET,ListWithIdenticalEntries(i,j)); 
+    j:=1-j;
+    od;
+  Add(RET,ListWithIdenticalEntries(d,k));
+  return RET;
+  end;
+
+R:=R011(1,1);COMPDIAG4(DIAG(R));
+R:=R011(2,0);COMPDIAG4(DIAG(R));
+R:=R011(2,1);COMPDIAG4(DIAG(R));
+R:=R011(3,1);COMPDIAG4(DIAG(R));
+R:=R011(4,0);COMPDIAG4(DIAG(R));
+R:=R011(4,1);COMPDIAG4(DIAG(R));
+R:=R011(5,1);COMPDIAG4(DIAG(R));
+R:=R011(6,0);COMPDIAG4(DIAG(R));
+R:=R011(6,1);COMPDIAG4(DIAG(R));
+R:=R011(7,1);COMPDIAG4(DIAG(R));
+R:=R011(8,0);COMPDIAG4(DIAG(R));
+R:=R011(8,1);COMPDIAG4(DIAG(R));
+R:=R011(9,1);COMPDIAG4(DIAG(R));
+R:=R011(10,0);COMPDIAG4(DIAG(R));
+R:=R011(10,1);COMPDIAG4(DIAG(R));
+R:=R011(11,1);COMPDIAG4(DIAG(R));
+R:=R011(12,0);COMPDIAG4(DIAG(R));
+R:=R011(12,1);COMPDIAG4(DIAG(R));
+R:=R011(13,1);COMPDIAG4(DIAG(R));
+R:=R011(14,0);COMPDIAG4(DIAG(R));
+R:=R011(14,1);COMPDIAG4(DIAG(R));
+R:=R011(15,1);COMPDIAG4(DIAG(R));
+R:=R011(16,0);COMPDIAG4(DIAG(R));
+R:=R011(16,1);COMPDIAG4(DIAG(R));
+R:=R011(17,1);COMPDIAG4(DIAG(R));
+R:=R011(18,0);COMPDIAG4(DIAG(R));
+R:=R011(18,1);COMPDIAG4(DIAG(R));
+R:=R011(19,1);COMPDIAG4(DIAG(R));
+
+d:=1;
+repeat 
+  if IsEvenInt(d) then 
+    R:=R011(d,0);
+    Print("\n\n",d," ",0," ",COMPDIAG4(DIAG(R)));
+    fi;
+  R:=R011(d,1);
+  Print("\n",d," ",1," ",COMPDIAG4(DIAG(R)));
+  d:=d+1;
+  until d>dmax;
+    
+  </FILE>
+
 <NACHLAD> #oben ändern
 
   </NACHLAD>
