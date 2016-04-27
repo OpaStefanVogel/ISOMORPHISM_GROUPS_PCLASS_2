@@ -3839,48 +3839,43 @@ R:=R5([0,1]);P:=PcgsOfR(R);RMAXSUCH(P);
 R:=R5([0,0]);P:=PcgsOfR(R);RMAXSUCH(P);
 XSAMMELVIEWER4(XSAMMEL);
 
-ERGS[2]:=[];
-ERGS[3]:=[];
-RI:=[];ListX(IS,IS,FUN8);Size(ERGS[3]);7;
-XSAMMELVIEWER2(XSAMMEL);
-XSAMMELVIEWER4(XSAMMEL);#123444
-
+ERGS[3]:=[[1,1],[0,1],[0,0]];
 ERGS[4]:=[];
 for RI in ERGS[3] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[5]);15;
+  od;ERGS;Size(ERGS[4]);4;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
+ERGS[5]:=[];
+for RI in ERGS[4] do
+  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
+  Print("\n***P17***",RI);
+  ListX(IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[5]);6;
+XSAMMELVIEWER4(XSAMMEL);
+SaveWorkspace("GAP64-54");
 ERGS[6]:=[];
 for RI in ERGS[5] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
-  ListX(IS,IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[6]);54;
-XSAMMELVIEWER4(XSAMMEL);
-SaveWorkspace("GAP64-54");
+  ListX(IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[6]);7;
+SaveWorkspace("GAP128-151");
 ERGS[7]:=[];
 for RI in ERGS[6] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
-  ListX(IS,IS,IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[7]);151;
-SaveWorkspace("GAP128-151");
+  ListX(IS,IS,IS,IS,IS,IS,FUN8);
+  od;ERGS;Size(ERGS[7]);9;
+SaveWorkspace("GAP256-433");
 ERGS[8]:=[];
 for RI in ERGS[7] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
-  ListX(IS,IS,IS,IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[8]);433;
-SaveWorkspace("GAP256-433");
-ERGS[9]:=[];
-for RI in ERGS[8] do
-  GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
-  Print("\n***P17***",RI);
   ListX(IS,IS,IS,IS,IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[9]);1112;
+  od;ERGS;Size(ERGS[8]);10;
 SaveWorkspace("GAP512-1112");
 
   </FILE>
