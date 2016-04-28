@@ -118,6 +118,7 @@ RTT:=function()#neu
 S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
 NEU:=RTT();
+
 inh:=1;
 FUN:=function(arg)#neu
   RT:=[];
@@ -3873,6 +3874,7 @@ for RI in ERGS[7] do
   ListX(IS,IS,IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[8]);10;
 XSAMMELVIEWER4(XSAMMEL);
+SaveWorkspace("GAP256-10");
 
   </FILE>
   
@@ -4249,7 +4251,7 @@ COMPDIAG5(DIAG(R2),1);
 
   </FILE>
 
-<FILE id="P2" inhalt="Bahnen des Stabilisators">
+<FILE id="P25" inhalt="Bahnen des Stabilisators">
 ok erstmal das aus No.28 reaktivieren
 ok damit paar von den letzten Vergleiche nochmal, sie funktionieren!!!
 .. als nächstes mal direkt von KANTENZUG(3,1) ausgehen...
@@ -4324,7 +4326,10 @@ y:=List(ORB[6][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 
   </FILE>
 
-<FILE id=25" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
+
+
+
+<FILE id=26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
 ok funktioniert wie gewünscht
 
 R011:=function(d,k)
@@ -4345,6 +4350,10 @@ R:=R011(3,1);COMPDIAG4(DIAG(R));
 R:=R011(4,0);COMPDIAG4(DIAG(R));
 R:=R011(4,1);COMPDIAG4(DIAG(R));
 R:=R011(5,1);COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[0,0,0,0]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[1,1,1,1]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[1,1,1,1],[0,0,0,0,0]];COMPDIAG4(DIAG(R));
 
 d:=1;
 repeat 
@@ -4357,6 +4366,41 @@ repeat
   d:=d+1;
   until d>dmax;
     
+  </FILE>
+
+<FILE id=26" inhalt="XSAMMEL und Stab zusammenmachen">
+#XSAMMEL aus P22
+#RTT aus P04 jetzt neu mit Size(PL)
+ok zuerst Size(PL) rein, damit auch kleinere R abgefragt werden.
+.. jetzt wollte ich eigentlich das RMAX haben und das PHI dazu
+  -- ZR[4] liefert nur das letzte transformierte PNE, nicht die davor
+.. und das auch noch möglichst ohne Pcgs zwischendrin
+
+RTT:=function()#neu
+  if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
+  ri:=PL[S];
+  Add(HRES,ri,1);HRESEXT[S]:=ri;
+#  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  PNEU:=QY11(HRES,S);
+  R[S]:=List(PNEU);
+  HRESMERK:=List(HRES);
+  n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
+#Print("\nZR[4]=",ZR[4]);
+  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
+    S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
+  if ZR3MERK=-1 then return -10000; else
+    if ZEIGER=[] or S>Size(PL) then return 1; else return RTT()+1; fi;
+    fi;
+  end;
+
+R:=R5([0,0]);P:=PcgsOfR(R);
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];ZEIGER:=XSAMMEL;;NEU:=RTT();
+
+R:=R5([[0,1],[0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];ZEIGER:=XSAMMEL;;NEU:=RTT();R;
+
   </FILE>
 
 <NACHLAD> #oben ändern
