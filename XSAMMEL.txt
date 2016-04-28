@@ -27,7 +27,8 @@ LETZTEWEGEZAHLVEKTOR:=[];
 HRES0SIZE:=0;
 EINMALBIT:=0;
 NZUITAB:=[];
-QUADRATTYP:=2;
+DSTART:=3;
+
 
 #Schnittstellen zu GAP
 Commu:=function(a,b) return Comm(a,b); end;
@@ -38,15 +39,13 @@ PositionFirstComponentRepariert:=function(ZEIGER,PNEU)
   end;
 
 IZUN:=function(L) return Iterated(Reversed(L),function(a,b) return a+a+b; end); end;
-PZUN:=function(L,S) return Iterated(L{[Minimum(3,S)..S]},function(a,b) return 4*a+b; end); end;
-PZUN:=function(L,S) return Iterated(L{[Minimum(2,S)..S]},function(a,b) return 2*a+b; end); end;
+PZUN:=function(L,S) if DSTART=2 then
+  return Iterated(L{[Minimum(2,S)..S]},function(a,b) return 2*a+b; end); else
+    return Iterated(L{[Minimum(3,S)..S]},function(a,b) return 4*a+b; end); fi; end;
 NZUI:=function(n,S) return CoefficientsQadic(1024+n,2){[1..S]}; end;
 NZUI:=function(n,S) return NZUITAB[n+1]{[1..S]}; end;
 for i in [0..1023] do NZUITAB[i+1]:=CoefficientsQadic(1024+i,2); od;
-#IZUN:=function(L) return Iterated(L,function(a,b) return a+a+b; end); end;
-NZUIREV:=function(n,S) return Reversed(CoefficientsQadic(1024+n,2){[1..S]}); end;
 
-#
 QY09:=function(PNEU)#packt PNEU[i] von [0,1,0,0] in 8.
   local RET;
   RET:=Iterated(PNEU,function(a,b) return a+a+b; end)+1;
@@ -64,9 +63,13 @@ QY10:=function(HRES,S,GROUP)#ob HRES ein pcgs ist
       od;
     fi;
   if RET=true then
-    if S=2 and HRES[1]^2=e then RET:=false; fi;
-#    if S=3 and (HRES[1]^2<>(HRES[3]*HRES[1])^2 or HRES[1]^2<>(HRES[2]*HRES[1])^2 or HRES[1]^2=e) then RET:=false; fi;
-#    if S=4 and (HRES[1]^2=e or HRES[1]^2=HRES[2]^2) and ((HRES[2]*HRES[1])^2=e or (HRES[2]*HRES[1])^2=HRES[2]^2) then RET:=false; fi;
+    if DSTART=2 then
+      if S=2 and HRES[1]^2=e then RET:=false; fi;
+      else
+        if S=2 and HRES[1]^2<>e then RET:=false; fi;
+        if S=3 and (HRES[1]^2<>(HRES[3]*HRES[1])^2 or HRES[1]^2<>(HRES[2]*HRES[1])^2 or HRES[1]^2=e) then RET:=false; fi;
+        if S=4 and (HRES[1]^2=e or HRES[1]^2=HRES[2]^2) and ((HRES[2]*HRES[1])^2=e or (HRES[2]*HRES[1])^2=HRES[2]^2) then RET:=false; fi;
+        fi;
     fi;
   return RET;
   end;
@@ -276,9 +279,6 @@ QY15:=function(ZEIGER,XM,IPMIN,S) #packt XMERK in XSAMMEL rein
   local POS,i,ZMERK,HRES,HRES2,pcgs,pcgs2,STUFE;
   Print(StringNumbers([LogInt(Size(XM),2)+11],128),"\c");
   POS:=PZUN(UMKEHRLIST(XM[IPMIN][1]),S)+1;
-  if ZEIGER=[] and S>2 then 
-#    ZEIGER[QUADRATTYP^(S-2)]:=[];#nur ausdehnen anstelle von EmptyPlist(QUADRATTYP^(S-2))
-    fi;
   ZEIGER[POS]:=XM[IPMIN];
   ZEIGER[POS][6]:=[];
   ZEIGER[POS][8]:=Size(XM);
