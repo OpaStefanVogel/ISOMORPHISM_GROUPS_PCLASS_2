@@ -3844,8 +3844,6 @@ for RI in ERGS[3] do
   od;ERGS;Size(ERGS[4]);4;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
-ERGS[4];
-
 ERGS[5]:=[];
 for RI in ERGS[4] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
@@ -4373,33 +4371,75 @@ repeat
 #RTT aus P04 jetzt neu mit Size(PL)
 ok zuerst Size(PL) rein, damit auch kleinere R abgefragt werden.
 .. jetzt wollte ich eigentlich das RMAX haben und das PHI dazu
-  -- ZR[4] liefert nur das letzte transformierte PNE, nicht die davor
+  .. ZR[4] liefert nur das letzte transformierte PNE, nicht die davor
+  .. ich muss das nur das neue HRES 
 .. und das auch noch möglichst ohne Pcgs zwischendrin
 
-RTT:=function()#neu
-  if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
+RTT:=function(S)#neu
   ri:=PL[S];
-  Add(HRES,ri,1);HRESEXT[S]:=ri;
-#  QY10(HRES,S,GR);#ob HRES wirklich ein pcgs ist, deshalb PL
+  Add(HRES,ri,1);
   PNEU:=QY11(HRES,S);
-  R[S]:=List(PNEU);
-  HRESMERK:=List(HRES);
-  n:=nn;ZR:=QY21(HRES,S,nn,ZEIGER,PNEU);;
-#Print("\nZR[4]=",ZR[4]);
-  HRES:=List(ZR[1]);WEGLI[S]:=ZR[5];ZR3MERK:=ZR[3];
-    S:=S+1;nn:=2*nn;ZEIGER:=ZR[2];;
+  ZR:=QY21(HRES,S,2^S,ZEIGER,PNEU);;
+  HRES:=List(ZR[1]);ZR3MERK:=ZR[3];ZEIGER:=ZR[2];
   if ZR3MERK=-1 then return -10000; else
-    if ZEIGER=[] or S>Size(PL) then return 1; else return RTT()+1; fi;
+    if ZEIGER=[] or S=Size(PL) then return 1; 
+      else return RTT(S+1)+1; fi;
     fi;
   end;
 
-R:=R5([0,0]);P:=PcgsOfR(R);
+RAUSH:=function(HRES)
+  local i,RET;
+  S:=Size(HRES); RET:=[];
+  for i in [1..S] do
+    RET[i]:=UMKEHRLIST(QY11(HRES{[S-i+1..S]},i));
+    od;
+  return RET;
+  end;
+
+R:=R5([0,0]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];ZEIGER:=XSAMMEL;;NEU:=RTT();
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
 
 R:=R5([[0,1],[0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];ZEIGER:=XSAMMEL;;NEU:=RTT();R;
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+
+R:=R5([[[0,1],[0,0,1]],[0,0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+  
+R:=R5([[[[0,1],[0,0,1]],[0,0,0,1]],[1,1,1,1,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+
+
+QY21A:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
+  local HRES,NICHDRIN,ISO,RET,RGL,INDEX1,GNR;
+  HRES:=List(HRESALT);NICHDRIN:=0;RET:=ZEIGER;RGL:=[];GNR:=0;
+  ISO:=QY08(ZEIGER,PNEU,S);
+  if ISO=0 then NICHDRIN:=-1; INDEX1:=0; else
+    ISO:=ZEIGER[ISO];
+    HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[3][i],S)));
+    INDEX1:=ISO[14];
+    if IsBound(ISO[5]) then ISO:=ISO[5]; fi;
+    if IsBound(ISO[12]) then #Print("\007");
+      HRES:=List([1..S],i->PcElementByExponentsNC(HRES,NZUI(ISO[10][i],S)));
+      ISO:=ISO[12];
+      fi;
+    RGL:=ISO[1];
+    RET:=ISO[6];
+    if IsBound(ISO[7]) then GNR:=ISO[7]; fi;
+    fi;
+  return [HRES,RET,NICHDRIN,RGL,INDEX1,GNR];
+  end;
+
+
+
+
 
   </FILE>
 
