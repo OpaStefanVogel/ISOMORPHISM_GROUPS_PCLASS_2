@@ -4396,25 +4396,25 @@ RAUSH:=function(HRES)
   return RET;
   end;
 
+PHIAUSH:=function(HRES)
+  return List([1..S],i->IZUNREV(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+  end;
+
 R:=R5([0,0]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
-List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);
 
 R:=R5([[0,1],[0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
-List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);
 
 R:=R5([[[0,1],[0,0,1]],[0,0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
-List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);
   
 R:=R5([[[[0,1],[0,0,1]],[0,0,0,1]],[1,1,1,1,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
-List([1..S],i->IZUN(ExponentsOfPcElement(Pcgs(P),HRES[i])));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);
 
 
 QY21A:=function(HRESALT,S,nn,ZEIGER,PNEU) #HRES2->HRES
