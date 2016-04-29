@@ -118,6 +118,7 @@ RTT:=function()#neu
 S:=1;nn:=1;HRES:=[];HRESEXT:=[];R:=[];WEGLI:=[];
 ZEIGER:=XSAMMEL;;
 NEU:=RTT();
+
 inh:=1;
 FUN:=function(arg)#neu
   RT:=[];
@@ -2222,6 +2223,8 @@ FUN9:=function(arg)#neu
   S:=Size(R);
   RSIZE:=Size(R);
   V:=COMPDIAG4_15(DIAG(R));MIN:=V;
+#  VVV:=COMPDIAG7(DIAG(R),0)[2][1];
+#if VVV=[[6,6,2,2],[8,4,4],[9,6,1]] then  Print("\n>",RI,RT,R,COMPDIAG7(DIAG(R),0)[2]); fi;
 #  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
@@ -3456,7 +3459,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 #Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0..3];
+IS:=[0..3];DSTART:=3;
 
 #R:=[[0],[0,0],[1,1,1], [ 0, 0, 0, 2 ], [ 0, 0, 0, 0, 1 ], [ 0, 0, 0, 0, 1, 3 ] ];P:=PcgsOfR(R);RMAXSUCH(P);
 
@@ -3826,7 +3829,7 @@ FUN8:=function(arg)#neu-->DIAG.txt
 #Ablauf aus idP10 und sowas wie FUN6 aus idP13
 ClearProfile();
 ERGS:=[];XSAMMEL:=[];
-IS:=[0,1];
+IS:=[0,1];DSTART:=2;
 
 R:=R5([1,1]);P:=PcgsOfR(R);RMAXSUCH(P);
 R:=R5([1,0]);P:=PcgsOfR(R);RMAXSUCH(P);
@@ -3843,8 +3846,6 @@ for RI in ERGS[3] do
   od;ERGS;Size(ERGS[4]);4;
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
-ERGS[4];
-
 ERGS[5]:=[];
 for RI in ERGS[4] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
@@ -3873,6 +3874,7 @@ for RI in ERGS[7] do
   ListX(IS,IS,IS,IS,IS,IS,IS,FUN8);
   od;ERGS;Size(ERGS[8]);10;
 XSAMMELVIEWER4(XSAMMEL);
+SaveWorkspace("GAP256-10");
 
   </FILE>
   
@@ -4156,10 +4158,10 @@ COMPDIAG7:=function(D,flag)#neu
   D2:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
   DD:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
   RET:=StructuralCopy([SortedList([D0,D1,D2]),DD]);
-Print("\n  ",D0);
-Print("\n  ",D1);
-Print("\n  ",D2);
-Print("\n  ",DD);
+#Print("\n  ",D0);
+#Print("\n  ",D1);
+#Print("\n  ",D2);
+#Print("\n  ",DD);
 # RET:=Collected(RET);#Remove(RET,1);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
@@ -4205,7 +4207,7 @@ a  b ab  c ac bc abc
 1  3  0  1  1  0  0  1133
 0  1  0  2  0  1  0  224
 
-1  0  0  1  1  3  0  1133
+1  0  0  1  1  3  0  1133 #nicht isom!!!
 3  1  0  1  0  1  0  1133
 0  1  0  0  1  0  2  224
 
@@ -4249,20 +4251,23 @@ COMPDIAG5(DIAG(R2),1);
 
   </FILE>
 
-<FILE id="P2" inhalt="Bahnen des Stabilisators">
+<FILE id="P25" inhalt="Bahnen des Stabilisators">
 ok erstmal das aus No.28 reaktivieren
 ok damit paar von den letzten Vergleiche nochmal, sie funktionieren!!!
 .. als nächstes mal direkt von KANTENZUG(3,1) ausgehen...
   ok das siehT sehr gut aus...
   .. nur noch [1,1,3] ist doppelt...
     .. doch im letzten Beispiel geht das durch anderes x wählen.
-    .. weiter muss ich erstmal P22 RMAXSUCH XSAMMEL wieder in Gang bringen
-   
+    ok weiter muss ich erstmal P22 RMAXSUCH XSAMMEL wieder in Gang bringen
+    ok auch PHIAUSH und RAUSPHI ist da
+    ok doch fehlt jetzt noch ein PHI01, das aus a^2=0 ein a^2=1 macht.
+      an dem PHI01 hab ich noch tüchtig dranrumgebastelt, doch
+ok jetzt geht das erste richtige Beispiel komplett durch ok 
 
 dd:=3;
 G:=ElementaryAbelianGroup(2^dd);
-a:=G.1;b:=G.2;c:=G.3;#d:=G.4;
-L:=[a,b,a*b,c,a*c,b*c,a*b*c];
+aa:=G.1;b:=G.2;c:=G.3;#d:=G.4;
+L:=[aa,b,aa*b,c,aa*c,b*c,aa*b*c];
 A:=Action(AutomorphismGroup(G),L);
 
 STEST:=function(x,y,z)
@@ -4310,7 +4315,7 @@ x:=[0,0,2,0,1,1,0];y:=[0,0,1,0,2,1,0];z:=[0,1,0,2,0,1,0];STEST(x,y,z);
   [ [ 3, 3, 3 ], 1 ], [ [ 3, 3, 4 ], 1 ] ]
 
 x:=DIAG(KANTENZUG(3,1));
-x:=Remove(x,1);
+Remove(x,1);
 ORBAX:=Orbit(A,x,Permuted);Size(ORBAX);
 STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
 ORB:=Orbits(STABAX,ORBAX,Permuted);Size(ORB);
@@ -4322,9 +4327,140 @@ y:=List(ORB[4][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 y:=List(ORB[5][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 1 ]2
 y:=List(ORB[6][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 
+
+###ab hier mit RNEUPHI aus P27, Beisp.4764 was aber nur id liefert
+
+RX1:=[[0],[0,0],[0,1,1]];
+RY1:=[[0],[0,1],[0,0,0]];
+PHI:=PHI01(RX1,3);
+RX1:=RNEUPHI(PHI,RX1,3);
+RY1:=RNEUPHI(PHI,RY1,3);
+
+RX1:=REXP(RX1,3);
+RY1:=REXP(RY1,3);
+P:=PcgsOfR(RX1);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX1:=RNEUPHI(PHI,RX1,4);
+RY1:=RNEUPHI(PHI,RY1,4);
+RX1:=RRED(RX1,4);
+RY1:=RRED(RY1,4);
+
+RX2:=[[0],[0,0],[0,1,0]];
+RY2:=[[0],[0,1],[0,0,1]];
+PHI:=PHI01(RY2,3);
+RX2:=RNEUPHI(PHI,RX2,3);
+RY2:=RNEUPHI(PHI,RY2,3);
+
+RX2:=REXP(RX2,3);
+RY2:=REXP(RY2,3);
+P:=PcgsOfR(RY2);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX2:=RNEUPHI(PHI,RX2,4);
+RY2:=RNEUPHI(PHI,RY2,4);
+RX2:=RRED(RX2,4);
+RY2:=RRED(RY2,4);
+
+dd:=3;
+G:=ElementaryAbelianGroup(2^dd);
+aa:=G.1;b:=G.2;c:=G.3;#d:=G.4;
+L:=[aa,b,aa*b,c,aa*c,b*c,aa*b*c];
+A:=Action(AutomorphismGroup(G),L);Size(A);
+
+x:=DIAG(RX1);
+Remove(x,1);
+STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
+y:=DIAG(RY1);
+Remove(y,1);
+ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);
+yy:=DIAG(RX2);
+Remove(yy,1);
+yy in ORBRY;
+
+###besseres Beispiel, von 16 bel zu n=32 müssen 2 gleich sein.
+
+R1:=[[1],[0,0],[0,1,1],[1,0,0,1]];
+[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 3 ] ][ 3, 3, 2, 2, 1, 1, 1, 1, 1, 1 ] ]
+[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 2, 2 ] ][ 6, 3, 3, 2, 1, 1 ] ]
+[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 3, 3 ] ][ 6, 3, 3, 2, 1, 1 ] ]
+
+[ [ 1 ], [ 0, 0 ], [ 2, 2, 2 ], [ 2, 0, 3, 3 ] ][ 3, 3, 2, 2, 1, 1, 1, 1, 1, 1 ] ]*40*41
+[ [ 1 ], [ 0, 0 ], [ 2, 2, 2 ], [ 2, 3, 0, 0 ] ][ 6, 3, 3, 2, 1, 1 ] ]
+[ [ 1 ], [ 0, 0 ], [ 2, 2, 2 ], [ 3, 0, 0, 0 ] ][ 3, 3, 2, 2, 1, 1, 1, 1, 1, 1 ] ]
+R1:=[[1],[0,0],[0,1,1],[1,0,0,3]];COMPDIAG7(DIAG(R1),1);
+R2:=[[1],[0,0],[2,2,2],[2,0,3,3]];COMPDIAG7(DIAG(R2),1);
+
+RX1:=[[1],[0,0],[0,1,1],[1,0,0,1]];COMPDIAG4(DIAG(RX1));#6622
+RY1:=[[0],[0,0],[0,0,0],[0,0,0,1]];COMPDIAG4(DIAG(RY1));#844
+RZ1:=[[1],[0,0],[0,1,1],[1,0,0,0]];COMPDIAG4(DIAG(RZ1));#961
+PHI:=PHI01(RX1,4);#6622
+RX1:=RNEUPHI(PHI,RX1,4);
+RY1:=RNEUPHI(PHI,RY1,4);
+RZ1:=RNEUPHI(PHI,RZ1,4);
+
+RX1:=REXP(RX1,4);
+RY1:=REXP(RY1,4);
+RZ1:=REXP(RZ1,4);
+P:=PcgsOfR(RX1);IdSmallGroup(P);#6622
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX1:=RNEUPHI(PHI,RX1,5);
+RY1:=RNEUPHI(PHI,RY1,5);
+RZ1:=RNEUPHI(PHI,RZ1,5);
+RX1:=RRED(RX1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
+RY1:=RRED(RY1,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0, 1 ] ]
+RZ1:=RRED(RZ1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 0 ] ]
+
+
+RX2:=[[1],[0,0],[0,0,0],[0,0,1,1]];COMPDIAG4(DIAG(RX2));#844
+RY2:=[[0],[0,0],[1,1,1],[1,0,1,1]];COMPDIAG4(DIAG(RY2));#6622
+RZ2:=[[1],[0,0],[1,1,1],[1,0,0,0]];COMPDIAG4(DIAG(RZ2));#961
+PHI:=PHI01(RY2,4);#6622
+RX2:=RNEUPHI(PHI,RX2,4);
+RY2:=RNEUPHI(PHI,RY2,4);
+RZ2:=RNEUPHI(PHI,RZ2,4);
+
+RX2:=REXP(RX2,4);
+RY2:=REXP(RY2,4);
+RZ2:=REXP(RZ2,4);
+P:=PcgsOfR(RY2);IdSmallGroup(P);#6622
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX2:=RNEUPHI(PHI,RX2,5);
+RY2:=RNEUPHI(PHI,RY2,5);
+RZ2:=RNEUPHI(PHI,RZ2,5);
+RX2:=RRED(RX2,5);
+RY2:=RRED(RY2,5);
+RZ2:=RRED(RZ2,5);
+
+dd:=4;
+G:=ElementaryAbelianGroup(2^dd);
+a:=G.1;b:=G.2;c:=G.3;d:=G.4;
+L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
+A:=Action(AutomorphismGroup(G),L);Size(A);
+
+x:=DIAG(RX1);
+Remove(x,1);
+STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
+y:=DIAG(RY1);
+Remove(y,1);
+ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);
+yy:=DIAG(RX2);
+Remove(yy,1);
+Position(ORBRY,yy);
+yy in ORBRY;
+
   </FILE>
 
-<FILE id=25" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
+
+
+
+<FILE id=26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
 ok funktioniert wie gewünscht
 
 R011:=function(d,k)
@@ -4345,6 +4481,10 @@ R:=R011(3,1);COMPDIAG4(DIAG(R));
 R:=R011(4,0);COMPDIAG4(DIAG(R));
 R:=R011(4,1);COMPDIAG4(DIAG(R));
 R:=R011(5,1);COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[0,0,0,0]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[1,1,1,1]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];COMPDIAG4(DIAG(R));
+R:=[[1],[0,0],[1,1,1],[1,1,1,1],[0,0,0,0,0]];COMPDIAG4(DIAG(R));
 
 d:=1;
 repeat 
@@ -4357,6 +4497,159 @@ repeat
   d:=d+1;
   until d>dmax;
     
+  </FILE>
+
+<FILE id=27" inhalt="XSAMMEL und Stab zusammenmachen">
+#XSAMMEL aus P22
+#RTT aus P04 jetzt neu mit Size(PL)
+ok zuerst Size(PL) rein, damit auch kleinere R abgefragt werden.
+ok jetzt wollte ich eigentlich das RMAX haben und das PHI dazu
+  ok ZR[4] liefert nur das letzte transformierte PNE, nicht die davor
+  ok ich muss nur das neue HRES machen, dann RAUSH, PHIAUSH, PERMPHI ok
+.. und das auch noch möglichst ohne Pcgs zwischendrin
+
+RTT:=function(S)#neu
+  ri:=PL[S];
+  Add(HRES,ri,1);
+  PNEU:=QY11(HRES,S);
+  ZR:=QY21(HRES,S,2^S,ZEIGER,PNEU);;
+  HRES:=List(ZR[1]);ZR3MERK:=ZR[3];ZEIGER:=ZR[2];
+  if ZR3MERK=-1 then return -10000; else
+    if ZEIGER=[] or S=Size(PL) then return 1; 
+      else return RTT(S+1)+1; fi;
+    fi;
+  end;
+
+RAUSH:=function(HRES)
+  local i,RET,S;
+  S:=Size(HRES); RET:=[];
+  for i in [1..S] do
+    RET[i]:=UMKEHRLIST(QY11(HRES{[S-i+1..S]},i));
+    od;
+  return RET;
+  end;
+
+PHIAUSH:=function(HRES)
+  local S;
+  S:=Size(HRES); 
+  return Reversed(List([1..S],i->IZUNREV(ExponentsOfPcElement(Pcgs(P),HRES[i]))));
+  end;
+
+PERMPHI:=function(PHI,S)
+  local d,D,i,i0;
+  D:=[];
+  for d in [1..S] do
+    i0:=2^(d-1);
+    D[i0]:=PHI[d];
+    for i in [i0+1..2^d-1] do
+      D[i]:=XORMAT[D[i-i0]+1][D[i0]+1]-1;
+      od;
+    od;
+  return PermList(D);
+  end;
+
+RNEUPHI:=function(PHI,R,S)
+  local d,D,i,RNEU;
+  D:=DIAG(R);
+#Print(D);
+  RNEU:=[];
+  for d in [1..S] do
+    RNEU[d]:=[D[PHI[d]+1]];
+    for i in [1..d-1] do
+      RNEU[d][i+1]:=D[XORMAT[PHI[i]+1][PHI[d]+1]-1+1];
+      od;
+    od;
+  return RNEU;
+  end;
+
+PHI01:=function(R,S)
+  local d,D,i,j,i0,PHI01,INDIZES;
+  D:=DIAG(R);INDIZES:=[];
+  Remove(D,1);
+#Print("\n",5,D,INDIZES);
+  i0:=Position(D,1);
+  PHI01:=[i0]; D[i0]:=-1;INDIZES[1]:=i0;
+#Print("\n",6,D,PHI01,INDIZES);
+  for d in [2..S] do
+    i0:=0;repeat i0:=i0+1; until D[i0]<>-1; 
+    PHI01[d]:=i0; D[i0]:=-1;INDIZES[2^(d-1)]:=i0;
+#Print("\n",7,D,PHI01,INDIZES,d);
+    for i in [1..2^(d-1)-1] do
+      D[XORMAT[INDIZES[i]+1][PHI01[d]+1]-1]:=-1;
+      INDIZES[i+2^(d-1)]:=XORMAT[INDIZES[i]+1][PHI01[d]+1]-1;
+#Print("\n",8,D,PHI01,INDIZES,d,i);
+      od;
+    od;
+#Print("\n",9,D,INDIZES);
+  return PHI01;
+  end;
+
+RY2:=[[0],[0,0],[1,1,1],[1,0,1,1]];#6622
+PHI:=PHI01(RY2,4);#6622
+
+RX1:=[[1],[0,0],[0,1,1],[1,0,0,1]];#6622
+PHI:=PHI01(RX1,4);
+
+R:=[[0],[0,0],[0,1,1]];
+PHI:=PHI01(R,3);
+RNEUPHI(PHI,R,3);
+
+RX1:=[[1],[0,0],[0,1,1],[1,0,0,1]];#6622
+RY1:=[[0],[0,0],[0,0,0],[0,0,0,1]];#844
+RZ1:=[[1],[0,0],[0,1,1],[1,0,0,0]];#961
+PHI:=PHI01(RX1,4);
+RX1:=RNEUPHI(PHI,RX1,4);
+RY1:=RNEUPHI(PHI,RY1,4);
+RZ1:=RNEUPHI(PHI,RZ1,4);
+
+REXP:=function(R,S)
+  local i,j,RET;
+  RET:=[[0]];
+  for i in [1..S] do 
+    j:=List(R[i]);
+    Add(j,j[1],1);
+    Add(RET,j);
+    od;
+  return RET;
+  end;
+REXP([[1],[0,1],[1,0,1]],3);
+
+RRED:=function(R,S)
+  local i,j,RET;
+  RET:=[];
+  for i in [2..S] do 
+    j:=List(R[i]);
+    Remove(j,1);
+    RET[i-1]:=j;
+    od;
+  return RET;
+  end;
+RRED([[0],[1,1],[0,0,1],[1,1,0,1]],4);
+
+
+
+R:=R5([0,0]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),3);RNEUPHI(PHI,R,3);
+
+R:=R5([[0,1],[0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),4);RNEUPHI(PHI,R,4);
+
+R:=R5([[[0,1],[0,0,1]],[0,0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),5);RNEUPHI(PHI,R,5);
+  
+R:=R5([[[[0,1],[0,0,1]],[0,0,0,1]],[1,1,1,1,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),6);RNEUPHI(PHI,R,6);
+
+
+
   </FILE>
 
 <NACHLAD> #oben ändern
