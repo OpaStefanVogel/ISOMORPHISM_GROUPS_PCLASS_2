@@ -4366,7 +4366,7 @@ repeat
     
   </FILE>
 
-<FILE id=26" inhalt="XSAMMEL und Stab zusammenmachen">
+<FILE id=27" inhalt="XSAMMEL und Stab zusammenmachen">
 #XSAMMEL aus P22
 #RTT aus P04 jetzt neu mit Size(PL)
 ok zuerst Size(PL) rein, damit auch kleinere R abgefragt werden.
@@ -4413,21 +4413,40 @@ PERMPHI:=function(PHI,S)
   return PermList(D);
   end;
 
+RNEUPHI:=function(PHI,R,S)
+  local d,D,i,i0,RNEU;
+  D:=DIAG(R);
+#Print(D);
+  RNEU:=[];
+  for d in [1..S] do
+    i0:=2^(d-1);
+    RNEU[d]:=[D[PHI[d]+1]];
+    for i in [1..d-1] do
+      RNEU[d][i+1]:=D[XORMAT[PHI[i]+1][PHI[d]+1]-1+1];
+      od;
+    od;
+  return RNEU;
+  end;
+
 R:=R5([0,0]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),3);
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),3);RNEUPHI(PHI,R,3);
 
 R:=R5([[0,1],[0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),4);
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),4);RNEUPHI(PHI,R,4);
 
 R:=R5([[[0,1],[0,0,1]],[0,0,0,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),5);
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),5);RNEUPHI(PHI,R,5);
   
 R:=R5([[[[0,1],[0,0,1]],[0,0,0,1]],[1,1,1,1,1]]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),6);
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
+PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),6);RNEUPHI(PHI,R,6);
 
 
 
