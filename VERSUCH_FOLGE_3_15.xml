@@ -4324,26 +4324,47 @@ y:=List(ORB[5][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 1 ]2
 y:=List(ORB[6][1]);Add(y,0,1);COMPDIAG5(x+2*y,1);#[ 1, 1, 3 ]
 
 
-###ab hier mit RNEUPHI aus P27, Beisp.4764 nee, Beisp aus P24:
-a  b ab  c ac bc abc
-1  0  0  1  1  3  0  1133
-1  3  0  1  1  0  0  1133
-0  1  0  2  0  1  0  224
+###ab hier mit RNEUPHI aus P27, Beisp.4764 was aber nur id liefert
 
-1  0  0  1  1  3  0  1133
-3  1  0  1  0  1  0  1133
-0  1  0  0  1  0  2  224
+RX1:=[[0],[0,0],[0,1,1]];
+RY1:=[[0],[0,1],[0,0,0]];
+PHI:=PHI01(RX1,3);
+RX1:=RNEUPHI(PHI,RX1,3);
+RY1:=RNEUPHI(PHI,RY1,3);
 
-R:=[[0],[1,1],[0,0,0],[1,1,1,1]];
-#R:=R5([[0,1],[0,0,1]]);
-P:=PcgsOfR(R);IdSmallGroup(P);
+RX1:=REXP(RX1,3);
+RY1:=REXP(RY1,3);
+P:=PcgsOfR(RX1);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
-HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);R;RAUSH(HRES);
-PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),4);RNEUPHI(PHI,R,4);
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX1:=RNEUPHI(PHI,RX1,4);
+RY1:=RNEUPHI(PHI,RY1,4);
+RX1:=RRED(RX1,4);
+RY1:=RRED(RY1,4);
 
-RX:=RNEUPHI(PHI,R,4);
-RY:=RNEUPHI(PHI,[[0],[1,1],[1,1,0],[1,1,1,0]],4);
-RYY:=RNEUPHI(PHI,[[0],[1,1],[1,1,0],[1,1,0,1]],4);
+RX2:=[[0],[0,0],[0,1,0]];
+RY2:=[[0],[0,1],[0,0,1]];
+PHI:=PHI01(RY2,3);
+RX2:=RNEUPHI(PHI,RX2,3);
+RY2:=RNEUPHI(PHI,RY2,3);
+
+RX2:=REXP(RX2,3);
+RY2:=REXP(RY2,3);
+P:=PcgsOfR(RY2);IdSmallGroup(P);
+PL:=Reversed(GeneratorsOfGroup(P));
+HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
+PHI:=PHIAUSH(HRES);
+RX2:=RNEUPHI(PHI,RX2,4);
+RY2:=RNEUPHI(PHI,RY2,4);
+RX2:=RRED(RX2,4);
+RY2:=RRED(RY2,4);
+
+dd:=3;
+G:=ElementaryAbelianGroup(2^dd);
+aa:=G.1;b:=G.2;c:=G.3;#d:=G.4;
+L:=[aa,b,aa*b,c,aa*c,b*c,aa*b*c];
+A:=Action(AutomorphismGroup(G),L);Size(A);
 
 dd:=4;
 G:=ElementaryAbelianGroup(2^dd);
@@ -4351,13 +4372,15 @@ a:=G.1;b:=G.2;c:=G.3;d:=G.4;
 L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
 A:=Action(AutomorphismGroup(G),L);Size(A);
 
-x:=DIAG(RX);
+x:=DIAG(RX1);
 Remove(x,1);
 STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
-y:=DIAG(RY);
+y:=DIAG(RY1);
 Remove(y,1);
 ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);
-yy:=DIAG(RYY);
+yy:=DIAG(RX2);
+Remove(yy,1);
+yy in ORBRY;
 
   </FILE>
 
@@ -4451,12 +4474,11 @@ PERMPHI:=function(PHI,S)
   end;
 
 RNEUPHI:=function(PHI,R,S)
-  local d,D,i,i0,RNEU;
+  local d,D,i,RNEU;
   D:=DIAG(R);
 #Print(D);
   RNEU:=[];
   for d in [1..S] do
-    i0:=2^(d-1);
     RNEU[d]:=[D[PHI[d]+1]];
     for i in [1..d-1] do
       RNEU[d][i+1]:=D[XORMAT[PHI[i]+1][PHI[d]+1]-1+1];
@@ -4464,6 +4486,57 @@ RNEUPHI:=function(PHI,R,S)
     od;
   return RNEU;
   end;
+
+PHI01:=function(R,S)
+  local d,D,i,j,PHI01;
+  D:=DIAG(R);
+  Remove(D,1);
+#Print(D);
+  i0:=Position(D,1);
+  PHI01:=[i0]; D[i0]:=-1;
+  for d in [2..S] do
+    i0:=0;repeat i0:=i0+1; until D[i0]<>-1; 
+    PHI01[d]:=i0; D[i0]:=-1;
+    for i in [1..d-1] do
+      D[XORMAT[PHI01[i]+1][PHI01[d]+1]-1]:=-1;
+      od;
+    od;
+  return PHI01;
+  end;
+R:=[[0],[0,0],[0,1,1]];
+PHI:=PHI01(R,3);
+RNEUPHI(PHI,R,3);
+RX2:=[[0],[0,0],[0,1,0]];
+RY2:=[[0],[0,1],[0,0,1]];
+PHI:=PHI01(RY2,3);
+RX2:=RNEUPHI(PHI,RX2,3);
+RY2:=RNEUPHI(PHI,RY2,3);
+
+REXP:=function(R,S)
+  local i,j,RET;
+  RET:=[[0]];
+  for i in [1..S] do 
+    j:=List(R[i]);
+    Add(j,j[1],1);
+    Add(RET,j);
+    od;
+  return RET;
+  end;
+REXP([[1],[0,1],[1,0,1]],3);
+
+RRED:=function(R,S)
+  local i,j,RET;
+  RET:=[];
+  for i in [2..S] do 
+    j:=List(R[i]);
+    Remove(j,1);
+    RET[i-1]:=j;
+    od;
+  return RET;
+  end;
+RRED([[0],[1,1],[0,0,1],[1,1,0,1]],4);
+
+
 
 R:=R5([0,0]);P:=PcgsOfR(R);IdSmallGroup(P);
 PL:=Reversed(GeneratorsOfGroup(P));
