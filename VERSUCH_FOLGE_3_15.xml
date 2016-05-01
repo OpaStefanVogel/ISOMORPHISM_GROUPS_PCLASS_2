@@ -2589,6 +2589,7 @@ COMPDIAG4:=function(D)#neu
     if dl=1 and dk=dj then DD[l]:=1; fi;
     if dl=0 and dk<>dj then DD[l]:=0; fi;
     od;
+Print("\n",DD);
   RET:=Collected(List(DD));
   RET:=Reversed(SortedList(List(RET,i->i[2])));
   return RET;
@@ -4428,7 +4429,12 @@ RZ1:=RNEUPHI(PHI,RZ1,5);
 RX1:=RRED(RX1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
 RY1:=RRED(RY1,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0, 1 ] ]
 RZ1:=RRED(RZ1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 0 ] ]
-
+DIAG(RX1);#[ 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1 ]
+DIAG(RY1);#[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 ]
+DIAG(RZ1);#[ 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0 ]
+COMPDIAG4(DIAG(RX1));#[ 2, 1, 0, 0, 0, 0, 2, 1, 0, 3, 1, 1, 1, 1, 0, 3 ]
+COMPDIAG4(DIAG(RY1));#[ 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 ]
+COMPDIAG4(DIAG(RZ1));#[ 2, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0 ]
 
 PHI:=PHI01(RX2,4);#6622
 RX2:=RNEUPHI(PHI,RX2,4);
@@ -4445,26 +4451,54 @@ PHI:=PHIAUSH(HRES);
 RX2:=RNEUPHI(PHI,RX2,5);
 RY2:=RNEUPHI(PHI,RY2,5);
 RZ2:=RNEUPHI(PHI,RZ2,5);
-RX2:=RRED(RX2,5);
-RY2:=RRED(RY2,5);
-RZ2:=RRED(RZ2,5);
+RX2:=RRED(RX2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
+RY2:=RRED(RY2,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 0, 1, 0 ] ]
+RZ2:=RRED(RZ2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 1, 0, 1 ] ]
+COMPDIAG4(DIAG(RX2));#[ 2, 1, 0, 0, 0, 0, 2, 1, 0, 3, 1, 1, 1, 1, 0, 3 ]
+COMPDIAG4(DIAG(RY2));#[ 2, 0, 2, 0, 0, 2, 0, 2, 1, 0, 1, 0, 0, 1, 0, 1 ]
+COMPDIAG4(DIAG(RZ2));#[ 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0 ]
 
-dd:=4;
+dd:=Size(RX1);
 G:=ElementaryAbelianGroup(2^dd);
-a:=G.1;b:=G.2;c:=G.3;d:=G.4;
-L:=[a,b,a*b,c,a*c,b*c,a*b*c,d,a*d,b*d,a*b*d,c*d,a*c*d,b*c*d,a*b*c*d];
-A:=Action(AutomorphismGroup(G),L);Size(A);
+GEN:=GeneratorsOfGroup(G);
+L:=[];for i in [1..Size(GEN)] do
+  Add(L,GEN[i]);
+  for j in [1..Size(L)-1] do Add(L,L[j]*GEN[i]); od;
+  od;
+L;
+A:=Action(AutomorphismGroup(G),L);Size(A);#20160
 
 x:=DIAG(RX1);
 Remove(x,1);
-STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
+STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);Size(A)/Size(STABAX);#48;420
 y:=DIAG(RY1);
 Remove(y,1);
-ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);
+ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);#24
 yy:=DIAG(RY2);
 Remove(yy,1);
 Position(ORBRY,yy);
 yy in ORBRY;
+
+####Versuch mit den Orbits:
+
+dd:=6;
+G:=ElementaryAbelianGroup(2^dd);
+GEN:=GeneratorsOfGroup(G);
+L:=[];for i in [1..Size(GEN)] do
+  Add(L,GEN[i]);
+  for j in [1..Size(L)-1] do Add(L,L[j]*GEN[i]); od;
+  od;
+L;
+A:=Action(AutomorphismGroup(G),L);Size(A);
+
+x:=DIAG(KANTENZUG(dd,3));
+Remove(x,1);
+STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);Size(A)/Size(STABAX);
+y:=DIAG(KANTENZUG(dd,1));
+Remove(y,1);
+ORBAX:=Orbit(A,y,Permuted);;Size(ORBAX);
+ORB:=OrbitsDomain(STABAX,ORBAX,Permuted);;Size(ORB);
+
 
   </FILE>
 
