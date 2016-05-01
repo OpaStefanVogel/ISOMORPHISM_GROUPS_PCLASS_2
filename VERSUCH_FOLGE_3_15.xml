@@ -4393,9 +4393,23 @@ R1:=[[1],[0,0],[0,1,1],[1,0,0,1]];
 R1:=[[1],[0,0],[0,1,1],[1,0,0,3]];COMPDIAG7(DIAG(R1),1);
 R2:=[[1],[0,0],[2,2,2],[2,0,3,3]];COMPDIAG7(DIAG(R2),1);
 
-RX1:=[[1],[0,0],[0,1,1],[1,0,0,1]];COMPDIAG4(DIAG(RX1));#6622
-RY1:=[[0],[0,0],[0,0,0],[0,0,0,1]];COMPDIAG4(DIAG(RY1));#844
-RZ1:=[[1],[0,0],[0,1,1],[1,0,0,0]];COMPDIAG4(DIAG(RZ1));#961
+RX1:=[[1],[0,0],[0,1,1],[1,0,0,1]];COMPDIAG4(DIAG(last));#6622
+RY1:=[[0],[0,0],[0,0,0],[0,0,0,1]];COMPDIAG4(DIAG(last));#844
+RZ1:=[[1],[0,0],[0,1,1],[1,0,0,0]];COMPDIAG4(DIAG(last));#961
+RX2:=[[0],[0,0],[1,1,1],[1,0,1,1]];COMPDIAG4(DIAG(last));#6622
+RY2:=[[1],[0,0],[0,0,0],[0,0,1,1]];COMPDIAG4(DIAG(last));#844
+RZ2:=[[1],[0,0],[1,1,1],[1,0,0,0]];COMPDIAG4(DIAG(last));#961
+
+R1:=[[1],[0,0],[0,1,1],[1,0,2,2]];COMPDIAG7(DIAG(R1),1);
+R2:=[[1],[0,0],[2,2,2],[2,3,0,0]];COMPDIAG7(DIAG(R2),1);
+
+RX1:=[[1],[0,0],[0,1,1],[1,0,1,1]];COMPDIAG4(DIAG(last));#6622
+RY1:=[[0],[0,0],[0,0,0],[0,0,1,1]];COMPDIAG4(DIAG(last));#844
+RZ1:=[[1],[0,0],[0,1,1],[1,0,0,0]];COMPDIAG4(DIAG(last));#961
+RX2:=[[0],[0,0],[1,1,1],[1,1,0,0]];COMPDIAG4(DIAG(last));#6622
+RY2:=[[1],[0,0],[0,0,0],[0,1,0,0]];COMPDIAG4(DIAG(last));#844
+RZ2:=[[1],[0,0],[1,1,1],[1,0,0,0]];COMPDIAG4(DIAG(last));#961
+
 PHI:=PHI01(RX1,4);#6622
 RX1:=RNEUPHI(PHI,RX1,4);
 RY1:=RNEUPHI(PHI,RY1,4);
@@ -4416,10 +4430,7 @@ RY1:=RRED(RY1,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0, 1 ] ]
 RZ1:=RRED(RZ1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 0 ] ]
 
 
-RX2:=[[1],[0,0],[0,0,0],[0,0,1,1]];COMPDIAG4(DIAG(RX2));#844
-RY2:=[[0],[0,0],[1,1,1],[1,0,1,1]];COMPDIAG4(DIAG(RY2));#6622
-RZ2:=[[1],[0,0],[1,1,1],[1,0,0,0]];COMPDIAG4(DIAG(RZ2));#961
-PHI:=PHI01(RY2,4);#6622
+PHI:=PHI01(RX2,4);#6622
 RX2:=RNEUPHI(PHI,RX2,4);
 RY2:=RNEUPHI(PHI,RY2,4);
 RZ2:=RNEUPHI(PHI,RZ2,4);
@@ -4427,7 +4438,7 @@ RZ2:=RNEUPHI(PHI,RZ2,4);
 RX2:=REXP(RX2,4);
 RY2:=REXP(RY2,4);
 RZ2:=REXP(RZ2,4);
-P:=PcgsOfR(RY2);IdSmallGroup(P);#6622
+P:=PcgsOfR(RX2);IdSmallGroup(P);#6622
 PL:=Reversed(GeneratorsOfGroup(P));
 HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
 PHI:=PHIAUSH(HRES);
@@ -4450,7 +4461,7 @@ STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);
 y:=DIAG(RY1);
 Remove(y,1);
 ORBRY:=Orbit(STABAX,y,Permuted);Size(ORBRY);
-yy:=DIAG(RX2);
+yy:=DIAG(RY2);
 Remove(yy,1);
 Position(ORBRY,yy);
 yy in ORBRY;
