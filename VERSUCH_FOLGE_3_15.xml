@@ -99,7 +99,7 @@ NEU:=RMAXSUCH(P);#da soll schon bei 0 Schluss sein
 #so, aus QY13 rausmach:
 PL:=Reversed(GeneratorsOfGroup(P));
 
-RTT:=function()#neu
+RTT:=function()#neu in P27
   if HRES=[] then GR:=Group(P.1^0); else GR:=Group(HRES); fi;
   ri:=PL[S];
   Add(HRES,ri,1);HRESEXT[S]:=ri;
@@ -4345,8 +4345,8 @@ HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
 PHI:=PHIAUSH(HRES);
 RX1:=RNEUPHI(PHI,RX1,4);
 RY1:=RNEUPHI(PHI,RY1,4);
-RX1:=RRED(RX1,4);
-RY1:=RRED(RY1,4);
+RX1:=RWEN(RX1,4);
+RY1:=RWEN(RY1,4);
 
 RX2:=[[0],[0,0],[0,1,0]];
 RY2:=[[0],[0,1],[0,0,1]];
@@ -4362,8 +4362,8 @@ HRES:=[];ZEIGER:=XSAMMEL;;RTT(1);
 PHI:=PHIAUSH(HRES);
 RX2:=RNEUPHI(PHI,RX2,4);
 RY2:=RNEUPHI(PHI,RY2,4);
-RX2:=RRED(RX2,4);
-RY2:=RRED(RY2,4);
+RX2:=RWEN(RX2,4);
+RY2:=RWEN(RY2,4);
 
 dd:=3;
 G:=ElementaryAbelianGroup(2^dd);
@@ -4426,9 +4426,9 @@ PHI:=PHIAUSH(HRES);
 RX1:=RNEUPHI(PHI,RX1,5);
 RY1:=RNEUPHI(PHI,RY1,5);
 RZ1:=RNEUPHI(PHI,RZ1,5);
-RX1:=RRED(RX1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
-RY1:=RRED(RY1,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0, 1 ] ]
-RZ1:=RRED(RZ1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 0 ] ]
+RX1:=RWEN(RX1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
+RY1:=RWEN(RY1,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0, 1 ] ]
+RZ1:=RWEN(RZ1,5);#[ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ], [ 1, 0, 0, 0 ] ]
 DIAG(RX1);#[ 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1 ]
 DIAG(RY1);#[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 ]
 DIAG(RZ1);#[ 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0 ]
@@ -4451,9 +4451,9 @@ PHI:=PHIAUSH(HRES);
 RX2:=RNEUPHI(PHI,RX2,5);
 RY2:=RNEUPHI(PHI,RY2,5);
 RZ2:=RNEUPHI(PHI,RZ2,5);
-RX2:=RRED(RX2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
-RY2:=RRED(RY2,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 0, 1, 0 ] ]
-RZ2:=RRED(RZ2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 1, 0, 1 ] ]
+RX2:=RWEN(RX2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 0, 1, 1, 1 ] ]
+RY2:=RWEN(RY2,5);#[ [ 0 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 0, 1, 0 ] ]
+RZ2:=RWEN(RZ2,5);#[ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ], [ 1, 1, 0, 1 ] ]
 COMPDIAG4(DIAG(RX2));#[ 2, 1, 0, 0, 0, 0, 2, 1, 0, 3, 1, 1, 1, 1, 0, 3 ]
 COMPDIAG4(DIAG(RY2));#[ 2, 0, 2, 0, 0, 2, 0, 2, 1, 0, 1, 0, 0, 1, 0, 1 ]
 COMPDIAG4(DIAG(RZ2));#[ 2, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0 ]
@@ -4544,7 +4544,7 @@ repeat
     
   </FILE>
 
-<FILE id=27" inhalt="XSAMMEL und Stab zusammenmachen">
+<FILE id="P27" inhalt="XSAMMEL und Stab zusammenmachen">
 #XSAMMEL aus P22
 #RTT aus P04 jetzt neu mit Size(PL)
 ok zuerst Size(PL) rein, damit auch kleinere R abgefragt werden.
@@ -4553,7 +4553,7 @@ ok jetzt wollte ich eigentlich das RMAX haben und das PHI dazu
   ok ich muss nur das neue HRES machen, dann RAUSH, PHIAUSH, PERMPHI ok
 .. und das auch noch möglichst ohne Pcgs zwischendrin
 
-RTT:=function(S)#neu
+RTT:=function(S)#neu aus P04
   ri:=PL[S];
   Add(HRES,ri,1);
   PNEU:=QY11(HRES,S);
@@ -4659,7 +4659,7 @@ REXP:=function(R,S)
   end;
 REXP([[1],[0,1],[1,0,1]],3);
 
-RRED:=function(R,S)
+RWEN:=function(R,S)
   local i,j,RET;
   RET:=[];
   for i in [2..S] do 
@@ -4669,7 +4669,7 @@ RRED:=function(R,S)
     od;
   return RET;
   end;
-RRED([[0],[1,1],[0,0,1],[1,1,0,1]],4);
+RWEN([[0],[1,1],[0,0,1],[1,1,0,1]],4);
 
 
 
