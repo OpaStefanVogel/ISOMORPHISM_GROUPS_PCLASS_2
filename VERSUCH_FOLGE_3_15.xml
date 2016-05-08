@@ -4552,6 +4552,7 @@ ok jetzt wollte ich eigentlich das RMAX haben und das PHI dazu
   ok ZR[4] liefert nur das letzte transformierte PNE, nicht die davor
   ok ich muss nur das neue HRES machen, dann RAUSH, PHIAUSH, PERMPHI ok
 .. und das auch noch möglichst ohne Pcgs zwischendrin
+  .. in PERMPHI vor return die Diagonale halbieren, dann brauchts 
 
 RTT:=function(S)#neu aus P04
   ri:=PL[S];
