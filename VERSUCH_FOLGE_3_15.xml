@@ -1,4 +1,12 @@
 <LOS>
+<FILE id="P00" inhalt="wie das in Gang bringen nach langer Zeit">
+zuerst P21 laden und ausführen liefert XSAMMEL
+dann P23 die 10101-Gruppen machen
+dann P25 Bahnen des Stabilisators
+  dazu KANTENZUG DIAG aus P17 
+  vergleichen mit Ergebnis aus P16
+  </FILE>
+
 <FILE id="P01" inhalt="R von 1...n auf 0...(n-1) umstellen">
 #
 Read("PcgsOfR.txt");
@@ -2589,7 +2597,7 @@ COMPDIAG4:=function(D)#neu
     if dl=1 and dk=dj then DD[l]:=1; fi;
     if dl=0 and dk<>dj then DD[l]:=0; fi;
     od;
-Print("\n",DD);
+#Print("\n",DD);
   RET:=Collected(List(DD));
   RET:=Reversed(SortedList(List(RET,i->i[2])));
   return RET;
@@ -4481,7 +4489,7 @@ yy in ORBRY;
 
 ####Versuch mit den Orbits:
 
-dd:=6;
+dd:=9;
 G:=ElementaryAbelianGroup(2^dd);
 GEN:=GeneratorsOfGroup(G);
 L:=[];for i in [1..Size(GEN)] do
@@ -4491,15 +4499,16 @@ L:=[];for i in [1..Size(GEN)] do
 L;
 A:=Action(AutomorphismGroup(G),L);Size(A);
 
-x:=DIAG(KANTENZUG(dd,3));
+x:=DIAG(KANTENZUG(dd,1));COMPDIAG4(x);
 Remove(x,1);
 STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);Size(A)/Size(STABAX);
 y:=DIAG(KANTENZUG(dd,1));
 Remove(y,1);
 ORBAX:=Orbit(A,y,Permuted);;Size(ORBAX);
-ORB:=OrbitsDomain(STABAX,ORBAX,Permuted);;Size(ORB);
+ORB:=OrbitsDomain(STABAX,ORBAX,Permuted);;Size(ORB);#dann noch BBD=BBD herausfischen
 
-
+#2 2*2 4*6 8*14 16*30
+#2 4*3 8*7 16*15 32*31
   </FILE>
 
 
