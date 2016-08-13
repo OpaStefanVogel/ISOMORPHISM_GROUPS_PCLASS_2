@@ -1,6 +1,6 @@
-FORTSETZ=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
-  local PHI,i,HRESNEU,nochnichtgefunden;
-  PHI:=[];
+FORTSETZ:=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
+  local PHI,i,j,k,HRESNEU,nochnichtgefunden;
+  PHI:=[];HRESNEU:=[];
   i:=1;
   repeat
     if i<=Size(HRES) then HRESNEU[i]:=HRES[i]; fi;
@@ -10,15 +10,15 @@ FORTSETZ=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht
       for k in [1..Size(D)] do if nochnichtgefunden and not k in PHI then
         if D[k]=D[2^(i-1)] then 
           nochnichtgefunden:=false;
-          for j in [1..Size(PHI)] do if nochnichtgefunden=false then
-            if D[XORMAT[PHI[j][k]]<>D[2^(i-1)+j] then nochnichtgefunden:=true; fi;
+          for j in [1..Size(PHI)] do if nochnichtgefunden=false then 
+            if D[XORMAT[PHI[j]+1][k+1]-1]<>D[2^(i-1)+j] then nochnichtgefunden:=true; fi;
             fi; od;
           if nochnichtgefunden=false then HRESNEU[i]:=k; fi;
           fi; fi; od;
       fi;
     PHI[2^(i-1)]:=HRESNEU[i];#ja!!!
     for j in [1..2^(i-1)-1] do
-      PHI[2^(i-1)+j]:=XORMAT[PHI[j]][PHI[2^(i-1)]];#ja!!!
+      PHI[2^(i-1)+j]:=XORMAT[PHI[j]+1][PHI[2^(i-1)]+1]-1;#ja!!!
       od;
     i:=i+1;
     until 2^(i-1)=Size(D)+1;
@@ -26,7 +26,7 @@ FORTSETZ=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht
   end;
 
 FORTSETZ([1],3,[1,0,0,1,1,3,0]);#(2,3)(4,5)
-FORTSETZ([], 3,[1,0,0,1,1,3,0]);#(1,4,5)(2,3,7)
+FORTSETZ([], 4,[1,0,0,1,1,3,0]);#(1,4,5)(2,3,7)
 
 
 STABERZ=function(MENGE,HRES,STAB,D)
