@@ -1,0 +1,78 @@
+FORTSETZ=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
+  local PHI,i,HRESNEU,nochnichtgefunden;
+  PHI:=[];
+  i:=1;
+  repeat
+    if i<=Size(HRES) then HRESNEU[i]:=HRES[i]; fi;
+    if i=Size(HRES)+1 then HRESNEU[i]:=y; fi;
+    if i>Size(HRES)+1 then
+      nochnichtgefunden:=true;
+      for k in [1..Size(D)] do if nochnichtgefunden and not k in PHI then
+        if D[k]=D[2^(i-1)] then 
+          nochnichtgefunden:=false;
+          for j in [1..Size(PHI)] do if nochnichtgefunden=false then
+            if D[XORMAT[PHI[j][k]]<>D[2^(i-1)+j] then nochnichtgefunden:=true; fi;
+            fi; od;
+          if nochnichtgefunden=false then HRESNEU[i]:=k; fi;
+          fi; fi; od;
+      fi;
+    PHI[2^(i-1)]:=HRESNEU[i];#ja!!!
+    for j in [1..2^(i-1)-1] do
+      PHI[2^(i-1)+j]:=XORMAT[PHI[j]][PHI[2^(i-1)]];#ja!!!
+      od;
+    i:=i+1;
+    until 2^(i-1)=Size(D)+1;
+  return PermList(PHI);
+  end;
+
+FORTSETZ([1],3,[1,0,0,1,1,3,0]);#(2,3)(4,5)
+FORTSETZ([], 3,[1,0,0,1,1,3,0]);#(1,4,5)(2,3,7)
+
+
+STABERZ=function(MENGE,HRES,STAB,D)
+  local MENGENEU,STABNEU,x,y,i,DRIN,PHI;
+  #1
+  x:=MENGE[1];STABNEU:=STAB;
+  #2
+  MENGENEU:=[];
+  for y in MENGE do
+    DRIN:=true;
+    if D[y]<>D[x] then DRIN:=false; fi;
+    for i in [0..Size(HRES)-1] do
+      if D[XORMAT[HRES[i]][y]]<>D[XORMAT[HRES[i]][x]] then DRIN:=false; fi;
+      od;
+    if DRIN then Add(MENGENEU,y); fi;
+    od;
+  #3
+  repeat
+    y:=MENGENEU[0];
+    #4
+    PHI:=FORTSETZ(HRES,y,D));
+    #5
+    if not PHI in STABNEU then Add(STABNEU,PHI); fi;
+    #6
+    MENGENEU:=Difference(MENGENEU,Orbit(Group(STABNEU),x));
+    #7
+    until MENGENEU=[];
+  #8
+  return STABNEU;
+  end;
+  
+STAB:=[];
+#   0  1  2  3  4  5  6  7
+#   e  a  b ab  c ac bc abc
+D:=[2, 1, 0, 0, 1, 1, 3, 0];#D
+STAB:=STABERZ([4..7],[1,2],STAB,D);
+STAB:=STABERZ([2..7],[1],STAB,D);
+STAB:=STABERZ([1..7],[],STAB,D);
+Size(STAB);
+
+STAB:=[];
+#   0  1  2  3  4  5  6  7  8  9 10  11 12  13  14   15
+#   e  a  b ab  c ac bc abc d ad bd abd cd acd bcd abcd
+D:=[2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0,  1, 0,  1,  0,   0];#F
+STAB:=STABERZ([8..15],[1,2,4],STAB,D);
+STAB:=STABERZ([4..15],[1,2],STAB,D);
+STAB:=STABERZ([2..15],[1],STAB,D);
+STAB:=STABERZ([1..15],[],STAB,D);
+Size(STAB);

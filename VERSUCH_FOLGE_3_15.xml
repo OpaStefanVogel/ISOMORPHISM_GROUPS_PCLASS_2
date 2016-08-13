@@ -1,9 +1,9 @@
 <LOS>
 <FILE id="P00" inhalt="wie das in Gang bringen nach langer Zeit">
 zuerst P21 laden und ausführen liefert XSAMMEL
+  dann KANTENZUG DIAG XORMAT JKLLISTE aus P18 
 dann P23 die 10101-Gruppen machen
 dann P25 Bahnen des Stabilisators
-  dazu KANTENZUG DIAG aus P17 
   vergleichen mit Ergebnis aus P16
   </FILE>
 
@@ -4489,7 +4489,7 @@ yy in ORBRY;
 
 ####Versuch mit den Orbits:
 
-dd:=9;
+dd:=4;
 G:=ElementaryAbelianGroup(2^dd);
 GEN:=GeneratorsOfGroup(G);
 L:=[];for i in [1..Size(GEN)] do
@@ -4514,7 +4514,7 @@ ORB:=OrbitsDomain(STABAX,ORBAX,Permuted);;Size(ORB);#dann noch BBD=BBD herausfis
 
 
 
-<FILE id=26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
+<FILE id=P26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
 ok funktioniert wie gewünscht
 
 R011:=function(d,k)
