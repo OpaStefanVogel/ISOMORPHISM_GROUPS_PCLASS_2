@@ -29,34 +29,46 @@ FORTSETZ([1,2],4,[1,0,0,1,1,3,0]);#(2,3)(4,5)
 FORTSETZ([1],3,[1,0,0,1,1,3,0]);#(2,3)(4,5)
 FORTSETZ([], 4,[1,0,0,1,1,3,0]);#(1,4,5)(2,3,7)
 
-
+LRESAUSHRES:=function(HRES)
+  local LRES,i,j;
+  LRES:=[];
+  for i in [1..Size(HRES)] do
+    LRES[2^(i-1)]:=HRES[i];
+    for j in [1..Size(LRES)-1] do
+      LRES[2^(i-1)+j]:=XORMAT[LRES[j]+1][HRES[i]+1]-1;
+      od;
+    od;
+  return LRES;
+  end;
+LRESAUSHRES([1,2,27]);
+  
 STABERZ:=function(MENGE,HRES,STAB,D)
-  local MENGENEU,STABNEU,x,y,i,DRIN,PHI,DK;
+  local MENGENEU,STABNEU,x,y,i,DRIN,PHI,DK,PHI0;
   #1
   x:=MENGE[1];STABNEU:=STAB;
   #2
   MENGENEU:=[];
   for y in MENGE do
     DRIN:=true;
-    Print("\ny=",y," ",D[y]," ",D[x]);
+    ##Print("\ny=",y," ",D[y]," ",D[x]);
     if D[y]<>D[x] then DRIN:=false; fi;
-    for i in [1..Size(HRES)] do
-      Print(" i=",i," ",D[XORMAT[HRES[i]+1][y+1]-1]," ",D[XORMAT[HRES[i]+1][x+1]-1]);
+    for i in [1..2^Size(HRES)-1] do
+     ##Print(" i=",i," ",D[XORMAT[HRES[i]+1][y+1]-1]," ",D[XORMAT[HRES[i]+1][x+1]-1]);
       if D[XORMAT[HRES[i]+1][y+1]-1]<>D[XORMAT[HRES[i]+1][x+1]-1] then DRIN:=false; fi;
       od;
     if DRIN then Add(MENGENEU,y); fi;
     od;
-  Print("\nMENGENEU=",MENGENEU,"\n\c");
+  ##Print("\nMENGENEU=",MENGENEU,"\n\c");
   #3
   repeat
     y:=MENGENEU[1];
     #4
     DK:=List(D);Remove(DK,1);
-    Print("\n",MENGENEU,HRES,y,D,"\n\c");
+    ##Print("\n",MENGENEU,HRES,y,D,"\n\c");
     PHI:=FORTSETZ(HRES,y,D);
     #5
     if not PHI in STABNEU then Add(STABNEU,PHI); fi;
-    Print("\n",PHI,STABNEU,"\n\c");
+    ##Print("\n",PHI,STABNEU,"\n\c");
     #6
     MENGENEU:=Difference(MENGENEU,Orbit(Group(STABNEU),x));
   #7
@@ -140,3 +152,42 @@ STAB:=STABERZ([2..15],[1],STAB,D);
 STAB:=STABERZ([1..15],[],STAB,D);
 Size(STAB);
 Size(Group(STAB));#576
+
+#-----------
+#Test STABERZ mit P25: Ergebnis Size(STAB)=16 22 29 37 46
+COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,DD;
+  SD:=Size(D);DD:=[];
+  for i in [1..SD] do DD[i]:=D[i]+2; od;
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+    if dj=1 and dk=dl then DD[j]:=1; fi;
+    if dj=0 and dk<>dl then DD[j]:=0; fi;
+    if dk=1 and dj=dl then DD[k]:=1; fi;
+    if dk=0 and dj<>dl then DD[k]:=0; fi;
+    if dl=1 and dk=dj then DD[l]:=1; fi;
+    if dl=0 and dk<>dj then DD[l]:=0; fi;
+    od;
+#Print("\n",DD);
+  RET:=Collected(List(DD));
+  RET:=Reversed(SortedList(List(RET,i->i[2])));
+  return DD;
+  end;
+
+dd:=5;
+for kd in [1..6] do
+  x:=DIAG(KANTENZUG(dd,kd));
+  x:=COMPDIAGSTABERZ(x);
+  Remove(x,1);
+  D:=x;
+  STAB:=[];
+  for ddd in [dd,dd-1..1] do 
+    STAB:=STABERZ([2^(ddd-1)..2^dd-1],List([1..ddd-1],i->2^(i-1)),STAB,D);
+    od;
+  Print("\n",kd," ",Size(STAB)," ",Size(Group(STAB)));#576
+  od;
+
+also in STABERZ muss statt HRES eiN PHI ausgelesen werden-->PHIMACH? gibt's das schon?

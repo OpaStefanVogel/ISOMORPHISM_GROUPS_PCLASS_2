@@ -4515,7 +4515,7 @@ ORB:=OrbitsDomain(STABAX,ORBAX,Permuted);;Size(ORB);#dann noch BBD=BBD herausfis
 
 
 
-<FILE id=P26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
+<FILE id="P26" inhalt="Die Gruppen 0 11 000 1111 00000 111111 ...">
 ok funktioniert wie gewünscht
 
 R011:=function(d,k)
