@@ -1,8 +1,11 @@
 <LOS>
 <FILE id="P00" inhalt="wie das in Gang bringen nach langer Zeit">
-zuerst P21 laden und ausführen liefert XSAMMEL
+Read("PcgsOfR.txt");
+Read("MatrixOf.txt");
+Read("XSAMMEL.txt"); 
+Read("DIAG.txt");
   dann KANTENZUG DIAG XORMAT JKLLISTE aus P18 
-dann P23 die 10101-Gruppen machen
+#dann P23 die 10101-Gruppen machen
 dann P25 Bahnen des Stabilisators
   vergleichen mit Ergebnis aus P16
   </FILE>
@@ -4502,7 +4505,8 @@ A:=Action(AutomorphismGroup(G),L);Size(A);
 
 x:=DIAG(KANTENZUG(dd,1));COMPDIAG4(x);
 Remove(x,1);
-STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);Size(A)/Size(STABAX);
+#STABAX:=Stabilizer(A,x,Permuted);Size(STABAX);Size(A)/Size(STABAX);
+STABAX:=Group(STABMACH(dd,x);Size(STABAX);Size(A)/Size(STABAX);
 y:=DIAG(KANTENZUG(dd,1));
 Remove(y,1);
 ORBAX:=Orbit(A,y,Permuted);;Size(ORBAX);

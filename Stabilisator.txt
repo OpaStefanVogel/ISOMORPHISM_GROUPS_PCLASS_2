@@ -46,15 +46,16 @@ STABERZ:=function(MENGE,HRES,STAB,D)
   local MENGENEU,STABNEU,x,y,i,DRIN,PHI,DK,PHI0;
   #1
   x:=MENGE[1];STABNEU:=STAB;
+  LRES:=LRESAUSHRES(HRES);
   #2
   MENGENEU:=[];
   for y in MENGE do
     DRIN:=true;
     ##Print("\ny=",y," ",D[y]," ",D[x]);
     if D[y]<>D[x] then DRIN:=false; fi;
-    for i in [1..2^Size(HRES)-1] do
+    for i in [1..Size(LRES)] do
      ##Print(" i=",i," ",D[XORMAT[HRES[i]+1][y+1]-1]," ",D[XORMAT[HRES[i]+1][x+1]-1]);
-      if D[XORMAT[HRES[i]+1][y+1]-1]<>D[XORMAT[HRES[i]+1][x+1]-1] then DRIN:=false; fi;
+      if D[XORMAT[LRES[i]+1][y+1]-1]<>D[XORMAT[LRES[i]+1][x+1]-1] then DRIN:=false; fi;
       od;
     if DRIN then Add(MENGENEU,y); fi;
     od;
@@ -177,17 +178,91 @@ COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
   return DD;
   end;
 
-dd:=5;
-for kd in [1..6] do
-  x:=DIAG(KANTENZUG(dd,kd));
-  x:=COMPDIAGSTABERZ(x);
-  Remove(x,1);
-  D:=x;
+STABMACH:=function(dd,D)
+  local ddd;
   STAB:=[];
   for ddd in [dd,dd-1..1] do 
     STAB:=STABERZ([2^(ddd-1)..2^dd-1],List([1..ddd-1],i->2^(i-1)),STAB,D);
     od;
-  Print("\n",kd," ",Size(STAB)," ",Size(Group(STAB)));#576
+  end;
+
+for dd in [1..10] do
+  Print("\n\ndd=",dd);
+  for kd in [1..a[dd]] do
+    x:=DIAG(KANTENZUG(dd,kd));
+    x:=COMPDIAGSTABERZ(x);
+    Remove(x,1);
+    D:=x;
+    STABMACH(dd,D);
+    Print("\n",kd," ",Size(STAB)," ",Size(Group(STAB)));#576
+    od;
   od;
 
-also in STABERZ muss statt HRES eiN PHI ausgelesen werden-->PHIMACH? gibt's das schon?
+dd=1
+1 1 1
+
+dd=2
+1 2 2
+2 2 2
+3 3 6
+
+dd=3
+1 4 8
+2 4 24
+3 3 6
+4 4 24
+
+dd=4
+1 7 192
+2 7 1344
+3 6 72
+4 5 48
+5 6 576
+6 5 120
+
+dd=5
+1 11 21504
+2 11 322560
+3 9 1152
+4 8 2304
+5 9 64512
+6 6 1920
+7 6 720
+
+dd=6
+1 16 10321920
+2 16 319979520
+3 13 110592
+4 12 516096
+5 13 30965760
+6 8 184320
+7 8 51840
+8 7 23040
+9 8 40320
+
+dd=7
+1 22 20478689280
+2 22 1290157424640
+3 18 49545216
+4 17 495452160
+5 18 61436067840
+6 11 82575360
+7 10 3317760
+8 9 4423680
+9 9 1451520
+10 9 2580480
+
+dd=8
+1 29 165140150353920
+2 29 20972799094947840
+3 24 95126814720
+4 23 1965954170880
+5 24 495420451061760
+6 15 158544691200
+7 13 1274019840
+8 12 3963617280
+9 11 394813440
+10 11 185794560
+11 11 990904320
+12 10 348364800
+
