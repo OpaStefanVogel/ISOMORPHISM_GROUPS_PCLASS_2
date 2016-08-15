@@ -179,11 +179,12 @@ COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
   end;
 
 STABMACH:=function(dd,D)
-  local ddd;
+  local STAB,ddd;
   STAB:=[];
   for ddd in [dd,dd-1..1] do 
     STAB:=STABERZ([2^(ddd-1)..2^dd-1],List([1..ddd-1],i->2^(i-1)),STAB,D);
     od;
+  return STAB;
   end;
 
 for dd in [1..10] do
@@ -193,7 +194,7 @@ for dd in [1..10] do
     x:=COMPDIAGSTABERZ(x);
     Remove(x,1);
     D:=x;
-    STABMACH(dd,D);
+    STAB:=STABMACH(dd,D);
     Print("\n",kd," ",Size(STAB)," ",Size(Group(STAB)));#576
     od;
   od;
