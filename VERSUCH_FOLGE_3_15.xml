@@ -4746,6 +4746,38 @@ PHI:=PHIAUSH(HRES);PERMPHI(PHIAUSH(HRES),6);RNEUPHI(PHI,R,6);
 
   </FILE>
 
+<FILE id="P27" inhalt="neues RMAXSUCH">
+
+RMAXSUCHEXTRA:=function(D)
+  local HRES,LRES,LDES,LRES2,LDES2,RMAX,R,i,j,k,dd,n;
+  HRES:=[];LRES:=[];LDES:=[];RMAX:=[];R:=[];
+  n:=Size(D)+1;
+  dd:=LogInt(n,2);
+  for i in [1..dd] do Print("\n\ni=",i);
+    for j in [1..n-1] do if not IsBound(LDES[j]) then Print("\nj=",j);
+      HRES[i]:=j;
+      R[i]:=[D[j]];
+      for k in [1..i-1] do Add(R[i],D[XORMAT[HRES[k]+1][j+1]-1]); od;Print("R=",R,RMAX);
+      if R>RMAX then RMAX:=StructuralCopy(R); jmax:=j; Print(j); fi;
+      Unbind(LDES[j]);
+      fi; od;
+    HRES[i]:=jmax;
+    LRES[2^(i-1)]:=jmax;
+    LDES[LRES[2^(i-1)]]:=D[LRES[2^(i-1)]];
+    for k in [1..2^(i-1)-1] do
+      LRES[2^(i-1)+k]:=XORMAT[LRES[k]+1][jmax+1]-1;
+      LDES[LRES[2^(i-1)+k]]:=D[LRES[2^(i-1)+k]];
+      od; 
+    Print("\njmax=",jmax,HRES,LRES,LDES,RMAX);
+    od;
+  Print(List(LRES,j->LDES[j]));
+  return RMAX; 
+  end;
+
+RMAXSUCHEXTRA([2,3,3,2,2,3,3]);
+
+  </FILE>
+
 <NACHLAD> #oben ändern
 
   </NACHLAD>
