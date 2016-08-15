@@ -4762,6 +4762,8 @@ RMAXSUCHEXTRA:=function(D)
       Unbind(LDES[j]);
       fi; od;
     HRES[i]:=jmax;
+    R[i]:=[D[jmax]];
+    for k in [1..i-1] do Add(R[i],D[XORMAT[HRES[k]+1][jmax+1]-1]); od;
     LRES[2^(i-1)]:=jmax;
     LDES[LRES[2^(i-1)]]:=D[LRES[2^(i-1)]];
     for k in [1..2^(i-1)-1] do
@@ -4775,6 +4777,10 @@ RMAXSUCHEXTRA:=function(D)
   end;
 
 RMAXSUCHEXTRA([2,3,3,2,2,3,3]);
+RMAXSUCHEXTRA([2,3,3,2,2,3,3])=RMAXSUCHEXTRA([3,3,2,3,2,2,3]);
+RMAXSUCHEXTRA([3,3,2,3,2,2,3,3,2,2,3,2,3,3,2])=RMAXSUCHEXTRA([3,2,3,2,3,2,3,2,3,2,3,2,3,2,3]);#B
+RMAXSUCHEXTRA([1,1,2,1,2,2,1,0,0,0,0,0,0,0,0])=RMAXSUCHEXTRA([1,0,0,2,1,0,0,2,1,0,0,2,1,0,0]);#A
+RMAXSUCHEXTRA([1,1,2,1,2,2,1,0,0,0,0,0,0,0,0])=RMAXSUCHEXTRA([1,0,0,2,1,0,0,2,1,0,0,2,1,0,0]);#A
 
   </FILE>
 
