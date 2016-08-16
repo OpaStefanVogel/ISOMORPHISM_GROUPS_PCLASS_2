@@ -5031,15 +5031,16 @@ FUN9:=function(arg)#neu
 #if VVV=[[6,6,2,2],[8,4,4],[9,6,1]] then  Print("\n>",RI,RT,R,COMPDIAG7(DIAG(R),0)[2]); fi;
   V5:=COMPDIAGEXTRA(DIAG(R),0);MIN:=V;
   Print("\n#+#+#+#+#+",V5);
-  Print("\nZAMPACKAB1 012 ",RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3])));
+  MIN:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3]));
+  Print("\nZAMPACKAB1 012 ",MIN);
   GESAMTDI:=MIN;
   if not (GESAMTDI in GESAMTDILIST) then
     Add(GESAMTDILIST,GESAMTDI);
-    GV:=T23P(P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[1],V5[3])); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[3],V5[1])); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[1],V5[2])); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[2],V5[1])); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
     if RI=[] then Add(ERG,RT); else Add(ERG,[RI,RT]); fi;
     Print("*",Size(ERG),"\c");
     fi;
