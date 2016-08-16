@@ -4782,6 +4782,70 @@ RMAXSUCHEXTRA:=function(D)
   return StructuralCopy(RMAX); 
   end;
 
+RMAXSUCHEXTRA:=function(D)
+  local HRES,LRES,LDES,LRES2,LDES2,LMAX,RMAX,R,i,j,k,dd,n;
+  HRES:=[];LRES:=[];LDES:=[];LMAX:=[];RMAX:=[];R:=[];
+  n:=Size(D)+1;
+  dd:=LogInt(n,2);
+  for i in [1..dd] do
+    for j in [1..n-1] do if not IsBound(LDES[j]) then
+      HRES[i]:=j;
+      R[i]:=[D[j]];
+      for k in [1..i-1] do Add(R[i],D[XORMAT[HRES[k]+1][j+1]-1]); od;
+      LRES[2^(i-1)]:=j;
+      for k in [1..2^(i-1)-1] do
+        LRES[2^(i-1)+k]:=XORMAT[LRES[k]+1][j+1]-1;
+        od; 
+      if List(LRES,a->D[a])>List(LMAX,a->D[a]) then
+        LMAX:=StructuralCopy(LRES);
+        RMAX:=StructuralCopy(R); 
+        jmax:=j; 
+        fi;
+      fi; od;
+    HRES[i]:=jmax;
+    R[i]:=[D[jmax]];
+    for k in [1..i-1] do Add(R[i],D[XORMAT[HRES[k]+1][jmax+1]-1]); od;
+    LRES[2^(i-1)]:=jmax;
+    LDES[LRES[2^(i-1)]]:=D[LRES[2^(i-1)]];
+    for k in [1..2^(i-1)-1] do
+      LRES[2^(i-1)+k]:=XORMAT[LRES[k]+1][jmax+1]-1;
+      LDES[LRES[2^(i-1)+k]]:=D[LRES[2^(i-1)+k]];
+      od; 
+    #Print("\njmax=",jmax,HRES,LRES,LDES,RMAX);
+    od;
+  #Print(List(LRES,j->LDES[j]));
+  return [StructuralCopy(RMAX),LRES]; 
+  end;
+
+#                1  2  3   4  5   6   7  8    9  10  11 12  13  14 15
+#                a  b ab   c ac  bc abc  d   ad  bd abd cd acd bcd abcd
+RMAXSUCHEXTRA([ 17, 0, 5, 17, 5, 20, 20, 0,  20, 20, 20, 5, 20, 20,17 ]);
+RMAXSUCHEXTRA([ 17, 0, 5, 17, 5, 20, 20, 17, 20, 20, 5, 20, 20, 20, 0 ]);
+V6:=COMPDIAGEXTRA(DIAG(R5(ERG[72])),0);
+
+richtig wäre gewesen
+20   20  20   20 17
+bc  abd acd  abc  a  cd=5
+bc  acd abd  abc  a  bd=20
+
+                                      x<>y
+       1  -  2  3  -  5  -  2  -  1  x  -  5  -  3
+       -  -  -  2  1  3  5  -  -  -  x  5  3  1  2
+       1  -  3  2  5  -  7  3  -  1  x  7  -  5  2
+                
+       -  -  -  1  2  3  5  2  1  5  3  -  y  -  -
+       -  2  1  -  -  3  5  -  -  5  3  -  y  1  2
+       2  1  3  5  7  -  -  7  5  -  -  2  y  3  1
+       a  b ab  c ac bc ..  d ad bd a. cd a. b. .. 
+[ [ 2, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1 ], 
+  [ 2, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 ], 
+  [ 2, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ] ]
+
+[ [ 2, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 ], 
+  [ 2, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 ], 
+  [ 2, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 ] ]
+
+
 RMAXSUCHEXTRA([2,3,3,2,2,3,3]);
 RMAXSUCHEXTRA([2,3,3,2,2,3,3])=RMAXSUCHEXTRA([3,3,2,3,2,2,3]);
 RMAXSUCHEXTRA([3,3,2,3,2,2,3,3,2,2,3,2,3,3,2])=RMAXSUCHEXTRA([3,2,3,2,3,2,3,2,3,2,3,2,3,2,3]);#B
@@ -4792,7 +4856,8 @@ RMAXSUCHEXTRA([1,1,2,1,2,2,1,0,0,0,0,0,0,0,0])=RMAXSUCHEXTRA([1,0,0,2,1,0,0,2,1,
 
 <FILE id="P29" inhalt="nochmal Branch Folge_3_15 aus P21 jetzt mit RMAXSUCHEXTRA">
 .. alles aus P21 nochmal durchgucken, geht, ist aber wegen dem Überspringen nicht geeignet
-.. also mal P16 versuchen:
+ok also mal P16 versuchen: ok kommt zu der Stelle wo mit Dji, Dki, Dkj weiter, also
+.. stattdessen was anderes versuchen.
 
 RRED:=function(V)#neu
   local i,R,V2;
