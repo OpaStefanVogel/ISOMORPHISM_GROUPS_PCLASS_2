@@ -4779,7 +4779,7 @@ RMAXSUCHEXTRA:=function(D)
     #Print("\njmax=",jmax,HRES,LRES,LDES,RMAX);
     od;
   #Print(List(LRES,j->LDES[j]));
-  return RMAX; 
+  return StructuralCopy(RMAX); 
   end;
 
 RMAXSUCHEXTRA([2,3,3,2,2,3,3]);
@@ -4981,7 +4981,8 @@ ZAMPACKAB1:=function(D0,D1,D2)
   local i,D;
   D:=[];
   for i in [2..Size(D0)] do
-    D[i-1]:=[D0[i],D1[i],D2[i]];
+    D[i-1]:=D0[i]+4*D1[i]+16*D2[i];
+    #D[i-1]:=[D0[i],D1[i],D2[i]];
     od;
   return D;
   end;
@@ -4998,11 +4999,10 @@ FUN9:=function(arg)#neu
   if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
   V5:=COMPDIAGEXTRA(DIAG(R),0);
   #Print("\n#+#+#+#+#+",V5);
-  MIN:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3]));
-  #Print("\nZAMPACKAB1 012 ",MIN);
-  GESAMTDI:=MIN;
-  if not (GESAMTDI in GESAMTDILIST) then
-    Add(GESAMTDILIST,GESAMTDI);
+  GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3]));
+  #Print("\nZAMPACKAB1 012 ",GV);
+  if not (GV in GESAMTDILIST) then if RT=[ 0, 3, 3, 2 ] then Error(Size(ERG)); fi;
+    Add(GESAMTDILIST,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); Add(GESAMTDILIST,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[1],V5[3])); Add(GESAMTDILIST,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[3],V5[1])); Add(GESAMTDILIST,GV);
@@ -5096,28 +5096,56 @@ for i in [1..Size(ERG)] do
   Print("\ni=",i," ",IdSmallGroup(G));
   od;
   
-DIAG(FEHLERSUCH(ERG[71]));
-DIAG(FEHLERSUCH(ERG[72]));
+DIAG(FEHLERSUCH(ERG[71]));#[ [ [ 0, 2 ], [ 1, 2, 3 ] ], [ 0, 3, 3, 2 ] ]
+DIAG(FEHLERSUCH(ERG[72]));#[ [ [ 0, 2 ], [ 1, 2, 3 ] ], [ 1, 3, 3, 3 ] ]
+DIAG(R5(ERG[71]));#[ [ [ 0, 2 ], [ 1, 2, 3 ] ], [ 0, 3, 3, 2 ] ]
+DIAG(R5(ERG[72]));#[ [ [ 0, 2 ], [ 1, 2, 3 ] ], [ 1, 3, 3, 3 ] ]
+#[ 0, 1, 0, 2, 1, 2, 3, 3, 0, 3, 3, 3, 2, 3, 3, 1 ]
+#[ 0, 1, 0, 2, 1, 2, 3, 3, 1, 3, 3, 2, 3, 3, 3, 0 ]#also d->abcd
+IdSmallGroup(PcgsOfR(FEHLERSUCH(ERG[71])));#[ 64, 244 ]
+IdSmallGroup(PcgsOfR(FEHLERSUCH(ERG[72])));#[ 64, 244 ]
 GESAMTDILIST1:=[];
 V5:=COMPDIAGEXTRA(DIAG(FEHLERSUCH(ERG[71])),0);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3])); Add(GESAMTDILIST1,GV);
-#    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); Add(GESAMTDILIST1,GV);
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); Add(GESAMTDILIST1,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[1],V5[3])); Add(GESAMTDILIST1,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[3],V5[1])); Add(GESAMTDILIST1,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[1],V5[2])); Add(GESAMTDILIST1,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[2],V5[1])); Add(GESAMTDILIST1,GV);
 G1:=SortedList(GESAMTDILIST1);
 GESAMTDILIST2:=[];
-V6:=COMPDIAGEXTRA(DIAG(FEHLERSUCH(ERG[72])),0);
-    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3])); Add(GESAMTDILIST1,GV);
-#    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); Add(GESAMTDILIST2,GV);
+V5:=COMPDIAGEXTRA(DIAG(FEHLERSUCH(ERG[72])),0);
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[2],V5[3])); Add(GESAMTDILIST2,GV);
+    GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[1],V5[3],V5[2])); Add(GESAMTDILIST2,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[1],V5[3])); Add(GESAMTDILIST2,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[2],V5[3],V5[1])); Add(GESAMTDILIST2,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[1],V5[2])); Add(GESAMTDILIST2,GV);
     GV:=RMAXSUCHEXTRA(ZAMPACKAB1(V5[3],V5[2],V5[1])); Add(GESAMTDILIST2,GV);
 G2:=SortedList(GESAMTDILIST2);
 G1=G2;
-
+GESAMTDILIST1[1]=GESAMTDILIST2[1];#false
+GESAMTDILIST1[2]=GESAMTDILIST2[2];#true,auch 2=4
+GESAMTDILIST1[3]=GESAMTDILIST2[3];#false
+GESAMTDILIST1[4]=GESAMTDILIST2[4];#true,auch 2=4
+GESAMTDILIST1[5]=GESAMTDILIST2[5];#true,auch 5=6
+GESAMTDILIST1[6]=GESAMTDILIST2[6];#true,auch 5=6
+V5:=COMPDIAGEXTRA(DIAG(R5(ERG[71])),0);
+[ [ 2, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1 ], 
+  [ 2, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 ], 
+  [ 2, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ] ]
+V6:=COMPDIAGEXTRA(DIAG(R5(ERG[72])),0);
+[ [ 2, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0 ], 
+  [ 2, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 ], 
+  [ 2, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 ] ]
+Z5:=ZAMPACKAB1(V5[3],V5[2],V5[1]);
+#  a  b ab   c ac  bc abc  d
+[ 17, 0, 5, 17, 5, 20, 20, 0, 20, 20, 20, 5, 20, 20, 17 ]
+Z6:=ZAMPACKAB1(V6[3],V6[2],V6[1]);
+[ 17, 0, 5, 17, 5, 20, 20, 17, 20, 20, 5, 20, 20, 20, 0 ]
+RMAXSUCHEXTRA(Z5);
+[ [ 20 ], [ 20, 20 ], [ 20, 17, 5 ], [ 20, 17, 0, 20 ] ]
+RMAXSUCHEXTRA(Z6);
+[ [ 20 ], [ 20, 20 ], [ 20, 17, 20 ], [ 20, 17, 17, 20 ] ]
 
   </FILE>
 
