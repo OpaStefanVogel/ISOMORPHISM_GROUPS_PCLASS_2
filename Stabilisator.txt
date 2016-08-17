@@ -187,15 +187,20 @@ STABMACH:=function(dd,D)
   return STAB;
   end;
 
+STABTAB:=[];
+GRUPTAB:=[];
 for dd in [1..10] do
+  STABTAB[dd]:=[];
+  GRUPTAB[dd]:=[];
   Print("\n\ndd=",dd);
   for kd in [1..a[dd]] do
     x:=DIAG(KANTENZUG(dd,kd));
     x:=COMPDIAGSTABERZ(x);
     Remove(x,1);
     D:=x;
-    STAB:=STABMACH(dd,D);
-    Print("\n",kd," ",Size(STAB)," ",Size(Group(STAB)));#576
+    STABTAB[dd][kd]:=STABMACH(dd,D);
+    GRUPTAB[dd][kd]:=Group(STABTAB[dd][kd]);
+    Print("\n",kd," ",Size(STABTAB[dd][kd])," ",Size(Group(STABTAB[dd][kd])));#576
     od;
   od;
 
@@ -266,4 +271,48 @@ dd=8
 10 11 185794560
 11 11 990904320
 12 10 348364800
+
+
+
+D1:=[1,0,0,1,0,1,1,0,1,1,1,0,1,1,1];
+D2:=[0,0,1,0,1,1,1,0,1,1,1,1,1,1,0];
+S1:=STABMACH(4,D1);
+S2:=STABMACH(4,D2);
+G1:=Group(S1);
+G2:=Group(S2);
+I1:=Intersection(G1,G2);
+
+D1:=[1,0,0,1,0,1,1,0,1,1,1,0,1,1,1];
+D2:=[0,0,1,0,1,1,1];
+S1:=STABMACH(4,D1);
+S2:=STABMACH(3,D2);
+G1:=Group(S1);
+G2:=Group(S2);
+I1:=Intersection(G1,G2);
+
+D1:=[1,0,0,1,0,1,1,0,1,1,1,0,1,1,1];
+D2:=[0,0,1,0,1,1,1,0,1,1,1,1,1,1,0];
+S1:=STABMACH(4,D1);
+G1:=Group(S1);
+ORB:=Orbit(G1,D2,Permuted);;
+Size(ORB);
+Filtered(ORB,i->i{[1..7]}=[0,0,1,0,1,1,1]);
+
+ORB:=Orbit(G1,D2,Permuted);;Size(ORB);#60
+ORB1:=Orbit(A[4],D1,Permuted);#168
+ORB12:=Orbit(A[4],[1,0,2,1,2,3,3,0,3,3,3,2,3,3,1],Permuted);;Size(ORB12);#10080=168*60
+#also ist das ORB schon mal vollständig.
+DIAG(R5([ [ [ 0, 2 ], [ 1, 2, 3 ] ], [ 0, 3, 3, 2 ] ]));
+STAB12:=Stabiliser(A[4],[1,0,2,1,2,3,3,0,3,3,3,2,3,3,1],Permuted);
+#=Group([ (1,4)(2,8)(3,12)(6,9)(7,13)(11,14) ])
+
+i1:=1;i2:=2;dd:=5;
+I1:=Intersection(GRUPTAB[dd][i1],GRUPTAB[dd][i2]);Size(I1);
+RT:=RightTransversal(A[dd],I1);Size(RT);#210
+DX1:=DIAG(KANTENZUG(dd,i1));
+DX2:=DIAG(KANTENZUG(dd,i2));
+DX:=[]; for i in [2..Size(DX1)] do DX[i-1]:=[DX1[i],DX2[i]]; od; DX;
+ORB:=Orbit(A[dd],DX,Permuted);;Size(ORB);#210
+Size(RT)=Size(ORB);
+
 
