@@ -3498,7 +3498,7 @@ for RI in ERGS[4] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[5]);15;
+  od;ERGS;Size(ERGS[5]);15;#dd=32n=32
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
 ERGS[6]:=[];
@@ -3506,7 +3506,7 @@ for RI in ERGS[5] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[6]);54;
+  od;ERGS;Size(ERGS[6]);54;#dd=4,n=64
 XSAMMELVIEWER4(XSAMMEL);
 SaveWorkspace("GAP64-54");
 ERGS[7]:=[];
