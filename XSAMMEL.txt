@@ -629,7 +629,7 @@ XSAMMELVIEWER2:=function(XSAMMEL)
     Print(UMKEHRLIST(i[1])," ");#PNEU
     Print(i[2]," ");
     if IsBound(i[5]) then 
-      Print(i[5][2]," "); 
+      Print(i[5][2]," ",i[5][7]," "); 
       Print("(",i[14],") ");#steht in Wegebaum dann
       else
         if IsBound(i[12]) then 
