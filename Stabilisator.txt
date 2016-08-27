@@ -603,18 +603,24 @@ R:=[[1],[1,2],[1,2,3]];#<=== [ 32, 32 ]#mit D1,D2 ok
 R:=[[1],[2,3],[0,0,0]];#<=== [ 32, 34 ]#ok
 R:=[[1],[2,3],[0,1,2]];#<=== [ 32, 21 ]#ok
 
+STABAUSD4:=function(D)#aufpass, Input mit 0, Output ohne 0!
+  local S,D1,D2,i,S1,S2;
+  D1:=[];D2:=[];
+  for i in [1..Size(D)] do
+    if D[i]=1 or D[i]=3 then D1[i]:=1; else D1[i]:=0; fi;
+    if D[i]=2 or D[i]=3 then D2[i]:=1; else D2[i]:=0; fi;
+    od;
+  D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
+  D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
+  S1:=STABMACH(3,D1);
+  S2:=STABMACH(3,D2);
+  S:=Intersection(Group(S1),Group(S2));
+  return S;
+  end;
+
 TESTL:=function()
 D:=DIAG(R);#Remove(D,1);
-D1:=[];D2:=[];
-for i in [1..Size(D)] do
-  if D[i]=1 or D[i]=3 then D1[i]:=1; else D1[i]:=0; fi;
-  if D[i]=2 or D[i]=3 then D2[i]:=1; else D2[i]:=0; fi;
-  od;
-D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
-D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
-S1:=STABMACH(3,D1);
-S2:=STABMACH(3,D2);
-S:=Intersection(Group(S1),Group(S2));
+S:=STABAUSD4(D);
 #S:=STABMACH(3,D);
 L:=List(S,s->ListPerm(s,2^(dd-1)-1));
 for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
@@ -645,3 +651,8 @@ Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR([
   [i[1][4],i[1][4],i[1][4],i[1][5],i[1][6]],
   [i[1][8],i[1][8],i[1][8],i[1][9],i[1][10],i[1][12]]])))));
   end;
+
+###jetzt Id bestimmen
+DMITNULL:=StructuralCopy(List(DDD[8]));Add(DMITNULL,0,1);DMITNULL;
+S:=STABAUSD4(DMITNULL);Size(S);
+Orbits(S,[1..15]);
