@@ -173,8 +173,6 @@ COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
     if dl=0 and dk<>dj then DD[l]:=0; fi;
     od;
 #Print("\n",DD);
-  RET:=Collected(List(DD));
-  RET:=Reversed(SortedList(List(RET,i->i[2])));
   return DD;
   end;
 
@@ -592,28 +590,38 @@ gap> Orbit(K,D,Permuted);
 R:=[[1],[0,2],[0,0,0]];#<=== [ 32, 27 ]#ok
 R:=[[1],[0,2],[0,0,1]];#<=== [ 32, 28 ]#ok
 R:=[[1],[0,2],[0,1,0]];#<=== [ 32, 22 ]#ok
-R:=[[1],[0,2],[0,1,1]];#<=== [ 32, 30 ]#
-R:=[[1],[0,2],[0,1,3]];#<=== [ 32, 25 ]#
+R:=[[1],[0,2],[0,1,1]];#<=== [ 32, 30 ]#mit D1,D2 ok
+R:=[[1],[0,2],[0,1,3]];#<=== [ 32, 25 ]#mit D1,D2 ok
 R:=[[1],[0,2],[0,2,2]];#<=== [ 32, 31 ]#ok
-R:=[[1],[0,2],[1,1,1]];#<=== [ 32, 29 ]#
-R:=[[1],[0,2],[1,2,3]];#<=== [ 32, 33 ]#
+R:=[[1],[0,2],[1,1,1]];#<=== [ 32, 29 ]#mit D1,D2 ok
+R:=[[1],[0,2],[1,2,3]];#<=== [ 32, 33 ]#mit D1,D2 ok
 R:=[[1],[0,2],[1,3,2]];#<=== [ 32, 24 ]#ok
 R:=[[1],[1,2],[0,1,1]];#<=== [ 32, 23 ]#ok
-R:=[[1],[1,2],[1,1,1]];#<=== [ 32, 35 ]#
+R:=[[1],[1,2],[1,1,1]];#<=== [ 32, 35 ]#mit D1,D2 ok
 R:=[[1],[1,2],[1,2,2]];#<=== [ 32, 26 ]#ok
-R:=[[1],[1,2],[1,2,3]];#<=== [ 32, 32 ]#
+R:=[[1],[1,2],[1,2,3]];#<=== [ 32, 32 ]#mit D1,D2 ok
 R:=[[1],[2,3],[0,0,0]];#<=== [ 32, 34 ]#ok
 R:=[[1],[2,3],[0,1,2]];#<=== [ 32, 21 ]#ok
 
 TESTL:=function()
-D:=DIAG(R);Remove(D,1);
-S:=STABMACH(3,D);
+D:=DIAG(R);#Remove(D,1);
+D1:=[];D2:=[];
+for i in [1..Size(D)] do
+  if D[i]=1 or D[i]=3 then D1[i]:=1; else D1[i]:=0; fi;
+  if D[i]=2 or D[i]=3 then D2[i]:=1; else D2[i]:=0; fi;
+  od;
+D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
+D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
+S1:=STABMACH(3,D1);
+S2:=STABMACH(3,D2);
+S:=Intersection(Group(S1),Group(S2));
+#S:=STABMACH(3,D);
 L:=List(S,s->ListPerm(s,2^(dd-1)-1));
 for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
   for i in [2^(dd-1)+1..2^dd-1] do
     LL[i]:=LL[i-2^(dd-1)]+2^(dd-1);
     od;
-  od; Print(L);
+  od; Display(L);
 SD:=List(L,s->PermList(s));
 H:=Group(
   (8,9)(10,11)(12,13)(14,15),
