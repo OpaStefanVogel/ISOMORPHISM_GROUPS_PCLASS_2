@@ -546,3 +546,24 @@ for i in [1..16] do if not IsBound(SCHONFERTIG) then
     SCHONFERTIG[PositionSorted(ENUM,Permuted(D2,PHI){[8,9,10,12]})]:=1;
     od;
   fi; od;
+
+##########jetzt mit ListPerm
+dd:=4;
+R:=[[1],[2,3],[0,0,0],[0,0,1,0]];
+D:=DIAG(R);Remove(D,1);#[ 64, 216 ]
+S:=STABMACH(3,D{[1..7]});[ (), (4,5)(6,7), (4,6)(5,7) ];
+L:=List(S,s->ListPerm(s,2^(dd-1)-1));
+for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
+  for i in [2^(dd-1)+1..2^dd-1] do
+    LL[i]:=LL[i-2^(dd-1)]+2^(dd-1);
+    od;
+  od; L;
+SD:=List(L,s->PermList(s));[ (), (4,5)(6,7)(12,13)(14,15), (4,6)(5,7)(12,14)(13,15) ];
+H:=Group(
+  (8,9)(10,11)(12,13)(14,15),
+  (8,10)(9,11)(12,14)(13,15),
+  (8,12)(9,13)(10,14)(11,15)
+  );
+K:=Group(Concatenation(SD,List(H)));
+Size(Orbit(K,D,Permuted));16;
+
