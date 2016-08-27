@@ -618,17 +618,23 @@ STABAUSD4:=function(D)#aufpass, Input mit 0, Output ohne 0!
   return S;
   end;
 
+DOPPELSTAB:=function(dd,S)
+  local L,LL;
+  L:=List(S,s->ListPerm(s,2^(dd-1)-1));
+  for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
+    for i in [2^(dd-1)+1..2^dd-1] do
+      LL[i]:=LL[i-2^(dd-1)]+2^(dd-1);
+      od;
+    od; #Display(L);
+  SD:=List(L,s->PermList(s));
+  return SD;
+  end;
+  
+
 TESTL:=function()
 D:=DIAG(R);#Remove(D,1);
 S:=STABAUSD4(D);
-#S:=STABMACH(3,D);
-L:=List(S,s->ListPerm(s,2^(dd-1)-1));
-for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
-  for i in [2^(dd-1)+1..2^dd-1] do
-    LL[i]:=LL[i-2^(dd-1)]+2^(dd-1);
-    od;
-  od; Display(L);
-SD:=List(L,s->PermList(s));
+SD:=DOPPELSTAB(dd,S);
 H:=Group(
   (8,9)(10,11)(12,13)(14,15),
   (8,10)(9,11)(12,14)(13,15),
