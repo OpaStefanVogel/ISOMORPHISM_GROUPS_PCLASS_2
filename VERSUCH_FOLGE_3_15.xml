@@ -3498,7 +3498,7 @@ for RI in ERGS[4] do
   GLOBZEIG:=RINXS(R5(RI),XSAMMEL,1);
   Print("\n***P17***",RI);
   ListX(IS,IS,IS,FUN8);
-  od;ERGS;Size(ERGS[5]);15;#dd=32n=32
+  od;ERGS;Size(ERGS[5]);15;#dd=3,n=32
 XSAMMELVIEWER2(XSAMMEL);
 XSAMMELVIEWER4(XSAMMEL);
 ERGS[6]:=[];

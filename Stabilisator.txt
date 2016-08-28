@@ -666,6 +666,20 @@ RVOND:=function(dd,D)
   end;
 RVOND(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[0],[0,0],[1,1,1],[1,1,1,2],[1,1,1,2,3],[0,0,0,0,0,0]];
 
+RKVOND:=function(dd,D)
+  local d,j,R,RI;
+  R:=[];
+  for d in [1..dd] do
+    RI:=[D[2^(d-1)]];
+    for j in [2..d] do
+      Add(RI,D[2^(d-1)+2^(j-2)]);
+      od;
+    Add(R,RI);
+    od;
+  return R;
+  end;
+RKVOND(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[1],[1,2],[1,2,3],[0,0,0,0]];
+
 
 TESTL:=function(R)#alle Fortsetzungen von R
 dd:=Size(R)+1;
@@ -683,9 +697,38 @@ for i in [1..4^dd] do
 ORBS:=OrbitsDomain(K,DDD,Permuted);;Print(Size(ORBS));
 Print(List(ORBS,i->Size(i)));Print("\c");
 Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,i[1]))))));
+  return ORBS;
   end;
 
 ###jetzt Id bestimmen
 DMITNULL:=StructuralCopy(List(DDD[8]));Add(DMITNULL,0,1);DMITNULL;
 S:=STABAUSD4(DMITNULL);Size(S);
 Orbits(S,[1..15]);
+
+############dann wieder ganzes ERGS
+ERGS:=[
+  [[[1]]],#dd=1
+  [[[1],[0,2]],#dd=2
+   [[1],[1,2]],
+   [[1],[2,3]]],
+  ];
+dd:=3;
+dd:=4;
+dd:=5;
+dd:=6;
+dd:=7;
+dd:=8;
+ERGS[dd]:=[];GESAMTDILIST:=[];
+for ERG in ERGS[dd-1] do
+  ORBS:=TESTL(ERG);
+  Print("\nSize(ORBS)=",Size(ORBS)," ");
+  for oi in ORBS do
+    ID:=IdSmallGroup(PcgsOfR(RVOND(dd,oi[1])))[2];
+    if not IsBound(GESAMTDILIST[ID]) then 
+      GESAMTDILIST[ID]:=ID;
+      Add(ERGS[dd],RKVOND(dd,oi[1]));
+      Print("\n",Size(ERGS[dd]),"<===",ID," ");
+      fi;
+    od;
+  od;#ok bis dd:=4 schonmal gleiches Ergebnis wie XSAMMELVIEWER4;
+
