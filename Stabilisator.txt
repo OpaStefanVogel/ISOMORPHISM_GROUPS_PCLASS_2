@@ -629,18 +629,31 @@ DOPPELSTAB:=function(dd,S)
   SD:=List(L,s->PermList(s));
   return SD;
   end;
-  
 
-TESTL:=function()
+HMACH:=function(dd)
+  local d,ddd,dddd,i,j,H,L;
+  H:=[];ddd:=2^(dd-1);dddd:=2^dd;
+  for d in [1..dd-1] do
+    L:=[];
+    for j in [1..ddd-1] do L[j]:=j; od;
+    for j in [ddd..dddd-1] do
+      if not IsBound(L[j]) then
+        L[j]:=j+2^(d-1);
+        L[j+2^(d-1)]:=j;
+        fi;
+      od;
+    Add(H,PermList(L));
+    od;
+  return H;
+  end;
+HMACH(4);
+
+TESTL:=function(R)#alle Fortsetzungen von R
 D:=DIAG(R);#Remove(D,1);
 S:=STABAUSD4(D);
 SD:=DOPPELSTAB(dd,S);
-H:=Group(
-  (8,9)(10,11)(12,13)(14,15),
-  (8,10)(9,11)(12,14)(13,15),
-  (8,12)(9,13)(10,14)(11,15)
-  );
-K:=Group(Concatenation(SD,List(H)));Print(Size(K));
+H:=HMACH(4);
+K:=Group(Concatenation(SD,H));Print(Size(K));
 
 DD:=Tuples([0..3],4);;Print(Size(DD));
 DDD:=[];
