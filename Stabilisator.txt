@@ -587,6 +587,10 @@ gap> Orbit(K,D,Permuted);
   [ 1, 2, 3, 0, 0, 0, 0, 2, 1, 0, 3, 2, 0, 2, 0 ] ]
 
 #########gleich ganze Orbits
+R:=[[1]];#<=== [ 8, 2 ]#
+R:=[[1],[0,2]];#<=== [ 16, 3 ]#
+R:=[[1],[1,2]];#<=== [ 16, 4 ]#
+R:=[[1],[2,3]];#<=== [ 16, 2 ]#
 R:=[[1],[0,2],[0,0,0]];#<=== [ 32, 27 ]#ok
 R:=[[1],[0,2],[0,0,1]];#<=== [ 32, 28 ]#ok
 R:=[[1],[0,2],[0,1,0]];#<=== [ 32, 22 ]#ok
@@ -603,7 +607,7 @@ R:=[[1],[1,2],[1,2,3]];#<=== [ 32, 32 ]#mit D1,D2 ok
 R:=[[1],[2,3],[0,0,0]];#<=== [ 32, 34 ]#ok
 R:=[[1],[2,3],[0,1,2]];#<=== [ 32, 21 ]#ok
 
-STABAUSD4:=function(D)#aufpass, Input mit 0, Output ohne 0!
+STABAUSD4:=function(dd,D)#aufpass, Input mit 0, Output ohne 0!
   local S,D1,D2,i,S1,S2;
   D1:=[];D2:=[];
   for i in [1..Size(D)] do
@@ -612,8 +616,8 @@ STABAUSD4:=function(D)#aufpass, Input mit 0, Output ohne 0!
     od;
   D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
   D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
-  S1:=STABMACH(3,D1);
-  S2:=STABMACH(3,D2);
+  S1:=STABMACH(dd,D1);
+  S2:=STABMACH(dd,D2);
   S:=Intersection(Group(S1),Group(S2));
   return S;
   end;
@@ -648,27 +652,37 @@ HMACH:=function(dd)
   end;
 HMACH(4);
 
+RVOND:=function(dd,D)
+  local d,j,R,RI;
+  R:=[[0],[0,0]];
+  for d in [1..dd] do
+    RI:=[D[2^(d-1)],D[2^(d-1)],D[2^(d-1)]];
+    for j in [2..d] do
+      Add(RI,D[2^(d-1)+2^(j-2)]);
+      od;
+    Add(R,RI);
+    od;
+  return R;
+  end;
+RVOND(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[0],[0,0],[1,1,1],[1,1,1,2],[1,1,1,2,3],[0,0,0,0,0,0]];
+
+
 TESTL:=function(R)#alle Fortsetzungen von R
+dd:=Size(R)+1;
 D:=DIAG(R);#Remove(D,1);
-S:=STABAUSD4(D);
+S:=STABAUSD4(dd-1,D);
 SD:=DOPPELSTAB(dd,S);
-H:=HMACH(4);
+H:=HMACH(dd);
 K:=Group(Concatenation(SD,H));Print(Size(K));
 
-DD:=Tuples([0..3],4);;Print(Size(DD));
+DD:=Tuples([0..3],dd);;Print(Size(DD));
 DDD:=[];
-for i in [1..256] do
-  DDD[i]:=DIAG([R[1],R[2],R[3],DD[i]]){[2..16]};
+for i in [1..4^dd] do
+  DDD[i]:=DIAG(Concatenation(R,[DD[i]])){[2..2^dd]};
   od;
 ORBS:=OrbitsDomain(K,DDD,Permuted);;Print(Size(ORBS));
-Print(List(ORBS,i->Size(i)));
-Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR([
-  [0],
-  [0,0],
-  [i[1][1],i[1][1],i[1][1]],
-  [i[1][2],i[1][2],i[1][2],i[1][3]],
-  [i[1][4],i[1][4],i[1][4],i[1][5],i[1][6]],
-  [i[1][8],i[1][8],i[1][8],i[1][9],i[1][10],i[1][12]]])))));
+Print(List(ORBS,i->Size(i)));Print("\c");
+Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,i[1]))))));
   end;
 
 ###jetzt Id bestimmen
