@@ -5,6 +5,7 @@ Read("MatrixOf.txt");
 Read("XSAMMEL.txt"); 
 Read("DIAG.txt");
   dann KANTENZUG DIAG XORMAT JKLLISTE aus P18 
+    dann STABILISATOR.txt
 #dann P23 die 10101-Gruppen machen
 dann P25 Bahnen des Stabilisators
   vergleichen mit Ergebnis aus P16
