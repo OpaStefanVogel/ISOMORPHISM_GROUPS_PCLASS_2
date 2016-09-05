@@ -789,7 +789,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
   ORBS:=OrbitsDomain(K,DDD,Permuted);;#Print(Size(ORBS));
   #Print(List(ORBS,i->Size(i)));Print("\c");
   D0:=DIAG(R1);Remove(D0,1);
-  List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
+  #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
   #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))))));
   return List(ORBS,i->RKVOND(dd,i[1]));
   end;
@@ -797,3 +797,43 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
 R1:=[[1],[0,0],[0,1,0]];
 R2:=[[1],[0,1]];ORBS:=SCHNICK(R1,R2);Size(ORBS);
 R2:=[[1],[1,1]];ORBS:=SCHNICK(R1,R2);Size(ORBS);
+
+
+
+#########weiter mit ERGS2
+ERGS1:=[];
+for dd in [1..10] do
+  ERGS1[dd]:=[];
+  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
+  od;
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[1]];
+dd:=2;
+ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+for R1 in ERGS1[dd] do
+  Print("\n***R1=",R1);
+  TEILIDLIST:=[];
+  for R1R2 in ERGS2[dd-1] do if R1{[1..dd-1]}=R1R2[1] then
+    Print("\n...R1,R1R2=",R1,R1R2);
+    ORBI:=SCHNICK(R1,R1R2[2]);
+    Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"\n");
+    for ORB in ORBI do
+      R:=R1+2*ORB;
+      D:=DIAG(R);Remove(D,1);
+      RV:=RVOND(dd,D);
+      ID:=IdSmallGroup(PcgsOfR(RV));
+      Print(" ",ID,"\c");
+      if not ID in TEILIDLIST then
+        Add(TEILIDLIST,ID);
+        Add(ERGS2[dd],[R1,ORB]);
+        fi;
+      if not ID in GESAMTDILIST[dd] then
+        Add(GESAMTDILIST[dd],ID);
+        fi;
+      od;
+    fi; od;
+  od;
+GESAMTDILIST;List(GESAMTDILIST,i->Size(i));
+
