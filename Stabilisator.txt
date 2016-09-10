@@ -801,6 +801,8 @@ R2:=[[1],[1,1]];ORBS:=SCHNICK(R1,R2);Size(ORBS);
 
 
 #########weiter mit ERGS2
+ok R1<>ORB geht nicht weil eine von 60 wohl auf ERGS1 aufbaut
+ok SD:=Intersect(S0,SD) und H:=... geht nicht weil Group(A,B)*C nicht Group(A*C,B*C ) ist.
 ERGS1:=[];
 for dd in [1..10] do
   ERGS1[dd]:=[];
@@ -816,9 +818,9 @@ for R1 in ERGS1[dd] do
   Print("\n***R1=",R1);
   TEILIDLIST:=[];
   for R1R2 in ERGS2[dd-1] do if R1{[1..dd-1]}=R1R2[1] then
-    Print("\n...R1,R1R2=",R1,R1R2);
+    Print("\n...R1,R1R2=",R1,"\n",R1R2,"\n");
     ORBI:=SCHNICK(R1,R1R2[2]);
-    Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"\n");
+    Print("ORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
     for ORB in ORBI do
       R:=R1+2*ORB;
       D:=DIAG(R);Remove(D,1);
@@ -835,5 +837,4 @@ for R1 in ERGS1[dd] do
       od;
     fi; od;
   od;
-GESAMTDILIST;List(GESAMTDILIST,i->Size(i));
-
+GESAMTDILIST;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];
