@@ -772,14 +772,21 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
   D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
   D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
   S1:=STABMACH(dd-1,D1);
+  Print("\nDOPPELSTAB S1: \c");t:=Runtime();
+  SD1:=DOPPELSTAB(dd,S1);Print(Runtime()-t);
   S2:=STABMACH(dd-1,D2);
-  S:=Intersection(Group(S1),Group(S2));
-  SD:=DOPPELSTAB(dd,S);
-  H:=HMACH(dd);
-  K:=Group(Concatenation(SD,H));#Print(Size(K));
+  Print("\nDOPPELSTAB S2: \c");t:=Runtime();
+  SD2:=DOPPELSTAB(dd,S2);Print(Runtime()-t);
+  Print("\nIntersection(S1,S2): \c");t:=Runtime();
+  S:=Intersection(Group(SD1),Group(SD2));Print(Runtime()-t);
+  Print("\nHMACH: \c");t:=Runtime();
+  H:=HMACH(dd);Print(Runtime()-t);
+  Print("\nConcatenation(SD,H): \c");t:=Runtime();
+  K:=Group(Concatenation(SD,H));Print(Runtime()-t);
   D0:=COMPDIAGSTABERZ(D0);Remove(D0,1);
   S0:=STABMACH(dd,D0);
-  K:=Intersection(Group(S0),K);
+  Print("\nIntersection(S0,K): \c");t:=Runtime();
+  K:=Intersection(Group(S0),K);Print(Runtime()-t);
 
   DD:=Tuples([0..1],dd);;#Print(Size(DD));
   DDD:=[];
@@ -813,14 +820,15 @@ ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
 dd:=2;
+Exec("date");
 ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
 for R1 in ERGS1[dd] do
   Print("\n***R1=",R1);
   TEILIDLIST:=[];
   for R1R2 in ERGS2[dd-1] do if R1{[1..dd-1]}=R1R2[1] then
-    Print("\n...R1,R1R2=",R1,"\n",R1R2,"\n");
+    Print("\n...R1,R1R2=",Size(ERGS2[dd],"\n",R1,"\n",R1R2,"\n");
     ORBI:=SCHNICK(R1,R1R2[2]);
-    Print("ORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+    Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
     for ORB in ORBI do
       R:=R1+2*ORB;
       D:=DIAG(R);Remove(D,1);
@@ -837,4 +845,4 @@ for R1 in ERGS1[dd] do
       od;
     fi; od;
   od;
-GESAMTDILIST;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];
+GESAMTDILIST;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];Exec("date");
