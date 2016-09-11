@@ -824,25 +824,30 @@ Exec("date");
 ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
 for R1 in ERGS1[dd] do
   Print("\n***R1=",R1);
-  TEILIDLIST:=[];
+  TEILDILIST:=[];
   for R1R2 in ERGS2[dd-1] do if R1{[1..dd-1]}=R1R2[1] then
-    Print("\n...R1,R1R2=",Size(ERGS2[dd],"\n",R1,"\n",R1R2,"\n");
+    Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n");
     ORBI:=SCHNICK(R1,R1R2[2]);
-    Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+    #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+    Print("\nSize(ORBI)=",Size(ORBI));
+    Print("\nSize(GESAMTDILIST[dd]=",Size(GESAMTDILIST[dd]));
     for ORB in ORBI do
       R:=R1+2*ORB;
-      D:=DIAG(R);Remove(D,1);
-      RV:=RVOND(dd,D);
-      ID:=IdSmallGroup(PcgsOfR(RV));
-      Print(" ",ID,"\c");
-      if not ID in TEILIDLIST then
-        Add(TEILIDLIST,ID);
+      D:=DIAG(R);
+      #a#Remove(D,1);
+      #a#RV:=RVOND(dd,D);
+      #a#ID:=IdSmallGroup(PcgsOfR(RV));
+      ID:=COMPDIAG5(D,false);
+      #a#Print(" ",ID,"\c");
+      if not ID in TEILDILIST then
+        Add(TEILDILIST,ID);
         Add(ERGS2[dd],[R1,ORB]);
         fi;
       if not ID in GESAMTDILIST[dd] then
         Add(GESAMTDILIST[dd],ID);
-        fi;
+        Print("*\c");
+        else Print(".\c"); fi;
       od;
     fi; od;
   od;
-GESAMTDILIST;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];Exec("date");
+GESAMTDILIST;;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];Exec("date");

@@ -4,6 +4,7 @@ Read("PcgsOfR.txt");
 Read("MatrixOf.txt");
 Read("XSAMMEL.txt"); 
 Read("DIAG.txt");
+  dann neuerdings COMPDIAG5 aus P16 
   dann KANTENZUG DIAG XORMAT JKLLISTE aus P18 
     dann STABILISATOR.txt
 #dann P23 die 10101-Gruppen machen
