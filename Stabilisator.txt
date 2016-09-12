@@ -809,7 +809,9 @@ R2:=[[1],[1,1]];ORBS:=SCHNICK(R1,R2);Size(ORBS);
 
 #########weiter mit ERGS2
 ok R1<>ORB geht nicht weil eine von 60 wohl auf ERGS1 aufbaut
-ok SD:=Intersect(S0,SD) und H:=... geht nicht weil Group(A,B)*C nicht Group(A*C,B*C ) ist.
+ok SD:=Intersect(S0,SD) und H:=... geht nicht weil Group(A,B)*C nicht 
+Group(A*C,B*C ) ist.
+ok aber DOPPELSTAB vor Intersection in SCHNICK hat den entscheidenden Schwung gebracht. Das ist jetzt gelaufen ok
 ERGS1:=[];
 for dd in [1..10] do
   ERGS1[dd]:=[];
@@ -819,18 +821,18 @@ ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
-dd:=2;
+9dd:=2;
 Exec("date");
 ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
 for R1 in ERGS1[dd] do
   Print("\n***R1=",R1);
   TEILDILIST:=[];
-  for R1R2 in ERGS2[dd-1] do if R1{[1..dd-1]}=R1R2[1] then
+  for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
     Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n");
     ORBI:=SCHNICK(R1,R1R2[2]);
     #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
     Print("\nSize(ORBI)=",Size(ORBI));
-    Print("\nSize(GESAMTDILIST[dd]=",Size(GESAMTDILIST[dd]));
+    Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd]=",Size(GESAMTDILIST[dd]));
     for ORB in ORBI do
       R:=R1+2*ORB;
       D:=DIAG(R);
