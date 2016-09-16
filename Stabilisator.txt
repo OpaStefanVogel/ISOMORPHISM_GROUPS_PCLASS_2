@@ -862,7 +862,7 @@ COMPDIAG5A:=function(D,flag)#neu
   anzj011,anzk011,anzl011,
   anzj000,anzk000,anzl000,
   anzj111,anzk111,anzl111,
-  anzj100,anzk100,anzl100
+  anzj100,anzk100,anzl100,
   DA,DB;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   GLEI:=NullMat(SD,16);
@@ -936,8 +936,8 @@ COMPDIAG5A:=function(D,flag)#neu
     fi;
 
 #neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
-DA:=List(D0);Remove
-DB:=List(D1);
+DA:=List(D0);Remove(DA,1);
+DB:=List(D1);Remove(DB,1);
 SDA:=STABMACH(dd,DA);Remove(DA,1);
 SDB:=STABMACH(dd,DB);Remove(DB,1);
 SDAB:=Intersection(Group(SDA),Group(SDB));
@@ -995,6 +995,8 @@ SCHNACK:=function(dd,CMPD)
         od;
       fi; od;
     od;
+  Print("\n",List(GESAMTDILIST,i->Size(i)));
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
   Exec("date");
   end;
 
