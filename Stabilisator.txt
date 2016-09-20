@@ -855,6 +855,62 @@ for R1 in ERGS1[dd] do
 
 GESAMTDILIST;;List(GESAMTDILIST,i->Size(i));[ 1, 6, 19, 60, 158, 442, 1122, 2945];Exec("date");
 
+##########nochmal als SCHNACK
+SCHNACK:=function(dd,CMPD)
+  Exec("date");
+  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+  for R1 in ERGS1[dd] do
+    Print("\n***R1=",R1);
+    TEILDILIST:=[];
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
+      Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n");
+      ORBI:=SCHNICK(R1,R1R2[2]);
+      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+      Print("\nSize(ORBI)=",Size(ORBI));
+      Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd]=",Size(GESAMTDILIST[dd])," ");
+      for ORB in ORBI do
+        R:=R1+2*ORB;
+        D:=DIAG(R);
+        #a#Remove(D,1);
+        #a#RV:=RVOND(dd,D);
+        #a#ID:=IdSmallGroup(PcgsOfR(RV));
+        ID:=CMPD(D,false);
+        #a#Print(" ",ID,"\c");
+        if not ID in TEILDILIST then
+          Add(TEILDILIST,ID);
+          Add(ERGS2[dd],[R1,ORB]);
+          fi;
+        if not ID in GESAMTDILIST[dd] then
+          Add(GESAMTDILIST[dd],ID);
+          Print("*\c");
+          else Print(".\c"); fi;
+        od;
+      fi; od;
+    od;
+  Print("\n",List(GESAMTDILIST,i->Size(i)));
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
+  Exec("date");
+  end;
+
+ERGS1:=[];
+for dd in [1..10] do
+  ERGS1[dd]:=[];
+  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
+  od;
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[1]];
+dd:=2;
+SCHNACK(2,COMPDIAG5);#16
+SCHNACK(3,COMPDIAG5);#32
+SCHNACK(4,COMPDIAG5);#64
+SCHNACK(5,COMPDIAG5);#128
+SCHNACK(6,COMPDIAG5);#256
+SCHNACK(7,COMPDIAG5);#512
+SCHNACK(8,COMPDIAG5);#1024
+
+
 ##################neues COMPDIAG5
 COMPDIAG5A:=function(D,flag)#neu
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
@@ -966,6 +1022,24 @@ for i in [1..OSIZE-1] do for j in [i+1..OSIZE] do
 #Print(RET);
   return StructuralCopy(RET);
   end;
+
+ERGS1:=[];
+for dd in [1..10] do
+  ERGS1[dd]:=[];
+  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
+  od;
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[1]];
+dd:=2;
+SCHNACK(2,COMPDIAG5A);#16#6
+SCHNACK(3,COMPDIAG5A);#32#19
+SCHNACK(4,COMPDIAG5A);#64#60
+SCHNACK(5,COMPDIAG5A);#128#158
+SCHNACK(6,COMPDIAG5A);#256#442
+SCHNACK(7,COMPDIAG5A);#512#1122
+SCHNACK(8,COMPDIAG5A);#1024#2945
 
 brk> GLEI;
 [ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 
@@ -1085,40 +1159,116 @@ f6
 brk> G.6^2;
 <identity> of ...
 
-SCHNACK:=function(dd,CMPD)
-  Exec("date");
-  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
-  for R1 in ERGS1[dd] do
-    Print("\n***R1=",R1);
-    TEILDILIST:=[];
-    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
-      Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n");
-      ORBI:=SCHNICK(R1,R1R2[2]);
-      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
-      Print("\nSize(ORBI)=",Size(ORBI));
-      Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd]=",Size(GESAMTDILIST[dd])," ");
-      for ORB in ORBI do
-        R:=R1+2*ORB;
-        D:=DIAG(R);
-        #a#Remove(D,1);
-        #a#RV:=RVOND(dd,D);
-        #a#ID:=IdSmallGroup(PcgsOfR(RV));
-        ID:=CMPD(D,false);
-        #a#Print(" ",ID,"\c");
-        if not ID in TEILDILIST then
-          Add(TEILDILIST,ID);
-          Add(ERGS2[dd],[R1,ORB]);
-          fi;
-        if not ID in GESAMTDILIST[dd] then
-          Add(GESAMTDILIST[dd],ID);
-          Print("*\c");
-          else Print(".\c"); fi;
-        od;
-      fi; od;
+#############neues COMPDIAG5B mit ausführlichster Markierung
+COMPDIAG5B:=function(D,flag)#neu
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
+  Dji,Dki,Dli,
+  anzj011,anzk011,anzl011,
+  anzj000,anzk000,anzl000,
+  anzj111,anzk111,anzl111,
+  anzj100,anzk100,anzl100,
+  DA,DB;
+  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
+  GLEI:=NullMat(SD,16);
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST2[D[i]+1]);
+    DDD[i]:=List(BITLIST0[D[i]+1]);
     od;
-  Print("\n",List(GESAMTDILIST,i->Size(i)));
-  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
-  Exec("date");
+##  RET:=NullMat(SD,20);
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
+##    RET[j][RET2]:=RET[j][RET2]+1;
+##    RET[k][RET2]:=RET[k][RET2]+1;
+##    RET[l][RET2]:=RET[l][RET2]+1;
+    anzj011:=0; anzk011:=0; anzl011:=0;
+    anzj000:=0; anzk000:=0; anzl000:=0;
+    anzj111:=0; anzk111:=0; anzl111:=0;
+    anzj100:=0; anzk100:=0; anzl100:=0;
+    for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; anzj111:=anzj111+1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; anzj100:=anzj100+1; fi;
+      if Dji=0 and Dki=Dli and Dki=1 then anzj011:=anzj011+1; fi;
+      if Dji=0 and Dki=Dli and Dki=0 then anzj000:=anzj000+1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; anzk111:=anzk111+1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; anzk100:=anzk100+1; fi;
+      if Dki=0 and Dji=Dli and Dji=1 then anzk011:=anzk011+1; fi;
+      if Dki=0 and Dji=Dli and Dji=0 then anzk000:=anzk000+1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; anzl111:=anzl111+1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; anzl100:=anzl100+1; fi;
+      if Dli=0 and Dki=Dji and Dki=1 then anzl011:=anzl011+1; fi;
+      if Dli=0 and Dki=Dji and Dki=0 then anzl000:=anzl000+1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+#      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dki=1 and Dji<>Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
+#      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
+      od;
+    GLEI[j][anzj011+1]:=GLEI[j][anzj011+1]+1;
+    GLEI[k][anzk011+1]:=GLEI[k][anzk011+1]+1;
+    GLEI[l][anzl011+1]:=GLEI[l][anzl011+1]+1;
+    GLEI[j][anzj000+5]:=GLEI[j][anzj000+5]+1;
+    GLEI[k][anzk000+5]:=GLEI[k][anzk000+5]+1;
+    GLEI[l][anzl000+5]:=GLEI[l][anzl000+5]+1;
+    GLEI[j][anzj111+9]:=GLEI[j][anzj111+9]+1;
+    GLEI[k][anzk111+9]:=GLEI[k][anzk111+9]+1;
+    GLEI[l][anzl111+9]:=GLEI[l][anzl111+9]+1;
+    GLEI[j][anzj100+13]:=GLEI[j][anzj100+13]+1;
+    GLEI[k][anzk100+13]:=GLEI[k][anzk100+13]+1;
+    GLEI[l][anzl100+13]:=GLEI[l][anzl100+13]+1;
+    od;
+#Print("\n--",DD);
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    od;
+  if flag=1 then
+    Print("\n  ",D0);
+    Print("\n  ",D1);
+    Print("\n  ",D2);
+    fi;
+
+###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+DA:=List(D0);Remove(DA,1);
+DB:=List(D1);Remove(DB,1);
+SDA:=STABMACH(dd,DA);
+SDB:=STABMACH(dd,DB);
+SDAB:=Intersection(Group(SDA),Group(SDB));
+ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+OSIZE:=Size(ORBAB);
+Print(OSIZE);
+ORBAB1:=List(ORBAB,i->i[1]);
+  
+  D0:=Reversed(SortedList(List(Collected(List(D0)),i->i[2])));
+  D1:=Reversed(SortedList(List(Collected(List(D1)),i->i[2])));
+  D2:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
+  DD:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
+#Print("\n  ",D0);
+#Print("\n  ",D1);
+#Print("\n  ",D2);
+#Print("\n  ",DD);
+
+###neu Einschub für Orbits(Aut(G),[1..2^dd-1]); das +1 in ORBAB1[i]+1 ist wegen 0,1 Start
+for i in [1..OSIZE-1] do for j in [i+1..OSIZE] do
+  if D[ORBAB1[i]+1]=D[ORBAB1[j]+1] and GLEI[ORBAB1[i]+1]=GLEI[ORBAB1[j]+1] and Size(ORBAB[i])=Size(ORBAB[j]) and D0<>D1 and D0<>D2 and D1<>D2 then Error(i," ",j," haben gleiche Markierung"); fi;
+  od; od;
+
+  GLEI:=SortedList(Collected(GLEI));
+# RET:=Collected(RET);#Remove(RET,1);
+  RET:=[SortedList([D0,D1,D2]),DD,GLEI];#DD muss bei 1122 dabei sein, D0,D1,D2 nicht
+#Print(RET);
+  return StructuralCopy(RET);
   end;
 
 ERGS1:=[];
@@ -1131,22 +1281,11 @@ ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
 dd:=2;
-SCHNACK(2,COMPDIAG5);#16
-SCHNACK(3,COMPDIAG5);#32
-SCHNACK(4,COMPDIAG5);#64
-SCHNACK(5,COMPDIAG5);#128
-SCHNACK(6,COMPDIAG5);#256
-SCHNACK(7,COMPDIAG5);#512
-SCHNACK(8,COMPDIAG5);#1024
+SCHNACK(2,COMPDIAG5B);#n=16#6
+SCHNACK(3,COMPDIAG5B);#n=32#19
+SCHNACK(4,COMPDIAG5B);#n=64#60
+SCHNACK(5,COMPDIAG5B);#n=128#158
+SCHNACK(6,COMPDIAG5B);#n=256#442
+SCHNACK(7,COMPDIAG5B);#n=512#1122
+SCHNACK(8,COMPDIAG5B);#n=1024#2945
 
-ERGS2:=[[[[[1]],[[1]]]]];
-ERGS2[1][1];[[[1]],[[1]]];
-GESAMTDILIST:=[[1]];
-dd:=2;
-SCHNACK(2,COMPDIAG5A);#16#6
-SCHNACK(3,COMPDIAG5A);#32#19
-SCHNACK(4,COMPDIAG5A);#64#60
-SCHNACK(5,COMPDIAG5A);#128#158
-SCHNACK(6,COMPDIAG5A);#256#442
-SCHNACK(7,COMPDIAG5A);#512#1122
-SCHNACK(8,COMPDIAG5A);#1024#2945
