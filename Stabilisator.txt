@@ -1322,4 +1322,4 @@ SCHNACK(5,COMPDIAG5B);#n=128#158
 SCHNACK(6,COMPDIAG5B);#n=256#442
 SCHNACK(7,COMPDIAG5B);#n=512#1122
 SCHNACK(8,COMPDIAG5B);#n=1024#2945
-
+for i in [1..8] do Print("\n",List(Collected(List(ERGS2[i],j->j[1])),k->k[2])); od;
