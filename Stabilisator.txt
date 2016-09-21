@@ -812,11 +812,15 @@ ok R1<>ORB geht nicht weil eine von 60 wohl auf ERGS1 aufbaut
 ok SD:=Intersect(S0,SD) und H:=... geht nicht weil Group(A,B)*C nicht 
 Group(A*C,B*C ) ist.
 ok aber DOPPELSTAB vor Intersection in SCHNICK hat den entscheidenden Schwung gebracht. Das ist jetzt gelaufen ok
-ERGS1:=[];
-for dd in [1..10] do
-  ERGS1[dd]:=[];
-  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
-  od;
+
+KANTENZUEGE:=function(ddmax)
+  ERGS1:=[];
+  for dd in [1..ddmax] do
+    ERGS1[dd]:=[];
+    for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
+    od;
+  end;
+KANTENZUEGE(10);
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
@@ -892,11 +896,7 @@ SCHNACK:=function(dd,CMPD)
   Exec("date");
   end;
 
-ERGS1:=[];
-for dd in [1..10] do
-  ERGS1[dd]:=[];
-  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
-  od;
+KANTENZUEGE(10);
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
@@ -1023,11 +1023,7 @@ for i in [1..OSIZE-1] do for j in [i+1..OSIZE] do
   return StructuralCopy(RET);
   end;
 
-ERGS1:=[];
-for dd in [1..10] do
-  ERGS1[dd]:=[];
-  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
-  od;
+KANTENZUEGE(10);
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
@@ -1305,11 +1301,7 @@ COMPDIAG5B([ 0, 3, 1, 1, 1, 1, 1, 2, 1, 0, 0, 2, 2, 0, 2, 3, 1, 2, 0, 0, 2, 2, 2
 #bei break dann: MARK[2];MARK[16];
 
 
-ERGS1:=[];
-for dd in [1..10] do
-  ERGS1[dd]:=[];
-  for i in [1..a[dd]] do ERGS1[dd][i]:=KANTENZUG(dd,i); od;
-  od;
+KANTENZUEGE(10);
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
@@ -1323,3 +1315,52 @@ SCHNACK(6,COMPDIAG5B);#n=256#442
 SCHNACK(7,COMPDIAG5B);#n=512#1122
 SCHNACK(8,COMPDIAG5B);#n=1024#2945
 for i in [1..8] do Print("\n",List(Collected(List(ERGS2[i],j->j[1])),k->k[2])); od;
+
+#############neue Kantenzüge
+DOPPER:=function(R)
+  local RNEU;
+  RNEU:=StructuralCopy(R);
+  RNEU[Size(R)+1]:=Concatenation([0],List(R,i->i[1]));
+  return R;
+  end;
+R:=[[1],[0,0],[1,1,1]];
+RD:=DOPPER(R);[[1],[0,0],[1,1,1],[0,1,0,1]];
+RDD:=DOPPER(RD);[[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0]];
+
+NEUE_KANTENZUEGE:=function(ddmax)
+  local ADMAX;
+  ERGS1:=[[[1]]];
+  for dd in [2..ddmax] do
+    ERGS1[dd]:=[];
+    ADMAX:=a[dd];
+    if IsEvenInt(dd) then
+      for i in [1..ADMAX-2] do ERGS1[dd][i]:=DOPPER(ERGS1[dd-1][i]); od;
+      ERGS1[dd][ADMAX-1]:=Concatenation(
+        ERGS1[dd-1][ADMAX-2],List([1..dd],j->1));
+      ERGS1[dd][ADMAX-0]:=Concatenation(
+        ERGS1[dd-1][ADMAX-2],List([1..dd],j->0));
+      else
+        for i in [1..ADMAX-1] do 
+          ERGS1[dd][i]:=DOPPER(ERGS1[dd-1][i]); od;
+        ERGS1[dd][ADMAX-0]:=Concatenation(
+          ERGS1[dd-1][ADMAX-1],List([1..dd],j->1));
+        fi;
+    od;
+  end;
+NEUE_KANTENZUEGE(10);
+
+#und los
+ERGS1{[1..6]};
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[1]];
+dd:=2;
+SCHNACK(2,COMPDIAG5B);#n=16#6
+SCHNACK(3,COMPDIAG5B);#n=32#19
+SCHNACK(4,COMPDIAG5B);#n=64#60
+SCHNACK(5,COMPDIAG5B);#n=128#158
+SCHNACK(6,COMPDIAG5B);#n=256#442
+SCHNACK(7,COMPDIAG5B);#n=512#1122
+SCHNACK(8,COMPDIAG5B);#n=1024#2945
+for i in [1..8] do Print("\n",List(Collected(List(ERGS2[i],j->j[1])),k->k[2])); od;
+#hier dann ohne TEILDILIST probieren...
