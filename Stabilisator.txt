@@ -1321,7 +1321,7 @@ DOPPER:=function(R)
   local RNEU;
   RNEU:=StructuralCopy(R);
   RNEU[Size(R)+1]:=Concatenation([0],List(R,i->i[1]));
-  return R;
+  return RNEU;
   end;
 R:=[[1],[0,0],[1,1,1]];
 RD:=DOPPER(R);[[1],[0,0],[1,1,1],[0,1,0,1]];
@@ -1329,21 +1329,21 @@ RDD:=DOPPER(RD);[[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0]];
 
 NEUE_KANTENZUEGE:=function(ddmax)
   local ADMAX;
-  ERGS1:=[[[1]]];
+  ERGS1:=[[[[1]]]];
   for dd in [2..ddmax] do
     ERGS1[dd]:=[];
     ADMAX:=a[dd];
     if IsEvenInt(dd) then
       for i in [1..ADMAX-2] do ERGS1[dd][i]:=DOPPER(ERGS1[dd-1][i]); od;
       ERGS1[dd][ADMAX-1]:=Concatenation(
-        ERGS1[dd-1][ADMAX-2],List([1..dd],j->1));
+        ERGS1[dd-1][ADMAX-2],[List([1..dd],j->1)]);
       ERGS1[dd][ADMAX-0]:=Concatenation(
-        ERGS1[dd-1][ADMAX-2],List([1..dd],j->0));
+        ERGS1[dd-1][ADMAX-2],[List([1..dd],j->0)]);
       else
         for i in [1..ADMAX-1] do 
           ERGS1[dd][i]:=DOPPER(ERGS1[dd-1][i]); od;
         ERGS1[dd][ADMAX-0]:=Concatenation(
-          ERGS1[dd-1][ADMAX-1],List([1..dd],j->1));
+          ERGS1[dd-1][ADMAX-1],[List([1..dd],j->1)]);
         fi;
     od;
   end;
