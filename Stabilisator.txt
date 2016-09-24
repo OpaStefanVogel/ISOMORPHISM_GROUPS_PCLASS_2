@@ -952,51 +952,6 @@ COMPDIAG5dd:=function(dd,D,flag)#neu
   return StructuralCopy(RET);
   end;
 
-P12:=(2,3)(5,8)(7,9)(11,17)(12,14)(13,18)(16,19);
-P23:=(3,4)(6,7)(8,10)(12,13)(14,16)(17,20)(18,19);
-T23P:=function(PERM,V)
-  local RET,j,k,l;
-  RET:=StructuralCopy(V);
-  for j in RET do
-    j[1]:=Permuted(j[1],PERM);
-    od;
-  RET:=SortedList(RET);
-  return RET;
-  end;
-
-Add1:=function(L,M) Add(L,M); end;
-GESAMTDILIST:=[];
-FUN9:=function(arg)#neu
-  local MIN,V;
-  RT:=[];
-  j:=Size(arg)/2;
-  for i in [1..j] do
-    Add1(RT,arg[i]+arg[i+j]);
-    od;
-  if RI=[] then R:=R4(RT); else R:=R5([RI,RT]); fi;
-#  Print(".");
-#  Print("\n",RI,RT,R,IdSmallGroup(PcgsOfR(R)));
-#  Print("\n",RT);
-  S:=Size(R);
-  RSIZE:=Size(R);
-  V:=COMPDIAG4_15(DIAG(R));MIN:=V;
-#  VVV:=COMPDIAG7(DIAG(R),0)[2][1];
-#if VVV=[[6,6,2,2],[8,4,4],[9,6,1]] then  Print("\n>",RI,RT,R,COMPDIAG7(DIAG(R),0)[2]); fi;
-#  V:=COMPDIAG5(DIAG(R),0);MIN:=V;
-  GESAMTDI:=MIN;
-  if not (GESAMTDI in GESAMTDILIST) then
-    Add(GESAMTDILIST,GESAMTDI);
-    GV:=T23P(P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    GV:=T23P(P12*P23*P12,V); if not (GV in GESAMTDILIST) then Add(GESAMTDILIST,GV); fi;
-    if RI=[] then Add(ERG,RT); else Add(ERG,[RI,RT]); fi;
-    Print("*",Size(ERG),"\c");
-    fi;
-  return [];
-  end;
-
 SCHNACK:=function(dd,CMPD)
   Exec("date");
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
@@ -1038,14 +993,13 @@ ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
-dd:=2;
-SCHNACK(2,COMPDIAG5);#16
-SCHNACK(3,COMPDIAG5);#32
-SCHNACK(4,COMPDIAG5);#64
-SCHNACK(5,COMPDIAG5);#128
-SCHNACK(6,COMPDIAG5);#256
-SCHNACK(7,COMPDIAG5);#512
-SCHNACK(8,COMPDIAG5);#1024
+SCHNACK(2,COMPDIAG5dd);#16
+SCHNACK(3,COMPDIAG5dd);#32
+SCHNACK(4,COMPDIAG5dd);#64
+SCHNACK(5,COMPDIAG5dd);#128
+SCHNACK(6,COMPDIAG5dd);#256
+SCHNACK(7,COMPDIAG5dd);#512
+SCHNACK(8,COMPDIAG5dd);#1024
 
 
 ##################neues COMPDIAG5
@@ -1444,7 +1398,6 @@ ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
-dd:=2;
 SCHNACK(2,COMPDIAG5B);#n=16#6
 SCHNACK(3,COMPDIAG5B);#n=32#19
 SCHNACK(4,COMPDIAG5B);#n=64#60
@@ -1535,6 +1488,7 @@ SCHNUCK:=function(dd,CMPD)
   Exec("date");
   end;
 
+GESAMTDILIST:=[[1]];
 SCHNUCK(2,COMPDIAG5B);#n=16#6
 SCHNUCK(3,COMPDIAG5B);#n=32#19
 SCHNUCK(4,COMPDIAG5B);#n=64#60
@@ -1542,3 +1496,91 @@ SCHNUCK(5,COMPDIAG5B);#n=128#158
 SCHNUCK(6,COMPDIAG5B);#n=256#442
 SCHNUCK(7,COMPDIAG5B);#n=512#1122#45 min
 SCHNUCK(8,COMPDIAG5B);#n=1024#2945
+
+######jetzt COMPDIAG vereinfachen
+COMPDIAG5C:=function(dd,D,flag)#neu
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
+    Dji,Dki,Dli,
+    anzj011,anzk011,anzl011,
+    anzj000,anzk000,anzl000,
+    anzj111,anzk111,anzl111,
+    anzj100,anzk100,anzl100,
+    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
+  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
+  GLEI:=NullMat(SD,16);
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST2[D[i]+1]);
+    DDD[i]:=List(BITLIST0[D[i]+1]);
+    od;
+##  RET:=NullMat(SD,20);
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+    for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+      od;
+    od;
+#Print("\n--",DD);
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    od;
+  if flag=1 then
+    Print("\n  ",D0);
+    Print("\n  ",D1);
+    Print("\n  ",D2);
+    fi;
+###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+DA:=List(D0);Remove(DA,1);
+DB:=List(D1);Remove(DB,1);
+SDA:=STABMACH(dd,DA);
+SDB:=STABMACH(dd,DB);
+SDAB:=Intersection(Group(SDA),Group(SDB));
+ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+OSIZE:=Size(ORBAB);
+Print(OSIZE);
+ORBAB1:=List(ORBAB,i->i[1]);
+MARK:=[];
+for i in [1..OSIZE] do
+  MARK[i]:=[];
+  for j in [1..SD] do
+    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+    MARKJ:=DD[j];
+    MARK[i][j]:=[MARKI,MARKJ];
+    od;
+  MARK[i]:=Collected(MARK[i]);
+  od;
+
+MARK123:=PERMMARK(MARK,1,2,3);
+MARK132:=PERMMARK(MARK,1,3,2);
+MARK213:=PERMMARK(MARK,2,1,3);
+MARK231:=PERMMARK(MARK,2,3,1);
+MARK312:=PERMMARK(MARK,3,1,2);
+MARK321:=PERMMARK(MARK,3,2,1);
+MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+
+  RET:=MINMARK;
+  return StructuralCopy(RET);
+  end;
+
+GESAMTDILIST:=[[1]];
+SCHNUCK(2,COMPDIAG5C);#n=16#6
+SCHNUCK(3,COMPDIAG5C);#n=32#19
+SCHNUCK(4,COMPDIAG5C);#n=64#60
+SCHNUCK(5,COMPDIAG5C);#n=128#158
+SCHNUCK(6,COMPDIAG5C);#n=256#442
+SCHNUCK(7,COMPDIAG5C);#n=512#1122#45 min
+SCHNUCK(8,COMPDIAG5C);#n=1024#2945
