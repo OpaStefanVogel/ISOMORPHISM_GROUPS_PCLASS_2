@@ -1471,10 +1471,12 @@ GESAMTDILISTMERK:=StructuralCopy(GESAMTDILIST);;
 
 ######jetzt SCHNUCK nur über ERGS2 laufen lassen
 SCHNUCK:=function(dd,CMPD)
+  local i,imax,R1R2;
+  imax:=Size(ERGS2MERK[dd]);
   Exec("date");
   GESAMTDILIST[dd]:=[];
-  for R1R2 in ERGS2MERK[dd] do
-    Print("\n***R1R2=",R1R2);
+  for i in [1..imax] do R1R2:=ERGS2MERK[dd][i];
+    Print("\n",i," von ",imax," ***R1R2=",R1R2);
     R:=R1R2[1]+2*R1R2[2];
     D:=DIAG(R);
     ID:=CMPD(dd,D,false);

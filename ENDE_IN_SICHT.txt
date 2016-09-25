@@ -1,0 +1,497 @@
+Read("MatrixOf.txt");
+Read("ERGS2PrintToTxt.txt");
+
+ERWIND:=[];
+j:=1;k:=1;S:=12;
+for i in IteratorOfTuples( [0,1], S ) do
+   Print(".");
+#  Print("\n",i);
+  if 3>Sum(i) then 
+    ERWIND[k]:=j;j:=j+1;k:=k+1;
+    else
+      XL:=0*i;YL:=List(XL);ZL:=List(i);
+      POS1:=Position(ZL,1);
+      XL[POS1]:=1;ZL[POS1]:=0;XP:=2^(S-POS1);
+      POS2:=Position(ZL,1);
+      YL[POS2]:=1;ZL[POS2]:=0;YP:=2^(S-POS2);
+      ZP:=0;ii:=1;
+      for POS3 in [S,S-1..1] do 
+        if ZL[POS3]=1 then ZP:=ZP+ii; fi;
+        ii:=ii+ii;
+        od;          
+      ERWIND[k]:=[XP+1,YP+1,ZP+1,XP+YP+1,XP+ZP+1,YP+ZP+1];
+      k:=k+1;
+      fi;
+#  Print(ERWIND[k-1]);
+  od;
+
+DIAG:=function(R)#neu
+  local i,S,T,RET,RF,PROD,GM,XP,YP,ZP,XPYP,XPZP,YPZP;
+#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
+  RET:=[];
+  RF:=Flat(R);Add(RF,0,1);
+#  Print("\n",RF);
+  S:=Size(R);T:=2^S;RET:=EmptyPlist(T);
+  GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
+  for i in [1..T] do
+    if IsInt(ERWIND[i]) then
+      RET[i]:=RF[ERWIND[i]];
+      else
+        XP:=ERWIND[i][1];
+        YP:=ERWIND[i][2];
+        ZP:=ERWIND[i][3];
+        XPYP:=ERWIND[i][4];
+        XPZP:=ERWIND[i][5];
+        YPZP:=ERWIND[i][6];
+        PROD:=GM[RET[XP]+1][RET[YP]+1];
+        PROD:=GM[PROD+1][RET[ZP]+1];
+        PROD:=GM[PROD+1][RET[XPYP]+1];
+        PROD:=GM[PROD+1][RET[XPZP]+1];
+        PROD:=GM[PROD+1][RET[YPZP]+1];
+        RET[i]:=PROD;
+        fi;
+    od;
+  return RET;
+  end;
+R:=[[0],[0,0],[1,1,1],[1,1,1,0],[0,0,0,2,3],[2,2,2,3,1,1]];
+DIAG(R);
+
+ERWIND:=[];
+j:=1;k:=1;S:=12;
+for i in IteratorOfTuples( [0,1], S ) do
+   Print(".");
+#  Print("\n",i);
+  if 3>Sum(i) then 
+    ERWIND[k]:=j;j:=j+1;k:=k+1;
+    else
+      XL:=0*i;YL:=List(XL);ZL:=List(i);
+      POS1:=Position(ZL,1);
+      XL[POS1]:=1;ZL[POS1]:=0;XP:=2^(S-POS1);
+      POS2:=Position(ZL,1);
+      YL[POS2]:=1;ZL[POS2]:=0;YP:=2^(S-POS2);
+      ZP:=0;ii:=1;
+      for POS3 in [S,S-1..1] do 
+        if ZL[POS3]=1 then ZP:=ZP+ii; fi;
+        ii:=ii+ii;
+        od;          
+      ERWIND[k]:=[XP+1,YP+1,ZP+1,XP+YP+1,XP+ZP+1,YP+ZP+1];
+      k:=k+1;
+      fi;
+#  Print(ERWIND[k-1]);
+  od;
+
+DIAG:=function(R)#neu
+  local i,S,T,RET,RF,PROD,GM,XP,YP,ZP,XPYP,XPZP,YPZP;
+#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
+  RET:=[];
+  RF:=Flat(R);Add(RF,0,1);
+#  Print("\n",RF);
+  S:=Size(R);T:=2^S;RET:=EmptyPlist(T);
+  GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
+  for i in [1..T] do
+    if IsInt(ERWIND[i]) then
+      RET[i]:=RF[ERWIND[i]];
+      else
+        XP:=ERWIND[i][1];
+        YP:=ERWIND[i][2];
+        ZP:=ERWIND[i][3];
+        XPYP:=ERWIND[i][4];
+        XPZP:=ERWIND[i][5];
+        YPZP:=ERWIND[i][6];
+        PROD:=GM[RET[XP]+1][RET[YP]+1];
+        PROD:=GM[PROD+1][RET[ZP]+1];
+        PROD:=GM[PROD+1][RET[XPYP]+1];
+        PROD:=GM[PROD+1][RET[XPZP]+1];
+        PROD:=GM[PROD+1][RET[YPZP]+1];
+        RET[i]:=PROD;
+        fi;
+    od;
+  return RET;
+  end;
+R:=[[0],[0,0],[1,1,1],[1,1,1,0],[0,0,0,2,3],[2,2,2,3,1,1]];
+DIAG(R);
+
+XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]]);;
+#XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
+
+dmax:=10;
+JKLLISTE:=[ [ 2, 3, 4 ],#d=2
+ 
+  [ 2, 5, 6 ], [ 2, 7, 8 ],#d=3 
+
+  [ 3, 5, 7 ], [ 3, 6, 8 ], 
+  [ 4, 5, 8 ], [ 4, 6, 7 ] ];
+
+for d in [4..dmax] do
+  for i in [(2^(d-2)-1)*(2^(d-2)-2)/6+1..(2^(d-1)-1)*(2^(d-1)-2)/6] do
+    Add(JKLLISTE,[JKLLISTE[i][1],JKLLISTE[i][2]+2^(d-2),JKLLISTE[i][3]+2^(d-2)]);
+    Add(JKLLISTE,[JKLLISTE[i][1],JKLLISTE[i][2]+2^(d-1),JKLLISTE[i][3]+2^(d-1)]);
+    od;
+  for j in [1..2^(d-2)] do for k in [1..2^(d-2)] do
+    Add(JKLLISTE,[j+2^(d-2),k+2^(d-1),XORMAT[j][k+2^(d-2)+2^(d-1)]]);
+    od; od; 
+  od;
+
+BITLIST0:=[[0,0,0],[1,0,1],[0,1,1],[1,1,0]];
+BITLIST2:=[[2,2,2],[3,2,3],[2,3,3],[3,3,2]];
+
+###aus Stabilisator.txt:
+FORTSETZ:=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
+  local PHI,i,j,k,HRESNEU,nochnichtgefunden;
+  PHI:=[];HRESNEU:=[];
+  i:=1;
+  repeat
+    if i<=Size(HRES) then HRESNEU[i]:=HRES[i]; fi;
+    if i=Size(HRES)+1 then HRESNEU[i]:=y; fi;
+    if i>Size(HRES)+1 then
+      nochnichtgefunden:=true;
+      for k in [1..Size(D)] do if nochnichtgefunden and not k in PHI then
+        if D[k]=D[2^(i-1)] then 
+          nochnichtgefunden:=false;
+          for j in [1..Size(PHI)] do if nochnichtgefunden=false then 
+            if D[XORMAT[PHI[j]+1][k+1]-1]<>D[2^(i-1)+j] then nochnichtgefunden:=true; fi;
+            fi; od;
+          if nochnichtgefunden=false then HRESNEU[i]:=k; fi;
+          fi; fi; od;
+      fi;
+    PHI[2^(i-1)]:=HRESNEU[i];#ja!!!
+    for j in [1..2^(i-1)-1] do
+      PHI[2^(i-1)+j]:=XORMAT[PHI[j]+1][PHI[2^(i-1)]+1]-1;#ja!!!
+      od;
+    i:=i+1;
+    until 2^(i-1)=Size(D)+1;
+  return PermList(PHI);
+  end;
+
+FORTSETZ([1,2],4,[1,0,0,1,1,3,0]);();
+FORTSETZ([1],3,[1,0,0,1,1,3,0]);(2,3)(4,5);
+FORTSETZ([], 4,[1,0,0,1,1,3,0]);(1,4,5)(2,3,7);
+
+LRESAUSHRES:=function(HRES)
+  local LRES,i,j;
+  LRES:=[];
+  for i in [1..Size(HRES)] do
+    LRES[2^(i-1)]:=HRES[i];
+    for j in [1..Size(LRES)-1] do
+      LRES[2^(i-1)+j]:=XORMAT[LRES[j]+1][HRES[i]+1]-1;
+      od;
+    od;
+  return LRES;
+  end;
+LRESAUSHRES([1,2,27]);[ 1, 2, 3, 27, 26, 25, 24 ];
+  
+STABERZ:=function(MENGE,HRES,STAB,D)
+  local MENGENEU,STABNEU,x,y,i,DRIN,PHI,DK,PHI0;
+  #1
+  x:=MENGE[1];STABNEU:=STAB;
+  LRES:=LRESAUSHRES(HRES);
+  #2
+  MENGENEU:=[];
+  for y in MENGE do
+    DRIN:=true;
+    ##Print("\ny=",y," ",D[y]," ",D[x]);
+    if D[y]<>D[x] then DRIN:=false; fi;
+    for i in [1..Size(LRES)] do
+     ##Print(" i=",i," ",D[XORMAT[HRES[i]+1][y+1]-1]," ",D[XORMAT[HRES[i]+1][x+1]-1]);
+      if D[XORMAT[LRES[i]+1][y+1]-1]<>D[XORMAT[LRES[i]+1][x+1]-1] then DRIN:=false; fi;
+      od;
+    if DRIN then Add(MENGENEU,y); fi;
+    od;
+  ##Print("\nMENGENEU=",MENGENEU,"\n\c");
+  #3
+  repeat
+    y:=MENGENEU[1];
+    #4
+    DK:=List(D);Remove(DK,1);
+    ##Print("\n",MENGENEU,HRES,y,D,"\n\c");
+    PHI:=FORTSETZ(HRES,y,D);
+    #5
+    if not PHI in STABNEU then Add(STABNEU,PHI); fi;
+    ##Print("\n",PHI,STABNEU,"\n\c");
+    #6
+    MENGENEU:=Difference(MENGENEU,Orbit(Group(STABNEU),x));
+  #7
+    until MENGENEU=[];
+  #8
+  return STABNEU;
+  end;
+
+COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,DD;
+  SD:=Size(D);DD:=[];
+  for i in [1..SD] do DD[i]:=D[i]+2; od;
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+    if dj=1 and dk=dl then DD[j]:=1; fi;
+    if dj=0 and dk<>dl then DD[j]:=0; fi;
+    if dk=1 and dj=dl then DD[k]:=1; fi;
+    if dk=0 and dj<>dl then DD[k]:=0; fi;
+    if dl=1 and dk=dj then DD[l]:=1; fi;
+    if dl=0 and dk<>dj then DD[l]:=0; fi;
+    od;
+#Print("\n",DD);
+  return DD;
+  end;
+
+STABMACH:=function(dd,D)
+  local STAB,ddd;
+  STAB:=[];
+  for ddd in [dd,dd-1..1] do 
+    STAB:=STABERZ([2^(ddd-1)..2^dd-1],List([1..ddd-1],i->2^(i-1)),STAB,D);
+    od;
+  return STAB;
+  end;
+
+PERMMARK:=function(MARK,a,b,c)
+  return SortedList(List(MARK,
+    i->SortedList(List(i,j->[[
+      [j[1][1][a],j[1][1][b],j[1][1][c]],
+      [j[1][2][a],j[1][2][b],j[1][2][c]]],j[2]]))));
+  end;
+MARK:=[[[[[1,0,1],[0,1,1]],5],[[[1,0,1],[0,0,2]],6]],
+       [[[[1,1,0],[0,1,1]],7],[[[1,1,0],[3,1,0]],8]]];
+MARK123:=PERMMARK(MARK,1,2,3);#6,5,7,8
+MARK132:=PERMMARK(MARK,1,3,2);#7,8,5,6
+MARK213:=PERMMARK(MARK,2,1,3);#6,5,7,8
+MARK231:=PERMMARK(MARK,2,3,1);#6,5,8,7
+MARK312:=PERMMARK(MARK,3,1,2);#8,7,5,6
+MARK321:=PERMMARK(MARK,3,2,1);#8,7,5,6
+
+COMPDIAG5B:=function(dd,D,flag)#neu
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
+    Dji,Dki,Dli,
+    anzj011,anzk011,anzl011,
+    anzj000,anzk000,anzl000,
+    anzj111,anzk111,anzl111,
+    anzj100,anzk100,anzl100,
+    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
+  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
+  GLEI:=NullMat(SD,16);
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST2[D[i]+1]);
+    DDD[i]:=List(BITLIST0[D[i]+1]);
+    od;
+##  RET:=NullMat(SD,20);
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+#Print("\n",jkl," ",dj," ",dk," ",dl);
+##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
+##    RET[j][RET2]:=RET[j][RET2]+1;
+##    RET[k][RET2]:=RET[k][RET2]+1;
+##    RET[l][RET2]:=RET[l][RET2]+1;
+    anzj011:=0; anzk011:=0; anzl011:=0;
+    anzj000:=0; anzk000:=0; anzl000:=0;
+    anzj111:=0; anzk111:=0; anzl111:=0;
+    anzj100:=0; anzk100:=0; anzl100:=0;
+    for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; anzj111:=anzj111+1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; anzj100:=anzj100+1; fi;
+      if Dji=0 and Dki=Dli and Dki=1 then anzj011:=anzj011+1; fi;
+      if Dji=0 and Dki=Dli and Dki=0 then anzj000:=anzj000+1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; anzk111:=anzk111+1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; anzk100:=anzk100+1; fi;
+      if Dki=0 and Dji=Dli and Dji=1 then anzk011:=anzk011+1; fi;
+      if Dki=0 and Dji=Dli and Dji=0 then anzk000:=anzk000+1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; anzl111:=anzl111+1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; anzl100:=anzl100+1; fi;
+      if Dli=0 and Dki=Dji and Dki=1 then anzl011:=anzl011+1; fi;
+      if Dli=0 and Dki=Dji and Dki=0 then anzl000:=anzl000+1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+#      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
+#      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dki=1 and Dji<>Dli then DD[k][i]:=DD[k][i]+2; fi;
+#      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
+#      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
+      od;
+    GLEI[j][anzj011+1]:=GLEI[j][anzj011+1]+1;
+    GLEI[k][anzk011+1]:=GLEI[k][anzk011+1]+1;
+    GLEI[l][anzl011+1]:=GLEI[l][anzl011+1]+1;
+    GLEI[j][anzj000+5]:=GLEI[j][anzj000+5]+1;
+    GLEI[k][anzk000+5]:=GLEI[k][anzk000+5]+1;
+    GLEI[l][anzl000+5]:=GLEI[l][anzl000+5]+1;
+    GLEI[j][anzj111+9]:=GLEI[j][anzj111+9]+1;
+    GLEI[k][anzk111+9]:=GLEI[k][anzk111+9]+1;
+    GLEI[l][anzl111+9]:=GLEI[l][anzl111+9]+1;
+    GLEI[j][anzj100+13]:=GLEI[j][anzj100+13]+1;
+    GLEI[k][anzk100+13]:=GLEI[k][anzk100+13]+1;
+    GLEI[l][anzl100+13]:=GLEI[l][anzl100+13]+1;
+    od;
+  GLEIZ:=SortedList(Collected(GLEI));
+#Print("\n--",DD);
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    od;
+  if flag=1 then
+    Print("\n  ",D0);
+    Print("\n  ",D1);
+    Print("\n  ",D2);
+    fi;
+  D0Z:=Reversed(SortedList(List(Collected(List(D0)),i->i[2])));
+  D1Z:=Reversed(SortedList(List(Collected(List(D1)),i->i[2])));
+  D2Z:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
+  DDZ:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
+#Print("\n  ",D0);
+#Print("\n  ",D1);
+#Print("\n  ",D2);
+#Print("\n  ",DD);
+
+###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+DA:=List(D0);Remove(DA,1);
+DB:=List(D1);Remove(DB,1);
+SDA:=STABMACH(dd,DA);
+SDB:=STABMACH(dd,DB);
+SDAB:=Intersection(Group(SDA),Group(SDB));
+ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+OSIZE:=Size(ORBAB);
+Print(OSIZE);
+ORBAB1:=List(ORBAB,i->i[1]);
+MARK:=[];
+for i in [1..OSIZE] do
+  MARK[i]:=[];
+  for j in [1..SD] do
+    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+    MARKJ:=DD[j];
+    MARK[i][j]:=[MARKI,MARKJ];
+    od;
+  MARK[i]:=Collected(MARK[i]);
+  od;
+
+#for i in [1..OSIZE-1] do for j in [i+1..OSIZE] do
+#  if D[ORBAB1[i]+1]=D[ORBAB1[j]+1] and GLEI[ORBAB1[i]+1]=GLEI[ORBAB1[j]+1] and Size(ORBAB[i])=Size(ORBAB[j]) and D0<>D1 and D0<>D2 and D1<>D2 then Error(i," ",j," haben gleiche Markierung"); fi;
+#  od; od;
+
+MARK123:=PERMMARK(MARK,1,2,3);
+MARK132:=PERMMARK(MARK,1,3,2);
+MARK213:=PERMMARK(MARK,2,1,3);
+MARK231:=PERMMARK(MARK,2,3,1);
+MARK312:=PERMMARK(MARK,3,1,2);
+MARK321:=PERMMARK(MARK,3,2,1);
+MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+
+# RET:=Collected(RET);#Remove(RET,1);
+  RET:=[SortedList([D0Z,D1Z,D2Z]),DDZ,GLEIZ,MINMARK];#DDZ muss bei 1122 dabei sein, D0Z,D1Z,D2Z nicht
+#Print(RET);
+  return StructuralCopy(RET);
+  end;
+
+COMPDIAG5C:=function(dd,D,flag)#neu
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
+    Dji,Dki,Dli,
+    anzj011,anzk011,anzl011,
+    anzj000,anzk000,anzl000,
+    anzj111,anzk111,anzl111,
+    anzj100,anzk100,anzl100,
+    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
+  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
+  GLEI:=NullMat(SD,16);
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST2[D[i]+1]);
+    DDD[i]:=List(BITLIST0[D[i]+1]);
+    od;
+##  RET:=NullMat(SD,20);
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+    for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+      od;
+    od;
+#Print("\n--",DD);
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    od;
+  if flag=1 then
+    Print("\n  ",D0);
+    Print("\n  ",D1);
+    Print("\n  ",D2);
+    fi;
+###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+DA:=List(D0);Remove(DA,1);
+DB:=List(D1);Remove(DB,1);
+SDA:=STABMACH(dd,DA);
+SDB:=STABMACH(dd,DB);
+SDAB:=Intersection(Group(SDA),Group(SDB));
+ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+OSIZE:=Size(ORBAB);
+Print(OSIZE);
+ORBAB1:=List(ORBAB,i->i[1]);
+MARK:=[];
+for i in [1..OSIZE] do
+  MARK[i]:=[];
+  for j in [1..SD] do
+    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+    MARKJ:=DD[j];
+    MARK[i][j]:=[MARKI,MARKJ];
+    od;
+  MARK[i]:=Collected(MARK[i]);
+  od;
+
+MARK123:=PERMMARK(MARK,1,2,3);
+MARK132:=PERMMARK(MARK,1,3,2);
+MARK213:=PERMMARK(MARK,2,1,3);
+MARK231:=PERMMARK(MARK,2,3,1);
+MARK312:=PERMMARK(MARK,3,1,2);
+MARK321:=PERMMARK(MARK,3,2,1);
+MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+
+  RET:=MINMARK;
+  return StructuralCopy(RET);
+  end;
+
+
+SCHNUCK:=function(dd,CMPD)
+  local i,imax,R1R2;
+  imax:=Size(ERGS2[dd]);
+  Exec("date");
+  GESAMTDILIST[dd]:=[];
+  for i in [1..imax] do R1R2:=ERGS2[dd][i];
+    Print("\n",i," von ",imax," ***R1R2=",R1R2);
+    R:=R1R2[1]+2*R1R2[2];
+    D:=DIAG(R);
+    ID:=CMPD(dd,D,false);
+    if not ID in GESAMTDILIST[dd] then
+      Add(GESAMTDILIST[dd],ID);
+      Print("*\c");
+      else Print(".\c"); fi;
+    od;
+  Print("\n",List(GESAMTDILIST,i->Size(i)));
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
+  Exec("date");
+  end;
+
+GESAMTDILIST:=[[1]];
+SCHNUCK(2,COMPDIAG5C);#n=16#6
+#SCHNUCK(3,COMPDIAG5C);time;#n=32#19
+#SCHNUCK(4,COMPDIAG5C);time;#n=64#60
+#SCHNUCK(5,COMPDIAG5C);time;#n=128#158
+#SCHNUCK(6,COMPDIAG5C);time;#n=256#442
+#SCHNUCK(7,COMPDIAG5C);time;#n=512#1122#45 min
+#SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945
+#SCHNUCK(8,COMPDIAG5B);time;#n=1024#2945
