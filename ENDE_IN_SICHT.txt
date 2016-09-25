@@ -470,23 +470,26 @@ SCHNUCK:=function(dd,CMPD)
   local i,imax,R1R2;
   imax:=Size(ERGS2[dd]);
   Exec("date");
-  GESAMTDILIST[dd]:=[];
+  GESAMTDILIST[dd]:=[];WOHINDAMIT[dd]:=[];
   for i in [1..imax] do R1R2:=ERGS2[dd][i];
     Print("\n",i," von ",imax," ***R1R2=",R1R2);
     R:=R1R2[1]+2*R1R2[2];
     D:=DIAG(R);
     ID:=CMPD(dd,D,false);
     if not ID in GESAMTDILIST[dd] then
-      Add(GESAMTDILIST[dd],ID);
+      Add(GESAMTDILIST[dd],ID);WOHINDAMIT[dd][i]:=Size(GESAMTDILIST[dd]);
       Print("*\c");
-      else Print(".\c"); fi;
+      else 
+        WOHINDAMIT[dd][i]:=Position(GESAMTDILIST[dd],ID);
+        Print(".\c"); 
+        fi;
     od;
   Print("\n",List(GESAMTDILIST,i->Size(i)));
   Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
   Exec("date");
   end;
 
-GESAMTDILIST:=[[1]];
+GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5C);#n=16#6
 #SCHNUCK(3,COMPDIAG5C);time;#n=32#19
 #SCHNUCK(4,COMPDIAG5C);time;#n=64#60
