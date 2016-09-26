@@ -572,9 +572,9 @@ MARK:=[];
 for i in [1..OSIZE] do
   MARK[i]:=[];
   for j in [1..SD] do
-    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
-    MARKJ:=DD[j];
-    MARK[i][j]:=[DD[ORBAB1[i]+1],MARKI,MARKJ];
+    MARKI:=DDD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+    MARKJ:=DDD[j];
+    MARK[i][j]:=[DDD[ORBAB1[i]+1],MARKI,MARKJ];
     od;
   MARK[i]:=Collected(MARK[i]);
   Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
@@ -598,5 +598,5 @@ SCHNUCK(2,COMPDIAG5D);#n=16#6
 #SCHNUCK(4,COMPDIAG5D);time;#n=64#60
 #SCHNUCK(5,COMPDIAG5D);time;#n=128#158
 #SCHNUCK(6,COMPDIAG5D);time;#n=256#442
-#SCHNUCK(7,COMPDIAG5D);time;#n=512#1122#8 min
-#SCHNUCK(8,COMPDIAG5D);time;#n=1024#2945#45 min
+#SCHNUCK(7,COMPDIAG5D);time;#n=512#1122#6 min
+#SCHNUCK(8,COMPDIAG5D);time;#n=1024#2945#49 min
