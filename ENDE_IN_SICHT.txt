@@ -452,6 +452,7 @@ for i in [1..OSIZE] do
     MARK[i][j]:=[DD[ORBAB1[i]+1],MARKI,MARKJ];
     od;
   MARK[i]:=Collected(MARK[i]);
+  Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
   od;
 
 MARK123:=PERMMARK(MARK,1,2,3);
