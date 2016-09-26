@@ -246,7 +246,7 @@ STABMACH:=function(dd,D)
   end;
 
 PERMMARK:=function(MARK,a,b,c)
-  return SortedList(List(MARK,
+  return Collected(List(MARK,
     i->SortedList(List(i,j->[[
       [j[1][1][a],j[1][1][b],j[1][1][c]],
       [j[1][2][a],j[1][2][b],j[1][2][c]]],j[2]]))));
@@ -499,11 +499,11 @@ SCHNUCK(2,COMPDIAG5C);#n=16#6
 #SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945
 #SCHNUCK(8,COMPDIAG5B);time;#n=1024#2945
 
-RX:=ERGS2[8][5007][1]+2*ERGS2[8][5007][2]];
+RX:=ERGS2[8][5007][1]+2*ERGS2[8][5007][2];
   DX:=DIAG(RX);
   IDX5B:=COMPDIAG5B(8,DX,false);;
   IDX5C:=COMPDIAG5C(8,DX,false);;
-RY:=ERGS2[8][5008][1]+2*ERGS2[8][5008][2]];
+RY:=ERGS2[8][5008][1]+2*ERGS2[8][5008][2];
   DY:=DIAG(RY);
   IDY5B:=COMPDIAG5B(8,DY,false);;
   IDY5C:=COMPDIAG5C(8,DY,false);;
