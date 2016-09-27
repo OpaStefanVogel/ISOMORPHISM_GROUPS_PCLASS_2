@@ -1,4 +1,3 @@
-Read("MatrixOf.txt");
 Read("ERGS2PrintToTxt.txt");
 
 ERWIND:=[];
@@ -56,65 +55,21 @@ DIAG:=function(R)#neu
 R:=[[0],[0,0],[1,1,1],[1,1,1,0],[0,0,0,2,3],[2,2,2,3,1,1]];
 DIAG(R);
 
-ERWIND:=[];
-j:=1;k:=1;S:=12;
-for i in IteratorOfTuples( [0,1], S ) do
-   Print(".");
-#  Print("\n",i);
-  if 3>Sum(i) then 
-    ERWIND[k]:=j;j:=j+1;k:=k+1;
-    else
-      XL:=0*i;YL:=List(XL);ZL:=List(i);
-      POS1:=Position(ZL,1);
-      XL[POS1]:=1;ZL[POS1]:=0;XP:=2^(S-POS1);
-      POS2:=Position(ZL,1);
-      YL[POS2]:=1;ZL[POS2]:=0;YP:=2^(S-POS2);
-      ZP:=0;ii:=1;
-      for POS3 in [S,S-1..1] do 
-        if ZL[POS3]=1 then ZP:=ZP+ii; fi;
-        ii:=ii+ii;
-        od;          
-      ERWIND[k]:=[XP+1,YP+1,ZP+1,XP+YP+1,XP+ZP+1,YP+ZP+1];
-      k:=k+1;
-      fi;
-#  Print(ERWIND[k-1]);
-  od;
-
-DIAG:=function(R)#neu
-  local i,S,T,RET,RF,PROD,GM,XP,YP,ZP,XPYP,XPZP,YPZP;
-#  PR:=function(X) return RET[IZUN(Reversed(X))+1]; end; 
-  RET:=[];
-  RF:=Flat(R);Add(RF,0,1);
-#  Print("\n",RF);
-  S:=Size(R);T:=2^S;RET:=EmptyPlist(T);
-  GM:=[[0,1,2,3],[1,0,3,2],[2,3,0,1],[3,2,1,0]];
-  for i in [1..T] do
-    if IsInt(ERWIND[i]) then
-      RET[i]:=RF[ERWIND[i]];
-      else
-        XP:=ERWIND[i][1];
-        YP:=ERWIND[i][2];
-        ZP:=ERWIND[i][3];
-        XPYP:=ERWIND[i][4];
-        XPZP:=ERWIND[i][5];
-        YPZP:=ERWIND[i][6];
-        PROD:=GM[RET[XP]+1][RET[YP]+1];
-        PROD:=GM[PROD+1][RET[ZP]+1];
-        PROD:=GM[PROD+1][RET[XPYP]+1];
-        PROD:=GM[PROD+1][RET[XPZP]+1];
-        PROD:=GM[PROD+1][RET[YPZP]+1];
-        RET[i]:=PROD;
-        fi;
-    od;
-  return RET;
-  end;
-R:=[[0],[0,0],[1,1,1],[1,1,1,0],[0,0,0,2,3],[2,2,2,3,1,1]];
-DIAG(R);
-
-XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0]]);;
-#XORMAT:=MatrixOf([[0],[0,0],[0,0,0],[0,0,0,0],[0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0]]);;
 
 dmax:=10;
+#dmax:=12;
+
+XORMAT:=[[1]];
+for i in [1..dmax] do
+  n2:=2^(dmax-1);
+  for j in [1..n2] do
+    XORMAT[j+n2]:=[];
+    for k in [1..n2] do
+      XORMAT[j][k+n2]:=XORMAT[j][k]+n2;
+      XORMAT[j+n2][k+n2]:=XORMAT[j][k];
+      XORMAT[j+n2][k]:=XORMAT[j][k]+n2;
+      od; od; od;
+
 JKLLISTE:=[ [ 2, 3, 4 ],#d=2
  
   [ 2, 5, 6 ], [ 2, 7, 8 ],#d=3 
@@ -498,7 +453,7 @@ SCHNUCK(2,COMPDIAG5C);#n=16#6
 #SCHNUCK(5,COMPDIAG5C);time;#n=128#158
 #SCHNUCK(6,COMPDIAG5C);time;#n=256#442
 #SCHNUCK(7,COMPDIAG5C);time;#n=512#1122#8 min
-#SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945#45 min
+#SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945#45? min
 #SCHNUCK(8,COMPDIAG5B);time;#n=1024#2945
 
 RX:=ERGS2[8][5007][1]+2*ERGS2[8][5007][2];
