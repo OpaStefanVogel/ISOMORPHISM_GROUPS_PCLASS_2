@@ -200,229 +200,6 @@ STABMACH:=function(dd,D)
   return STAB;
   end;
 
-PERMMARK:=function(MARK,a,b,c)
-  return Collected(List(MARK,
-    i->SortedList(List(i,j->[[
-      [j[1][1][a],j[1][1][b],j[1][1][c]],
-      [j[1][2][a],j[1][2][b],j[1][2][c]],
-      [j[1][3][a],j[1][3][b],j[1][3][c]]],j[2]]))));
-  end;
-MARK:=[[[[[1,0,1],[1,0,1],[0,1,1]],5],[[[1,0,1],[1,0,1],[0,0,2]],6]],
-       [[[[1,0,1],[1,1,0],[0,1,1]],7],[[[1,0,1],[1,1,0],[3,1,0]],8]]];
-MARK123:=PERMMARK(MARK,1,2,3);#6,5,7,8
-MARK132:=PERMMARK(MARK,1,3,2);#7,8,5,6
-MARK213:=PERMMARK(MARK,2,1,3);#6,5,7,8
-MARK231:=PERMMARK(MARK,2,3,1);#6,5,8,7
-MARK312:=PERMMARK(MARK,3,1,2);#8,7,5,6
-MARK321:=PERMMARK(MARK,3,2,1);#8,7,5,6
-
-COMPDIAG5B:=function(dd,D,flag)#neu
-  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
-    Dji,Dki,Dli,
-    anzj011,anzk011,anzl011,
-    anzj000,anzk000,anzl000,
-    anzj111,anzk111,anzl111,
-    anzj100,anzk100,anzl100,
-    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
-  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=NullMat(SD,16);
-  for i in [1..SD] do 
-    DD[i]:=List(BITLIST2[D[i]+1]);
-    DDD[i]:=List(BITLIST0[D[i]+1]);
-    od;
-##  RET:=NullMat(SD,20);
-  for jkli in [1..(SD-1)*(SD-2)/6] do
-    jkl:=JKLLISTE[jkli];
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-    dj:=D[j];dk:=D[k];dl:=D[l];
-#Print("\n",jkl," ",dj," ",dk," ",dl);
-##    RET2:=DJDKDL[dj+1][dk+1][dl+1];
-##    RET[j][RET2]:=RET[j][RET2]+1;
-##    RET[k][RET2]:=RET[k][RET2]+1;
-##    RET[l][RET2]:=RET[l][RET2]+1;
-    anzj011:=0; anzk011:=0; anzl011:=0;
-    anzj000:=0; anzk000:=0; anzl000:=0;
-    anzj111:=0; anzk111:=0; anzl111:=0;
-    anzj100:=0; anzk100:=0; anzl100:=0;
-    for i in [1..3] do
-      Dji:=DDD[j][i];
-      Dki:=DDD[k][i];
-      Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; anzj111:=anzj111+1; fi;
-      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; anzj100:=anzj100+1; fi;
-      if Dji=0 and Dki=Dli and Dki=1 then anzj011:=anzj011+1; fi;
-      if Dji=0 and Dki=Dli and Dki=0 then anzj000:=anzj000+1; fi;
-      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
-      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; anzk111:=anzk111+1; fi;
-      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; anzk100:=anzk100+1; fi;
-      if Dki=0 and Dji=Dli and Dji=1 then anzk011:=anzk011+1; fi;
-      if Dki=0 and Dji=Dli and Dji=0 then anzk000:=anzk000+1; fi;
-      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
-      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; anzl111:=anzl111+1; fi;
-      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; anzl100:=anzl100+1; fi;
-      if Dli=0 and Dki=Dji and Dki=1 then anzl011:=anzl011+1; fi;
-      if Dli=0 and Dki=Dji and Dki=0 then anzl000:=anzl000+1; fi;
-      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
-#      if Dji=0 and Dki=Dli then DD[j][i]:=DD[j][i]+2; fi;
-#      if Dji=1 and Dki<>Dli then DD[j][i]:=DD[j][i]+2; fi;
-#      if Dki=0 and Dji=Dli then DD[k][i]:=DD[k][i]+2; fi;
-#      if Dki=1 and Dji<>Dli then DD[k][i]:=DD[k][i]+2; fi;
-#      if Dli=0 and Dki=Dji then DD[l][i]:=DD[l][i]+2; fi;
-#      if Dli=1 and Dki<>Dji then DD[l][i]:=DD[l][i]+2; fi;
-      od;
-    GLEI[j][anzj011+1]:=GLEI[j][anzj011+1]+1;
-    GLEI[k][anzk011+1]:=GLEI[k][anzk011+1]+1;
-    GLEI[l][anzl011+1]:=GLEI[l][anzl011+1]+1;
-    GLEI[j][anzj000+5]:=GLEI[j][anzj000+5]+1;
-    GLEI[k][anzk000+5]:=GLEI[k][anzk000+5]+1;
-    GLEI[l][anzl000+5]:=GLEI[l][anzl000+5]+1;
-    GLEI[j][anzj111+9]:=GLEI[j][anzj111+9]+1;
-    GLEI[k][anzk111+9]:=GLEI[k][anzk111+9]+1;
-    GLEI[l][anzl111+9]:=GLEI[l][anzl111+9]+1;
-    GLEI[j][anzj100+13]:=GLEI[j][anzj100+13]+1;
-    GLEI[k][anzk100+13]:=GLEI[k][anzk100+13]+1;
-    GLEI[l][anzl100+13]:=GLEI[l][anzl100+13]+1;
-    od;
-  GLEIZ:=SortedList(Collected(GLEI));
-#Print("\n--",DD);
-  for i in [1..SD] do 
-    D0[i]:=DD[i][1];
-    D1[i]:=DD[i][2];
-    D2[i]:=DD[i][3];
-    od;
-  if flag=1 then
-    Print("\n  ",D0);
-    Print("\n  ",D1);
-    Print("\n  ",D2);
-    fi;
-  D0Z:=Reversed(SortedList(List(Collected(List(D0)),i->i[2])));
-  D1Z:=Reversed(SortedList(List(Collected(List(D1)),i->i[2])));
-  D2Z:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
-  DDZ:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
-#Print("\n  ",D0);
-#Print("\n  ",D1);
-#Print("\n  ",D2);
-#Print("\n  ",DD);
-
-###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
-DA:=List(D0);Remove(DA,1);
-DB:=List(D1);Remove(DB,1);
-SDA:=STABMACH(dd,DA);
-SDB:=STABMACH(dd,DB);
-SDAB:=Intersection(Group(SDA),Group(SDB));
-ORBAB:=Orbits(SDAB,[1..Size(DA)]);
-OSIZE:=Size(ORBAB);
-Print(OSIZE);
-ORBAB1:=List(ORBAB,i->i[1]);
-MARK:=[];
-for i in [1..OSIZE] do
-  MARK[i]:=[];
-  for j in [1..SD] do
-    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
-    MARKJ:=DD[j];
-    MARK[i][j]:=[DD[ORBAB1[i]+1],MARKI,MARKJ];
-    od;
-  MARK[i]:=Collected(MARK[i]);
-  od;
-
-#for i in [1..OSIZE-1] do for j in [i+1..OSIZE] do
-#  if D[ORBAB1[i]+1]=D[ORBAB1[j]+1] and GLEI[ORBAB1[i]+1]=GLEI[ORBAB1[j]+1] and Size(ORBAB[i])=Size(ORBAB[j]) and D0<>D1 and D0<>D2 and D1<>D2 then Error(i," ",j," haben gleiche Markierung"); fi;
-#  od; od;
-
-MARK123:=PERMMARK(MARK,1,2,3);
-MARK132:=PERMMARK(MARK,1,3,2);
-MARK213:=PERMMARK(MARK,2,1,3);
-MARK231:=PERMMARK(MARK,2,3,1);
-MARK312:=PERMMARK(MARK,3,1,2);
-MARK321:=PERMMARK(MARK,3,2,1);
-MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
-
-# RET:=Collected(RET);#Remove(RET,1);
-  RET:=[SortedList([D0Z,D1Z,D2Z]),DDZ,GLEIZ,MINMARK];#DDZ muss bei 1122 dabei sein, D0Z,D1Z,D2Z nicht
-#Print(RET);
-  return StructuralCopy(RET);
-  end;
-
-COMPDIAG5C:=function(dd,D,flag)#neu
-  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
-    Dji,Dki,Dli,
-    anzj011,anzk011,anzl011,
-    anzj000,anzk000,anzl000,
-    anzj111,anzk111,anzl111,
-    anzj100,anzk100,anzl100,
-    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
-  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=NullMat(SD,16);
-  for i in [1..SD] do 
-    DD[i]:=List(BITLIST2[D[i]+1]);
-    DDD[i]:=List(BITLIST0[D[i]+1]);
-    od;
-##  RET:=NullMat(SD,20);
-  for jkli in [1..(SD-1)*(SD-2)/6] do
-    jkl:=JKLLISTE[jkli];
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-    dj:=D[j];dk:=D[k];dl:=D[l];
-    for i in [1..3] do
-      Dji:=DDD[j][i];
-      Dki:=DDD[k][i];
-      Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; fi;
-      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; fi;
-      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
-      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; fi;
-      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; fi;
-      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
-      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; fi;
-      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; fi;
-      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
-      od;
-    od;
-#Print("\n--",DD);
-  for i in [1..SD] do 
-    D0[i]:=DD[i][1];
-    D1[i]:=DD[i][2];
-    D2[i]:=DD[i][3];
-    od;
-  if flag=1 then
-    Print("\n  ",D0);
-    Print("\n  ",D1);
-    Print("\n  ",D2);
-    fi;
-###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
-DA:=List(D0);Remove(DA,1);
-DB:=List(D1);Remove(DB,1);
-SDA:=STABMACH(dd,DA);
-SDB:=STABMACH(dd,DB);
-SDAB:=Intersection(Group(SDA),Group(SDB));
-ORBAB:=Orbits(SDAB,[1..Size(DA)]);
-OSIZE:=Size(ORBAB);
-Print(OSIZE);
-ORBAB1:=List(ORBAB,i->i[1]);
-MARK:=[];
-for i in [1..OSIZE] do
-  MARK[i]:=[];
-  for j in [1..SD] do
-    MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
-    MARKJ:=DD[j];
-    MARK[i][j]:=[DD[ORBAB1[i]+1],MARKI,MARKJ];
-    od;
-  MARK[i]:=Collected(MARK[i]);
-  Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
-  od;
-
-MARK123:=PERMMARK(MARK,1,2,3);
-MARK132:=PERMMARK(MARK,1,3,2);
-MARK213:=PERMMARK(MARK,2,1,3);
-MARK231:=PERMMARK(MARK,2,3,1);
-MARK312:=PERMMARK(MARK,3,1,2);
-MARK321:=PERMMARK(MARK,3,2,1);
-MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
-
-  RET:=MINMARK;
-  return StructuralCopy(RET);
-  end;
-
-
 SCHNUCK:=function(dd,CMPD)
   local i,imax,R1R2;
   imax:=Size(ERGS2[dd]);
@@ -446,43 +223,33 @@ SCHNUCK:=function(dd,CMPD)
   Exec("date");
   end;
 
-GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
-SCHNUCK(2,COMPDIAG5C);#n=16#6
-#SCHNUCK(3,COMPDIAG5C);time;#n=32#19
-#SCHNUCK(4,COMPDIAG5C);time;#n=64#60
-#SCHNUCK(5,COMPDIAG5C);time;#n=128#158
-#SCHNUCK(6,COMPDIAG5C);time;#n=256#442
-#SCHNUCK(7,COMPDIAG5C);time;#n=512#1122#8 min
-#SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945#45? min
-#SCHNUCK(8,COMPDIAG5B);time;#n=1024#2945
 
-RX:=ERGS2[8][5007][1]+2*ERGS2[8][5007][2];
-  DX:=DIAG(RX);
-  IDX5B:=COMPDIAG5B(8,DX,false);;
-  IDX5C:=COMPDIAG5C(8,DX,false);;
-RY:=ERGS2[8][5008][1]+2*ERGS2[8][5008][2];
-  DY:=DIAG(RY);
-  IDY5B:=COMPDIAG5B(8,DY,false);;
-  IDY5C:=COMPDIAG5C(8,DY,false);;
-IDX5B=IDY5B;false;
-IDX5C=IDY5C;true;
+PERMMARK:=function(MARK,a,b,c)
+  return Collected(List(MARK,
+    i->SortedList(List(i,j->[[
+      [j[1][1][a],j[1][1][b],j[1][1][c]],
+      [j[1][2][a],j[1][2][b],j[1][2][c]],
+      [j[1][3][a],j[1][3][b],j[1][3][c]]],j[2]]))));
+  end;
+MARK:=[[[[[1,0,1],[1,0,1],[0,1,1]],5],[[[1,0,1],[1,0,1],[0,0,2]],6]],
+       [[[[1,0,1],[1,1,0],[0,1,1]],7],[[[1,0,1],[1,1,0],[3,1,0]],8]]];
+MARK123:=PERMMARK(MARK,1,2,3);#6,5,7,8
+MARK132:=PERMMARK(MARK,1,3,2);#7,8,5,6
+MARK213:=PERMMARK(MARK,2,1,3);#6,5,7,8
+MARK231:=PERMMARK(MARK,2,3,1);#6,5,8,7
+MARK312:=PERMMARK(MARK,3,1,2);#8,7,5,6
+MARK321:=PERMMARK(MARK,3,2,1);#8,7,5,6
 
 
-COMPDIAG5D:=function(dd,D,flag)#neu
-  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,GLEI,
-    Dji,Dki,Dli,
-    anzj011,anzk011,anzl011,
-    anzj000,anzk000,anzl000,
-    anzj111,anzk111,anzl111,
-    anzj100,anzk100,anzl100,
-    DA,DB,MARK,MARKI,MARKJ,D0Z,D1Z,D2Z,DDZ,MINMARK,GLEIZ;
+COMPDIAG5C:=function(dd,D,flag)#neu
+  local i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
+    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,MARK,MARKI,MARKJ,MINMARK,
+    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  GLEI:=NullMat(SD,16);
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
     DDD[i]:=List(BITLIST0[D[i]+1]);
     od;
-##  RET:=NullMat(SD,20);
   for jkli in [1..(SD-1)*(SD-2)/6] do
     jkl:=JKLLISTE[jkli];
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
@@ -502,7 +269,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
       if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
       od;
     od;
-#Print("\n--",DD);
+  #Print("\n--",DD);
   for i in [1..SD] do 
     D0[i]:=DD[i][1];
     D1[i]:=DD[i][2];
@@ -513,38 +280,128 @@ COMPDIAG5D:=function(dd,D,flag)#neu
     Print("\n  ",D1);
     Print("\n  ",D2);
     fi;
-###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
-DA:=List(D0);Remove(DA,1);
-DB:=List(D1);Remove(DB,1);
-SDA:=STABMACH(dd,DA);
-SDB:=STABMACH(dd,DB);
-SDAB:=Intersection(Group(SDA),Group(SDB));
-ORBAB:=Orbits(SDAB,[1..Size(DA)]);
-OSIZE:=Size(ORBAB);
-Print(OSIZE);
-ORBAB1:=List(ORBAB,i->i[1]);
-MARK:=[];
-for i in [1..OSIZE] do
-  MARK[i]:=[];
-  for j in [1..SD] do
-    MARKI:=DDD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
-    MARKJ:=DDD[j];
-    MARK[i][j]:=[DDD[ORBAB1[i]+1],MARKI,MARKJ];
+  ###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+  DA:=List(D0);Remove(DA,1);
+  DB:=List(D1);Remove(DB,1);
+  SDA:=STABMACH(dd,DA);
+  SDB:=STABMACH(dd,DB);
+  SDAB:=Intersection(Group(SDA),Group(SDB));
+  ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+  OSIZE:=Size(ORBAB);
+  Print(OSIZE);
+  ORBAB1:=List(ORBAB,i->i[1]);
+  MARK:=[];
+  for i in [1..OSIZE] do
+    MARK[i]:=[];
+    for j in [1..SD] do
+      MARKI:=DD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+      MARKJ:=DD[j];
+      MARK[i][j]:=[DD[ORBAB1[i]+1],MARKI,MARKJ];
+      od;
+    MARK[i]:=Collected(MARK[i]);
+    Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
     od;
-  MARK[i]:=Collected(MARK[i]);
-  Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
-  od;
+  MARK123:=PERMMARK(MARK,1,2,3);
+  MARK132:=PERMMARK(MARK,1,3,2);
+  MARK213:=PERMMARK(MARK,2,1,3);
+  MARK231:=PERMMARK(MARK,2,3,1);
+  MARK312:=PERMMARK(MARK,3,1,2);
+  MARK321:=PERMMARK(MARK,3,2,1);
+  MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+  return StructuralCopy(MINMARK);
+  end;
 
-MARK123:=PERMMARK(MARK,1,2,3);
-MARK132:=PERMMARK(MARK,1,3,2);
-MARK213:=PERMMARK(MARK,2,1,3);
-MARK231:=PERMMARK(MARK,2,3,1);
-MARK312:=PERMMARK(MARK,3,1,2);
-MARK321:=PERMMARK(MARK,3,2,1);
-MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
+SCHNUCK(2,COMPDIAG5C);#n=16#6
+#SCHNUCK(3,COMPDIAG5C);time;#n=32#19
+#SCHNUCK(4,COMPDIAG5C);time;#n=64#60
+#SCHNUCK(5,COMPDIAG5C);time;#n=128#158
+#SCHNUCK(6,COMPDIAG5C);time;#n=256#442
+#SCHNUCK(7,COMPDIAG5C);time;#n=512#1122#8 min
+#SCHNUCK(8,COMPDIAG5C);time;#n=1024#2945#45? min
+#SCHNUCK(8,COMPDIAG5B);time;#n=1024#2945
 
-  RET:=MINMARK;
-  return StructuralCopy(RET);
+#das war zur Fehlersuche
+RX:=ERGS2[8][5007][1]+2*ERGS2[8][5007][2];
+  DX:=DIAG(RX);
+  IDX5B:=COMPDIAG5B(8,DX,false);;
+  IDX5C:=COMPDIAG5C(8,DX,false);;
+RY:=ERGS2[8][5008][1]+2*ERGS2[8][5008][2];
+  DY:=DIAG(RY);
+  IDY5B:=COMPDIAG5B(8,DY,false);;
+  IDY5C:=COMPDIAG5C(8,DY,false);;
+IDX5B=IDY5B;false;
+IDX5C=IDY5C;true;
+
+
+COMPDIAG5D:=function(dd,D,flag)#neu
+  local i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
+    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,MARK,MARKI,MARKJ,MINMARK,
+    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321;
+  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST2[D[i]+1]);
+    DDD[i]:=List(BITLIST0[D[i]+1]);
+    od;
+  for jkli in [1..(SD-1)*(SD-2)/6] do
+    jkl:=JKLLISTE[jkli];
+    j:=jkl[1];k:=jkl[2];l:=jkl[3];
+    dj:=D[j];dk:=D[k];dl:=D[l];
+    for i in [1..3] do
+      Dji:=DDD[j][i];
+      Dki:=DDD[k][i];
+      Dli:=DDD[l][i];
+      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; fi;
+      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; fi;
+      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
+      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; fi;
+      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; fi;
+      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
+      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; fi;
+      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; fi;
+      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
+      od;
+    od;
+  #Print("\n--",DD);
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    od;
+  if flag=1 then
+    Print("\n  ",D0);
+    Print("\n  ",D1);
+    Print("\n  ",D2);
+    fi;
+  ###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
+  DA:=List(D0);Remove(DA,1);
+  DB:=List(D1);Remove(DB,1);
+  SDA:=STABMACH(dd,DA);
+  SDB:=STABMACH(dd,DB);
+  SDAB:=Intersection(Group(SDA),Group(SDB));
+  ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+  OSIZE:=Size(ORBAB);
+  Print(OSIZE);
+  ORBAB1:=List(ORBAB,i->i[1]);
+  MARK:=[];
+  for i in [1..OSIZE] do
+    MARK[i]:=[];
+    for j in [1..SD] do
+      MARKI:=DDD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+      MARKJ:=DDD[j];
+      MARK[i][j]:=[DDD[ORBAB1[i]+1],MARKI,MARKJ];
+      od;
+    MARK[i]:=Collected(MARK[i]);
+    Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
+    od;
+  MARK123:=PERMMARK(MARK,1,2,3);
+  MARK132:=PERMMARK(MARK,1,3,2);
+  MARK213:=PERMMARK(MARK,2,1,3);
+  MARK231:=PERMMARK(MARK,2,3,1);
+  MARK312:=PERMMARK(MARK,3,1,2);
+  MARK321:=PERMMARK(MARK,3,2,1);
+  MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
+  return StructuralCopy(MINMARK);
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
