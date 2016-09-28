@@ -336,7 +336,8 @@ IDX5C=IDY5C;true;
 
 COMPDIAG5D:=function(dd,D,flag)#neu
   local i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
-    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,MARK,MARKI,MARKJ,MINMARK,
+    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,D0Z,D1Z,D2Z,DDZ,
+    MARK,MARKI,MARKJ,MINMARK,
     MARK123,MARK132,MARK213,MARK231,MARK312,MARK321;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   for i in [1..SD] do 
@@ -373,6 +374,10 @@ COMPDIAG5D:=function(dd,D,flag)#neu
     Print("\n  ",D1);
     Print("\n  ",D2);
     fi;
+  D0Z:=Reversed(SortedList(List(Collected(List(D0)),i->i[2])));
+  D1Z:=Reversed(SortedList(List(Collected(List(D1)),i->i[2])));
+  D2Z:=Reversed(SortedList(List(Collected(List(D2)),i->i[2])));
+  DDZ:=Reversed(SortedList(List(Collected(List(DD)),i->i[2])));
   ###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
   DA:=List(D0);Remove(DA,1);
   DB:=List(D1);Remove(DB,1);
@@ -401,7 +406,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   MARK312:=PERMMARK(MARK,3,1,2);
   MARK321:=PERMMARK(MARK,3,2,1);
   MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
-  return StructuralCopy(MINMARK);
+  return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK)];
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
