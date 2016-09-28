@@ -336,7 +336,8 @@ IDX5C=IDY5C;true;
 
 COMPDIAG5D:=function(dd,D,flag)#neu
   local i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
-    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,D0Z,D1Z,D2Z,DDZ,
+    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,
+    D0Z,D1Z,D2Z,DDZ,ORBZU,
     MARK,MARKI,MARKJ,MINMARK,
     MARK123,MARK132,MARK213,MARK231,MARK312,MARK321;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
@@ -388,15 +389,24 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   OSIZE:=Size(ORBAB);
   Print(OSIZE);
   ORBAB1:=List(ORBAB,i->i[1]);
+  ORBZU:=[[1]];
+  for i in [1..OSIZE] do for j in [1..Size(ORBAB[i])] do
+    ORBZU[ORBAB[i][j]+1]:=ORBAB1[i]+1;
+    od; od;
   MARK:=[];
   for i in [1..OSIZE] do
     MARK[i]:=[];
     for j in [1..SD] do
-      MARKI:=DDD[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
-      MARKJ:=DDD[j];
-      MARK[i][j]:=[DDD[ORBAB1[i]+1],MARKI,MARKJ];
+      MARKI:=ORBZU[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+      MARKJ:=ORBZU[j];
+      MARK[i][j]:=[ORBZU[ORBAB1[i]+1],MARKI,MARKJ];
       od;
     MARK[i]:=Collected(MARK[i]);
+    for j in [1..Size(MARK[i])] do
+      MARK[i][j][1][1]:=DDD[MARK[i][j][1][1]];
+      MARK[i][j][1][2]:=DDD[MARK[i][j][1][2]];
+      MARK[i][j][1][3]:=DDD[MARK[i][j][1][3]];
+      od;
     Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
     od;
   MARK123:=PERMMARK(MARK,1,2,3);
