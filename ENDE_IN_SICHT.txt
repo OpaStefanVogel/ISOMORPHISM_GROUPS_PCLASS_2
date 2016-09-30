@@ -335,7 +335,7 @@ IDX5C=IDY5C;true;
 
 
 COMPDIAG5D:=function(dd,D,flag)#neu
-  local i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
+  local i,j,k,l,jkl,jkli,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
     DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,
     D0Z,D1Z,D2Z,DDZ,ORBZU,
     MARK,MARKI,MARKJ,MINMARK,
@@ -348,19 +348,15 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   for jkli in [1..(SD-1)*(SD-2)/6] do
     jkl:=JKLLISTE[jkli];
     j:=jkl[1];k:=jkl[2];l:=jkl[3];
-    dj:=D[j];dk:=D[k];dl:=D[l];
     for i in [1..3] do
       Dji:=DDD[j][i];
       Dki:=DDD[k][i];
       Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli and Dki=1 then DD[j][i]:=1; fi;
-      if Dji=1 and Dki=Dli and Dki=0 then DD[j][i]:=1; fi;
+      if Dji=1 and Dki=Dli then DD[j][i]:=1; fi;
       if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
-      if Dki=1 and Dji=Dli and Dji=1 then DD[k][i]:=1; fi;
-      if Dki=1 and Dji=Dli and Dji=0 then DD[k][i]:=1; fi;
+      if Dki=1 and Dji=Dli then DD[k][i]:=1; fi;
       if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
-      if Dli=1 and Dki=Dji and Dki=1 then DD[l][i]:=1; fi;
-      if Dli=1 and Dki=Dji and Dki=0 then DD[l][i]:=1; fi;
+      if Dli=1 and Dki=Dji then DD[l][i]:=1; fi;
       if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
       od;
     od;
