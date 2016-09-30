@@ -430,6 +430,7 @@ MARKX[i]:=StructuralCopy(MARK[i]);
   #MARK321:=PERMMARK(MARK,3,2,1);
   #MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
   MINMARK:=0;
+  DDZ:=0;
   return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK),NMARK];
   end;
 
