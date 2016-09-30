@@ -410,9 +410,10 @@ COMPDIAG5D:=function(dd,D,flag)#neu
       if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
         Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
           Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
-    NMARK[i]:=List(NMARK[i],j->SortedList(j[2]));
+    NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
     od;
-  NMARK:=0;#Collected(NMARK);
+  Print("\n#+#+#+#+#",NMARK);
+  NMARK:=Collected(NMARK);
   MARK123:=PERMMARK(MARK,1,2,3);
   MARK132:=PERMMARK(MARK,1,3,2);
   MARK213:=PERMMARK(MARK,2,1,3);
@@ -431,3 +432,28 @@ SCHNUCK(2,COMPDIAG5D);#n=16#6
 #SCHNUCK(6,COMPDIAG5D);time;#n=256#442
 #SCHNUCK(7,COMPDIAG5D);time;#n=512#1122#6 min
 #SCHNUCK(8,COMPDIAG5D);time;#n=1024#2945#49 min
+
+
+
+[ [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ], 
+  [ [ 1, 1 ], [ 1 ], [ 1 ], [ 1 ] ], 
+  [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ] ]
+
+[ [ [ 1, 1 ], [ 1, 1 ], [ 2 ] ], 
+  [ [ 1, 1 ], [ 2 ], [ 1 ] ] ]
+  
+[ [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ], 
+  [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ], 
+  [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 1 ] ] ]
+
+[ [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 2 ] ], 
+  [ [ 1 ], [ 1 ], [ 2 ], [ 1 ] ] ]
+
+[ [ [ 1 ], [ 2 ], [ 1 ], [ 1 ] ], 
+  [ [ 1 ], [ 1 ], [ 1 ], [ 1 ], [ 2 ] ] ]
+
+[ [ [ 1 ], [ 1 ], [ 2 ], [ 3 ] ] ]
+
+[ [ [ 2 ], [ 1 ], [ 1 ], [ 1 ] ], [ [ 1, 1 ], [ 1 ], [ 1 ], [ 2 ] ] 
+ ]
+
