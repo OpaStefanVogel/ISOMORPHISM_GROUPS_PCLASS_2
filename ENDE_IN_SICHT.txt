@@ -339,7 +339,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
     DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,
     D0Z,D1Z,D2Z,DDZ,ORBZU,
     MARK,MARKI,MARKJ,MINMARK,
-    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321;
+    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321,NMARK;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
@@ -389,7 +389,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   for i in [1..OSIZE] do for j in [1..Size(ORBAB[i])] do
     ORBZU[ORBAB[i][j]+1]:=ORBAB1[i]+1;
     od; od;
-  MARK:=[];
+  MARK:=[];NMARK:=[];
   for i in [1..OSIZE] do
     MARK[i]:=[];
     for j in [1..SD] do
@@ -404,7 +404,15 @@ COMPDIAG5D:=function(dd,D,flag)#neu
       MARK[i][j][1][3]:=DDD[MARK[i][j][1][3]];
       od;
     Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
+    Mark[i]:=SortedList(Mark[i]);
+    NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
+    for j in [2..Size(MARK[i])] do
+      if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
+        Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]) else
+          Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
+    NMARK[i]:=List(NMARK[i],j->SortedList(j[2]));
     od;
+  NMARK:=Collected(NMARK);
   MARK123:=PERMMARK(MARK,1,2,3);
   MARK132:=PERMMARK(MARK,1,3,2);
   MARK213:=PERMMARK(MARK,2,1,3);
@@ -412,7 +420,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   MARK312:=PERMMARK(MARK,3,1,2);
   MARK321:=PERMMARK(MARK,3,2,1);
   MINMARK:=Minimum(MARK123,MARK132,MARK213,MARK231,MARK312,MARK321);
-  return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK)];
+  return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK),NMARK];
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
