@@ -227,8 +227,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   local i,j,k,l,jkl,jkli,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
     DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,
     D0Z,D1Z,D2Z,DDZ,ORBZU,
-    MARK,MARKI,MARKJ,MINMARK,
-    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321,NMARK;
+    MARK,MARKI,MARKJ,NMARK,EMARK,u,x,y,xy;
   SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
   for i in [1..SD] do 
     DD[i]:=List(BITLIST2[D[i]+1]);
@@ -274,15 +273,26 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   for i in [1..OSIZE] do for j in [1..Size(ORBAB[i])] do
     ORBZU[ORBAB[i][j]+1]:=ORBAB1[i]+1;
     od; od;
-  MARK:=[];NMARK:=[];
+  MARK:=[];NMARK:=[];EMARK:=[];
   for i in [1..OSIZE] do
-    MARK[i]:=[];
+    MARK[i]:=[];EMARK[i]:=[];x:=DDD[ORBAB1[i]+1];
     for j in [1..SD] do
       MARKI:=ORBZU[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
       MARKJ:=ORBZU[j];
       MARK[i][j]:=[ORBZU[ORBAB1[i]+1],MARKI,MARKJ];
+      u:=0;
+      y:=DDD[j];
+      xy:=DDD[XORMAT[j][ORBAB1[i]+1]];
+      if y=[0,0,0] then u:=u+1; fi;
+      if xy=[0,0,0] then u:=u+2; fi;
+      if x=y then u:=u+4; fi;
+      if x=xy then u:=u+8; fi;
+      if y=xy then u:=u+16; fi;
+      EMARK[i][j]:=u;
       od;
     MARK[i]:=Collected(MARK[i]);
+    EMARK[i]:=Collected(EMARK[i]);
+    Print("\n\\\\\\i=",i," EMARK[i]=",EMARK[i]);
     for j in [1..Size(MARK[i])] do
       MARK[i][j][1][1]:=DDD[MARK[i][j][1][1]];
       MARK[i][j][1][2]:=DDD[MARK[i][j][1][2]];
@@ -300,8 +310,11 @@ COMPDIAG5D:=function(dd,D,flag)#neu
           Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
     NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
     od;
+  EMARK:=Collected(EMARK);
+  Print("\n//////i=",i," EMARK=",EMARK);
   NMARK:=Collected(NMARK);
-  return NMARK;
+  Print("\n======i=",i," NMARK=",NMARK);
+  return EMARK;
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
