@@ -430,7 +430,8 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   MINMARK:=0;
   DDZ:=0;
   D0Z:=0;D1Z:=0;D2Z:=0;
-  return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK),NMARK];
+  #return [SortedList([D0Z,D1Z,D2Z]),DDZ,StructuralCopy(MINMARK),NMARK];
+  return NMARK;
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
