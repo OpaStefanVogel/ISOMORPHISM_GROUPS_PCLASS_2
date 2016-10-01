@@ -313,3 +313,42 @@ SCHNUCK(2,COMPDIAG5D);#n=16#6
 #SCHNUCK(7,COMPDIAG5D);time;#n=512#1122#6 min#5 min
 #SCHNUCK(8,COMPDIAG5D);time;#n=1024#2945#49 min#45 min
 
+ANZ:=[];
+for i in [1..Size(ERGS2)] do
+  ANZ[i]:=[1];
+  for j in [2..Size(ERGS2[i])] do
+    if ERGS2[i][j][1]=ERGS2[i][j-1][1] then ANZ[i][Size(ANZ[i])]:=ANZ[i][Size(ANZ[i])]+1;
+      else Add(ANZ[i],1); fi;
+    od;
+  od;
+ANZ;
+[ [ 1 ], 
+  [ 4, 2, 3 ], 
+  [ 7, 6, 11, 10 ], 
+  [ 11, 13, 23, 32, 18, 25 ], 
+  [ 14, 19, 36, 70, 58, 77, 69 ], 
+  [ 18, 27, 49, 114, 127, 174, 252, 114, 124 ], 
+  [ 21, 33, 62, 160, 204, 278, 565, 412, 460, 426 ], 
+  [ 25, 41, 75, 205, 292, 401, 985, 947, 1057, 1613, 669, 715 ] ]
+    3/4 6/8 13 46/45
+
+ANZ:=[];
+for i in [1..Size(ERGS2)] do
+  ANZ[i]:=[1];AMAX:=0;
+  for j in [2..Size(ERGS2[i])] do
+    if ERGS2[i][j][1]<>ERGS2[i][j-1][1] then Add(ANZ[i],0); fi;
+    if WOHINDAMIT[i][j]>AMAX then 
+      AMAX:=WOHINDAMIT[i][j];
+      ANZ[i][Size(ANZ[i])]:=ANZ[i][Size(ANZ[i])]+1;
+      fi;
+    od;
+  od;
+ANZ;
+[ [ 1 ], 
+  [ 4, 1, 1 ], #
+  [ 7, 4, 6, 2 ], 
+  [ 11, 11, 17, 14, 4, 3 ], #
+  [ 14, 17, 30, 50, 24, 19, 4 ], 
+  [ 18, 25, 43, 94, 85, 92, 74, 7, 4 ], #
+  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
+  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
