@@ -1,3 +1,4 @@
+#Read("ENDE_IN_SICHT.txt");
 Read("ERGS2PrintToTxt.txt");
 
 ERWIND:=[];
@@ -223,50 +224,17 @@ SCHNUCK:=function(dd,CMPD)
   Exec("date");
   end;
 
-COMPDIAG5D:=function(dd,D,flag)#neu
-  local i,j,k,l,jkl,jkli,SD,DD,DDD,D0,D1,D2,Dji,Dki,Dli,
-    DA,DB,SDA,SDB,SDAB,ORBAB,ORBAB1,OSIZE,
-    D0Z,D1Z,D2Z,DDZ,ORBZU,
-    MARK,MARKI,MARKJ,MINMARK,
-    MARK123,MARK132,MARK213,MARK231,MARK312,MARK321,NMARK;
-  SD:=Size(D);DD:=[];DDD:=[];D0:=[];D1:=[];D2:=[];
-  for i in [1..SD] do 
-    DD[i]:=List(BITLIST2[D[i]+1]);
-    DDD[i]:=List(BITLIST0[D[i]+1]);
-    od;
-  for jkli in [1..(SD-1)*(SD-2)/6] do
-    jkl:=JKLLISTE[jkli];
-    j:=jkl[1];k:=jkl[2];l:=jkl[3];
-    for i in [1..3] do
-      Dji:=DDD[j][i];
-      Dki:=DDD[k][i];
-      Dli:=DDD[l][i];
-      if Dji=1 and Dki=Dli then DD[j][i]:=1; fi;
-      if Dji=0 and Dki<>Dli then DD[j][i]:=0; fi;
-      if Dki=1 and Dji=Dli then DD[k][i]:=1; fi;
-      if Dki=0 and Dji<>Dli then DD[k][i]:=0; fi;
-      if Dli=1 and Dki=Dji then DD[l][i]:=1; fi;
-      if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
-      od;
-    od;
-  #Print("\n--",DD);
-  for i in [1..SD] do 
-    D0[i]:=DD[i][1];
-    D1[i]:=DD[i][2];
-    D2[i]:=DD[i][3];
-    od;
-  if flag=1 then
-    Print("\n  ",D0);
-    Print("\n  ",D1);
-    Print("\n  ",D2);
-    fi;
-  ###neu Einschub für Orbits(Aut(G),[1..2^dd-1]);
-  DA:=List(D0);Remove(DA,1);
-  DB:=List(D1);Remove(DB,1);
-  SDA:=STABMACH(dd,DA);
-  SDB:=STABMACH(dd,DB);
-  SDAB:=Intersection(Group(SDA),Group(SDB));
-  ORBAB:=Orbits(SDAB,[1..Size(DA)]);
+COMPDIAG5E:=function(dd,D,flag)#neu
+  local i,j,SD,ORBAB,ORBAB1,OSIZE,ORBZU,MARK,MARKI,MARKJ,NMARK;
+  SD:=Size(D);
+  ####neuer Versuch mit repeat
+  ORBAB:=[[],[],[],[]];
+  for i in [2..SD] do Add(ORBAB[D[i]+1],i-1); od;
+  if ORBAB[4]=[] then Remove(ORBAB,4); fi;
+  if ORBAB[3]=[] then Remove(ORBAB,3); fi;
+  if ORBAB[2]=[] then Remove(ORBAB,2); fi;
+  if ORBAB[1]=[] then Remove(ORBAB,1); fi;
+  ####hier vorübergehend alt weiter
   OSIZE:=Size(ORBAB);
   Print(OSIZE);
   ORBAB1:=List(ORBAB,i->i[1]);
@@ -274,23 +242,25 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   for i in [1..OSIZE] do for j in [1..Size(ORBAB[i])] do
     ORBZU[ORBAB[i][j]+1]:=ORBAB1[i]+1;
     od; od;
+  #Print(ORBAB,ORBAB1,ORBZU,D);
   MARK:=[];NMARK:=[];
-  for i in [1..OSIZE] do
+  for i in [1..SD] do
     MARK[i]:=[];
     for j in [1..SD] do
-      MARKI:=ORBZU[XORMAT[j][ORBAB1[i]+1]];#das +1 wg. Beginn bei Index 1
+      MARKI:=ORBZU[XORMAT[j][i]];#das +1 wg. Beginn bei Index 1
       MARKJ:=ORBZU[j];
-      MARK[i][j]:=[ORBZU[ORBAB1[i]+1],MARKI,MARKJ];
+      MARK[i][j]:=[ORBZU[i],MARKI,MARKJ];
       od;
     MARK[i]:=Collected(MARK[i]);
     for j in [1..Size(MARK[i])] do
-      MARK[i][j][1][1]:=DDD[MARK[i][j][1][1]];
-      MARK[i][j][1][2]:=DDD[MARK[i][j][1][2]];
-      MARK[i][j][1][3]:=DDD[MARK[i][j][1][3]];
-      if MARK[i][j][1][2]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-      if MARK[i][j][1][3]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+      MARK[i][j][1][1]:=D[MARK[i][j][1][1]];
+      MARK[i][j][1][2]:=D[MARK[i][j][1][2]];
+      MARK[i][j][1][3]:=D[MARK[i][j][1][3]];
+      if MARK[i][j][1][2]=0 then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+      if MARK[i][j][1][3]=0 then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
       if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
       if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+      if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
       od;
     MARK[i]:=SortedList(MARK[i]);
     NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
@@ -305,13 +275,13 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
-SCHNUCK(2,COMPDIAG5D);#n=16#6
-#SCHNUCK(3,COMPDIAG5D);time;#n=32#19
-#SCHNUCK(4,COMPDIAG5D);time;#n=64#60
-#SCHNUCK(5,COMPDIAG5D);time;#n=128#158
-#SCHNUCK(6,COMPDIAG5D);time;#n=256#442
-#SCHNUCK(7,COMPDIAG5D);time;#n=512#1122#6 min#5 min
-#SCHNUCK(8,COMPDIAG5D);time;#n=1024#2945#49 min#45 min
+SCHNUCK(2,COMPDIAG5E);#n=16#6
+#SCHNUCK(3,COMPDIAG5E);time;#n=32#19
+#SCHNUCK(4,COMPDIAG5E);time;#n=64#60
+#SCHNUCK(5,COMPDIAG5E);time;#n=128#158
+#SCHNUCK(6,COMPDIAG5E);time;#n=256#442
+#SCHNUCK(7,COMPDIAG5E);time;#n=512#1122#6 min#1121
+#SCHNUCK(8,COMPDIAG5E);time;#n=1024#2945#49 min#2925
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
@@ -322,15 +292,15 @@ for i in [1..Size(ERGS2)] do
     od;
   od;
 ANZ;
-[ [ 1 ], 
-  [ 4, 2, 3 ], 
-  [ 7, 6, 11, 10 ], 
-  [ 11, 13, 23, 32, 18, 25 ], 
-  [ 14, 19, 36, 70, 58, 77, 69 ], 
-  [ 18, 27, 49, 114, 127, 174, 252, 114, 124 ], 
-  [ 21, 33, 62, 160, 204, 278, 565, 412, 460, 426 ], 
-  [ 25, 41, 75, 205, 292, 401, 985, 947, 1057, 1613, 669, 715 ] ]
-    3/4 6/8 13 46/45
+#[ [  1 ], 
+#  [  4,  2,  3 ], 
+#  [  7,  6, 11,  10 ], 
+#  [ 11, 13, 23,  32,  18,  25 ], 
+#  [ 14, 19, 36,  70,  58,  77,  69 ], 
+#  [ 18, 27, 49, 114, 127, 174, 252, 114,  124 ], 
+#  [ 21, 33, 62, 160, 204, 278, 565, 412,  460,  426 ], 
+#  [ 25, 41, 75, 205, 292, 401, 985, 947, 1057, 1613, 669, 715 ] ]
+#    3/4 6/8 13 46/45
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
@@ -344,11 +314,11 @@ for i in [1..Size(ERGS2)] do
     od;
   od;
 ANZ;
-[ [ 1 ], 
-  [ 4, 1, 1 ], #
-  [ 7, 4, 6, 2 ], 
-  [ 11, 11, 17, 14, 4, 3 ], #
-  [ 14, 17, 30, 50, 24, 19, 4 ], 
-  [ 18, 25, 43, 94, 85, 92, 74, 7, 4 ], #
-  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
-  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
+#[ [  1 ], 
+#  [  4,  1,  1 ], #
+#  [  7,  4,  6,   2 ], 
+#  [ 11, 11, 17,  14,   4,   3 ], #
+#  [ 14, 17, 30,  50,  24,  19,   4 ], 
+#  [ 18, 25, 43,  94,  85,  92,  74,   7,  4 ], #
+#  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
+#  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
