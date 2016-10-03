@@ -225,26 +225,14 @@ SCHNUCK:=function(dd,CMPD)
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBAB,ORBAB1,OSIZE,ORBZU,MARK,MARKI,MARKJ,NMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,MARKI,MARKJ,NMARK;
   SD:=Size(D);
   ####neuer Versuch mit repeat
-  ORBAB:=[[],[],[],[]];
-  for i in [2..SD] do Add(ORBAB[D[i]+1],i-1); od;
-  if ORBAB[4]=[] then Remove(ORBAB,4); fi;
-  if ORBAB[3]=[] then Remove(ORBAB,3); fi;
-  if ORBAB[2]=[] then Remove(ORBAB,2); fi;
-  if ORBAB[1]=[] then Remove(ORBAB,1); fi;
-  ####hier vorübergehend alt weiter
-  OSIZE:=Size(ORBAB);
-  Print(OSIZE);
-  ORBAB1:=List(ORBAB,i->i[1]);
   ORBZU:=[1];
-  for i in [1..OSIZE] do for j in [1..Size(ORBAB[i])] do
-    ORBZU[ORBAB[i][j]+1]:=ORBAB1[i]+1;
-    od; od;
-  #Print(ORBAB,ORBAB1,ORBZU,D);
-  ####neu mit repeat
+  for i in [2..SD] do for j in [i,i-1..2] do
+    if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
   repeat
+    Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];NMARK:=[];
     for i in [1..SD] do
       MARK[i]:=[];
@@ -276,16 +264,15 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
       if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
-    Print("#",Size(Collected(ORBZU)),"\c");
-    until Size(Collected(ORBZU))=Size(Collected(ORBZUMERK));
+    until ORBZU=ORBZUMERK;
   #Print("\n",NMARK,ORBZU,D);
   NMARK:=Collected(NMARK);
   return NMARK;
   end;
 
-#COMPDIAG5E(2,DIAG(ERGS2[2][1][1]+2*ERGS2[2][1][2]),false);
-#COMPDIAG5E(2,DIAG(ERGS2[2][2][1]+2*ERGS2[2][2][2]),false);
-#COMPDIAG5D(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);
+#CD:=COMPDIAG5D(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#63
+#CE:=COMPDIAG5E(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#30
+#Size(CD);Size(CE);
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6
@@ -293,8 +280,8 @@ SCHNUCK(2,COMPDIAG5E);#n=16#6
 #SCHNUCK(4,COMPDIAG5E);time;#n=64#60
 #SCHNUCK(5,COMPDIAG5E);time;#n=128#158
 #SCHNUCK(6,COMPDIAG5E);time;#n=256#442
-#SCHNUCK(7,COMPDIAG5E);time;#n=512#1122#6 min#1122
-#SCHNUCK(8,COMPDIAG5E);time;#n=1024#2945#49 min#2925
+#SCHNUCK(7,COMPDIAG5E);time/60.;#n=512#1122#10 min
+#SCHNUCK(8,COMPDIAG5E);time/60.;#n=1024#2945#100 min
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
