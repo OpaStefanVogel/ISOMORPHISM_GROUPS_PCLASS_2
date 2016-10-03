@@ -267,12 +267,25 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     until ORBZU=ORBZUMERK;
   #Print("\n",NMARK,ORBZU,D);
   NMARK:=Collected(NMARK);
-  return NMARK;
+  return Size(Collected(ORBZU));#NMARK; #Size(Collected(ORBZU));
   end;
 
 #CD:=COMPDIAG5D(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#63
 #CE:=COMPDIAG5E(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#30
 #Size(CD);Size(CE);
+#CD;CE;
+
+#  return Size(Collected(ORBZU));#NMARK; #Size(Collected(ORBZU));
+#  return OSIZE;#NMARK;
+dd:=8;
+for i in [1..Size(ERGS2[dd])] do
+  CD:=COMPDIAG5D(dd,DIAG(ERGS2[dd][i][1]+2*ERGS2[dd][i][2]),false);
+  CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][i][1]+2*ERGS2[dd][i][2]),false);
+  if CD>CE-1 then Print("\n\n****",i," ",Size(ERGS2[dd])," ",CD," ",CE-1," "); fi;
+  if CD<CE-1 then Print("\n\n****",i," ",CD," ",CE-1," "); Error("8"); fi;
+  od;
+#dd=4:
+#**** 109 15 14 
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6
