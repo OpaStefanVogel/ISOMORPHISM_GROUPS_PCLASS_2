@@ -225,17 +225,19 @@ SCHNUCK:=function(dd,CMPD)
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,MARKI,MARKJ,NMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,MARKI,MARKJ,NMARK,MARKALT;
   SD:=Size(D);
   ####neuer Versuch mit repeat
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
+  MARKALT:=List(ORBZU);
   repeat
+    #Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];NMARK:=[];
     for i in [1..SD] do
-      MARK[i]:=[];
+      MARK[i]:=[];if not(IsBound(GMARK[i])) then GMARK[i]:=[]; fi;
       for j in [1..SD] do
         MARKI:=ORBZU[XORMAT[j][i]];#das +1 wg. Beginn bei Index 1
         MARKJ:=ORBZU[j];
@@ -243,11 +245,11 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         od;
       MARK[i]:=Collected(MARK[i]);
       for j in [1..Size(MARK[i])] do
-        MARK[i][j][1][1]:=D[MARK[i][j][1][1]];
-        MARK[i][j][1][2]:=D[MARK[i][j][1][2]];
-        MARK[i][j][1][3]:=D[MARK[i][j][1][3]];
-        if MARK[i][j][1][2]=0 then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-        if MARK[i][j][1][3]=0 then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+        MARK[i][j][1][1]:=[D[MARK[i][j][1][1]],ORBZU[MARK[i][j][1][1]]];
+        MARK[i][j][1][2]:=[D[MARK[i][j][1][2]],ORBZU[MARK[i][j][1][2]]];
+        MARK[i][j][1][3]:=[D[MARK[i][j][1][3]],ORBZU[MARK[i][j][1][3]]];
+        if MARK[i][j][1][2][1]=0 then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+        if MARK[i][j][1][3][1]=0 then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
         if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
         if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
         if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
@@ -259,33 +261,58 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
             Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
       NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
+      Add(GMARK[i],StructuralCopy(MARK[i]));
       od;
+    MARKALT:=StructuralCopy(NMARK);
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
       if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
+  #Print("\n",D);
   #Print("\n",NMARK,ORBZU,D);
   NMARK:=Collected(NMARK);
   return Size(Collected(ORBZU));#NMARK; #Size(Collected(ORBZU));
   end;
 
-#CD:=COMPDIAG5D(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#63
-#CE:=COMPDIAG5E(2,DIAG(ERGS2[6][227][1]+2*ERGS2[6][227][2]),false);;#30
-#Size(CD);Size(CE);
-#CD;CE;
+#dd:=4; nr:=109;
+#CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
+#CE:=COMPDIAG5E(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),false);;
+#CD;CE-1;
+
+[ 1, 2, 3, 3, 5, 5, 2, 3, 3, 10, 3,  5, 10,  2,  3, 10 ]#5
+[ 1, 2, 3, 4, 5, 6, 7, 8, 3, 10, 3, 12, 13, 14, 15, 16 ]#14
+[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11, 12, 13, 14, 15, 16 ]#16
+[ 0, 3, 0, 0, 1, 1, 3, 0, 0,  2, 0,  1,  2,  3,  0,  2 ]
+
+[ 2, 3, 4 ][ 3, 5, 7 ][ 3, 6, 8 ][ 3, 9, 11 ][ 3, 13, 15 ][ 3, 10, 12 ][ 3, 14, 16 ]
+ .3  0  0   .0  1  3   .0  1  0   .0  0   0   .0   2   0   .0   2   1   .0   3   2
+[ 2, 9, 10 ][ 3, 9, 11 ][ 4, 9, 12 ][ 5, 9, 13 ][ 6, 9, 14 ][ 7, 9, 15 ][ 8, 9, 16 ]
+  3  0   2    0  0   0    0  0   1    1  0   2    1  0   3    3  0   0    0  0   2
+gap> GMARK[3][2];
+[ [ [ 0, 0, 0 ], 31001 ], [ [ 0, 0, 0 ], 31001 ], [ [ 0, 0, 0 ], 31002 ], 
+  [ [ 0, 0, 1 ], 5001 ], [ [ 0, 0, 2 ], 5001 ], [ [ 0, 0, 3 ], 5001 ], 
+  [ [ 0, 1, 0 ], 10001 ], [ [ 0, 1, 2 ], 1 ], [ [ 0, 1, 3 ], 1 ], 
+  [ [ 0, 2, 0 ], 10001 ], [ [ 0, 2, 1 ], 1 ], [ [ 0, 2, 3 ], 1 ], 
+  [ [ 0, 3, 0 ], 10001 ], [ [ 0, 3, 1 ], 1 ], [ [ 0, 3, 2 ], 1 ] ]
+
+x:=3;
+x:=9;
+x:=11;
+for jkl in JKLLISTE{[1..15*14/6]} do if x in jkl then Print(jkl); fi; od;
+
 
 #  return Size(Collected(ORBZU));#NMARK; #Size(Collected(ORBZU));
 #  return OSIZE;#NMARK;
-dd:=8;
-for i in [1..Size(ERGS2[dd])] do
+dd:=7;
+for i in [1..Size(ERGS2[dd])] do Print("\n",i,":");
   CD:=COMPDIAG5D(dd,DIAG(ERGS2[dd][i][1]+2*ERGS2[dd][i][2]),false);
   CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][i][1]+2*ERGS2[dd][i][2]),false);
-  if CD>CE-1 then Print("\n\n****",i," ",Size(ERGS2[dd])," ",CD," ",CE-1," "); fi;
+  if CD>CE-1 then Print("\n\n****",i," ",Size(ERGS2[dd])," ",CD," ",CE-1," "); Error("7"); fi;
   if CD<CE-1 then Print("\n\n****",i," ",CD," ",CE-1," "); Error("8"); fi;
   od;
 #dd=4:
-#**** 109 15 14 
+#**** 109 15 13 
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6
