@@ -306,31 +306,19 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,MARKI,MARKJ;
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
-  MMARK:=[];
   repeat
-    Print("\n\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[];
       for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       MARK[i]:=Collected(MARK[i]);
-      for j in [1..Size(MARK[i])] do
-        if MARK[i][j][1][2]=0 then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-        if MARK[i][j][1][3]=0 then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
-        if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
-        if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
-        if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
-        od;
-      if IsBound(MMARK[i]) then Add(MMARK[i],Collected(List(MARK[i],j->j[2]))); else MMARK[i]:=Collected(List(MARK[i],j->j[2])); fi;
-      Print("\n",i,"=",MARK[i]);
       od;
-    Print("\n",List(Collected(MARK),j->j[2]));
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
@@ -349,7 +337,6 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
       od;
     MARK[i]:=SortedList(MARK[i]);
-    Add(MMARK[i],Collected(List(MARK[i],j->j[2])));
     NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
     for j in [2..Size(MARK[i])] do
       if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
@@ -360,13 +347,6 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   NMARK:=Collected(NMARK);
   return NMARK;#NMARK; #Size(Collected(ORBZU));
   end;
-
-
-#dd:=4; nr:=109;
-#CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
-#CE:=COMPDIAG5E(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),false);;
-#CD;CE-1;
-[ 1, 2, 3, 3, 5, 5, 2, 3, 3, 10, 3, 5, 10, 2, 3, 10 ]#5#D
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6
