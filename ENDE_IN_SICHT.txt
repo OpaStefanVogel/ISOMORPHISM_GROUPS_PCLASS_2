@@ -306,7 +306,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,MMARK,AMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK;
   SD:=Size(D);
   ORBZU:=[1];
 
@@ -323,15 +323,10 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
         if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
         od;
-      MMARK[i]:=Collected(List(MARK[i],j->j[2]));
-      Print("\nAnf MMARK ",i," ",D[i],"=",MMARK[i]);
+      if IsBound(MMARK[i]) then Add(MMARK[i],List(MARK[i],j->j[2])); else MMARK[i]:=List(MARK[i],j->j[2]); fi;
+      #Print("\nAnf ",i,"=",MARK[i]);
       od;
   #Print("\nAnf MMARK=",Collected(MMARK));
-  AMARK:=[[],[],[],[]];
-  for i in [1..SD] do Add(AMARK[D[i]+1],StructuralCopy(MMARK[i])); od;#
-  for i in [1..4]  do AMARK[i]:=Collected(AMARK[i]); od;
-  Print("\nAnf AMARK=",AMARK);
-  for i in [1..SD] do Add(MMARK[i],AMARK[D[i]+1],1); od;
   for i in [2..SD] do for j in [i,i-1..2] do
     if MMARK[i]=MMARK[j] then ORBZU[i]:=j; fi; od; od;
   
