@@ -306,12 +306,14 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,MARKI,MARKJ;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK;
+  Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
   repeat
+    Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [1..SD] do
@@ -344,9 +346,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
     NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
     od;
-  NMARK:=Collected(NMARK);
+  NMARK:=Collected(NMARK);#NMARK noch auf 0, 1, 2, 3 aufgliedern dann sollte es passen
   return NMARK;#NMARK; #Size(Collected(ORBZU));
   end;
+
+#dd:=4; nr:=109;
+#CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
+#CE:=COMPDIAG5E(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),false);;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6
