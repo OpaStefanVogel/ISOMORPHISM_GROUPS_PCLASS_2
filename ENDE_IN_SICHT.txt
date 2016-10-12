@@ -307,13 +307,13 @@ COMPDIAG5D:=function(dd,D,flag)#neu
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
-  Print("\n",D);
+  ##Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
   repeat
-    Print("\n",ORBZU);
+    ##Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [1..SD] do
@@ -365,8 +365,8 @@ SCHNUCK(2,COMPDIAG5E);#n=16#6#9
 #SCHNUCK(4,COMPDIAG5E);time;#n=64#60#122
 #SCHNUCK(5,COMPDIAG5E);time;#n=128#158#343
 #SCHNUCK(6,COMPDIAG5E);time;#n=256#442#999
-#SCHNUCK(7,COMPDIAG5E);time/60.;#n=512#1122#21xx#10 min
-#SCHNUCK(8,COMPDIAG5E);time/60.;#n=1024#2945##76xx#100 min
+#SCHNUCK(7,COMPDIAG5E);time/60000.;#n=512#1122#21xx#7 min
+#SCHNUCK(8,COMPDIAG5E);time/60000.;#n=1024#2945##76xx#80 min
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
