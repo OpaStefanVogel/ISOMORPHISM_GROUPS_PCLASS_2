@@ -306,7 +306,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
   Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
@@ -346,22 +346,27 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
     NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
     od;
-  NMARK:=Collected(NMARK);#NMARK noch auf 0, 1, 2, 3 aufgliedern dann sollte es passen
-  return NMARK;#NMARK; #Size(Collected(ORBZU));
+  #NMARK:=Collected(NMARK);#NMARK noch auf 0, 1, 2, 3 aufgliedern dann sollte es passen
+  UMARK:=[[],[],[],[]];
+  for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
+  for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
+  UMARK:=Collected(UMARK);
+  return UMARK;
   end;
 
 #dd:=4; nr:=109;
 #CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
 #CE:=COMPDIAG5E(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),false);;
+#CE;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
-SCHNUCK(2,COMPDIAG5E);#n=16#6
-#SCHNUCK(3,COMPDIAG5E);time;#n=32#19
-#SCHNUCK(4,COMPDIAG5E);time;#n=64#60
-#SCHNUCK(5,COMPDIAG5E);time;#n=128#158
-#SCHNUCK(6,COMPDIAG5E);time;#n=256#442
-#SCHNUCK(7,COMPDIAG5E);time/60.;#n=512#1122#10 min
-#SCHNUCK(8,COMPDIAG5E);time/60.;#n=1024#2945#100 min
+SCHNUCK(2,COMPDIAG5E);#n=16#6#9
+#SCHNUCK(3,COMPDIAG5E);time;#n=32#19#34
+#SCHNUCK(4,COMPDIAG5E);time;#n=64#60#122
+#SCHNUCK(5,COMPDIAG5E);time;#n=128#158#343
+#SCHNUCK(6,COMPDIAG5E);time;#n=256#442#999
+#SCHNUCK(7,COMPDIAG5E);time/60.;#n=512#1122#21xx#10 min
+#SCHNUCK(8,COMPDIAG5E);time/60.;#n=1024#2945##76xx#100 min
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
