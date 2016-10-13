@@ -306,7 +306,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,DT,flag)#neu
-  local i,j,D,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1;
+  local i,j,D,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1,nichtnochmal;
   D:=StructuralCopy(DT);
   Remove(D,1);
   Print("\n",D);
@@ -320,10 +320,13 @@ COMPDIAG5E:=function(dd,DT,flag)#neu
     MARK:=List([1..SD],i->Collected(
           List([1..SD],j->[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j+1][i+1]-1]])));
     ORBZUMERK:=List(ORBZU);
-    ORBZU:=[1];
-    for i in [2..SD] do for j in [i,i-1..2] do
-      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
-    until ORBZU=ORBZUMERK;
+    nichtnochmal:=true;
+    for i in [2..SD] do if MARK[i]<>MARK[ORBZU[i]] then
+      ORBZU[i]:=i; nichtnochmal:=false;
+      for j in [i-1,i-2..1] do 
+        if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then 
+          ORBZU[i]:=j; fi; od; od;
+    until nichtnochmal;
   NMARK:=[];
   for i in [1..SD] do
     for j in [1..Size(MARK[i])] do
