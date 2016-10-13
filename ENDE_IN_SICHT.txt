@@ -345,7 +345,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         Add(NMARK[i][Size(NMARK[i])],MARK[i][j][2]); else
           MARK1:=MARK[i][j][1];
           Add(NMARK[i],[MARK[i][j][2]]); fi; od;
-    NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j)));
+    NMARK[i]:=Collected(List(NMARK[i],j->Collected(j)));
     od;
   UMARK:=[[],[],[],[]];
   for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
