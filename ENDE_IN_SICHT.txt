@@ -317,12 +317,8 @@ COMPDIAG5E:=function(dd,DT,flag)#neu
   repeat
     Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
-    MARK:=[];
-    for i in [1..SD] do
-      MARK[i]:=[];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
-      MARK[i]:=Collected(MARK[i]);
-      od;
+    MARK:=List([1..SD],i->Collected(
+          List([1..SD],j->[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j+1][i+1]-1]])));
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
