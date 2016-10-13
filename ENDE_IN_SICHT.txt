@@ -306,7 +306,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1;
   Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
@@ -339,14 +339,14 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
       od;
     MARK[i]:=SortedList(MARK[i]);
-    NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
+    NMARK[i]:=[]; MARK1:=[];
     for j in [2..Size(MARK[i])] do
-      if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
-        Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
-          Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
-    NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
+      if MARK[i][j][1]=MARK1 then
+        Add(NMARK[i][Size(NMARK[i])],MARK[i][j][2]); else
+          MARK1:=MARK[i][j][1];
+          Add(NMARK[i],[MARK[i][j][2]]); fi; od;
+    NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j)));
     od;
-  #NMARK:=Collected(NMARK);#NMARK noch auf 0, 1, 2, 3 aufgliedern dann sollte es passen
   UMARK:=[[],[],[],[]];
   for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
   for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
