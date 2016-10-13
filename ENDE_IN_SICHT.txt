@@ -305,8 +305,10 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   return OSIZE;#NMARK;
   end;
 
-COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1;
+COMPDIAG5E:=function(dd,DT,flag)#neu
+  local i,j,D,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1;
+  D:=StructuralCopy(DT);
+  Remove(D,1);
   Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
