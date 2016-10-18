@@ -455,6 +455,11 @@ COMPDIAG5F:=function(dd,DT,flag)#
   UMARK:=[[],[],[],[]];
   for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
   for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
+  UPERM:=SortingPerm(UMARK);
+  for i in [1..SD] do
+    NMARK[i]:=[D[i]^UPERM,StructuralCopy(NMARK[i]));
+    od;
+  NPERM:=SortEx(NMARK);
   UMARK:=Collected(UMARK);
   return UMARK;
   end;
