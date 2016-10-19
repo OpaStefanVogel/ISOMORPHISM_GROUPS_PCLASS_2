@@ -410,7 +410,8 @@ ANZ;  #
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
 
 COMPDIAG5F:=function(dd,DT,flag)#
-  local i,j,D,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1,nichtnochmal;
+  local i,j,D,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,MARK1,nichtnochmal,
+  NPERM,UPERM,LRES,DNEU,jj,k,l,kk,ll;
   D:=StructuralCopy(DT);
   Remove(D,1);
   Print("\n",D);
@@ -455,13 +456,26 @@ COMPDIAG5F:=function(dd,DT,flag)#
   UMARK:=[[],[],[],[]];
   for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
   for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
-  UPERM:=SortingPerm(UMARK);
+  UPERM:=SortingPerm(UMARK{[2..4]});
   for i in [1..SD] do
-    NMARK[i]:=[D[i]^UPERM,StructuralCopy(NMARK[i]));
+    NMARK[i]:=[(D[i]+1)^UPERM-1,StructuralCopy(NMARK[i])];
     od;
-  NPERM:=SortEx(NMARK);
-  UMARK:=Collected(UMARK);
-  return UMARK;
+  NPERM:=SortEx(NMARK);NPERMINV:=NPERM^-1;
+  LRES:=[]; DNEU:=[];
+  for d in [1..dd] do
+    i:=2^(d-1);
+    j:=1; while not IsBound(NMARK[j]) do j:=j+1; od;
+    jj:=j^NPERMINV;
+    LRES[i]:=jj; DNEU[i]:=NMARK[j][1]; Unbind(NMARK[j]);
+    for k in [1..i-1] do
+      kk:=LRES[k];
+      ll:=XORMAT[kk+1][jj+1]-1; l:=ll^NPERM;
+      LRES[i+k]:=ll;
+      DNEU[i+k]:=NMARK[l][1];
+      Unbind(NMARK[l]);
+      od;
+    od;
+  return DNEU;
   end;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
