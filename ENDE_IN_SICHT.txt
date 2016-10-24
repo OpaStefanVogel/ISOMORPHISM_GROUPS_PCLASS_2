@@ -307,21 +307,25 @@ COMPDIAG5D:=function(dd,D,flag)#neu
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
-  ##Print("\n",D);
+  Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
+  ORBZU:=List(D);
   NMARK:=List([1..SD],i->[]);
   repeat
-    ##Print("\n",ORBZU);
+    #Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [2..SD] do
       MARK[i]:=[-1];
-      for j in [2..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
-      MARK[i]:=Collected(MARK[i]);
-      Add(NMARK[i],Collected(List(MARK[i],j->j[2])));
+      for j in [2..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      #Print("\nMARK[",i,"]=",MARK[i]{[2..SD]});
+      MARK[i]:=Collected(MARK[i]{[2..SD]});
+      MARK[i]:=Collected(List(MARK[i],j->j[2]));
+      #Print("\nMARK[",i,"]=",D[i],MARK[i]);
+      Add(NMARK[i],MARK[i]);
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
@@ -329,12 +333,19 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
-  UMARK:=[[],[],[],[]];
-  for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
-  for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
-  UMARK:=Collected(UMARK);
+#  UMARK:=[[],[],[],[]];
+#  for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
+#  for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
+#  UMARK:=Collected(UMARK);
+  UMARK:=[];
+  for i in [1..SD] do#wieso nicht 2?
+    if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
+    Add(UMARK[D[i]+1],NMARK[i]); od;
+  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
+  UMARK:=Collected(Compacted(UMARK));
   return UMARK;
   end;
+
 --------------
 #dd:=4; nr:=109;
 #CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
@@ -389,3 +400,44 @@ ANZ;
 #  [ 18, 25, 43,  94,  85,  92,  74,   7,  4 ], #
 #  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
+
+
+Diagonale:=function(G)
+  local HRES,i,j,D,DD,DDD,RET;
+  RA:=RankPGroup(G);
+  PC:=Pcgs(G);
+  HRES:=Reversed(PC{[1..RA]});Print(RA,PC,HRES);
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,D[j]*HRES[i]);
+      od;
+    od;
+  DD:=List(D,i->i^2);
+  DDD:=List(Group(DD));
+  RET:=List(DD,i->Position(DDD,i)-1);
+  return RET;
+  end;
+
+Diagonale(SmallGroup(4,1));
+Diagonale(SmallGroup(8,2));
+Diagonale(SmallGroup(16,3));
+
+Liste_der_Markierungen:=[];
+for m in [2..7] do n:=2^m;
+  Liste_der_Markierungen[m]:=[];
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-1) do #,RankPGroup,m-1,m-2,m-3
+    Print("\nId=",Id," \c");
+    G:=SmallGroup(Id);
+    RANK:=RankPGroup(G);
+    Print("Rank=",RANK," \c");
+    D:=Diagonale(G);
+    Add(D,0,1);
+    M:=COMPDIAG5E(RANK,D,0);
+    if M in Liste_der_Markierungen[m] then 
+      Error(Id);
+      else Print("ok"); fi;
+    Add(Liste_der_Markierungen[m],StructuralCopy(M));
+    od;
+  od;
