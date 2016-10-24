@@ -305,9 +305,20 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   return OSIZE;#NMARK;
   end;
 
+BITLIST8:=[
+  [0,0,0,0,0,0,0],
+  [1,0,1,0,1,0,1],
+  [0,1,1,0,0,1,1],
+  [1,1,0,0,1,1,0],
+  [0,0,0,1,1,1,1],
+  [1,0,1,1,0,1,0],
+  [0,1,1,1,1,0,0],
+  [1,1,0,1,0,0,1]];
+
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
-  Print("\n",D);
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
+  D0,D1,D2,D3,D4,D5,D6,DD;
+  if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
@@ -315,17 +326,18 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU:=List(D);
   NMARK:=List([1..SD],i->[]);
   repeat
-    #Print("\n",ORBZU);
+    Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
-    for i in [2..SD] do
+    for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [2..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[2..SD]});
       MARK[i]:=Collected(MARK[i]{[2..SD]});
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
+      if flag<>77 then Print("\nNMARK[",i,"]=",D[i],NMARK[i]); fi;
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
@@ -341,9 +353,39 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   for i in [1..SD] do#wieso nicht 2?
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],NMARK[i]); od;
-  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
+  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then 
+    UMARK[i]:=Collected(UMARK[i]);
+    Print("\nUMARK[",i-1,"]=",UMARK[i]);
+    fi; od;
+  #Print("\nUMARK=",UMARK);
   UMARK:=Collected(Compacted(UMARK));
-  return UMARK;
+  
+  DD:=[];D0:=[];D1:=[];D2:=[];D3:=[];D4:=[];D5:=[];D6:=[];
+  for i in [1..SD] do 
+    DD[i]:=List(BITLIST8[D[i]+1]);
+    od;
+  for i in [1..SD] do 
+    D0[i]:=DD[i][1];
+    D1[i]:=DD[i][2];
+    D2[i]:=DD[i][3];
+    D3[i]:=DD[i][4];
+    D4[i]:=DD[i][5];
+    D5[i]:=DD[i][6];
+    D6[i]:=DD[i][7];
+    od;
+  if flag<>77 then
+  return [UMARK,SortedList([
+    COMPDIAG5E(dd,D0,77),
+    COMPDIAG5E(dd,D1,77),
+    COMPDIAG5E(dd,D2,77),
+    COMPDIAG5E(dd,D3,77),
+    COMPDIAG5E(dd,D4,77),
+    COMPDIAG5E(dd,D5,77),
+    COMPDIAG5E(dd,D6,77)]),
+    SortedList([
+    COMPDIAG5E(dd,D3+2*D2,77),
+    COMPDIAG5E(dd,D3+2*D6,77)])];
+    else return UMARK; fi;
   end;
 
 --------------
@@ -415,8 +457,16 @@ Diagonale:=function(G)
       od;
     od;
   DD:=List(D,i->i^2);
-  DDD:=List(Group(DD));
-  RET:=List(DD,i->Position(DDD,i)-1);
+  HRES:=MinimalGeneratingSet(Group(DD));
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,D[j]*HRES[i]);
+      od;
+    od;
+  Add(D,D[1]^0,1);
+  RET:=List(DD,i->Position(D,i)-1);
   return RET;
   end;
 
@@ -424,10 +474,11 @@ Diagonale(SmallGroup(4,1));
 Diagonale(SmallGroup(8,2));
 Diagonale(SmallGroup(16,3));
 
-Liste_der_Markierungen:=[];
-for m in [2..7] do n:=2^m;
+Liste_der_Markierungen:=[];Liste_der_Id:=[];
+for m in [6..7] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
-  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-1) do #,RankPGroup,m-1,m-2,m-3
+  Liste_der_Id[m]:=[];
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
     RANK:=RankPGroup(G);
@@ -435,9 +486,37 @@ for m in [2..7] do n:=2^m;
     D:=Diagonale(G);
     Add(D,0,1);
     M:=COMPDIAG5E(RANK,D,0);
+    #Print(M);
     if M in Liste_der_Markierungen[m] then 
-      Error(Id);
+      Error(Id,Liste_der_Id[m][Position(Liste_der_Markierungen[m],M)]);
       else Print("ok"); fi;
     Add(Liste_der_Markierungen[m],StructuralCopy(M));
+    Add(Liste_der_Id[m],Id);
     od;
   od;
+Error, [ 128, 1079 ][ 128, 1078 ]
+D1:=[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ];#1078
+D2:=[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ];#1079
+COMPDIAG5E(4,D1,0)=COMPDIAG5E(4,D2,0);
+#nach c<-->bc in D2:
+R1:=[[1],[1,0],[2,2,3],[4,5,7,7]];
+R2:=[[1],[1,0],[2,2,3],[4,5,7,5]];
+#also doch RKAN bestimmen.
+
+
+[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ]#8#12
+[ 6, 6, 2, 2 ]#2#5
+[ 6, 6, 2, 2 ]#2#5
+[ 9, 6, 1 ]#2#3
+[ 8, 8 ]#2#3
+[ 6, 6, 2, 2 ]#2#5
+[ 6, 6, 2, 2 ]#2#5
+[ 10, 5, 1 ]#2#3
+[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ]#8#12
+[ 6, 6, 2, 2 ]#2#5
+[ 6, 6, 2, 2 ]#2#5
+[ 10, 5, 1 ]#2#3
+[ 8, 8 ]#2#3
+[ 6, 6, 2, 2 ]#2#5
+[ 6, 6, 2, 2 ]#2#5
+[ 9, 6, 1 ]#2#3true
