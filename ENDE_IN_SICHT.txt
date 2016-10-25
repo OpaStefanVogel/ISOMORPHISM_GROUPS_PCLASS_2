@@ -306,32 +306,37 @@ COMPDIAG5D:=function(dd,D,flag)#neu
   end;
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK;
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,MMARK,NMARK,UMARK;
   ##Print("\n",D);
   SD:=Size(D);
-  ORBZU:=[1];
-  for i in [2..SD] do for j in [i,i-1..2] do
+  ORBZU:=[];
+  for i in [2..SD] do for j in [i-1,i-2..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
   NMARK:=List([1..SD],i->[]);
   repeat
     ##Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
-    MARK:=[];
+    MARK:=[]; MMARK:=[];
     for i in [2..SD] do
       for j in [2..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
-      MARK[i]:=Collected(MARK[i]{[2..SD]});
-      Add(NMARK[i],Collected(List(MARK[i],j->j[2])));
+      MMARK[i]:=Collected(MARK[i]{[2..SD]});
+      MMARK[i]:=List(MARK[i],j->j[2]);
+      MMARK[i]:=Collected(MARK[i]);
+      Add(NMARK[i],MMARK[i]);
       od;
-    ORBZUMERK:=List(ORBZU);
-    ORBZU:=[1];
-    for i in [2..SD] do for j in [i,i-1..2] do
-      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
-    until ORBZU=ORBZUMERK;
+    ORBZUMERK:=List(ORBZU); ORBZU:=[]; nichtnochmal:=true;
+    for i in [2..SD] do 
+      if MMARK[i]<>MMARK[ORBZUMERK[i]] then
+        ORBZU[i]:=i; nichtnochmal:=false;
+        for j in [i-1,i-2..2] do 
+          if MMARK[i]=MMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then 
+            ORBZU[i]:=j; fi; od; fi; od;
+    until nichtnochmal;
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
   UMARK:=[[],[],[],[]];
   for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
   for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
-  UMARK:=Collected(UMARK);
+  UMARK{[2..4]}:=SortedList(UMARK{[2..4]});
   return UMARK;
   end;
 --------------
