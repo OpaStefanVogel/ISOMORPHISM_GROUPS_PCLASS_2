@@ -318,9 +318,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [2..SD] do
-      MARK[i]:=[-1];
       for j in [2..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
-      MARK[i]:=Collected(MARK[i]);
+      MARK[i]:=Collected(MARK[i]{[2..SD]});
       Add(NMARK[i],Collected(List(MARK[i],j->j[2])));
       od;
     ORBZUMERK:=List(ORBZU);
