@@ -333,10 +333,12 @@ COMPDIAG5E:=function(dd,D,flag)#neu
             ORBZU[i]:=j; fi; od; fi; od;
     until nichtnochmal;
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
-  UMARK:=[[],[],[],[]];
-  for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
-  for i in [1..4] do UMARK[i]:=Collected(UMARK[i]); od;
-  UMARK{[2..4]}:=SortedList(UMARK{[2..4]});
+  UMARK:=[];
+  for i in [1..SD] do 
+    if not IsBound(UMARK[i]) then UMARK[i]:=[]; fi;
+    Add(UMARK[D[i]+1],NMARK[i]); od;
+  for i in [1..Size(UMARK)] do UMARK[i]:=Collected(UMARK[i]); od;
+  UMARK:=Collected(UMARK);
   return UMARK;
   end;
 --------------
