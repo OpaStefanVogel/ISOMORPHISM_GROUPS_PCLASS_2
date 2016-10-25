@@ -326,7 +326,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
-      if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
+      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
   UMARK:=[[],[],[],[]];
