@@ -403,3 +403,27 @@ ANZ;
 #  [ 18, 25, 43,  94,  85,  92,  74,   7,  4 ], #
 #  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
+
+
+##für Beitrag33.htm
+Liste_der_Markierungen:=[];#Reset
+m=1; 
+repeat 
+  n:=2^m; #betrachte alle Gruppen der Ordnungszahl n
+  Liste_der_Markierungen[n]:=[];
+  for i in [1..NumberSmallGroups(2^n)] do
+    Print("\n",n," \c");
+    G:=SmallGroup(n,i);
+    Print(i," \c");
+    if IsPGroup(G) then
+      if PClassPGroup(G)=2 then #nur die G aus TABLE 1
+        D:=Diagonale(G);
+        M:=Marierung(D);
+        if M in Liste_der_Markierungen[n] then 
+          Error("gleiche Markierung"); 
+          else Print("ok"); fi;
+        Add(Liste_der_Markierungen[n],M);
+        fi;
+      fi;
+    od;
+  repeat;
