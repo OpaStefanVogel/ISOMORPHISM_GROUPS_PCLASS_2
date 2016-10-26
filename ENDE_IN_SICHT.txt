@@ -406,22 +406,51 @@ ANZ;
 
 
 ##für Beitrag33.htm
+Diagonale:=function(G)
+  local HRES,i,j,D,DD,RET;
+  HRES:=Reversed(Pcgs(G));
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,D[j]*HRES[i]);
+      od;
+    od;
+  DD:=List(D,i->i^2);
+  HRES:=SmallestGeneratingSet(Group(DD));
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,D[j]*HRES[i]);
+      od;
+    od;
+  Add(D,D[1]^0,1);
+  RET:=List(DD,i->Position(D,i)-1;);
+  return RET;
+  end:
+
+
+####dann gehts los:
 Liste_der_Markierungen:=[];#Reset
 m=1; 
-repeat 
+repeat
   n:=2^m; #betrachte alle Gruppen der Ordnungszahl n
   Liste_der_Markierungen[n]:=[];
-  for i in [1..NumberSmallGroups(2^n)] do
-    Print("\n",n," \c");
+  imin:=1;
+  imax:=NumberSmallGroups(2^n);
+  for i in [imin..imax] do
+    Print("\n",n," ",i," von ",imax,": \c");
     G:=SmallGroup(n,i);
-    Print(i," \c");
     if IsPGroup(G) then
       if PClassPGroup(G)=2 then #nur die G aus TABLE 1
+        Print("Rang=",RankPGroup(G)," \c");
         D:=Diagonale(G);
         M:=Marierung(D);
         if M in Liste_der_Markierungen[n] then 
-          Error("gleiche Markierung"); 
-          else Print("ok"); fi;
+          Error(i," und ",Position(Liste_der_Markierungen[n],M),
+            " haben gleiche Markierung"); 
+          else Print("neu"); fi;
         Add(Liste_der_Markierungen[n],M);
         fi;
       fi;
