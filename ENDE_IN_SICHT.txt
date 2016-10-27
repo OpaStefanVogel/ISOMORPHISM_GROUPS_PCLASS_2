@@ -422,7 +422,8 @@ Diagonale:=function(G)
   return RET;
   end:
 
-#### nur die p-class 2 Gruppen verwenden.
+#### Liste der p-class 2 Gruppen aus dem GAP-package.
+#vielleicht geht IdsOfAllSmallGroups(Size,16,PClass,2);
 LISTE:=[
 [1],#n=2
 [1,2],#n=4
