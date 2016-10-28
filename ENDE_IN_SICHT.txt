@@ -382,11 +382,11 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   for i in [1..SD-1] do
     if not IsBound(PHI0[MRES[i]+1]) then
       PHI0[MRES[i]+1]:=up; up:=2*up;
-      for j in [1..SD-1] do if IsBound(PHI0[MRES[j]+1]) then
-        PHI0[XORMAT[MRES[j]+1][MRES[i]+1]]:=XORMAT[PHI0[MRES[j]+1]+1][PHI0[MRES[i]+1]+1]-1;
-        fi; od;
-      #Print("\n",i," ",j,PHI0,up);
       fi;
+    for j in [1..SD-1] do if IsBound(PHI0[MRES[j]+1]) then
+      PHI0[XORMAT[MRES[j]+1][MRES[i]+1]]:=XORMAT[PHI0[MRES[j]+1]+1][PHI0[MRES[i]+1]+1]-1;
+      fi; od;
+    #Print("\n",i," ",j,PHI0,up);
     od;
   MRET:=List(MRES,i->PHI0[i+1]);
   Print("\n",MRES);
