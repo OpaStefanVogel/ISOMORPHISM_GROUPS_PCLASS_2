@@ -317,8 +317,8 @@ BITLIST8:=[
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
-  D0,D1,D2,D3,D4,D5,D6,DD;
-  if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
+  HRES,LRES,MRES,PHI0,up,MRET;
+  #if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
@@ -326,7 +326,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU:=List(D);
   NMARK:=List([1..SD],i->[]);
   repeat
-    Print("\n",ORBZU);
+    #Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [1..SD] do
@@ -337,7 +337,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
-      if flag<>77 then Print("\nNMARK[",i,"]=",D[i],NMARK[i]); fi;
+      #if flag<>77 then Print("\nNMARK[",i,"]=",D[i],NMARK[i]); fi;
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
@@ -352,42 +352,52 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   UMARK:=[];
   for i in [1..SD] do#wieso nicht 2?
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
-    Add(UMARK[D[i]+1],NMARK[i]); od;
+    Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then 
     UMARK[i]:=Collected(UMARK[i]);
-    Print("\nUMARK[",i-1,"]=",UMARK[i]);
+    #Print("\nUMARK[",i-1,"]=",UMARK[i]);
     fi; od;
+  for i in [1..SD] do Add(NMARK[i],UMARK[D[i]+1],1); od;
   #Print("\nUMARK=",UMARK);
-  UMARK:=Collected(Compacted(UMARK));
-  
-  DD:=[];D0:=[];D1:=[];D2:=[];D3:=[];D4:=[];D5:=[];D6:=[];
-  for i in [1..SD] do 
-    DD[i]:=List(BITLIST8[D[i]+1]);
+  HRES:=[]; LRES:=[];
+  Unbind(NMARK[1]);
+  repeat
+    i:=Position(NMARK,Minimum(NMARK));
+    Print(" ",i);
+    Add(HRES,i);
+    Add(LRES,i);
+    Unbind(NMARK[i]);
+    for j in [1..Size(LRES)-1] do
+      k:=XORMAT[LRES[j]][i];
+      Add(LRES,k);
+      Unbind(NMARK[k]);
+      od;
+    until Size(NMARK)=0;
+  MRES:=List(LRES,i->D[i]);
+  PHI0:=[0];up:=1;
+  for i in [1..SD-1] do
+    if not IsBound(PHI0[MRES[i]+1]) then
+      PHI0[MRES[i]+1]:=up; up:=2*up;
+      for j in [1..SD-1] do if IsBound(PHI0[MRES[j]+1]) then
+        PHI0[XORMAT[MRES[j]+1][MRES[i]+1]]:=XORMAT[PHI0[MRES[j]+1]+1][PHI0[MRES[i]+1]+1]-1;
+        fi; od;
+      #Print("\n",i," ",j,PHI0,up);
+      fi;
     od;
-  for i in [1..SD] do 
-    D0[i]:=DD[i][1];
-    D1[i]:=DD[i][2];
-    D2[i]:=DD[i][3];
-    D3[i]:=DD[i][4];
-    D4[i]:=DD[i][5];
-    D5[i]:=DD[i][6];
-    D6[i]:=DD[i][7];
-    od;
-  if flag<>77 then
-  return [UMARK,SortedList([
-    COMPDIAG5E(dd,D0,77),
-    COMPDIAG5E(dd,D1,77),
-    COMPDIAG5E(dd,D2,77),
-    COMPDIAG5E(dd,D3,77),
-    COMPDIAG5E(dd,D4,77),
-    COMPDIAG5E(dd,D5,77),
-    COMPDIAG5E(dd,D6,77)]),
-    SortedList([
-    COMPDIAG5E(dd,D3+2*D2,77),
-    COMPDIAG5E(dd,D3+2*D6,77)])];
-    else return UMARK; fi;
+  MRET:=List(MRES,i->PHI0[i+1]);
+  return MRET;#[HRES,LRES,MRES,PHI0,MRET];
   end;
 
+#Error, [ 128, 1079 ][ 128, 1078 ]
+D1:=[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ];#1078
+D2:=[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ];#1079
+L1:=COMPDIAG5E(4,D1,0);
+L2:=COMPDIAG5E(4,D2,0);
+L1;L2;
+GE:=ElementaryAbelianGroup(8);
+GA:=Image(IsomorphismPermGroup(GE));
+AU:=AutomorphismGroup(GA);
+AA:=Image(IsomorphismPermGroup(AU));
 --------------
 #dd:=4; nr:=109;
 #CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
@@ -448,7 +458,7 @@ Diagonale:=function(G)
   local HRES,i,j,D,DD,DDD,RET;
   RA:=RankPGroup(G);
   PC:=Pcgs(G);
-  HRES:=Reversed(PC{[1..RA]});Print(RA,PC,HRES);
+  HRES:=Reversed(PC{[1..RA]});#Print(RA,PC,HRES);
   D:=[];
   for i in [1..Size(HRES)] do
     Add(D,HRES[i]);
@@ -475,10 +485,10 @@ Diagonale(SmallGroup(8,2));
 Diagonale(SmallGroup(16,3));
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];
-for m in [6..7] do n:=2^m;
+for m in [2..8] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
   Liste_der_Id[m]:=[];
-  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2) do #,RankPGroup,m-1,m-2,m-3
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
     RANK:=RankPGroup(G);
@@ -494,6 +504,44 @@ for m in [6..7] do n:=2^m;
     Add(Liste_der_Id[m],Id);
     od;
   od;
+-----
+Id=[ 4, 1 ] Rank=1 #2#2 2ok
+Id=[ 8, 2 ] Rank=2 #2#3 2 3ok
+Id=[ 8, 3 ] Rank=2 #2#3 4 2ok
+Id=[ 8, 4 ] Rank=2 #2#2 2 3ok
+Id=[ 16, 2 ] Rank=2 #4#4 2 3ok
+Id=[ 16, 3 ] Rank=2 #3#4 3 4ok
+Id=[ 16, 4 ] Rank=2 #3#3 2 3ok
+Id=[ 16, 10 ] Rank=3 #2#3 2 3 5ok
+Id=[ 16, 11 ] Rank=3 #2#4 7 8 3ok
+Id=[ 16, 12 ] Rank=3 #2#3 3 4 5ok
+Id=[ 16, 13 ] Rank=3 #2#4 3 4 5ok
+Id=[ 32, 2 ] Rank=2 #4#4 2 3ok
+Id=[ 32, 21 ] Rank=3 #4#5 2 3 5ok
+Id=[ 32, 35 ] Rank=3 #4#5 2 4 5ok
+Id=[ 32, 45 ] Rank=4 #2#3 2 3 5 9ok
+Id=[ 32, 50 ] Rank=4 #2#3 2 9 12 13ok
+Id=[ 64, 55 ] Rank=3 #8#8 2 3 5ok
+Id=[ 64, 82 ] Rank=3 #8#8 2 3 5ok
+Id=[ 64, 192 ] Rank=4 #4#5 2 3 5 9ok
+Id=[ 64, 245 ] Rank=4 #4#4 2 3 5 9ok
+Id=[ 64, 260 ] Rank=5 #2#3 2 3 5 9 17ok
+Id=[ 64, 266 ] Rank=5 #2#4 3 4 5 9 17ok
+Id=[ 128, 164 ] Rank=3 #8#8 2 3 5ok
+Id=[ 128, 178 ] Rank=3 #6#6 2 3 5ok
+Id=[ 128, 997 ] Rank=4 #8#9 2 3 5 9ok
+Id=[ 128, 1600 ] Rank=4 #8#9 2 3 6 9ok
+Id=[ 128, 2150 ] Rank=5 #4#5 2 3 5 9 17ok
+Id=[ 128, 2300 ] Rank=5 #4#18 3 6 11 17 10ok
+Id=[ 128, 2319 ] Rank=6 #2#3 2 3 5 9 17 33ok
+Id=[ 128, 2327 ] Rank=6 #2#3 2 3 17 23 27 33ok
+Id=[ 256, 542 ] Rank=3 #8#8 2 3 5ok
+Id=[ 256, 543 ] Rank=3 #7#8 3 4 5ok
+Id=[ 256, 544 ] Rank=3 #8#8 2 3 5ok
+Id=[ 256, 545 ] Rank=3 #7#7 2 3 7ok
+Id=[ 256, 6732 ] Rank=4 #16#16 2 3 5 9ok
+über Id=[ 256, 8097 ] Rank=4 #12#14 11 3 4 16ok
+----
 Error, [ 128, 1079 ][ 128, 1078 ]
 D1:=[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ];#1078
 D2:=[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ];#1079
