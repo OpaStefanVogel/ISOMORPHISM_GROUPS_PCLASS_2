@@ -337,7 +337,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
-      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
+      Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
@@ -366,7 +366,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   HRES:=[]; LRES:=[];
   Unbind(NMARK[1]);
   repeat
-    i:=Position(NMARK,Minimum(NMARK));
+    i:=Position(NMARK,Minimum(NMARK));if i=5 then i:=7; fi;#Ausweg bei n=1/20.
     Print(" ",i);
     Add(HRES,i);
     Add(LRES,i);
@@ -396,11 +396,11 @@ COMPDIAG5E:=function(dd,D,flag)#neu
 ------
 dd:=3; 
 nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
 nr:=2; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=18;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=18;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
 nr:=1; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=20;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=20;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6#9
