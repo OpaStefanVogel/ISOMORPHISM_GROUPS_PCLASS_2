@@ -318,7 +318,7 @@ BITLIST8:=[
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET;
-  #if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
+  if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
@@ -337,7 +337,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
-      #if flag<>77 then Print("\nNMARK[",i,"]=",D[i],NMARK[i]); fi;
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
@@ -357,7 +357,11 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     UMARK[i]:=Collected(UMARK[i]);
     #Print("\nUMARK[",i-1,"]=",UMARK[i]);
     fi; od;
-  for i in [1..SD] do Add(NMARK[i],UMARK[D[i]+1],1); od;
+  UMARK[1]:=-1;
+  for i in [1..SD] do 
+    Add(NMARK[i],[UMARK[D[i]+1]],1);
+    Add(NMARK[i],D[i]);
+    od;
   #Print("\nUMARK=",UMARK);
   HRES:=[]; LRES:=[];
   Unbind(NMARK[1]);
@@ -385,24 +389,18 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       fi;
     od;
   MRET:=List(MRES,i->PHI0[i+1]);
-  return MRET;#[HRES,LRES,MRES,PHI0,MRET];
+  Print("\n",MRES);
+  Print("\n",MRET);
+  return MRET;#Collected(Compacted(UMARK));#MRET;#[HRES,LRES,MRES,PHI0,MRET];
   end;
-
-#Error, [ 128, 1079 ][ 128, 1078 ]
-D1:=[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ];#1078
-D2:=[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ];#1079
-L1:=COMPDIAG5E(4,D1,0);
-L2:=COMPDIAG5E(4,D2,0);
-L1;L2;
-GE:=ElementaryAbelianGroup(8);
-GA:=Image(IsomorphismPermGroup(GE));
-AU:=AutomorphismGroup(GA);
-AA:=Image(IsomorphismPermGroup(AU));
---------------
-#dd:=4; nr:=109;
-#CD:=COMPDIAG5D(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),1);;
-#CE:=COMPDIAG5E(2,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),false);;
-#CE;
+------
+dd:=3; 
+nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=2; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=18;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=1; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=20;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6#9
@@ -412,6 +410,44 @@ SCHNUCK(2,COMPDIAG5E);#n=16#6#9
 #SCHNUCK(6,COMPDIAG5E);time;#n=256#442#999
 #SCHNUCK(7,COMPDIAG5E);time/60000.;#n=512#1122#21xx#3 min!
 #SCHNUCK(8,COMPDIAG5E);time/60000.;#n=1024#2945##76xx#38 min!
+gap> WOHINDAMIT;
+[ [ 1 ], [ 1, 2, 3, 4, 4, 5, 6, 1, 4 ], 
+  [ 1, 2, 3, 4, 5, 6, 7, 8, 6, 9, 7, 10, 11, 12, 13, 14, 15, 2, 16, 1, 17, 8, 6, 9, 2, 14, 16, 
+      17, 18, 19, 3, 8, 10, 7 ] ]
+1 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ] ] ]#3#4 2 4 6*
+2 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 1 ] ] ]#4#6 8 3 4*
+3 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 0, 1 ] ] ]#4#5 3 5 2*
+4 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ] ]#2#3 3 5 2*
+5 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 1, 0, 1 ] ] ]#4#5 3 2 5*
+6 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 1, 1, 1 ] ] ]#3#4 3 5 2*
+7 von 34 ***R1R2=[ [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 1, 0 ], [ 1, 0, 1 ] ] ]#4#4 2 3 5*
+8 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ] ] ]#3#5 5 3 4*
+9 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ] ]#3#4 5 2 3.
+10 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 0, 0 ] ] ]#4#5 2 5 3*
+11 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 0, 1 ] ] ]#4#4 5 2 3.
+12 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 1, 0 ] ] ]#4#6 5 4 2*
+13 von 34 ***R1R2=[ [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ], [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ] ]#2#3 2 3 6*
+14 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ] ] ]#4#6 3 5 4*
+15 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ] ]#2#4 2 6 3*
+16 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ] ] ]#3#5 5 3 4*
+17 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 0, 0 ] ] ]#4#5 2 5 3*
+18 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 0, 1 ] ] ]#4#6 5 3 4.
+19 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 0, 0, 1 ] ] ]#4#6 5 3 2*
+20 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ] ]#3#4 2 4 6.
+21 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 1, 0, 0 ] ] ]#4#6 3 7 2*
+22 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 0, 1 ], [ 1, 1, 1 ] ] ]#3#5 3 5 4.
+23 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 1, 1 ], [ 0, 1, 1 ] ] ]#3#4 5 2 3.
+24 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 0, 1, 0 ] ], [ [ 1 ], [ 1, 1 ], [ 1, 0, 1 ] ] ]#4#5 2 6 3.
+25 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 0 ] ] ]#4#6 7 3 4.
+26 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 0, 1 ] ] ]#3#5 8 3 4.
+27 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 0, 1, 1 ] ] ]#4#6 4 3 5.
+28 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 1, 0 ] ] ]#4#6 3 4 7.
+29 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ] ]#2#4 2 3 5*
+30 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 1 ], [ 0, 0, 1 ] ] ]#4#8 3 2 5*
+31 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 1 ], [ 0, 1, 0 ] ] ]#4#5 3 5 2.
+32 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 0, 1 ], [ 1, 1, 1 ] ] ]#3#5 3 5 2.
+33 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 1, 1 ], [ 0, 0, 0 ] ] ]#4#6 2 7 3.
+34 von 34 ***R1R2=[ [ [ 1 ], [ 0, 0 ], [ 1, 1, 1 ] ], [ [ 1 ], [ 1, 1 ], [ 1, 1, 0 ] ] ]#4#4 7 2 3.
 
 ANZ:=[];
 for i in [1..Size(ERGS2)] do
@@ -504,6 +540,15 @@ for m in [2..8] do n:=2^m;
     Add(Liste_der_Id[m],Id);
     od;
   od;
+Id=[ 128, 166 ] Rank=3 
+[ 0, 1, 8, 9, 4, 7, 13, 14 ]#8#8 2 5 3
+[ 1, 4, 7, 8, 9, 13, 14 ]
+[ 1, 2, 4, 8, 36, 16, 32 ]ok
+Id=[ 128, 175 ] Rank=3 
+[ 0, 1, 3, 6, 8, 11, 10, 13 ]#8#8 2 3 5
+[ 1, 3, 6, 8, 11, 10, 13 ]
+Error, [ 128, 175 ][ 128, 166 ] called from
+[ 1, 2, 4, 8, 36, 16, 32 ]<function "unknown">( <arguments> )#Fehler wieso 36?
 -----
 Id=[ 4, 1 ] Rank=1 #2#2 2ok
 Id=[ 8, 2 ] Rank=2 #2#3 2 3ok
@@ -542,7 +587,7 @@ Id=[ 256, 545 ] Rank=3 #7#7 2 3 7ok
 Id=[ 256, 6732 ] Rank=4 #16#16 2 3 5 9ok
 über Id=[ 256, 8097 ] Rank=4 #12#14 11 3 4 16ok
 ----
-Error, [ 128, 1079 ][ 128, 1078 ]
+Error, [ 128, 1079 ][ 128, 1078 ] ist weg, aber 24 statt 19
 D1:=[ 0, 1, 1, 0, 2, 2, 3, 3, 4, 5, 7, 6, 7, 7, 4, 4 ];#1078
 D2:=[ 0, 1, 1, 0, 3, 3, 2, 2, 4, 5, 7, 6, 6, 6, 5, 5 ];#1079
 COMPDIAG5E(4,D1,0)=COMPDIAG5E(4,D2,0);
