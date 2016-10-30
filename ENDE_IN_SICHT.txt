@@ -318,7 +318,7 @@ BITLIST8:=[
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET;
-  if flag=77 then Print("\n",COMPDIAG4(D)); else Print("\n",D); fi;
+  #Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
@@ -331,19 +331,29 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[2..SD]});
       MARK[i]:=Collected(MARK[i]{[2..SD]});
+      for j in [1..Size(MARK[i])] do
+        if MARK[i][j][1][2]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+        if MARK[i][j][1][3]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+        if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
+        if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+        if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+        od;
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
-      Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
     ORBZUMERK:=List(ORBZU);
     ORBZU:=[1];
     for i in [2..SD] do for j in [i,i-1..2] do
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
+  return Size(Collected(ORBZU));
+  end;
+------
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
 #  UMARK:=[[],[],[],[]];
 #  for i in [1..SD] do Add(UMARK[D[i]+1],NMARK[i]); od;
@@ -392,8 +402,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   Print("\n",MRES);
   Print("\n",MRET);
   return MRET;#Collected(Compacted(UMARK));#MRET;#[HRES,LRES,MRES,PHI0,MRET];
-  end;
-------
+
 dd:=3; 
 nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
@@ -524,22 +533,42 @@ Liste_der_Markierungen:=[];Liste_der_Id:=[];
 for m in [2..8] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
   Liste_der_Id[m]:=[];
-  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2) do #,RankPGroup,m-1,m-2,m-3
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
     RANK:=RankPGroup(G);
     Print("Rank=",RANK," \c");
     D:=Diagonale(G);
     Add(D,0,1);
-    M:=COMPDIAG5E(RANK,D,0);
+    M1:=COMPDIAG5D(RANK,D,0);#ist schon ohne e
+    M:=COMPDIAG5E(RANK,D,0)-1;#e weg
+    Print(" OSIZE= ",M1," \c");
+    Print(M," \c");
+    A:=AutomorphismGroup(G);
+    G2:=Group(List(G,i->i^2));
+    GD:=Difference(G,G2);
+    ORBS:=Orbits(A,GD);
+    S:=Size(ORBS);
+    Print(S," ",M>=S," \c");
+    if M<S then Error(i," ",j); fi;
+    od;
+  od;
+
+Ergebnis: obwohl durch bis 2945 ist COMPDIAG5E ist nicht so gut wie COMPDIAG5D.
+Id=[ 64, 210 ] Rank=4 11#4#11 OSIZE= 11 10 11 false 
+Id=[ 128, 2171 ] Rank=5 12#4#12 OSIZE= 12 11 12 false 
+Id=[ 128, 2224 ] Rank=5 11#4#10#11 OSIZE= 11 10 11 false 
+Id=[ 128, 2225 ] Rank=5 11#4#11 OSIZE= 11 10 11 false
+Id=[ 128, 2248 ] Rank=5 15#4#15 OSIZE= 15 14 15 false
+usw.
+
     #Print(M);
     if M in Liste_der_Markierungen[m] then 
       Error(Id,Liste_der_Id[m][Position(Liste_der_Markierungen[m],M)]);
       else Print("ok"); fi;
     Add(Liste_der_Markierungen[m],StructuralCopy(M));
     Add(Liste_der_Id[m],Id);
-    od;
-  od;
+
 Id=[ 128, 166 ] Rank=3 
 [ 0, 1, 8, 9, 4, 7, 13, 14 ]#8#8 2 5 3
 [ 1, 4, 7, 8, 9, 13, 14 ]
