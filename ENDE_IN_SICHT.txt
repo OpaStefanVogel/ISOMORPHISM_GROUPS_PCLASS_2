@@ -335,13 +335,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[2..SD]});
       MARK[i]:=Collected(MARK[i]{[2..SD]});
-      for j in [1..Size(MARK[i])] do
-        if MARK[i][j][1][2]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-        if MARK[i][j][1][3]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
-        if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
-        if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
-        if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
-        od;
+      #for j in [1..Size(MARK[i])] do
+      #  if MARK[i][j][1][2]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+      #  if MARK[i][j][1][3]=ORBZU[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+      #  if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
+      #  if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+      #  if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+      #  od;
       MARK[i]:=Collected(List(MARK[i],j->j[2]));
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
@@ -588,6 +588,23 @@ Id=[ 64, 221 ] Rank=4 11#8#11 OSIZE= 11 10
   [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 11, 11, 13, 13, 9, 9 ]
 [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ], [ 8, 9 ], [ 10, 11 ], 
   [ 12, 13 ], [ 14, 15 ] ]Error, M1<>M called from
+#bei ohne +1000, +2000 schon bei
+Id=[ 64, 219 ] Rank=4 9#7#8#9 OSIZE= 9 8 
+  [ 0, 0, 0, 0, 2, 2, 3, 3, 0, 1, 2, 3, 3, 2, 0, 1 ]#7#8#9
+  [ 2, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1 ]
+  [ 2, 2, 0, 0, 3, 3, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0 ]
+  [ 2, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1 ]9
+  [ 1, 2, 3, 3, 5, 5, 7, 7, 9, 10, 11, 12, 12, 11, 9, 10 ]
+[ [ 1 ], [ 2, 3 ], [ 4, 5 ], [ 6 ], [ 7 ], [ 8, 14 ], [ 9, 15 ], [ 10, 13 ], 
+  [ 11, 12 ] ]Error, M1<>M called from
+Id=[ 64, 220 ] Rank=4 9#7#8#9 OSIZE= 9 8 
+  [ 0, 0, 1, 1, 2, 2, 2, 2, 0, 1, 3, 2, 3, 2, 1, 0 ]#7#8#9
+  [ 2, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0 ]
+  [ 2, 2, 0, 0, 3, 3, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0 ]
+  [ 2, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0 ]9
+  [ 1, 2, 3, 3, 5, 5, 7, 7, 9, 10, 11, 12, 11, 12, 10, 9 ]
+[ [ 1 ], [ 2, 3 ], [ 4, 5 ], [ 6 ], [ 7 ], [ 8, 15 ], [ 9, 14 ], [ 10, 12 ], 
+  [ 11, 13 ] ]Error, M1<>M called from
 
 Ergebnis: obwohl durch bis 2945 ist COMPDIAG5E ist nicht so gut wie COMPDIAG5D.
 Id=[ 64, 210 ] Rank=4 11#4#11 OSIZE= 11 10 11 false 
