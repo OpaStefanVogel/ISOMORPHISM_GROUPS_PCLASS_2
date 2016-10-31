@@ -302,7 +302,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
     NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
     od;
   NMARK:=Collected(NMARK);
-  return OSIZE;#NMARK;
+  return ORBAB;#OSIZE;#NMARK;
   end;
 
 BITLIST8:=[
@@ -318,7 +318,7 @@ BITLIST8:=[
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET;
-  #Print("\n",D);
+  Print("\n",D);
   SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
@@ -351,7 +351,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for i in [2..SD] do for j in [i,i-1..2] do
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
-  return Size(Collected(ORBZU));
+  return ORBZU;#Size(Collected(ORBZU));
   end;
 ------
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
@@ -408,8 +408,29 @@ nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
 nr:=2; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 nr:=18;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
-nr:=1; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=20;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;CD=CE;
+nr:=1; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);
+nr:=20;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);CD=CE;
+nr:=1; CD:=COMPDIAG5D(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);
+nr:=20;CE:=COMPDIAG5D(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);CD=CE;
+[ 0, 3, 0, 1, 0, 1, 0, 3 ];
+[ 0, 3, 0, 2, 0, 3, 0, 2 ];
+R1:=[[0],[0,0],[3,3,3],[0,0,0,1],[0,0,0,1,0]];
+R20:=[[0],[0,0],[3,3,3],[0,0,0,2],[0,0,0,3,0]];
+G1:=PcgsOfR(R1);
+   A:=AutomorphismGroup(G1);
+   G2:=Group(List(G1,i->i^2));
+   GD:=Difference(G1,G2); 
+   ORBS:=Orbits(A,GD);#f5=1,f4=2,f3=a,f2=b.f1=c:
+[ [ f1, f2, f1*f4, f1*f4*f5, f2*f4, f2*f4*f5, f1*f5, f2*f5 ], 
+  [ f3, f1*f3, f1*f2*f3, f3*f4, f3*f4*f5, f2*f3, f1*f3*f4, f1*f3*f4*f5, 
+      f1*f2*f3*f4, f1*f2*f3*f4*f5, f3*f5, f1*f3*f5, f2*f3*f4, f2*f3*f4*f5, 
+      f1*f2*f3*f5, f2*f3*f5 ], [ f1*f2, f1*f2*f4, f1*f2*f4*f5, f1*f2*f5 ] ]
+   #also f1*f2=bc ist extra Orbit gegenüber b und c!!! ein Glück
+   #auch COMPDIAG5D: [ [ 1, 7 ], [ 2, 4 ], [ 3, 5 ], [ 6 ] ]
+   #auch COMPDIAG5E:  [ 1, 2, 3, 4, 3, 4, 7, 2 ] mit  +1000, +2000...
+   #nicht COMPDIAG5E: [ 1, 2, 3, 4, 3, 4, 3, 2 ] ohne +1000, +2000...
+   #also COMPDISG5E weiter verbessern bis COMPDIAG5D erreicht ist.
+
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6#9
