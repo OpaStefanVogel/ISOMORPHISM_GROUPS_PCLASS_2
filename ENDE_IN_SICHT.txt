@@ -250,6 +250,7 @@ COMPDIAG5D:=function(dd,D,flag)#neu
       if Dli=0 and Dki<>Dji then DD[l][i]:=0; fi;
       od;
     od;
+  GLOBDD:=DD;
   #Print("\n--",DD);
   for i in [1..SD] do 
     D0[i]:=DD[i][1];
@@ -323,7 +324,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
-  ORBZU:=List(D);
+  ORBZU:=List(GLOBDD);
   NMARK:=List([1..SD],i->[]);
   repeat
     #Print("\n",ORBZU);
@@ -579,13 +580,14 @@ for m in [2..8] do n:=2^m;
     od;
   od;
 
-Id=[ 32, 27 ] Rank=3 7#4#6 OSIZE= 7 5 
-  [ 0, 0, 0, 0, 0, 2, 1, 3 ]#4#6
-  [ 2, 2, 0, 0, 0, 0, 1, 1 ]
-  [ 2, 0, 2, 0, 0, 1, 0, 1 ]
-  [ 2, 0, 0, 2, 0, 1, 1, 0 ]7
-  [ 1, 2, 2, 2, 5, 6, 7, 8 ]
-[ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ] ]Error, M1<>M called from
+Id=[ 64, 221 ] Rank=4 11#8#11 OSIZE= 11 10 
+  [ 0, 1, 0, 1, 2, 3, 3, 2, 0, 0, 2, 2, 3, 3, 0, 0 ]#8#11
+  [ 2, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0 ]
+  [ 2, 2, 0, 0, 3, 3, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0 ]
+  [ 2, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0 ]11
+  [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 11, 11, 13, 13, 9, 9 ]
+[ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ], [ 8, 9 ], [ 10, 11 ], 
+  [ 12, 13 ], [ 14, 15 ] ]Error, M1<>M called from
 
 Ergebnis: obwohl durch bis 2945 ist COMPDIAG5E ist nicht so gut wie COMPDIAG5D.
 Id=[ 64, 210 ] Rank=4 11#4#11 OSIZE= 11 10 11 false 
