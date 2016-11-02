@@ -341,7 +341,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
       MARK[i]:=Collected(MARK[i]{[1..SD]});
       #for j in [1..Size(MARK[i])] do#an bei [64,241]
@@ -361,7 +361,24 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for i in [1..SD] do for j in [i,i-1..1] do
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
-  return ORBZU;#Size(Collected(ORBZU));
+  for j in [1..Size(MARK[i])] do
+    MARK[i][j][1][1]:=GLOBDD[MARK[i][j][1][1]];
+    MARK[i][j][1][2]:=GLOBDD[MARK[i][j][1][2]];
+    MARK[i][j][1][3]:=GLOBDD[MARK[i][j][1][3]];
+    #if MARK[i][j][1][2]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+    #if MARK[i][j][1][3]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+    #if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
+    #if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+    od;
+  MARK[i]:=SortedList(MARK[i]);
+  NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
+  for j in [2..Size(MARK[i])] do
+    if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
+      Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
+        Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
+  NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
+  #Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
+  return NMARK;#ORBZU;
   end;
 ------
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
