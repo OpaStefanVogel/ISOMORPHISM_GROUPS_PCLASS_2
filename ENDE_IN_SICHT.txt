@@ -335,13 +335,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU:=List(GLOBDD);
   ORBZU[1]:=0;
   NMARK:=List([1..SD],i->[]);
-  repeat
+  repeat #zB bei [ 256, 56030 ]
     #Print("\n",ORBZU);
     Print("#",Size(Collected(ORBZU)),"\c");
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
       MARK[i]:=Collected(MARK[i]{[1..SD]});
       #for j in [1..Size(MARK[i])] do#an bei [64,241]
@@ -502,6 +502,7 @@ for m in [2..8] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
   Liste_der_Id[m]:=[];
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
+  #m:=9;n:=512;Liste_der_Markierungen[m]:=[];Liste_der_Id[m]:=[];for i in [10493062..10494173] do Id:=[512,i];
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
     RANK:=RankPGroup(G);
