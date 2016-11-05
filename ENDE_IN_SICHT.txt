@@ -361,14 +361,16 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for i in [1..SD] do for j in [i,i-1..1] do
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
-  for j in [1..Size(MARK[i])] do
-    MARK[i][j][1][1]:=GLOBDD[MARK[i][j][1][1]];
-    MARK[i][j][1][2]:=GLOBDD[MARK[i][j][1][2]];
-    MARK[i][j][1][3]:=GLOBDD[MARK[i][j][1][3]];
-    #if MARK[i][j][1][2]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-    #if MARK[i][j][1][3]=[0,0,0] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+  for i in [1..SD] do
+   for j in [1..Size(MARK[i])] do
+    MARK[i][j][1][1]:=GLOBDCollected(GLOBDD[MARK[i][j][1][1]]);
+    MARK[i][j][1][2]:=Collected(GLOBDD[MARK[i][j][1][2]]);
+    MARK[i][j][1][3]:=Collected(GLOBDD[MARK[i][j][1][3]]);
+    #if MARK[i][j][1][2]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+    #if MARK[i][j][1][3]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
     #if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
     #if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+    #if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
     od;
   MARK[i]:=SortedList(MARK[i]);
   NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
@@ -376,10 +378,61 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
       Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
         Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
-  NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
+  #Print("\nv",i,NMARK[i]);
+  #NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
+  NMARK[i]:=Collected(NMARK[i]);
+  #Print("\nn",i,NMARK[i]);
+  od;
+  UMARK:=[];
+  for i in [1..SD] do 
+    if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
+    Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
+  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
+  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
   #Add(MARK[i],[[[9,9,9],[9,9,9],[9,9,9]],Size(ORBAB[i])]);
   return NMARK;#ORBZU;
   end;
+
+   G:=SmallGroup([32,24]);
+    RANK:=RankPGroup(G);
+ D:=Diagonale(G);;Add(D,0,1);D;#[ 0, 1, 0, 1, 2, 3, 3, 2 ]
+    M1:=Size(COMPDIAG5D(RANK,D,0));#ist schon ohne e
+    M:=Size(Collected(COMPDIAG5E(RANK,D,88)))-1;#e weg
+
+    A:=AutomorphismGroup(G);
+ORBS:=Orbits(A,[G.3^0,G.3,G.2,G.3*G.2,G.1,G.3*G.1,G.2*G.1,G.3*G.2*G.1]);
+
+Id=[ 32, 21 ] Rank=3 4#5#5 OSIZE= 4 1 2 false 
+Id=[ 32, 22 ] Rank=3 4#5#5 OSIZE= 4 2 3 false 
+Id=[ 32, 23 ] Rank=3 3#4#4 OSIZE= 3 2 3 false 
+Id=[ 64, 195 ] Rank=4 6#7#7 OSIZE= 6 4 5 false 
+Id=[ 64, 196 ] Rank=4 6#7#7 OSIZE= 6 5 6 false 
+Id=[ 64, 197 ] Rank=4 4#5#5 OSIZE= 4 3 4 false 
+Id=[ 64, 202 ] Rank=4 8#9#9 OSIZE= 8 3 4 false 
+Id=[ 64, 203 ] Rank=4 6#7#7 OSIZE= 6 5 6 false 
+Id=[ 64, 204 ] Rank=4 6#7#7 OSIZE= 6 5 6 false 
+Id=[ 64, 205 ] Rank=4 8#9#9 OSIZE= 8 5 6 false 
+...
+Id=[ 128, 2294 ] Rank=5 23#8#24 OSIZE= 23 22 23 false 
+Id=[ 128, 2295 ] Rank=5 15#8#16 OSIZE= 15 14 15 false 
+Id=[ 128, 2296 ] Rank=5 19#8#20 OSIZE= 19 17 19 false 
+Id=[ 128, 2297 ] Rank=5 23#8#24 OSIZE= 23 19 23 false 
+Id=[ 128, 2298 ] Rank=5 31#8#32 OSIZE= 31 21 31 false 
+Id=[ 256, 56029 ] Rank=6 47#7#42#48 OSIZE= 47 24 29 false 
+Id=[ 256, 56030 ] Rank=6 63#8#56#64 OSIZE= 63 25 35 false 
+Id=[ 256, 56031 ] Rank=6 47#7#42#48 OSIZE= 47 28 47 false 
+Id=[ 256, 56032 ] Rank=6 31#6#28#32 OSIZE= 31 17 19 false 
+Id=[ 256, 56046 ] Rank=6 29#7#30 OSIZE= 29 24 29 false 
+Id=[ 256, 56047 ] Rank=6 39#8#40 OSIZE= 39 31 39 false 
+Id=[ 256, 56049 ] Rank=6 19#6#20 OSIZE= 19 17 19 false 
+Id=[ 256, 56050 ] Rank=6 29#7#30 OSIZE= 29 27 29 false 
+Id=[ 256, 56052 ] Rank=6 39#8#40 OSIZE= 39 20 23 false 
+Id=[ 256, 56053 ] Rank=6 29#7#30 OSIZE= 29 27 29 false
+ 
+CD:=COMPDIAG5E(2,D,0);;
+nr:=11;dd:=3; 
+nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 ------
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
 #  UMARK:=[[],[],[],[]];
@@ -430,9 +483,6 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   Print("\n",MRET);
   return MRET;#Collected(Compacted(UMARK));#MRET;#[HRES,LRES,MRES,PHI0,MRET];
 
-dd:=3; 
-nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
 
 GESAMTDILIST:=[[1]];WOHINDAMIT:=[[1]];
 SCHNUCK(2,COMPDIAG5E);#n=16#6#9
@@ -488,7 +538,7 @@ Diagonale:=function(G)
   local HRES,i,j,D,DD,DDD,RET;
   RA:=RankPGroup(G);
   PC:=Pcgs(G);
-  HRES:=Reversed(PC{[1..RA]});#Print(RA,PC,HRES);
+  HRES:=Reversed(PC{[1..RA]})#Print(RA,PC,HRES);
   D:=[];
   for i in [1..Size(HRES)] do
     Add(D,HRES[i]);
@@ -518,7 +568,7 @@ Liste_der_Markierungen:=[];Liste_der_Id:=[];
 for m in [2..8] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
   Liste_der_Id[m]:=[];
-  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
+  for Id in #dsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
   #m:=9;n:=512;Liste_der_Markierungen[m]:=[];Liste_der_Id[m]:=[];for i in [10493062..10494173] do Id:=[512,i];
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
@@ -530,17 +580,17 @@ for m in [2..8] do n:=2^m;
     M:=Size(Collected(COMPDIAG5E(RANK,D,0)))-1;#e weg
     Print(" OSIZE= ",M1," \c");
     Print(M," \c");
-    #A:=AutomorphismGroup(G);
-    #G2:=Group(List(G,i->i^2));
-    #GD:=Difference(G,G2);
-    #ORBS:=Orbits(A,GD);
-    #S:=Size(ORBS);
-    #Print(S," ",M>=S," \c");
-    if M1<>M then
-      M:= COMPDIAG5E(RANK,D,88);
-      M1:=COMPDIAG5D(RANK,D,1);
-      Print("\n  ",M,"\n",M1,"\c");
-      Error("M1<>M"); fi;
+    A:=AutomorphismGroup(G);
+    G2:=Group(List(G,i->i^2));
+    GD:=Difference(G,G2);
+    ORBS:=Orbits(A,GD);
+    S:=Size(ORBS);
+    Print(S," ",M>=S," \c");
+    #if M1<>M then
+     # M:= COMPDIAG5E(RANK,D,88);
+     # M1:=COMPDIAG5D(RANK,D,1);
+     # Print("\n  ",M,"\n",M1,"\c");
+     # Error("M1<>M"); fi;
     od;
   od;
 
