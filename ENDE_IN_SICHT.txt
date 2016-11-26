@@ -351,6 +351,36 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
   if flag=88 then Print("\n  ",D); fi;
   SD:=Size(D);
+  ORBZU:=List(D);
+  ORBZU[1]:=-1;
+  NMARK:=List([1..SD],i->[]);
+  repeat #zB bei [ 256, 56030 ]
+    if flag=88 then Print("\n",ORBZU); fi;
+    Print("#",Size(Collected(ORBZU)),"\c");
+    MARK:=[];
+    for i in [1..SD] do
+      MARK[i]:=[-1];
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
+      MARK[i]:=Collected(MARK[i]{[1..SD]});
+      #Print("\nMARK[",i,"]=",D[i],MARK[i]);
+      Add(NMARK[i],MARK[i]);
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
+      od;
+    ORBZUMERK:=List(ORBZU);
+    ORBZU:=[];
+    for i in [1..SD] do for j in [i,i-1..1] do
+      if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
+    until ORBZU=ORBZUMERK;
+  return ORBZU;#NMARK;
+  end;
+-----
+
+COMPDIAG5E:=function(dd,D,flag)#neu
+  local i,j,SD,ORBZU,ORBZUMERK,MARK,NMARK,UMARK,
+  HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
+  if flag=88 then Print("\n  ",D); fi;
+  SD:=Size(D);
   ORBZU:=[1];
   for i in [2..SD] do for j in [i,i-1..2] do
     if D[i]=D[j] then ORBZU[i]:=j; fi; od; od;
@@ -363,7 +393,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     od;
   ORBZU:=List([1..SD],i->[GLOBDD[i],MARK[i]]);
   ORBZU:=List(GLOBDD);
-  ORBZU[1]:=0;
+  ORBZU:=List(D);
+  ORBZU[1]:=-1;
   NMARK:=List([1..SD],i->[]);
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
@@ -392,28 +423,37 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;
   for i in [1..SD] do
-   for j in [1..Size(MARK[i])] do
-    MARK[i][j][1][1]:=Collected(GLOBDD[MARK[i][j][1][1]]);
-    MARK[i][j][1][2]:=Collected(GLOBDD[MARK[i][j][1][2]]);
-    MARK[i][j][1][3]:=Collected(GLOBDD[MARK[i][j][1][3]]);
-    #if MARK[i][j][1][2]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
-    #if MARK[i][j][1][3]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
-    #if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
-    #if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
-    #if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
+    for j in [1..Size(MARK[i])] do
+      MARK[i][j][1][1]:=GLOBDD[MARK[i][j][1][1]];
+      MARK[i][j][1][2]:=GLOBDD[MARK[i][j][1][2]];
+      MARK[i][j][1][3]:=GLOBDD[MARK[i][j][1][3]];
+      #if MARK[i][j][1][2]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+1000; fi;
+      #if MARK[i][j][1][3]=D[1] then MARK[i][j][2]:=MARK[i][j][2]+2000; fi;
+      #if MARK[i][j][1][1]=MARK[i][j][1][2] then MARK[i][j][2]:=MARK[i][j][2]+4000; fi;
+      #if MARK[i][j][1][1]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+8000; fi;
+      #if MARK[i][j][1][2]=MARK[i][j][1][3] then MARK[i][j][2]:=MARK[i][j][2]+16000; fi;
+      od;
+    MARK[i]:=SortedList(MARK[i]);
+    NMARK[i]:=[ORBZU[i],StructuralCopy(MARK[i])];
     od;
-  MARK[i]:=SortedList(MARK[i]);
-  NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
-  for j in [2..Size(MARK[i])] do
-    if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
-      Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
-        Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
+  GLOBMARK:=MARK;
+  NMARK[1]:=[];
+  NMARK:=Collected(NMARK);
+  for i in [2..Size(NMARK)] do
+    NMARK[i][1][1]:=Collected(GLOBDD[NMARK[i][1][1]]);
+    od;
+  return ORBZU;#NMARK;
+  end;
+-----
+#  NMARK[i]:=[[MARK[i][1][1],[MARK[i][1][2]]]];
+#  for j in [2..Size(MARK[i])] do
+#    if MARK[i][j][1]=NMARK[i][Size(NMARK[i])][1] then
+#      Add(NMARK[i][Size(NMARK[i])][2],MARK[i][j][2]); else
+#        Add(NMARK[i],[MARK[i][j][1],[MARK[i][j][2]]]); fi; od;
   #Print("\nv",i,NMARK[i]);
   #NMARK[i]:=Collected(List(NMARK[i],j->SortedList(j[2])));
   NMARK[i]:=Collected(NMARK[i]);
   #Print("\nn",i,NMARK[i]);
-  od;
-  NMARK[1]:=[];
   UMARK:=[];
   for i in [1..SD] do 
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
@@ -574,7 +614,7 @@ Liste_der_Markierungen:=[];Liste_der_Id:=[];
 for m in [2..8] do n:=2^m;
   Liste_der_Markierungen[m]:=[];
   Liste_der_Id[m]:=[];
-  for Id in #dsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-2) do #,RankPGroup,m-1,m-2,m-3
   #m:=9;n:=512;Liste_der_Markierungen[m]:=[];Liste_der_Id[m]:=[];for i in [10493062..10494173] do Id:=[512,i];
     Print("\nId=",Id," \c");
     G:=SmallGroup(Id);
@@ -586,17 +626,17 @@ for m in [2..8] do n:=2^m;
     M:=Size(Collected(COMPDIAG5E(RANK,D,0)))-1;#e weg
     Print(" OSIZE= ",M1," \c");
     Print(M," \c");
-    A:=AutomorphismGroup(G);
-    G2:=Group(List(G,i->i^2));
-    GD:=Difference(G,G2);
-    ORBS:=Orbits(A,GD);
-    S:=Size(ORBS);
-    Print(S," ",M>=S," \c");
-    #if M1<>M then
-     # M:= COMPDIAG5E(RANK,D,88);
-     # M1:=COMPDIAG5D(RANK,D,1);
-     # Print("\n  ",M,"\n",M1,"\c");
-     # Error("M1<>M"); fi;
+    #A:=AutomorphismGroup(G);
+    #G2:=Group(List(G,i->i^2));
+    #GD:=Difference(G,G2);
+    #ORBS:=Orbits(A,GD);
+    #S:=Size(ORBS);
+    #Print(S," ",M>=S," \c");
+    if M1<>M then
+      M:= COMPDIAG5E(RANK,D,88);
+      M1:=COMPDIAG5D(RANK,D,1);
+      Print("\n  ",M,"\n",M1,"\c");
+      Error("M1<>M"); fi;
     od;
   od;
 
