@@ -351,8 +351,9 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
   if flag=88 then Print("\n  ",D); fi;
   SD:=Size(D);
-  ORBZU:=List(D);
-  ORBZU[1]:=-1;
+  ORBZU:=[];STUFE:=1;
+  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE][1]:=-1;
   NMARK:=List([1..SD],i->[]);
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
@@ -360,19 +361,20 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[i],ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      for j in [1..SD] do MARK[i][j]:=[#ORBZU[STUFE][i],
+        ORBZU[STUFE][j],ORBZU[STUFE][XORMAT[j][i]]]; od;
       #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
       MARK[i]:=Collected(MARK[i]{[1..SD]});
       #Print("\nMARK[",i,"]=",D[i],MARK[i]);
       Add(NMARK[i],MARK[i]);
       #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
-    ORBZUMERK:=List(ORBZU);
-    ORBZU:=[];
+    STUFE:=STUFE+1;
+    ORBZU[STUFE]:=[];
     for i in [1..SD] do for j in [i,i-1..1] do
-      if NMARK[i]=NMARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
-    until ORBZU=ORBZUMERK;
-  return ORBZU;#NMARK;
+      if NMARK[i]=NMARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+    until ORBZU[STUFE]=ORBZU[STUFE-1];
+  return ORBZU[STUFE];#NMARK;
   end;
 -----
 
