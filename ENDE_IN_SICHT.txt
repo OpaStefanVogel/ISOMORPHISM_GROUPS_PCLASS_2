@@ -354,6 +354,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
   ORBZU[STUFE][1]:=-1;
+  ORBZU[STUFE]:=List(ORBZU[STUFE],i->[i]);
   NMARK:=List([1..SD],i->[]);
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
@@ -372,7 +373,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     STUFE:=STUFE+1;
     ORBZU[STUFE]:=[];
     for i in [1..SD] do for j in [i,i-1..1] do
-      if NMARK[i]=NMARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=[j]; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
   return ORBZU[STUFE];#NMARK;
   end;
