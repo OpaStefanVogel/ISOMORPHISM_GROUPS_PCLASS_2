@@ -352,13 +352,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   if flag=88 then Print("\n  ",D); fi;
   SD:=Size(D);
   ORBZU:=[];STUFE:=1;
-  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE]:=List(D,i->i=0);
   ORBZU[STUFE][1]:=-1;
-  ORBZU[STUFE]:=List(ORBZU[STUFE],i->[i]);
+  ORBZU[STUFE]:=List(ORBZU[STUFE],i->[String(i)]);
   NMARK:=List([1..SD],i->[]);
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
-    Print("#",Size(Collected(ORBZU)),"\c");
+    Print("#",Size(Collected(ORBZU[STUFE])),"\c");
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
@@ -373,10 +373,26 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     STUFE:=STUFE+1;
     ORBZU[STUFE]:=[];
     for i in [1..SD] do for j in [i,i-1..1] do
-      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=[j]; fi; od; od;
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=[String(j)]; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
-  return ORBZU[STUFE];#NMARK;
+  return NMARK;#ORBZU[STUFE];#NMARK;
   end;
+----- 
+Id:=[16,2];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
+Id:=[16,3];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
+Id:=[16,4];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
+    Id:=[64,241]; 
+    G:=SmallGroup(Id);
+    RANK:=RankPGroup(G);
+    Print("Rank=",RANK," \c");
+    D:=Diagonale(G);
+    Add(D,0,1);
+#    M1:=Size(COMPDIAG5D(RANK,D,0));#ist schon ohne e
+    M:=Size(Collected(COMPDIAG5E(RANK,D,0)))-1;#e weg
+#    M1:=Size(COMPDIAG5D(RANK,D,0));#ist schon ohne e
+    M:=Size(Collected(COMPDIAG5E(RANK,D,0)))-1;#e weg
+dd:=4;nr:=111;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),88);;
+COMPDIAG5E(3,[0, 0, 1, 0, 0, 1, 1, 2],88);
 -----
 
 COMPDIAG5E:=function(dd,D,flag)#neu
@@ -511,7 +527,7 @@ Id=[ 256, 56053 ] Rank=6 29#7#30 OSIZE= 29 27 29 false
 CD:=COMPDIAG5E(2,D,0);;
 dd:=3; 
 nr:=7; CD:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
-nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),0);;
+nr:=11;CE:=COMPDIAG5E(dd,DIAG(ERGS2[dd][nr][1]+2*ERGS2[dd][nr][2]),88);;
 ------
   #NMARK noch auf 0, 1, 2, 3 aufteilen dann sollte es passen
 #  UMARK:=[[],[],[],[]];
