@@ -347,10 +347,10 @@ Diagonale(SmallGroup(8,2));
 Diagonale(SmallGroup(16,3));
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,k,l,SD,ORBZU,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,UMARK,
+  local i,j,k,l,SD,ORBZU,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
   if flag=88 then Print("\n  ",D); fi;
-  NMARK2:=0;NMARK3:=0;
+  NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
@@ -408,7 +408,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
-  #for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
+  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
+  NMARK3:=StructuralCopy(NMARK);
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
     for j in [1..Size(NMARK[i])] do 
@@ -417,7 +418,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   #Error(i,j,k,NMA);
         for l in [1..3] do
           if j=1 then if NMA[l]>0 then NMA[l]:=UMARK[NMA[l]+1]; fi; else
-            if NMA[l]>0 then NMA[l]:=UMARK[D[NMA[l]]+1]; 
+            if NMA[l]>0 then NMA[l]:=NMARK3[NMA[l]]; 
               fi;
             fi;
           od;
@@ -426,9 +427,9 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       od;
     NMARK[i]:=Collected(NMARK[i]);
     od;
-  NMARK3:=StructuralCopy(NMARK);
+  NMARK4:=StructuralCopy(NMARK);
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU[STUFE],NMARK3,UMARK,NMARK2,NMARK1];#ORBZU[STUFE];#NMARK;
+  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1];#ORBZU[STUFE];#NMARK;
   end;
 
 Id:=[16,2];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
@@ -437,6 +438,7 @@ Id:=[16,4];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGrou
 Id:=[64,198];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 Id:=[64,206];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 Id:=[64,241];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+nicht UMARK[D[i]+1] einsetzen sondern das aufgemotzte NMARK[i]
 gap> CE[5][2];CE[5][3];
 [ [ [ [ 0, -1, 0 ], 1 ], [ [ 0, 0, -1 ], 1 ], [ [ 0, 0, 0 ], 2 ], 
       [ [ 0, 0, 1 ], 1 ], [ [ 0, 0, 2 ], 1 ], [ [ 0, 0, 3 ], 1 ], 
