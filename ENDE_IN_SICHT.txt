@@ -402,13 +402,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     #Print("\n==> ",NMARK[i]);
     od;
   #NMARK:=Collected(NMARK);
+  NMARK2:=StructuralCopy(NMARK);
   UMARK:=[];
   for i in [1..SD] do 
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
   #for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
-  NMARK2:=StructuralCopy(NMARK);
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
     for j in [1..Size(NMARK[i])] do 
@@ -427,7 +427,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     NMARK[i]:=Collected(NMARK[i]);
     od;
   NMARK3:=StructuralCopy(NMARK);
-  return [ORBZU[STUFE],NMARK2,UMARK,NMARK3,NMARK1];#ORBZU[STUFE];#NMARK;
+  for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
+  return [ORBZU[STUFE],NMARK3,UMARK,NMARK2,NMARK1];#ORBZU[STUFE];#NMARK;
   end;
 
 Id:=[16,2];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
@@ -435,18 +436,40 @@ Id:=[16,3];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGrou
 Id:=[16,4];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
 Id:=[64,198];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 Id:=[64,206];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-CE[2][15];CE[2][16];
-CE[4][15];CE[4][16];
-CE[5][15];CE[5][16];
-CE[2][15]=CE[2][16];
-CE[4][15]=CE[4][16];
-CE[5][15]=CE[5][16];
-CE[4][3];CE[4][5];
-CE[5][3];CE[5][5];
-CE[4][3]=CE[4][5];
-CE[5][3]=CE[5][5];
-CE[4][3]=CE[4][7];
-CE[5][3]=CE[5][7];
+Id:=[64,241];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+gap> CE[5][2];CE[5][3];
+[ [ [ [ 0, -1, 0 ], 1 ], [ [ 0, 0, -1 ], 1 ], [ [ 0, 0, 0 ], 2 ], 
+      [ [ 0, 0, 1 ], 1 ], [ [ 0, 0, 2 ], 1 ], [ [ 0, 0, 3 ], 1 ], 
+      [ [ 0, 1, 0 ], 1 ], [ [ 0, 1, 2 ], 1 ], [ [ 0, 1, 3 ], 1 ], 
+      [ [ 0, 2, 0 ], 1 ], [ [ 0, 2, 1 ], 1 ], [ [ 0, 2, 3 ], 1 ], 
+      [ [ 0, 3, 0 ], 1 ], [ [ 0, 3, 1 ], 1 ], [ [ 0, 3, 2 ], 1 ] ], 
+  [ [ [ 2, -2, 2 ], 1 ], [ [ 2, 2, -2 ], 1 ], [ [ 2, 2, 2 ], 2 ], 
+      [ [ 2, 5, 6 ], 1 ], [ [ 2, 6, 5 ], 1 ], [ [ 2, 7, 8 ], 1 ], 
+      [ [ 2, 8, 7 ], 1 ], [ [ 2, 9, 10 ], 1 ], [ [ 2, 10, 9 ], 1 ], 
+      [ [ 2, 11, 12 ], 1 ], [ [ 2, 12, 11 ], 1 ], [ [ 2, 13, 14 ], 1 ], 
+      [ [ 2, 14, 13 ], 1 ], [ [ 2, 15, 16 ], 1 ], [ [ 2, 16, 15 ], 1 ] ], 
+  [ [ [ 2, -2, 2 ], 1 ], [ [ 2, 2, -2 ], 1 ], [ [ 2, 3, 4 ], 1 ], 
+      [ [ 2, 4, 3 ], 1 ], [ [ 2, 5, 6 ], 1 ], [ [ 2, 6, 5 ], 1 ], 
+      [ [ 2, 7, 8 ], 1 ], [ [ 2, 8, 7 ], 1 ], [ [ 2, 9, 10 ], 1 ], 
+      [ [ 2, 10, 9 ], 1 ], [ [ 2, 11, 12 ], 1 ], [ [ 2, 12, 11 ], 1 ], 
+      [ [ 2, 13, 14 ], 1 ], [ [ 2, 14, 13 ], 1 ], [ [ 2, 15, 16 ], 1 ], 
+      [ [ 2, 16, 15 ], 1 ] ] ]
+[ [ [ [ 0, -1, 0 ], 1 ], [ [ 0, 0, -1 ], 1 ], [ [ 0, 0, 0 ], 2 ], 
+      [ [ 0, 0, 1 ], 1 ], [ [ 0, 0, 2 ], 1 ], [ [ 0, 0, 3 ], 1 ], 
+      [ [ 0, 1, 0 ], 1 ], [ [ 0, 1, 2 ], 1 ], [ [ 0, 1, 3 ], 1 ], 
+      [ [ 0, 2, 0 ], 1 ], [ [ 0, 2, 1 ], 1 ], [ [ 0, 2, 3 ], 1 ], 
+      [ [ 0, 3, 0 ], 1 ], [ [ 0, 3, 1 ], 1 ], [ [ 0, 3, 2 ], 1 ] ], 
+  [ [ [ 2, -2, 2 ], 1 ], [ [ 2, 2, -2 ], 1 ], [ [ 2, 2, 2 ], 2 ], 
+      [ [ 2, 5, 7 ], 1 ], [ [ 2, 6, 8 ], 1 ], [ [ 2, 7, 5 ], 1 ], 
+      [ [ 2, 8, 6 ], 1 ], [ [ 2, 9, 11 ], 1 ], [ [ 2, 10, 12 ], 1 ], 
+      [ [ 2, 11, 9 ], 1 ], [ [ 2, 12, 10 ], 1 ], [ [ 2, 13, 15 ], 1 ], 
+      [ [ 2, 14, 16 ], 1 ], [ [ 2, 15, 13 ], 1 ], [ [ 2, 16, 14 ], 1 ] ], 
+  [ [ [ 3, -2, 3 ], 1 ], [ [ 3, 2, 4 ], 1 ], [ [ 3, 3, -2 ], 1 ], 
+      [ [ 3, 4, 2 ], 1 ], [ [ 3, 5, 7 ], 1 ], [ [ 3, 6, 8 ], 1 ], 
+      [ [ 3, 7, 5 ], 1 ], [ [ 3, 8, 6 ], 1 ], [ [ 3, 9, 11 ], 1 ], 
+      [ [ 3, 10, 12 ], 1 ], [ [ 3, 11, 9 ], 1 ], [ [ 3, 12, 10 ], 1 ], 
+      [ [ 3, 13, 15 ], 1 ], [ [ 3, 14, 16 ], 1 ], [ [ 3, 15, 13 ], 1 ], 
+      [ [ 3, 16, 14 ], 1 ] ] ]
 
 Id=[ 64, 198 ] Rank=4 7#5#8 OSIZE= 7 7 4 5 false 
 Id=[ 64, 206 ] Rank=4 11#5#12 OSIZE= 11 11 7 8 false
@@ -732,12 +755,12 @@ for m in [2..8] do n:=2^m;
     GD:=Difference(G,G2);
     ORBS:=Orbits(A,GD);
     S:=Size(ORBS);
-    Print(S," ",M>=S," \c");
-    if M1<>M then
-      M:= COMPDIAG5E(RANK,D,88);
-      M1:=COMPDIAG5D(RANK,D,1);
-      Print("\n  ",M,"\n",M1,"\c");
-      Error("M1<>M"); fi;
+    Print(S," ",M1=M and MA=S ," \c");
+    if M1<>M or MA<>S then
+      #M:= COMPDIAG5E(RANK,D,88);
+      #M1:=COMPDIAG5D(RANK,D,1);
+      #Print("\n  ",M,"\n",M1,"\c");
+      Error("M1<>M or MA<>S"); fi;
     od;
   od;
 
