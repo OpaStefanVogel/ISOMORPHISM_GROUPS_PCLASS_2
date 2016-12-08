@@ -408,7 +408,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
-  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
+  UMARK2:=[-3];
+  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then
+    for j in [i,i-1..1] do if IsBound(UMARK[D[j]+1]) then 
+      if UMARK[D[i]+1]=UMARK[D[j]+1] then UMARK[D[i]+1]:=j; fi; 
+      fi; od; fi; od;
+  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK2[D[i]+1]); fi; od;  
+    
   NMARK3:=StructuralCopy(NMARK);
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
@@ -446,10 +452,7 @@ Id:=[256,55964];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(Rank
   21, 22, 23, 24, 6, 26, 27, 14, 29, 30, 22, 32, 33, 13, 5, 36, 21, 38, 
   39, 29, 41, 16, 8, 44, 24, 46, 38, 32, 49, 11, 3, 52, 19, 41, 33, 27, 
   52, 10, 2, 60, 18, 44, 36, 26 ]
-[ [ f1, f1*f3*f4*f5*f6, f1*f7, f1*f8, f1*f2*f5*f6*f8, f1*f3*f4*f5*f6*f7,
-      f1*f3*f4*f5*f6*f8, f1*f7*f8, f1*f3*f4*f5*f6*f7*f8, f1*f2*f4*f5*f7,
-      f1*f2*f5*f6*f7*f8, f1*f2*f5*f6, f1*f2*f5*f6*f7,
-      f2*f3*f4*f5*f6*f7*f8, f1*f2*f4*f5, f1*f2*f4*f5*f7*f8,
+[ [ f1, f1*f3*f4*f5*f6, f1*f2*f5*f6, f1*f2*f4*f5, f1*f2*f4*f5*f7*f8,
       f1*f2*f4*f5*f8, f1*f2*f3*f8, f2*f3*f4*f5*f6*f8, f2*f3*f4*f5*f6*f7,
       f2*f3*f4*f5*f6, f1*f2*f3*f7*f8, f1*f2*f3, f1*f2*f3*f7 ],
   [ f2, f1*f4, f2*f7, f2*f8, f1*f4*f6*f7*f8, f1*f4*f7, f1*f4*f8,
@@ -519,6 +522,13 @@ gap> Size(Collected(CE[2]));
 35
 gap> Size(Collected(CE[1]));
 36
+
+964
+999
+000
+005
+008
+012
 
 
 
