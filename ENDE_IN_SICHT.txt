@@ -441,8 +441,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     od;
   NMARK4:=StructuralCopy(NMARK);
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3];#ORBZU[STUFE];#NMARK;
-          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8
+  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,ORBZU];#ORBZU[STUFE];#NMARK;
+          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8    CE9
   end;
 
 ---------
