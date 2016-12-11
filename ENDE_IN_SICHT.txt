@@ -347,7 +347,7 @@ Diagonale(SmallGroup(8,2));
 Diagonale(SmallGroup(16,3));
 
 COMPDIAG5E:=function(dd,D,flag)#neu
-  local i,j,k,l,SD,ORBZU,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
+  local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
@@ -398,7 +398,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       #Print("\n--> ",NMARK[i][j]);
       od;
     #Print("\nund da was zusammenfassen: ",NMARK[i]);
-    NMARK[i]:=Collected(NMARK[i]);
+    #NMARK[i]:=Collected(NMARK[i]);
     #Print("\n==> ",NMARK[i]);
     od;
   #NMARK:=Collected(NMARK);
@@ -409,11 +409,16 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); fi; od;
   UMARK2:=[-3];
-  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then
-    for j in [i,i-1..1] do if IsBound(UMARK[D[j]+1]) then 
-      if UMARK[D[i]+1]=UMARK[D[j]+1] then UMARK[D[i]+1]:=j; fi; 
+  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then
+    for j in [i,i-1..1] do if IsBound(UMARK[j]) then 
+      if UMARK[i]=UMARK[j] then UMARK2[i]:=j; fi; 
       fi; od; fi; od;
   for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK2[D[i]+1]); fi; od;  
+  ORBZU3:=[-3];
+  for i in [2..SD] do
+    for j in [i,i-1..2] do
+      if NMARK[i]=NMARK[j] then ORBZU3[i]:=j; fi; 
+      od; od;
     
   NMARK3:=StructuralCopy(NMARK);
   NMARK:=StructuralCopy(NMARK1);
@@ -421,23 +426,26 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for j in [1..Size(NMARK[i])] do 
       for k in [1..Size(NMARK[i][j])] do
         NMA:=NMARK[i][j][k][1];
-  #Error(i,j,k,NMA);
+#  Error("\nvorher",i,j,k,NMA);
         for l in [1..3] do
-          if j=1 then if NMA[l]>0 then NMA[l]:=UMARK[NMA[l]+1]; fi; else
-            if NMA[l]>0 then NMA[l]:=NMARK3[NMA[l]]; 
+          if j=1 then if NMA[l]>0 then NMA[l]:=UMARK2[NMA[l]+1]; fi; else
+            if NMA[l]>0 then NMA[l]:=ORBZU3[NMA[l]];#NMARK3[NMA[l]]; 
               fi;
             fi;
+#  Error("\nnachher",i,j,k,NMA);
           od;
         od;
       NMARK[i][j]:=Collected(NMARK[i][j]);
       od;
-    NMARK[i]:=Collected(NMARK[i]);
+    #NMARK[i]:=Collected(NMARK[i]);
     od;
   NMARK4:=StructuralCopy(NMARK);
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1];#ORBZU[STUFE];#NMARK;
+  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3];#ORBZU[STUFE];#NMARK;
+          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8
   end;
 
+---------
 Id:=[16,2];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
 Id:=[16,3];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
 Id:=[16,4];G:=SmallGroup(Id);D:=Diagonale(G);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
