@@ -395,7 +395,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         if NMA[2]>0 then
           if NMA[2]=NMA[1] then NMA[2]:="x=y"; else NMA[2]:="y"; fi;
           fi;
-        if NMA[1]>0 then NMA[1]:="x"; NMA[4]:=STARTWERT; fi;
+        if NMA[1]>0 then NMA[1]:="x"; NMA[4]:=0*STARTWERT; fi;
         #Print(" --> ",NMARK[i][j][k][1]); 
         od;
       #Print("\nhier was zusammenfassen: ",NMARK[i][j]);
