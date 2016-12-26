@@ -351,7 +351,7 @@ Diagonale(SmallGroup(256,55750),1);
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
-  HRES,LRES,MRES,PHI0,up,MRET;#global GLOBDD;
+  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3;
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
@@ -392,13 +392,13 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   ORBZU[STUFE]:=List(D);
   ORBZU[STUFE][1]:=-1;
   #ORBZU[STUFE]:=List(ORBZU[STUFE],i->[String(i)]);
-  NMARK:=List([1..SD],i->List([1..SD],j->[]);
+  NMARK:=List([1..SD],i->List([1..SD],j->[]));
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
     Print("$",Size(Collected(ORBZU[STUFE])),"\c");
     MARK:=[];
     for i in [1..SD] do
-      #MARK[i]:=[-1];
+      MARK[i]:=[-1];
       for j in [1..SD] do 
         NMA:=[
           ORBZU[STUFE][i],
@@ -473,7 +473,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8    CE9
   end;
 
-
+--------------
 DDD:=Diagonale(G,1);
 for i in [1..Size(ORBS)] do for j in [1..Size(ORBS[i])] do
   POS:=Position(DDD,ORBS[i][j]);
