@@ -355,6 +355,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
+
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
   ORBZU[STUFE][1]:=-1;
@@ -385,11 +386,24 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
   NMARK1:=StructuralCopy(NMARK);
-  for i in [1..SD] do 
-    for j in [1..SD] do 
-      for k in [1..Size(NMARK[i][j])] do
-        #Print("\nhier was ersetzen: ",NMARK[i][j][k][1]);
-        NMA:=NMARK[i][j][k];
+  ORBZU1:=StructuralCopy(ORBZU);
+  
+  ORBZU:=[];STUFE:=1;
+  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE][1]:=-1;
+  #ORBZU[STUFE]:=List(ORBZU[STUFE],i->[String(i)]);
+  NMARK:=List([1..SD],i->List([1..SD],j->[]);
+  repeat #zB bei [ 256, 56030 ]
+    if flag=88 then Print("\n",ORBZU); fi;
+    Print("$",Size(Collected(ORBZU[STUFE])),"\c");
+    MARK:=[];
+    for i in [1..SD] do
+      #MARK[i]:=[-1];
+      for j in [1..SD] do 
+        NMA:=[
+          ORBZU[STUFE][i],
+          ORBZU[STUFE][j],
+          ORBZU[STUFE][XORMAT[j][i]]];
         if NMA[3]>0 then
           if NMA[3]=NMA[2] then NMA[3]:="y=z"; else
             if NMA[3]=NMA[1] then NMA[3]:="x=z"; else
@@ -398,26 +412,24 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         if NMA[2]>0 then
           if NMA[2]=NMA[1] then NMA[2]:="x=y"; else NMA[2]:="y"; fi;
           fi;
-        if NMA[1]>0 then NMA[1]:="x"; 
-          #if k>1 and NMARK1[i][j][k][1]<>NMARK1[i][j][k-1][1] then NMA[1]:="wx"; fi;
-          fi;
-        #Print(" --> ",NMARK[i][j][k][1]); 
+        if NMA[1]>0 then NMA[1]:="x"; fi;
+        MARK[i][j]:=NMA;
+        Add(NMARK[i][j],MARK[i][j]);
         od;
-      #Print("\nhier was zusammenfassen: ",NMARK[i][j]);
-      #NMARK[i][j]:=Collected(NMARK[i][j]);
-      #Print("\n--> ",NMARK[i][j]);
+      #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
+      MARK[i]:=Collected(MARK[i]{[1..SD]});
+      #Print("\nMARK[",i,"]=",D[i],MARK[i]);
+      #Add(NMARK[i],MARK[i]);
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
-    #Print("\nund da was zusammenfassen: ",NMARK[i]);
-    NMARK[i]:=Collected(NMARK[i]);
-    #Print("\n==> ",NMARK[i]);
-    od;
-  #NMARK:=Collected(NMARK);
+    STUFE:=STUFE+1;
+    ORBZU[STUFE]:=[-3];
+    for i in [2..SD] do for j in [i,i-1..1] do
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+    until ORBZU[STUFE]=ORBZU[STUFE-1];
   NMARK2:=StructuralCopy(NMARK);
-  ORBZU2:=[-2];
-  for i in [2..SD] do
-    for j in [i,i-1..2] do
-      if NMARK[i]=NMARK[j] then ORBZU2[i]:=j; fi; 
-      od; od;
+  ORBZU2:=StructuralCopy(ORBZU);
+
   UMARK:=[];
   for i in [1..SD] do 
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
@@ -434,8 +446,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for j in [i,i-1..2] do
       if NMARK[i]=NMARK[j] then ORBZU3[i]:=j; fi; 
       od; od;
-    
   NMARK3:=StructuralCopy(NMARK);
+
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
     for j in [1..SD] do 
@@ -456,9 +468,9 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     NMARK[i]:=Collected(NMARK[i]);
     od;
   NMARK4:=StructuralCopy(NMARK);
-#  for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,ORBZU2,ORBZU];#ORBZU[STUFE];#NMARK;
-          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8    CE9    CE10
+  for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
+  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,ORBZU2[STUFE],ORBZU1];#ORBZU[STUFE];#NMARK;
+          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8    CE9
   end;
 
 
