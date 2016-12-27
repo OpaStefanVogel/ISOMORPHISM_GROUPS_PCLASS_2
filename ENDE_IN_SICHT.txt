@@ -351,7 +351,7 @@ Diagonale(SmallGroup(256,55750),1);
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
-  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3;
+  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1;
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
@@ -386,7 +386,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
   NMARK1:=StructuralCopy(NMARK);
-  ORBZU1:=StructuralCopy(ORBZU);
+  ORBZU1:=StructuralCopy(ORBZU);STUFE1:=STUFE;
   
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
@@ -427,6 +427,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for i in [2..SD] do for j in [i,i-1..1] do
       if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
+  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
   NMARK2:=StructuralCopy(NMARK);
   ORBZU2:=StructuralCopy(ORBZU);
 
@@ -469,22 +470,28 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     od;
   NMARK4:=StructuralCopy(NMARK);
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU[STUFE],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,ORBZU2[STUFE],ORBZU1];#ORBZU[STUFE];#NMARK;
-          #CE1         CE2    CE3   CE4    CE5    CE6    CE7    CE8    CE9
+  return [ORBZU1[STUFE1],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
+          #CE1           CE2    CE3   CE4    CE5    CE6    CE7    CE8 
+          ORBZU2[STUFE],ORBZU1];#ORBZU[STUFE];#NMARK;
+          #CE9          CE10
   end;
 
 --------------
+    A:=AutomorphismGroup(G);
+    G2:=Group(List(G,i->i^2));
+    GD:=Difference(G,G2);
+    ORBS:=Orbits(A,GD);
 DDD:=Diagonale(G,1);
 for i in [1..Size(ORBS)] do for j in [1..Size(ORBS[i])] do
   POS:=Position(DDD,ORBS[i][j]);
   if POS<>fail then DDD[POS]:=i; fi;
   od; od;
-Add(DDD,-4,1);
 DDDD:=[-5];
 for i in [2..Size(DDD)] do for j in [i,i-1..2] do
   if DDD[i]=DDD[j] then DDDD[i]:=j; fi;
   od; od;
 DDDD;
+Size(Collected(DDDD));
 ---------
 Id:=[16,2];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
 Id:=[16,3];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);
@@ -689,6 +696,7 @@ gap> CE[6][3];
   [ [ 0, 2, 3 ], [ 2, 16, 14 ], [ 3, 16, 14 ] ] ]
 
 
+Id=[ 256, 55750 ] Rank=6 35#5#20#36$5$18$24 OSIZE= 35 35 35 20 false Error, M1<>
 Id:=[256,55750];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 #5#20#36gap> D;
 [ 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 2, 3, 0, 1, 2, 3, 1, 
@@ -1263,14 +1271,14 @@ for m in [2..8] do n:=2^m;
     G:=SmallGroup(Id);
     RANK:=RankPGroup(G);
     Print("Rank=",RANK," \c");
-    D:=Diagonale(G);
+    D:=Diagonale(G,0);
     Add(D,0,1);
     M1:=Size(COMPDIAG5D(RANK,D,0));#ist schon ohne e
     CE:=COMPDIAG5E(RANK,D,0);
     M:=Size(Collected(CE[1]))-1;#e weg
     Print(" OSIZE= ",M1," \c");
     Print(M," \c");
-    MA:=Size(Collected(CE[5]))-1;#e weg
+    MA:=Size(Collected(CE[2]))-1;#e weg
     Print(MA," \c");
     A:=AutomorphismGroup(G);
     G2:=Group(List(G,i->i^2));
@@ -1285,4 +1293,6 @@ for m in [2..8] do n:=2^m;
       Error("M1<>M or MA<>S"); fi;
     od;
   od;
-
+#2150 - 2300
+#55626 - 56081
+#10493062 - 10494173 
