@@ -404,6 +404,9 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           ORBZU[STUFE][i],
           ORBZU[STUFE][j],
           ORBZU[STUFE][XORMAT[j][i]]];
+        if STUFE=1 then
+          NMA[4]:=(NMA[1]+1=XORMAT[NMA[2]+1][NMA[3]+1]);
+          fi;
         if NMA[3]>0 then
           if NMA[3]=NMA[2] then NMA[3]:="y=z"; else
             if NMA[3]=NMA[1] then NMA[3]:="x=z"; else
@@ -651,15 +654,20 @@ for m in [2..8] do n:=2^m;
     CE:=COMPDIAG5E(RANK,D,0);
     M:=Size(Collected(CE[1]))-1;#e weg
     Print(M," \c");
+    M5:=Size(Collected(CE[5]))-1;#e weg
+    Print(M5," \c");
+    M4:=Size(Collected(CE[4]))-1;#e weg
+    Print(M4," \c");
     MA:=Size(Collected(CE[2]))-1;#e weg
     Print(MA," \c");
-    A:=AutomorphismGroup(G);
-    G2:=Group(List(G,i->i^2));
-    GD:=Difference(G,G2);
-    ORBS:=Orbits(A,GD);
-    S:=Size(ORBS);
-    if MA<>S then Error("MA<>S bei ",Id); fi;
-    Print(S," ",MA=S ," \c");
+    if MA<>M4 then Error("MA<>M4 bei ",Id); fi;
+    #A:=AutomorphismGroup(G);
+    #G2:=Group(List(G,i->i^2));
+    #GD:=Difference(G,G2);
+    #ORBS:=Orbits(A,GD);
+    #S:=Size(ORBS);
+    #if MA<>S then Error("MA<>S bei ",Id); fi;
+    #Print(S," ",MA=S ," \c");
     if [CE[2],CE[3],CE[4]] in Liste_der_Markierungen then Error("Doppelte Markierung bei ",Id," und ",Liste_der_Id[Position(Liste_der_Markierungen,[CE[2],CE[3],CE[4]])]); fi;
     Add(Liste_der_Markierungen,[CE[2],CE[3],CE[4]]);
     Add(Liste_der_Id,Id);
