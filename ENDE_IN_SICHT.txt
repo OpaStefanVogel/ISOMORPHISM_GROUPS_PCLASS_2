@@ -444,7 +444,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for j in [i,i-1..1] do if IsBound(UMARK[j]) then 
       if UMARK[i]=UMARK[j] then UMARK2[i]:=j; fi; 
       fi; od; fi; od;
-  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK2[D[i]+1]); fi; od;  
+  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],UMARK[D[i]+1]); fi; od;  
   ORBZU3:=[-3];
   for i in [2..SD] do
     for j in [i,i-1..2] do
