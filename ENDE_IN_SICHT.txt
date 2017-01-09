@@ -351,7 +351,7 @@ Diagonale(SmallGroup(256,55750),1);
 
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
-  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A;
+  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A,NMARK5,ORBZU5,NMARK4A,NMARK5A;
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
@@ -447,12 +447,12 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       if UMARK[i]=UMARK[j] then UMARK2[i]:=j; fi; 
       fi; od; fi; od;
   for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],Position(UMARKS,UMARK[D[i]+1])); fi; od;  
+  NMARK3:=StructuralCopy(NMARK);
   ORBZU3:=[-3];
   for i in [2..SD] do
     for j in [i,i-1..2] do
       if NMARK[i]=NMARK[j] then ORBZU3[i]:=j; fi; 
       od; od;
-  NMARK3:=StructuralCopy(NMARK);
 
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
@@ -470,18 +470,48 @@ COMPDIAG5E:=function(dd,D,flag)#neu
         od;
       NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])]];
       od;
-    NMARK[i]:=Collected(NMARK[i]);
+    #NMARK[i]:=Collected(NMARK[i]);
     od;
+  NMARK4A:=StructuralCopy(NMARK);
+  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
+  NMARK4:=StructuralCopy(NMARK);
   ORBZU4:=[-4];
   for i in [2..SD] do
     for j in [i,i-1..2] do
       if NMARK[i]=NMARK[j] then ORBZU4[i]:=j; fi; 
       od; od;
-  NMARK4:=StructuralCopy(NMARK);
+
+  NMARK:=StructuralCopy(NMARK1);
+  for i in [1..SD] do 
+    for j in [1..SD] do 
+      for k in [1..Size(NMARK[i][j])] do
+        NMA:=NMARK[i][j][k];
+#  Error("\nvorher",i,j,k,NMA);
+        for l in [1..3] do
+          if k=1 then if NMA[l]>0 then NMA[l]:=UMARK2[NMA[l]+1]; fi; else
+            if NMA[l]>0 then NMA[l]:=ORBZU4[NMA[l]];#NMARK3[NMA[l]]; 
+              fi;
+            fi;
+#  Error("\nnachher",i,j,k,NMA);
+          od;
+        od;
+      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])]];
+      od;
+    #NMARK[i]:=Collected(NMARK[i]);
+    od;
+  NMARK5A:=StructuralCopy(NMARK);
+  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
+  NMARK5:=StructuralCopy(NMARK);
+  ORBZU5:=[-5];
+  for i in [2..SD] do
+    for j in [i,i-1..2] do
+      if NMARK[i]=NMARK[j] then ORBZU5[i]:=j; fi; 
+      od; od;
+
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU1[STUFE1],NMARK4,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
+  return [ORBZU1[STUFE1],NMARK5,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
           #CE1           CE2    CE3   CE4    CE5    CE6    CE7    CE8 
-          ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS];#ORBZU[STUFE];#NMARK;
+          ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS,NMARK4,ORBZU5];#ORBZU[STUFE];#NMARK;
           #CE9          CE10   CE11   CE12
   end;
 
@@ -495,7 +525,7 @@ for i in [1..Size(ORBS)] do for j in [1..Size(ORBS[i])] do
   POS:=Position(DDD,ORBS[i][j]);
   if POS<>fail then DDD[POS]:=i; fi;
   od; od;
-DDDD:=[-5];
+DDDD:=[-9];
 for i in [2..Size(DDD)] do for j in [i,i-1..2] do
   if DDD[i]=DDD[j] then DDDD[i]:=j; fi;
   od; od;
