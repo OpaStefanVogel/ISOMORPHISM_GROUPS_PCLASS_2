@@ -439,7 +439,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   for i in [1..SD] do 
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
-  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); else UMARK[i]:=0; fi; od;
+  for i in [1..2^(LogInt(Size(UMARK),2)+1)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); else UMARK[i]:=0; fi; od;
   UMARKS:=StructuralCopy(UMARK);Sort(UMARKS);
   UMARK2:=[-3];
   for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then
@@ -512,7 +512,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   return [ORBZU1[STUFE1],NMARK5,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
           #CE1           CE2    CE3   CE4    CE5    CE6    CE7    CE8 
           ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS,NMARK4,ORBZU5];#ORBZU[STUFE];#NMARK;
-          #CE9          CE10   CE11   CE12
+          #CE9          CE10   CE11   CE12   CE13   CE14
   end;
 
 DDDDMACH:=function()
@@ -760,7 +760,10 @@ ANZ;
 #  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
 
-
+BG:=[];
+BG[2]:=Group((2,4),(2,3));
+BG[3]:=Group((2,4)(6,8),(2,3,5)(4,7,6));
+BG[4]:=Group((2,4)(6,8)(10,12)(14,16),(2,3,5,9),(4,7,13,10),(6,11),(8,15,14,12));
 Liste_der_Markierungen:=[];Liste_der_Id:=[];
 for m in [2..8] do n:=2^m;
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
@@ -792,6 +795,8 @@ for m in [2..8] do n:=2^m;
     if [CE[2],CE[12]] in Liste_der_Markierungen then Error("Doppelte Markierung bei ",Id," und ",Liste_der_Id[Position(Liste_der_Markierungen,[CE[2],CE[12]])]); fi;
     Add(Liste_der_Markierungen,[CE[2],CE[12]]);
     Add(Liste_der_Id,Id);
+    STAB:=Stabilizer(BG[3],CE[7],Permuted);
+    Print(" ",Size(A)/8^(m-3)/Size(STAB)/Size(Stabilizer(BG[m-3],CE[1],Permuted)),CE[1]);
     od;
   od;
 
