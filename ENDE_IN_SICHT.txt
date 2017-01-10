@@ -349,12 +349,31 @@ Diagonale(SmallGroup(8,2),0);
 Diagonale(SmallGroup(16,3),0);
 Diagonale(SmallGroup(256,55750),1);
 
+EGL:=List(ElementaryAbelianGroup(256));
+EXTRAORBZUMACH:=function(D)
+  local i,j,POS,GRP,RET;
+  RET:=List(D,i->[]);
+  for i in [0..Maximum(D)] do
+    POS:=Positions(D,i);
+    if POS>[] then
+      GRP:=Group(EGL{POS});
+      for j in GRP do
+        k:=Position(EGL,j);
+        Add(RET[k],i);
+        od;
+      fi;
+    od;
+  return RET;
+  end;
+EXTRAORBZU:=EXTRAORBZUMACH([0,0,4,5,5,6,5,7,0,0,6,7,4,7,6,4]);
+  
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A,NMARK5,ORBZU5,NMARK4A,NMARK5A;
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
+  EXTRAORBZU:=EXTRAORBZUMACH(D);
 
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
@@ -400,12 +419,17 @@ COMPDIAG5E:=function(dd,D,flag)#neu
     for i in [1..SD] do
       MARK[i]:=[-1];
       for j in [1..SD] do 
+        k:=XORMAT[j][i];
         NMA:=[
           ORBZU[STUFE][i],
           ORBZU[STUFE][j],
-          ORBZU[STUFE][XORMAT[j][i]]];
+          ORBZU[STUFE][k]];
         if STUFE=1 then
-          NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[XORMAT[j][i]]+1]);
+          NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[k]+1]);
+          if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
+          if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
+          #if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
+          #if i in EXTRAORBZU[j] then NMA[7]:="xinY"; fi;
           fi;
         if NMA[3]>0 then
           if NMA[3]=NMA[2] then NMA[3]:="y=z"; else
@@ -511,8 +535,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
   return [ORBZU1[STUFE1],NMARK5,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
           #CE1           CE2    CE3   CE4    CE5    CE6    CE7    CE8 
-          ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS,NMARK4,ORBZU5];#ORBZU[STUFE];#NMARK;
-          #CE9          CE10   CE11   CE12   CE13   CE14
+          ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS,NMARK4,ORBZU5,NMARK2A];#ORBZU[STUFE];#NMARK;
+          #CE9          CE10   CE11   CE12   CE13   CE14   CE15
   end;
 
 DDDDMACH:=function()
@@ -537,91 +561,10 @@ DDDD:=DDDDMACH();
 Size(Collected(DDDD));
 ---------
 
-Id=[ 128, 1047 ] Rank=4 #6#7$6$66 3 3 3 Error, MA<>S bei [ 128, 1047 ] called fr
-Id=[ 128, 1110 ] Rank=4 #8#16$8$1015 7 7 8 Error, MA<>S bei [ 128, 1110 ] called
-Id=[ 128, 1114 ] Rank=4 #7#10$7$79 4 4 4 Error, MA<>S bei [ 128, 1114 ] called f
-Id=[ 128, 1115 ] Rank=4 #9#16$9$1015 5 5 6 Error, MA<>S bei [ 128, 1115 ] called
-Id=[ 128, 1301 ] Rank=4 #7#16$7$1415 7 8 8 Error, MA<>S bei [ 128, 1301 ] called
-Id=[ 128, 1399 ] Rank=4 #7#16$7$1215 7 7 8 Error, MA<>S bei [ 128, 1399 ] called
-Id=[ 128, 1574 ] Rank=4 #6#14#16$6$615 2 2 2 Error, MA<>S bei [ 128, 1574 ] call
 Id=[ 128, 1598 ] Rank=4 #9#16$9$1615 3 3 3 3 true Error, Doppelte Markierung bei
-Id=[ 256, 27037 ] Rank=5 #6#8$6$77 4 4 4 Error, MA<>S bei [ 256, 27037 ] called 
-Id=[ 256, 27040 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
-Id=[ 256, 27097 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
 Id=[ 256, 27166 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
 Id=[ 256, 27167 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
 Id=[ 256, 27168 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
-
-Id:=[128,1047];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#6#7$6$6gap> D;
-[ 0, 0, 2, 2, 0, 0, 3, 3, 4, 5, 4, 5, 5, 4, 4, 5 ]
-gap> CE[8]; 
-[ -3, 2, 3, 3, 2, 2, 3, 3, 9, 9, 9, 9, 9, 9, 9, 9 ]
-gap> CE[11];
-[ -4, 2, 3, 3, 2, 2, 3, 3, 9, 9, 9, 9, 9, 9, 9, 9 ]
-gap> DDDD;
-[ -5, 2, 3, 3, 5, 5, 3, 3, 9, 9, 9, 9, 9, 9, 9, 9 ]
-
-Id:=[128,1110];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#8#16$8$10gap> D;
-[ 0, 1, 0, 1, 1, 1, 2, 2, 4, 6, 6, 4, 4, 7, 5, 6 ]
-gap> CE[8];
-[ -3, 2, 3, 4, 5, 5, 7, 7, 9, 9, 9, 9, 9, 14, 14, 9 ]
-gap> CE[11];                                                                  
-[ -4, 2, 3, 4, 5, 5, 7, 7, 9, 9, 9, 9, 13, 14, 14, 13 ]
-gap> DDDD;
-[ -5, 2, 3, 4, 5, 5, 7, 7, 9, 10, 9, 10, 13, 14, 14, 13 ]
-
-
-Id:=[128,1114];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#7#10$7$7gap> D;
-[ 0, 1, 2, 3, 2, 2, 3, 3, 4, 6, 4, 6, 7, 4, 4, 7 ]
-gap> CE[8];
-[ -3, 2, 3, 3, 3, 3, 3, 3, 9, 10, 9, 10, 10, 9, 9, 10 ]
-gap> CE[11];
-[ -4, 2, 3, 3, 3, 3, 3, 3, 9, 10, 9, 10, 10, 9, 9, 10 ]
-gap> DDDD;
-[ -5, 2, 3, 3, 5, 5, 5, 5, 9, 10, 9, 10, 10, 9, 9, 10 ]
-
-Id:=[128,1115];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#9#16$9$10gap> D;
-[ 0, 2, 1, 3, 0, 3, 2, 1, 4, 5, 7, 6, 5, 5, 5, 5 ]
-gap> CE[8]; 
-[ -3, 2, 2, 2, 5, 2, 2, 2, 9, 10, 9, 9, 13, 10, 13, 13 ]
-gap> CE[11];
-[ -4, 2, 2, 2, 5, 6, 6, 6, 9, 10, 9, 9, 13, 10, 13, 13 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 2, 2, 5, 6, 6, 6, 9, 10, 9, 9, 13, 14, 13, 13 ]
-
-Id:=[128,1301];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#7#16$7$14gap> D;               
-[ 0, 0, 2, 2, 5, 5, 3, 3, 6, 7, 6, 7, 2, 3, 6, 7 ]
-gap> CE[8];
-[ -3, 2, 3, 4, 5, 6, 3, 4, 9, 9, 11, 11, 13, 13, 11, 11 ]
-gap> CE[11];
-[ -4, 2, 3, 4, 5, 6, 3, 4, 9, 9, 11, 11, 13, 13, 11, 11 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 4, 5, 6, 3, 4, 9, 9, 11, 12, 13, 13, 12, 11 ]
-
-Id:=[128,1399];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#7#16$7$12gap> D;               
-[ 0, 2, 5, 6, 4, 6, 5, 6, 0, 2, 7, 4, 5, 7, 6, 5 ]
-gap> CE[8];
-[ -3, 2, 3, 3, 5, 6, 3, 3, 9, 10, 11, 11, 6, 5, 3, 3 ]
-gap> CE[11];
-[ -4, 2, 3, 3, 5, 6, 7, 7, 9, 10, 11, 11, 6, 5, 7, 7 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 3, 5, 6, 7, 8, 9, 10, 11, 11, 6, 5, 7, 8 ]
-
-Id:=[128,1574];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#6#14#16$6$6gap> D;               
-[ 0, 0, 4, 5, 5, 6, 5, 7, 0, 0, 6, 7, 4, 7, 6, 4 ]
-gap> CE[8];
-[ -3, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3 ]
-gap> CE[11];
-[ -4, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 3, 3, 3, 3, 3, 9, 9, 3, 3, 3, 3, 3, 3 ]
 
 Id:=[128,1598];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 #9#16$9$16gap> D;               
@@ -634,62 +577,6 @@ gap> DDDD:=DDDDMACH();
 [ -5, 2, 2, 2, 2, 2, 2, 2, 9, 10, 10, 10, 10, 10, 10, 10 ]
 #hier war doppelte Markierung!!!
 
-Id:=[256,27037];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#6#8$6$7gap> D;               
-[ 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 3, 3, 3, 3, 4, 4, 5, 5, 4, 4, 5, 5, 5, 
-  5, 4, 4, 4, 4, 5, 5 ]
-gap> CE[8];
-[ -3, 2, 3, 3, 5, 5, 5, 5, 3, 3, 3, 3, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-gap> CE[11];
-[ -4, 2, 3, 3, 5, 5, 5, 5, 3, 3, 3, 3, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 3, 5, 5, 5, 5, 9, 9, 9, 9, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-
-Id:=[256,27040];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#7#10$7$8gap> D;               
-[ 0, 1, 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 3, 2, 3, 2, 4, 5, 5, 4, 4, 5, 5, 4, 5, 
-  4, 4, 5, 4, 5, 5, 4 ]
-gap> CE[8];
-[ -3, 2, 3, 4, 5, 5, 5, 5, 3, 4, 3, 4, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-gap> CE[11];
-[ -4, 2, 3, 4, 5, 5, 5, 5, 3, 4, 3, 4, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 4, 5, 5, 5, 5, 9, 10, 9, 10, 5, 5, 5, 5, 17, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-
-Id:=[256,27097];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#9#24$9$23gap> D;               
-[ 0, 1, 0, 1, 0, 1, 0, 1, 2, 3, 3, 2, 2, 3, 3, 2, 4, 5, 4, 5, 6, 7, 6, 7, 7, 
-  6, 6, 7, 5, 4, 4, 5 ]
-gap> CE[8];
-[ -3, 2, 3, 4, 3, 6, 7, 8, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-gap> CE[11];
-[ -4, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 9, 13, 14, 14, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-
-Id:=[256,27097];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
-#9#24$9$23gap> D;               
-[ 0, 1, 0, 1, 0, 1, 0, 1, 2, 3, 3, 2, 2, 3, 3, 2, 4, 5, 4, 5, 6, 7, 6, 7, 7, 
-  6, 6, 7, 5, 4, 4, 5 ]
-gap> CE[8];
-[ -3, 2, 3, 4, 3, 6, 7, 8, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-gap> CE[11];
-[ -4, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 9, 13, 14, 14, 13, 17, 17, 19, 19, 17, 
-  17, 19, 19, 25, 25, 25, 25, 25, 25, 25, 25 ]
-
 Id:=[256,27166];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 #8#12$8$10$11gap> D;               
 [ 0, 0, 1, 1, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 4, 5, 5, 4, 6, 7, 7, 6, 7, 
@@ -701,11 +588,13 @@ gap> CE[11];
 [ -4, 2, 3, 3, 5, 5, 7, 7, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 17, 17, 17, 
   17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
 gap> DDDD:=DDDDMACH();
-[ -5, 2, 3, 3, 5, 6, 7, 7, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 17, 17, 17, 
-  17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
-- 27166 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
-Id=[ 256, 27167 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
-Id=[ 256, 27168 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
+[ -5, 2, 3, 3, 5, 6, 7, 7, 9, 9, 9, 9, 13, 13, 13, 13, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17 ]
+brk>EXTRAORBZU;
+[ [ 1, 2, 4, 5, 6, 7 ], [ 0, 1, 2 ], [ 0, 1, 2 ], [ 1, 2 ], [ 1, 2 ], [ 2 ], [ 2 ], [ 2 ], [ 2 ], [ 2, 4, 5, 6, 7 ], [ 2, 4, 5, 6, 7 ], [ 2, 4, 5, 6, 7 ],
+ [ 2, 4, 5, 6, 7 ], [ 4, 5 ], [ 4, 5 ], [ 4, 5 ], [ 4, 5 ], [ 6, 7 ], [ 6, 7 ],
+ [ 6, 7 ], [ 6, 7 ], [ 6, 7 ], [ 6, 7 ], [ 6, 7 ], [ 6, 7 ], [ 4, 5 ], [ 4, 5 ],
+ [ 4, 5 ], [ 4, 5 ] ]
+
 
 
 
@@ -760,10 +649,6 @@ ANZ;
 #  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
 
-BG:=[];
-BG[2]:=Group((2,4),(2,3));
-BG[3]:=Group((2,4)(6,8),(2,3,5)(4,7,6));
-BG[4]:=Group((2,4)(6,8)(10,12)(14,16),(2,3,5,9),(4,7,13,10),(6,11),(8,15,14,12));
 Liste_der_Markierungen:=[];Liste_der_Id:=[];
 for m in [2..8] do n:=2^m;
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
@@ -776,7 +661,7 @@ for m in [2..8] do n:=2^m;
     Add(D,0,1);
     CE:=COMPDIAG5E(RANK,D,0);
     M:=Size(Collected(CE[1]))-1;#e weg
-    Print(M," \c");
+    Print(" ",M," \c");
     M5:=Size(Collected(CE[5]))-1;#e weg
     Print(M5," \c");
     M4:=Size(Collected(CE[4]))-1;#e weg
@@ -795,8 +680,8 @@ for m in [2..8] do n:=2^m;
     if [CE[2],CE[12]] in Liste_der_Markierungen then Error("Doppelte Markierung bei ",Id," und ",Liste_der_Id[Position(Liste_der_Markierungen,[CE[2],CE[12]])]); fi;
     Add(Liste_der_Markierungen,[CE[2],CE[12]]);
     Add(Liste_der_Id,Id);
-    STAB:=Stabilizer(BG[3],CE[7],Permuted);
-    Print(" ",Size(A)/8^(m-3)/Size(STAB)/Size(Stabilizer(BG[m-3],CE[1],Permuted)),CE[1]);
+    #STAB:=Stabilizer(BG[3],CE[7],Permuted);
+    #Print(" ",Size(A)/8^(m-3)/Size(STAB)/Size(Stabilizer(BG[m-3],CE[1],Permuted)),CE[1]);
     od;
   od;
 
