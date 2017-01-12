@@ -414,7 +414,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
     Print("$",Size(Collected(ORBZU[STUFE])),"\c");
-    EXTRAORBZU:=EXTRAORBZUMACH(ORBZU1[STUFE]);
+    #EXTRAORBZU:=EXTRAORBZUMACH(ORBZU1[STUFE]);
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
@@ -424,10 +424,10 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           ORBZU[STUFE][i],
           ORBZU[STUFE][j],
           ORBZU[STUFE][k]];
-        if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
-        if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
-        if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
-        if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
+        #if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
+        #if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
+        #if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
+        #if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
         if STUFE=1 then
           NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[k]+1]);
           fi;
@@ -459,84 +459,46 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   NMARK2:=StructuralCopy(NMARK);
   ORBZU2:=StructuralCopy(ORBZU);
 
+repeat
   UMARK:=[];
   for i in [1..SD] do 
     if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
     Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
-  for i in [1..2^(LogInt(Size(UMARK),2)+1)] do if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); else UMARK[i]:=0; fi; od;
+  for i in [1..2^(LogInt(Size(UMARK),2)+1)] do 
+    if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); 
+      else UMARK[i]:=0; fi; od;
   UMARKS:=StructuralCopy(UMARK);Sort(UMARKS);
   UMARK2:=[-3];
-  for i in [1..Size(UMARK)] do if IsBound(UMARK[i]) then
-    for j in [i,i-1..1] do if IsBound(UMARK[j]) then 
+  for i in [1..Size(UMARK)] do
+    for j in [i,i-1..1] dO
       if UMARK[i]=UMARK[j] then UMARK2[i]:=j; fi; 
-      fi; od; fi; od;
-  for i in [1..SD] do if IsBound(UMARK[D[i]+1]) then Add(NMARK[i],Position(UMARKS,UMARK[D[i]+1])); fi; od;  
-  NMARK3:=StructuralCopy(NMARK);
-  ORBZU3:=[-3];
-  for i in [2..SD] do
-    for j in [i,i-1..2] do
-      if NMARK[i]=NMARK[j] then ORBZU3[i]:=j; fi; 
       od; od;
-
   NMARK:=StructuralCopy(NMARK1);
   for i in [1..SD] do 
     for j in [1..SD] do 
-      for k in [1..Size(NMARK[i][j])] do
+      for k in [1,Size(NMARK[i][j])] do
         NMA:=NMARK[i][j][k];
-#  Error("\nvorher",i,j,k,NMA);
         for l in [1..3] do
           if k=1 then if NMA[l]>0 then NMA[l]:=UMARK2[NMA[l]+1]; fi; else
-            if NMA[l]>0 then NMA[l]:=ORBZU3[NMA[l]];#NMARK3[NMA[l]]; 
+            if NMA[l]>0 then NMA[l]:=ORBZU[NMA[l]];#NMARK3[NMA[l]]; 
               fi;
             fi;
-#  Error("\nnachher",i,j,k,NMA);
           od;
         od;
-      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])]];
       od;
-    #NMARK[i]:=Collected(NMARK[i]);
     od;
-  NMARK4A:=StructuralCopy(NMARK);
+  NMARKSC:=StructuralCopy(NMARK);
   for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
-  NMARK4:=StructuralCopy(NMARK);
-  ORBZU4:=[-4];
+  ORBZUMERK:=List(ORBZU);
   for i in [2..SD] do
     for j in [i,i-1..2] do
-      if NMARK[i]=NMARK[j] then ORBZU4[i]:=j; fi; 
+      if NMARK[i]=NMARK[j] then ORBZU[i]:=j; fi; 
       od; od;
+  until ORBZU=ORBZUMERK;
 
-  NMARK:=StructuralCopy(NMARK1);
-  for i in [1..SD] do 
-    for j in [1..SD] do 
-      for k in [1..Size(NMARK[i][j])] do
-        NMA:=NMARK[i][j][k];
-#  Error("\nvorher",i,j,k,NMA);
-        for l in [1..3] do
-          if k=1 then if NMA[l]>0 then NMA[l]:=UMARK2[NMA[l]+1]; fi; else
-            if NMA[l]>0 then NMA[l]:=ORBZU4[NMA[l]];#NMARK3[NMA[l]]; 
-              fi;
-            fi;
-#  Error("\nnachher",i,j,k,NMA);
-          od;
-        od;
-      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])]];
-      od;
-    #NMARK[i]:=Collected(NMARK[i]);
-    od;
-  NMARK5A:=StructuralCopy(NMARK);
-  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
-  NMARK5:=StructuralCopy(NMARK);
-  ORBZU5:=[-5];
-  for i in [2..SD] do
-    for j in [i,i-1..2] do
-      if NMARK[i]=NMARK[j] then ORBZU5[i]:=j; fi; 
-      od; od;
 
-  for i in [1..SD] do Add(NMARK3[i],NMARK2[i]); od;
-  return [ORBZU1[STUFE1],NMARK5,UMARK,NMARK3,NMARK2,NMARK1,UMARK2,ORBZU3,
-          #CE1           CE2    CE3   CE4    CE5    CE6    CE7    CE8 
-          ORBZU2[STUFE],ORBZU1,ORBZU4,UMARKS,NMARK4,ORBZU5,NMARK2A];#ORBZU[STUFE];#NMARK;
-          #CE9          CE10   CE11   CE12   CE13   CE14   CE15
+  return [ORBZU1,NMARK,UMARKS,ORBZU1,NMARKSC];
+          #CE1   CE2   CE3    CE4
   end;
 
 DDDDMACH:=function()
