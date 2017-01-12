@@ -373,7 +373,6 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   if flag=88 then Print("\n  ",D); fi;
   NMARK2:=0; NMARK3:=0; NMARK4:=0;
   SD:=Size(D);
-  EXTRAORBZU:=EXTRAORBZUMACH(D);
 
   ORBZU:=[];STUFE:=1;
   ORBZU[STUFE]:=List(D);
@@ -415,21 +414,22 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
     Print("$",Size(Collected(ORBZU[STUFE])),"\c");
+    EXTRAORBZU:=EXTRAORBZUMACH(ORBZU1[STUFE]);
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
-      for j in [1..SD] do 
+      for j in [1..SD] do
         k:=XORMAT[j][i];
         NMA:=[
           ORBZU[STUFE][i],
           ORBZU[STUFE][j],
           ORBZU[STUFE][k]];
+        if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
+        if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
+        if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
+        if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
         if STUFE=1 then
           NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[k]+1]);
-          if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
-          if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
-          if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
-          if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
           fi;
         if NMA[3]>0 then
           if NMA[3]=NMA[2] then NMA[3]:="y=z"; else
