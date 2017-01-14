@@ -490,7 +490,8 @@ repeat
             fi;
           od;
         od;
-      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])]];
+      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])],
+        UMARK2[XORMAT[D[j]+1][D[k]+1]]];
       od;
     od;
   NMARKSC:=StructuralCopy(NMARK);
