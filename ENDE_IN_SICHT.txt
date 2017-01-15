@@ -366,7 +366,8 @@ EXTRAORBZUMACH:=function(D)
   return RET;
   end;
 EXTRAORBZU:=EXTRAORBZUMACH([0,0,4,5,5,6,5,7,0,0,6,7,4,7,6,4]);
-  
+#---------
+
 COMPDIAG5E:=function(dd,D,flag)#neu
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A,NMARK5,ORBZU5,NMARK4A,NMARK5A;
@@ -414,7 +415,7 @@ COMPDIAG5E:=function(dd,D,flag)#neu
   repeat #zB bei [ 256, 56030 ]
     if flag=88 then Print("\n",ORBZU); fi;
     Print("$",Size(Collected(ORBZU[STUFE])),"\c");
-    #EXTRAORBZU:=EXTRAORBZUMACH(ORBZU1[STUFE]);
+    EXTRAORBZU:=EXTRAORBZUMACH(ORBZU[STUFE]);
     MARK:=[];
     for i in [1..SD] do
       MARK[i]:=[-1];
@@ -424,9 +425,9 @@ COMPDIAG5E:=function(dd,D,flag)#neu
           ORBZU[STUFE][i],
           ORBZU[STUFE][j],
           ORBZU[STUFE][k]];
-        #if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
-        #if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
-        #if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;
+        if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
+        if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
+        #if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;#i?
         #if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
         if STUFE=1 then
           NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[k]+1]);
@@ -491,7 +492,7 @@ repeat
           od;
         od;
       NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])],
-        UMARK2[XORMAT[D[j]+1][D[k]+1]]];
+        UMARK2[XORMAT[D[j]+1][D[XORMAT[j][i]]+1]]];
       od;
     od;
   NMARKSC:=StructuralCopy(NMARK);
@@ -503,7 +504,7 @@ repeat
       od; od;
   until ORBZU4=ORBZUMERK;
 
-  return [ORBZU1[Size(ORBZU1)],NMARK,UMARKS,ORBZU4,NMARK2,NMARKSC,UMARK,UMARK2,NMARK2];
+  return [ORBZU1[Size(ORBZU1)],NMARK,UMARKS,ORBZU4,NMARK2,NMARKSC,UMARK,UMARK2];
           #CE1                 CE2   CE3    CE4    CE5    CE6     CE7   CE8
   end;
 
@@ -528,8 +529,20 @@ for i in [2..Size(DDD)] do for j in [i,i-1..2] do
 DDDD:=DDDDMACH();
 Size(Collected(DDDD));
 ---------
+mit EXTRAORBZU wieder dazu gehen [128,1574][256,29660], aber nicht:
+
+
+
+mit UMARK2[XORMAT[D[j]+1][D[XORMAT[j][i]]+1]]]: jetzt gehen [256,27166/27167/28545]!!!
+Id=[ 128, 1574 ] Error, MA<>S bei [ 128, 1574 ] 
+Id=[ 128, 1598 ] Rank=4 #9#16$9$16 15 3 3 3 3 true Error, Doppelte Markierung
+Id=[ 256, 29625 ] Rank=5 #9#17$9$17 16 4 4 4 4 true Error, Doppelte Markierung 
+Id=[ 256, 29660 ] Rank=5 #6#15#17$6$7 16 3 3 3 Error, MA<>S bei [ 256, 29660 ]
+Id=[ 256, 30001 ] Error, the library file 'sml256.m' must exist and be readable 
+
+
 mit zweitem repeat:
-Id=[ 128, 1574 ]
+Id=[ 128, 1574 ] Error, MA<>S bei [ 128, 1574 ] 
 Id=[ 128, 1598 ] Rank=4 #9#16$9$16 15 3 3 3 3 true Error, Doppelte Markierung be
 Id=[ 256, 27166 ] Rank=5 #8#12$8$10$11 11 7 7 7 Error, MA<>S bei [ 256, 27166 ] 
 Id=[ 256, 27167 ] Rank=5 #9#12$9$11 11 7 7 7 Error, MA<>S bei [ 256, 27167 ] cal
@@ -544,6 +557,30 @@ Id=[ 256, 27168 ] Rank=5 #7#10$7$89 5 5 5 Error, MA<>S bei [ 256, 27040 ] called
 
 Id:=[128,1115];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
 D;CE[4];DDDD:=DDDDMACH();EXTRAORBZUMACH(D);
+
+
+Id:=[128,1574];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+D;CE[4];DDDD:=DDDDMACH();EXTRAORBZUMACH(D);
+[ 0, 0, 4, 5, 5, 6, 5, 7, 0, 0, 6, 7, 4, 7, 6, 4 ]
+[ -4, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3 ]
+[ -9, 2, 3, 3, 3, 3, 3, 3, 9, 9, 3, 3, 3, 3, 3, 3 ]
+[ [ 0, 4, 5, 6, 7 ], [ 0, 4, 5, 6, 7 ], [ 4, 5 ], [ 4, 5 ], [ 5, 6 ], 
+  [ 5, 6 ], [ 5, 7 ], [ 5, 7 ], [ 0 ], [ 0 ], [ 6, 7 ], [ 6, 7 ], [ 4, 7 ], 
+  [ 4, 7 ], [ 4, 6 ], [ 4, 6 ] ]
+
+Id:=[256,29660];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+D;CE[4];DDDD:=DDDDMACH();EXTRAORBZUMACH(D);
+[ 0, 0, 0, 0, 2, 2, 7, 7, 0, 0, 0, 0, 6, 6, 3, 3, 3, 3, 7, 7, 3, 3, 2, 2, 2, 
+  2, 6, 6, 6, 6, 7, 7 ]
+[ -4, 2, 3, 3, 5, 5, 5, 5, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
+  5, 5, 5, 5, 5, 5, 5, 5 ]
+[ -9, 2, 3, 3, 5, 5, 5, 5, 3, 3, 11, 11, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 
+  5, 5, 5, 5, 5, 5, 5, 5 ]
+[ [ 0, 2, 3, 6, 7 ], [ 0, 2, 3, 6, 7 ], [ 0 ], [ 0 ], [ 2, 3 ], [ 2, 3 ], 
+  [ 6, 7 ], [ 6, 7 ], [ 0 ], [ 0 ], [ 0, 2, 3, 6, 7 ], [ 0, 2, 3, 6, 7 ], 
+  [ 6, 7 ], [ 6, 7 ], [ 2, 3 ], [ 2, 3 ], [ 3, 6 ], [ 3, 6 ], [ 2, 7 ], 
+  [ 2, 7 ], [ 3, 7 ], [ 3, 7 ], [ 2, 6 ], [ 2, 6 ], [ 2, 7 ], [ 2, 7 ], 
+  [ 3, 6 ], [ 3, 6 ], [ 2, 6 ], [ 2, 6 ], [ 3, 7 ], [ 3, 7 ] ]
 
 
 Id:=[128,1597];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
@@ -663,7 +700,7 @@ ANZ;
 #  [ 21, 31, 56, 140, 161, 191, 326, 117, 67, 12 ], 
 #  [ 25, 39, 69, 185, 249, 313, 733, 526, 413, 343, 36, 14 ] ]#
 
-Liste_der_Markierungen:=[];Liste_der_Id:=[];
+Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
 for m in [2..8] do n:=2^m;
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
   #m:=9;n:=512;for i in [10493062..10494173] do Id:=[512,i];
@@ -691,7 +728,7 @@ for m in [2..8] do n:=2^m;
     S:=Size(ORBS);
     if MA<>S then Error("MA<>S bei ",Id); fi;
     Print(S," ",MA=S ," \c");
-    if [CE[2],CE[3]] in Liste_der_Markierungen then Error("Doppelte Markierung bei ",Id," und ",Liste_der_Id[Position(Liste_der_Markierungen,[CE[2],CE[3]])]); fi;
+    if [CE[2],CE[3]] in Liste_der_Markierungen then Add(Doppelte_Markierungen,Id); fi;
     Add(Liste_der_Markierungen,[CE[2],CE[3]]);
     Add(Liste_der_Id,Id);
     #STAB:=Stabilizer(BG[3],CE[7],Permuted);
