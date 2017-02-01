@@ -400,8 +400,8 @@ COMPDIAG5E:=function(dd,D,flag)#neu
       #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
       od;
     STUFE:=STUFE+1;
-    ORBZU[STUFE]:=[-2];
-    for i in [2..SD] do for j in [i,i-1..1] do
+    ORBZU[STUFE]:=[];
+    for i in [1..SD] do for j in [i,i-1..1] do
       if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
     until ORBZU[STUFE]=ORBZU[STUFE-1];
   NMARK1:=StructuralCopy(NMARK);

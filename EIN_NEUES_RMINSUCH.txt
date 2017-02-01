@@ -1,0 +1,109 @@
+#Read("EIN_NEUES_RMINSUCH.txt");
+
+dmax:=10;
+#dmax:=12;
+
+XORMAT:=[[1]];
+for i in [1..dmax] do
+  n2:=2^(i-1);
+  for j in [1..n2] do
+    XORMAT[j+n2]:=[];
+    for k in [1..n2] do
+      XORMAT[j][k+n2]:=XORMAT[j][k]+n2;
+      XORMAT[j+n2][k+n2]:=XORMAT[j][k];
+      XORMAT[j+n2][k]:=XORMAT[j][k]+n2;
+      od; od; od;
+      
+XORFUN:=function(i,j) return XORMAT[i+1][j+1]-1; end;
+
+Diagonale:=function(G,flag)
+  local HRES,i,j,D,DD,DDD,RET;
+  RA:=RankPGroup(G);
+  PC:=Pcgs(G);
+  HRES:=Reversed(PC{[1..RA]});#Print(RA,PC,HRES);
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,HRES[i]*D[j]);
+      od;
+    od;
+  DDD:=List(D);
+  DD:=List(D,i->i^2);
+  HRES:=MinimalGeneratingSet(Group(DD));
+  D:=[];
+  for i in [1..Size(HRES)] do
+    Add(D,HRES[i]);
+    for j in [1..Size(D)-1] do
+      Add(D,D[j]*HRES[i]);
+      od;
+    od;
+  Add(D,D[1]^0,1); Add(DDD,D[1]^0,1);
+  RET:=List(DD,i->Position(D,i)-1);
+  if flag=1 then RET:=DDD; fi;
+  return RET;
+  end;
+
+Diagonale(SmallGroup(4,1),0);
+Diagonale(SmallGroup(8,2),0);
+Diagonale(SmallGroup(16,3),0);
+Diagonale(SmallGroup(256,55750),1);
+
+COMPDIAG6E:=function(dd,D,flag)#neu
+  local i,j,k,l,SD,ORBZU,MARK,NMARK,STUFE;
+  SD:=Size(D);
+
+  ORBZU:=[]; STUFE:=1;
+  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE][1]:=-1;
+  repeat
+    if flag=88 then Print("\n",ORBZU); fi;
+    Print("#",Size(Collected(ORBZU[STUFE])),"\c");
+    MARK:=[];
+    for i in [1..SD] do
+      MARK[i]:=[-1];
+      for j in [1..SD] do 
+        MARK[i][j]:=[
+          ORBZU[STUFE][i],
+          ORBZU[STUFE][j],
+          ORBZU[STUFE][XORMAT[j][i]]];
+        od;
+      MARK[i]:=Collected(MARK[i]{[1..SD]});
+      od;
+    STUFE:=STUFE+1;
+    ORBZU[STUFE]:=[];
+    for i in [1..SD] do for j in [i,i-1..1] do
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+    until ORBZU[STUFE]=ORBZU[STUFE-1];  
+  return ORBZU[Size(ORBZU1)];
+  end;
+
+Id:=[512,7533561];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+D;CE;
+
+Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
+for m in [2..8] do n:=2^m;
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
+  #m:=9;n:=512;for i in [10493062..10494173] do Id:=[512,i];
+  #m:=9;n:=512;for i in [7532393..10481221] do Id:=[512,i];
+    Print("\nId=",Id," \c");
+    G:=SmallGroup(Id);
+    RANK:=RankPGroup(G);
+    Print("Rank=",RANK," \c");
+    D:=Diagonale(G,0);
+    Add(D,0,1);
+    CE:=COMPDIAG6E(RANK,D,0);
+    M:=Size(Collected(CE))-1;#e weg
+    Print(" ",M," \c");
+    od;
+  od;
+
+SmallGroupsInformation(256);
+Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);  
+     #m-2                        #m-3           #m-4
+#16  #2-4 (3)
+#32  #21-35 (15)                 #2
+#64  #192 - 245 (54)             #55-82 (28)
+#128 #2150 - 2300 (151)          #997-1600
+#256 #55626 - 56058 (433)        #26973-53037  #6732-10297    
+#512 #10493062 - 10494173 (1112) #7532393 - 10481221
