@@ -83,7 +83,7 @@ RMINSUCH:=function(D)
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
   ORBZU:=COMPDIAG6E(S,D,0);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
-  for STUFE in [1..S-S+2] do
+  for STUFE in [1..S] do
     NEUE_VARIANTEN:=[];
     RNEU:=[9999];
     for V in VARIANTEN do
