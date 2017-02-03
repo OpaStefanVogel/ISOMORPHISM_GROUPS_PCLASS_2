@@ -78,25 +78,35 @@ COMPDIAG6E:=function(dd,D,flag)#neu
   end;
 
 RMINSUCH:=function(D)
-  local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU;
+  local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,LRES,LD,ORBZU,ORBS,ONEU;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+<<<<<<< HEAD
+=======
+  ORBZU:=COMPDIAG6E(RANK,D,0);
+>>>>>>> bee6c
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
   for STUFE in [1..S-S+1] do
     NEUE_VARIANTEN:=[];
     RNEU:=[9999];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
         RR:=[D[i]];
         for j in HRES do Add(RR,D[XORMAT[i][j]]); od;
         if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
-          VNEU:=StructuralCopy(V);
-          Add(VNEU.HRES,i);
           LNEU:=List(LRES,j->XORMAT[i][j]);
-          VNEU.LRES:=Concatenation(LRES,LNEU);
-          for i in LNEU do VNEU.LD[i]:=STUFE; od;
-          Add(NEUE_VARIANTEN,VNEU);
+          ONEU:=List(LNEU,j->ORBZU[j]);
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
           fi;
         fi; od;
       od;
@@ -106,9 +116,9 @@ RMINSUCH:=function(D)
   return [RMIN,VARIANTEN];
   end;
 
-Id:=[512,7533561];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG5E(RankPGroup(G),D,0);;
+Id:=[512,7533561];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG6E(RankPGroup(G),D,0);;
 D;CE;
-RMINSUCH(D);
+RANK:=RankPGroup(G);RMINSUCH(D);
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
 for m in [2..8] do n:=2^m;
