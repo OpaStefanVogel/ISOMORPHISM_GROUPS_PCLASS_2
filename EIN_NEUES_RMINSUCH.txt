@@ -81,6 +81,7 @@ RMINSUCH:=function(D)
   local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,LD,ORBZU,ORBS,ONEU;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+  RANK:=S-LogInt(Maximum(D),2)-1;
   ORBZU:=COMPDIAG6E(RANK,D,0);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
   for STUFE in [1..S-S+1] do
