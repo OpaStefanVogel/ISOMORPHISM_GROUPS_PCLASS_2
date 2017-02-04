@@ -115,11 +115,12 @@ RMINSUCH:=function(D)
 
 Id:=[512,7533561];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG6E(RankPGroup(G),D,0);;
 D;CE;
-RMINSUCH(D);
+RE:=RMINSUCH(D);Size(RE[2]);
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
+for kk in [1..6] do
 for m in [2..8] do n:=2^m;
-  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-3) do #,RankPGroup,m-1,m-2,m-3
+  for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-kk) do #,RankPGroup,m-1,m-2,m-3
   #m:=9;n:=512;for i in [10493062..10494173] do Id:=[512,i];
   #m:=9;n:=512;for i in [7532393..10481221] do Id:=[512,i];
     Print("\nId=",Id," \c");
@@ -128,13 +129,18 @@ for m in [2..8] do n:=2^m;
     Print("Rank=",RANK," \c");
     D:=Diagonale(G,0);
     Add(D,0,1);
-    CE:=COMPDIAG6E(RANK,D,0);
-    M:=Size(Collected(CE))-1;#e weg
-    Print(" ",M," \c");
+    #CE:=COMPDIAG6E(RANK,D,0);
+    #M:=Size(Collected(CE))-1;#e weg
+    #Print(" ",M," \c");
+    RE:=RMINSUCH(D);
+    RES:=Size(RE[2]);
+    Print(" ",RES," \c");
+    if RES<>1 then Error("RES<>1"); fi;
     od;
   od;
+ od;
 
-SmallGroupsInformation(256);
+SmallGroupsInformation(512);
 Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);  
      #m-2                        #m-3           #m-4
 #16  #2-4 (3)
@@ -142,4 +148,5 @@ Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);
 #64  #192 - 245 (54)             #55-82 (28)
 #128 #2150 - 2300 (151)          #997-1600
 #256 #55626 - 56058 (433)        #26973-53037  #6732-10297    
-#512 #10493062 - 10494173 (1112) #7532393 - 10481221
+#512 #10493062 - 10494173 r7 (1112) #7532393 - 10481221 r6 #420515 - 6249623 r5 #60904 - 67612 r4 #2045 r3
+
