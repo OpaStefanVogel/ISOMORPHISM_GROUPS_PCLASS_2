@@ -113,18 +113,30 @@ RMINVORTEST:=function(D)
   return [RMIN,VARIANTEN];
   end;
 
+ALPHA:=[0];#global weil von DNEU verändert
+BETA:=[0];
+
 DNEU:=function(d)
-  local dneu;
-  dneu:=d;
+  local dneu,i;
+  if not IsBound(ALPHA[d+1]) then
+    dneu:=Size(BETA);
+    for i in [1..dneu] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
+    for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
+    fi;
+  dneu:=ALPHA[d+1];
   return dneu;
   end;
+
+DNEU(2);ALPHA;BETA;
+DNEU(7);ALPHA;BETA;
+DNEU(6);ALPHA;BETA;
 
 RMINSUCH:=function(D)
   local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,LD,ORBZU,ORBS,ONEU;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
   ORBZU:=COMPDIAG6E(S,D,0);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
   for STUFE in [1..S] do
     NEUE_VARIANTEN:=[];
     RNEU:=[9999];
@@ -132,6 +144,7 @@ RMINSUCH:=function(D)
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
       ORBS:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
+        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         RR:=[DNEU(D[i])];
         for j in HRES do Add(RR,DNEU(D[XORMAT[i][j]])); od;
         if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
@@ -144,6 +157,7 @@ RMINSUCH:=function(D)
             Add(VNEU.HRES,i);
             VNEU.LRES:=Concatenation(LRES,LNEU);
             for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
             Add(NEUE_VARIANTEN,VNEU);
             fi;
           fi;
@@ -174,13 +188,16 @@ for m in [2..8] do n:=2^m;
     #CE:=COMPDIAG6E(RANK,D,0);
     #M:=Size(Collected(CE))-1;#e weg
     #Print(" ",M," \c");
-    RE:=RMINVORTEST(D);
-    REV:=Size(RE[2]);
-    Print(" ",REV," \c");
-    if RES<>1 then Error("RES<>1"); fi;
+    #RE:=RMINVORTEST(D);
+    #REV:=Size(RE[2]);
+    #Print(" ",REV," \c");
+    #if REV<>1 then Error("REV<>1"); fi;
     RE:=RMINSUCH(D);
     RES:=Size(RE[2]);
     Print(" ",RES," \c");
+    if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
+    Add(Liste_der_Markierungen,RE[1]);
+    Add(Liste_der_Id,Id);
     od;
   od;
  od;
