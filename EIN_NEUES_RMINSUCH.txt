@@ -120,7 +120,7 @@ DNEU:=function(d)
   local dneu,i;
   if not IsBound(ALPHA[d+1]) then
     dneu:=Size(BETA);
-    for i in [1..dneu] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
+    for i in [dneu,dneu-1..1] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
     for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
     fi;
   dneu:=ALPHA[d+1];
@@ -139,7 +139,7 @@ RMINSUCH:=function(D)
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
   for STUFE in [1..S] do
     NEUE_VARIANTEN:=[];
-    RNEU:=[9999];
+    RNEU:=[0];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
       ORBS:=[];
@@ -147,7 +147,7 @@ RMINSUCH:=function(D)
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         RR:=[DNEU(D[i])];
         for j in HRES do Add(RR,DNEU(D[XORMAT[i][j]])); od;
-        if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
           ONEU:=List(LNEU,j->ORBZU[j]);
@@ -174,9 +174,10 @@ D;CE;
 RE:=RMINSUCH(D);Size(RE[2]);
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
-for kk in [1..6] do
+for kk in [1..6] do#for kk in [1,2] do
 for m in [2..8] do n:=2^m;
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-kk) do #,RankPGroup,m-1,m-2,m-3
+  #m:=9;n:=512;for i in [10494201..10494212] do Id:=[512,i];
   #m:=9;n:=512;for i in [10493062..10494173] do Id:=[512,i];
   #m:=9;n:=512;for i in [7532393..10481221] do Id:=[512,i];
     Print("\nId=",Id," \c");
@@ -196,8 +197,8 @@ for m in [2..8] do n:=2^m;
     RES:=Size(RE[2]);
     Print(" ",RES," \c");
     if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
-    Add(Liste_der_Markierungen,RE[1]);
-    Add(Liste_der_Id,Id);
+    Add(Liste_der_Markierungen,[RE[1],Id]);
+    #Add(Liste_der_Id,Id);
     od;
   od;
  od;
@@ -209,6 +210,7 @@ Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);
 #32  #21-35 (15)                 #2
 #64  #192 - 245 (54)             #55-82 (28)
 #128 #2150 - 2300 (151)          #997-1600
-#256 #55626 - 56058 (433)        #26973-53037  #6732-10297    
+#256 #55626 - 56058 (433)        #26973-53037  #6732-10297 
+#512 #10494201 - 10494212 r8 (12)
 #512 #10493062 - 10494173 r7 (1112) #7532393 - 10481221 r6 #420515 - 6249623 r5 #60904 - 67612 r4 #2045 r3
 
