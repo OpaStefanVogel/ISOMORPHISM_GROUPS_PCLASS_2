@@ -77,7 +77,7 @@ COMPDIAG6E:=function(dd,D,flag)#neu
   return ORBZU[STUFE];
   end;
 
-RMINSUCH:=function(D)
+RMINVORTEST:=function(D)
   local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,LD,ORBZU,ORBS,ONEU;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
@@ -92,6 +92,48 @@ RMINSUCH:=function(D)
       for i in [2..SD] do if not IsBound(LD[i]) then
         RR:=[D[i]];
         for j in HRES do Add(RR,D[XORMAT[i][j]]); od;
+        if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          fi;
+        fi; od;
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+DNEU:=function(d)
+  local dneu;
+  dneu:=d;
+  return dneu;
+  end;
+
+RMINSUCH:=function(D)
+  local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,LD,ORBZU,ORBS,ONEU;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+  ORBZU:=COMPDIAG6E(S,D,0);
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  for STUFE in [1..S] do
+    NEUE_VARIANTEN:=[];
+    RNEU:=[9999];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        RR:=[DNEU(D[i])];
+        for j in HRES do Add(RR,DNEU(D[XORMAT[i][j]])); od;
         if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -132,10 +174,13 @@ for m in [2..8] do n:=2^m;
     #CE:=COMPDIAG6E(RANK,D,0);
     #M:=Size(Collected(CE))-1;#e weg
     #Print(" ",M," \c");
+    RE:=RMINVORTEST(D);
+    REV:=Size(RE[2]);
+    Print(" ",REV," \c");
+    if RES<>1 then Error("RES<>1"); fi;
     RE:=RMINSUCH(D);
     RES:=Size(RE[2]);
     Print(" ",RES," \c");
-    if RES<>1 then Error("RES<>1"); fi;
     od;
   od;
  od;
