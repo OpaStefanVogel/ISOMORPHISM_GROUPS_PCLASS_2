@@ -77,6 +77,23 @@ COMPDIAG6E:=function(dd,D,flag)#neu
   return ORBZU[STUFE];
   end;
 
+COMPDIAG7E:=function(D)
+  local i,j,SD,ORBZU,ORBZUMERK,MARK;
+  SD:=Size(D); ORBZU:=List(D); #ORBZU[1]:=-1;
+  repeat
+    MARK:=[];
+    for i in [1..SD] do
+      MARK[i]:=[];
+      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
+      MARK[i]:=Collected(MARK[i]);
+      od;
+    ORBZUMERK:=ORBZU; ORBZU:=[];
+    for i in [1..SD] do for j in [i,i-1..1] do
+      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK][j] then ORBZU[i]:=j; fi; od; od;
+    until ORBZU=ORBZUMERK;  
+  return ORBZU;
+  end;
+
 RMINVORTEST:=function(D)
   local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,LD,ORBZU,ORBS,ONEU;
@@ -344,12 +361,12 @@ for m in [2..8] do n:=2^m;
     #REV:=Size(RE[2]);
     #Print(" ",REV," \c");
     #if REV<>1 then Error("REV<>1"); fi;
-    RE:=RMINSUCH(D);
-    RES:=Size(RE[2]);
-    Print(" ",RES," \c");
-    if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
-    Add(Liste_der_Markierungen,[RE[1],Id]);
-    #Add(Liste_der_Id,Id);
+   # RE:=RMINSUCH(D);
+   # RES:=Size(RE[2]);
+   # Print(" ",RES," \c");
+   # if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
+   # Add(Liste_der_Markierungen,[RE[1],Id]);
+    if COMPDIAG6E(D)<>COMPDIAG7E(D) then Error("ungleich"); fi;
     od;
   od;
  od;
