@@ -79,7 +79,7 @@ COMPDIAG6E:=function(dd,D,flag)#neu
 
 COMPDIAG7E:=function(D)
   local i,j,SD,ORBZU,ORBZUMERK,MARK;
-  SD:=Size(D); ORBZU:=List(D); #ORBZU[1]:=-1;
+  SD:=Size(D); ORBZU:=List(D);
   repeat
     MARK:=[];
     for i in [1..SD] do
@@ -87,9 +87,9 @@ COMPDIAG7E:=function(D)
       for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
       MARK[i]:=Collected(MARK[i]);
       od;
-    ORBZUMERK:=ORBZU; ORBZU:=[];
-    for i in [1..SD] do for j in [i,i-1..1] do
-      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK][j] then ORBZU[i]:=j; fi; od; od;
+    ORBZUMERK:=ORBZU; ORBZU:=[1];
+    for i in [2..SD] do for j in [i,i-1..2] do
+      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
     until ORBZU=ORBZUMERK;  
   return ORBZU;
   end;
@@ -339,7 +339,7 @@ gap> RE:=RMINSUCH(D);Size(RE[2]);#mit Maximum
               2, 63, 54, 8, 13, 27, 18, 36, 41, 26, 19, 33, 44, 62, 55, 5, 
               16, 15, 6, 56, 61, 43, 34, 20, 25, 42, 35, 17, 28, 14, 7, 53, 
               64 ] ) ] ]
-8
+
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
 for kk in [1..6] do#for kk in [1,2] do
@@ -366,7 +366,8 @@ for m in [2..8] do n:=2^m;
    # Print(" ",RES," \c");
    # if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
    # Add(Liste_der_Markierungen,[RE[1],Id]);
-    if COMPDIAG6E(D)<>COMPDIAG7E(D) then Error("ungleich"); fi;
+    #Print(" ",COMPDIAG6E(RANK,D,0)=COMPDIAG7E(D),"\c");
+    if COMPDIAG6E(RANK,D,0)<>COMPDIAG7E(D) then Error("ungleich"); fi;
     od;
   od;
  od;
