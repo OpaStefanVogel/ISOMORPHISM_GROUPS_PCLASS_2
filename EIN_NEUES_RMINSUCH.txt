@@ -150,7 +150,7 @@ DNEU(6);ALPHA;BETA;
 
 RMINSUCH:=function(D)
   local SD,S,STUFE,LRES,V,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,LD,ORBZU,ORBS,ONEU;
+  HRES,KRES,LD,ORBZU,ORBS,ONEU;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
   ORBZU:=COMPDIAG6E(S,D,0);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
@@ -162,8 +162,9 @@ RMINSUCH:=function(D)
       ORBS:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
-        RR:=[DNEU(D[i])];
-        for j in HRES do Add(RR,DNEU(D[XORMAT[i][j]])); od;
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        RR:=List(KRES,i->DNEU(D[i]));
         if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -185,6 +186,8 @@ RMINSUCH:=function(D)
     od;
   return [RMIN,VARIANTEN];
   end;
+
+Id:=[256,56089];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=RMINSUCH(D);;CE[1];
 
 ----------
 Id:=[512,7533561];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=COMPDIAG6E(RankPGroup(G),D,0);;
@@ -342,7 +345,7 @@ gap> RE:=RMINSUCH(D);Size(RE[2]);#mit Maximum
 
 
 Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];
-for kk in [1..6] do#for kk in [1,2] do
+for kk in [1] do#..6] do#for kk in [1,2] do#for kk in [1] do
 for m in [2..8] do n:=2^m;
   for Id in IdsOfAllSmallGroups(Size,n,PClassPGroup,2,RankPGroup,m-kk) do #,RankPGroup,m-1,m-2,m-3
   #m:=9;n:=512;for i in [10494201..10494212] do Id:=[512,i];
@@ -361,16 +364,19 @@ for m in [2..8] do n:=2^m;
     #REV:=Size(RE[2]);
     #Print(" ",REV," \c");
     #if REV<>1 then Error("REV<>1"); fi;
-   # RE:=RMINSUCH(D);
-   # RES:=Size(RE[2]);
-   # Print(" ",RES," \c");
-   # if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
-   # Add(Liste_der_Markierungen,[RE[1],Id]);
+    RE:=RMINSUCH(D);
+    RES:=Size(RE[2]);
+    Print(" ",RES," \c");
+    if RE[1] in Liste_der_Markierungen then Error("doppelt"); fi;
+    Add(Liste_der_Markierungen,[RE[1],Id]);
+    Print(" ok\c");
     #Print(" ",COMPDIAG6E(RANK,D,0)=COMPDIAG7E(D),"\c");
-    if COMPDIAG6E(RANK,D,0)<>COMPDIAG7E(D) then Error("ungleich"); fi;
+    #if COMPDIAG6E(RANK,D,0)<>COMPDIAG7E(D) then Error("ungleich"); fi;
     od;
   od;
  od;
+
+SortedList(Liste_der_Markierungen);
 
 SmallGroupsInformation(512);
 Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);  
