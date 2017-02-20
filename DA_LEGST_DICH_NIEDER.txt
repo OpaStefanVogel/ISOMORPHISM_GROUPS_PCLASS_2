@@ -529,7 +529,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
   Print("\nHMACH: \c");t:=Runtime();
   H:=HMACH(dd);Print(Runtime()-t);
   Print("\nConcatenation(List(S),H): \c");t:=Runtime();
-  K:=Group(Concatenation(List(S),H));Print(Runtime()-t);
+  K:=Group(Concatenation(SmallGeneratingSet(S),H));Print(Runtime()-t);
   D0:=COMPDIAGSTABERZ(D0);Remove(D0,1);
   S0:=STABMACH(dd,D0);
   Print("\nIntersection(S0,K): \c");t:=Runtime();
@@ -600,11 +600,11 @@ ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
-SCHNACK(2,COMPDIAG5RR);#16
-SCHNACK(3,COMPDIAG5RR);#32
-SCHNACK(4,COMPDIAG5RR);#64
-SCHNACK(5,COMPDIAG5RR);#128
-SCHNACK(6,COMPDIAG5RR);#256
-SCHNACK(7,COMPDIAG5RR);#512
-SCHNACK(8,COMPDIAG5RR);#1024
+SCHNACK(2,COMPDIAG5RR);#16#6
+SCHNACK(3,COMPDIAG5RR);#32#19
+SCHNACK(4,COMPDIAG5RR);#64#60
+SCHNACK(5,COMPDIAG5RR);#128#158
+SCHNACK(6,COMPDIAG5RR);#256#442
+SCHNACK(7,COMPDIAG5RR);#512#1122
+SCHNACK(8,COMPDIAG5RR);#1024#2945
 
