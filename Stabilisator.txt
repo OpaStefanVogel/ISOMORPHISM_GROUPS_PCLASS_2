@@ -185,6 +185,7 @@ COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
   end;
 
 STABMACH:=function(dd,D)
+  #global STABERZ;
   local STAB,ddd;
   STAB:=[];
   for ddd in [dd,dd-1..1] do 
@@ -631,7 +632,7 @@ STABAUSD4:=function(dd,D)#aufpass, Input mit 0, Output ohne 0!
   end;
 
 DOPPELSTAB:=function(dd,S)
-  local L,LL;
+  local L,LL,SD;
   L:=List(S,s->ListPerm(s,2^(dd-1)-1));
   for LL in L do LL[2^(dd-1)]:=2^(dd-1); 
     for i in [2^(dd-1)+1..2^dd-1] do
@@ -768,10 +769,17 @@ R:=[[1],[2,2],[2,3,2]];#[ 32, 35 ]
 DIAG(R);[ 0, 1, 0, 2, 0, 1, 0, 2 ];
 ID:=IdSmallGroup(PcgsOfR(RVOND(dd,DIAG(R){[2..2^dd]})));
 
+#
+COMPDIAGSTABERZ:=0;
+STABMACH:=0;
+DOPPELSTAB:=0;
+HMACH:=0;
+RKVOND:=0;
 
 R1:=[[1],[0,0],[0,1,0]];
 R2:=[[1],[1,1]];
 SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
+  local D0,D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS;
   dd:=Size(R1);
   D0:=DIAG(R1);
   D1:=DIAG(R1{[1..dd-1]});
@@ -786,7 +794,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
   Print("\nDOPPELSTAB S2: \c");t:=Runtime();
   SD2:=DOPPELSTAB(dd,S2);Print(Runtime()-t);
   Print("\nIntersection(S1,S2): \c");t:=Runtime();
-  S:=Intersection(Group(SD1),Group(SD2));Print(Runtime()-t);
+  SD:=Intersection(Group(SD1),Group(SD2));Print(Runtime()-t);
   Print("\nHMACH: \c");t:=Runtime();
   H:=HMACH(dd);Print(Runtime()-t);
   Print("\nConcatenation(SD,H): \c");t:=Runtime();
@@ -821,6 +829,7 @@ ok SD:=Intersect(S0,SD) und H:=... geht nicht weil Group(A,B)*C nicht
 Group(A*C,B*C ) ist.
 ok aber DOPPELSTAB vor Intersection in SCHNICK hat den entscheidenden Schwung gebracht. Das ist jetzt gelaufen ok
 
+ERGS1:=[];
 KANTENZUEGE:=function(ddmax)
   ERGS1:=[];
   for dd in [1..ddmax] do
@@ -961,6 +970,7 @@ COMPDIAG5dd:=function(dd,D,flag)#neu
   end;
 
 SCHNACK:=function(dd,CMPD)
+  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID;
   Exec("date");
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for R1 in ERGS1[dd] do
