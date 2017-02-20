@@ -154,7 +154,7 @@ RMINSUCH:=function(D)
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
   ORBZU:=COMPDIAG6E(S,D,0);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
-  for STUFE in [1..S] do
+  for STUFE in [1..S] do Print("\nSTUFE=",STUFE);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
     for V in VARIANTEN do
@@ -168,7 +168,7 @@ RMINSUCH:=function(D)
         if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
-          ONEU:=List(LNEU,j->ORBZU[j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
           if not (ONEU in ORBS) then
             Add(ORBS,ONEU);
             VNEU:=StructuralCopy(V);
@@ -178,14 +178,28 @@ RMINSUCH:=function(D)
             VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
             Add(NEUE_VARIANTEN,VNEU);
             fi;
+          #Print("P");
           fi;
         fi; od;
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     Add(RMIN,RNEU);
+    Print("VARIANTEN",Size(VARIANTEN));
     od;
   return [RMIN,VARIANTEN];
   end;
+
+D:=[ 0, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 0, 0, 1, 1, 1, 2, 1, 2, 0, 0, 1, 2, 0, 0, 0, 0, 0, 3, 1, 1,
+ 1, 2, 1, 2, 0, 0, 1, 2, 0, 0, 0, 0, 0, 3, 3, 0, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 1, 3, 3, 1, 1, 1, 2, 1, 2, 0, 0, 3, 0, 2,
+ 2, 2, 2, 2, 1, 0, 3, 1, 1, 1, 1, 1, 2, 3, 3, 3, 0, 3, 0, 2, 2, 2, 1, 3, 3, 3, 3, 3, 0, 1, 1, 1, 2, 1,
+ 2, 0, 0, 0, 0, 0, 3, 0, 3, 1, 1, 2, 1, 3, 3, 3, 3, 3, 0, 3, 3, 1, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 0, 3, 2, 1, 1, 1, 1, 1,
+ 3, 0, 1, 1, 3, 0, 3, 0, 0, 0, 0, 3, 3, 3, 3, 3, 1, 2, 3, 3, 1, 2, 1, 2, 2, 2, 2, 2, 0, 3, 0, 3, 3, 3,
+ 0, 3, 3, 3, 3, 3, 1, 2, 3, 0, 0, 0, 0, 0, 2, 1, 2, 2, 0, 3, 0, 3, 3, 3, 2, 2, 0, 3, 0, 3, 3, 3, 2, 1, 1, 1, 1, 1, 3, 0, 2,
+ 2, 0, 3, 0, 3, 3, 3, 2, 1, 1, 1, 1, 1, 3, 0, 0, 3, 3, 3, 3, 3, 1, 2, 1, 1, 3, 0, 3, 0, 0, 0 ];
+Size(D);CE:=RMINSUCH(D);;CE[1];
+
+
+
 
 Id:=[256,56089];G:=SmallGroup(Id);D:=Diagonale(G,0);Add(D,0,1);CE:=RMINSUCH(D);;CE[1];
 
@@ -389,3 +403,18 @@ Remove(IdsOfAllSmallGroups(Size,256,PClassPGroup,2,RankPGroup,m-5),1);
 #512 #10494201 - 10494212 r8 (12)
 #512 #10493062 - 10494173 r7 (1112) #7532393 - 10481221 r6 #420515 - 6249623 r5 #60904 - 67612 r4 #2045 r3
 
+###Fortsetzung Stabilisator.txt Zeile 1002:
+COMPDIAG5RR:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
+
+KANTENZUEGE(10);
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[1]];
+SCHNACK(2,COMPDIAG5RR);#16
+SCHNACK(3,COMPDIAG5RR);#32
+SCHNACK(4,COMPDIAG5RR);#64
+SCHNACK(5,COMPDIAG5RR);#128
+SCHNACK(6,COMPDIAG5RR);#256
+SCHNACK(7,COMPDIAG5RR);#512
+SCHNACK(8,COMPDIAG5RR);#1024

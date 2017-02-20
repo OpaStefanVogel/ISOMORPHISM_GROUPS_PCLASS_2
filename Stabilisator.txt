@@ -1,3 +1,11 @@
+##XORMAT
+##ERWIND
+##DIAG
+##a
+##KANTENZUG
+##JKLLISTE, aber das zweite
+##dann Zeile 1002
+
 FORTSETZ:=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
   local PHI,i,j,k,HRESNEU,nochnichtgefunden;
   PHI:=[];HRESNEU:=[];
