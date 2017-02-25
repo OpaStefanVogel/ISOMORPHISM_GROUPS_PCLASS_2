@@ -1,6 +1,6 @@
 #Read("DA_LEGST_DICH_NIEDER.txt");
 
-
+SAGE:=true;
 dmax:=10;
 #dmax:=12;
 
@@ -519,21 +519,27 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
   D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
   D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
   S1:=STABMACH(dd-1,D1);
-  Print("\nDOPPELSTAB S1: \c");t:=Runtime();
-  SD1:=DOPPELSTAB(dd,S1);Print(Runtime()-t);
+  if not SAGE then Print("\nDOPPELSTAB S1: \c"); t:=Runtime(); fi;
+  SD1:=DOPPELSTAB(dd,S1);
+  if not SAGE then Print(Runtime()-t); fi;
   S2:=STABMACH(dd-1,D2);
-  Print("\nDOPPELSTAB S2: \c");t:=Runtime();
-  SD2:=DOPPELSTAB(dd,S2);Print(Runtime()-t);
-  Print("\nIntersection(S1,S2): \c");t:=Runtime();
-  S:=Intersection(Group(SD1),Group(SD2));Print(Runtime()-t);
-  Print("\nHMACH: \c");t:=Runtime();
-  H:=HMACH(dd);Print(Runtime()-t);
-  Print("\nConcatenation(List(S),H): \c");t:=Runtime();
-  K:=Group(Concatenation(SmallGeneratingSet(S),H));Print(Runtime()-t);
+  if not SAGE then Print("\nDOPPELSTAB S2: \c"); t:=Runtime(); fi;
+  SD2:=DOPPELSTAB(dd,S2);
+  if not SAGE then Print(Runtime()-t); fi;
+  if not SAGE then Print("\nIntersection(S1,S2): \c"); t:=Runtime(); fi;
+  S:=Intersection(Group(SD1),Group(SD2));
+  if not SAGE then Print(Runtime()-t); fi;
+  if not SAGE then Print("\nHMACH: \c"); t:=Runtime(); fi;
+  H:=HMACH(dd);
+  if not SAGE then Print(Runtime()-t); fi;
+  if not SAGE then Print("\nConcatenation(List(S),H): \c"); t:=Runtime(); fi;
+  K:=Group(Concatenation(SmallGeneratingSet(S),H));
+  if not SAGE then Print(Runtime()-t); fi;
   D0:=COMPDIAGSTABERZ(D0);Remove(D0,1);
   S0:=STABMACH(dd,D0);
-  Print("\nIntersection(S0,K): \c");t:=Runtime();
-  K:=Intersection(Group(S0),K);Print(Runtime()-t);
+  if not SAGE then Print("\nIntersection(S0,K): \c"); t:=Runtime(); fi;
+  K:=Intersection(Group(S0),K);
+  if not SAGE then Print(Runtime()-t); fi;
 
   DD:=Tuples([0..1],dd);;#Print(Size(DD));
   DDD:=[];
@@ -556,18 +562,19 @@ ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
 SCHNACK:=function(dd,CMPD)
-  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID;
-  Exec("date");
+  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts;
+  if not SAGE then Exec("date"); fi;
+  ts:=Runtime();
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for R1 in ERGS1[dd] do
-    Print("\n***R1=",R1);
+    if not SAGE then Print("\n***R1=",R1); fi;
     TEILDILIST:=[];
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
-      Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n");
+      if not SAGE then Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n"); fi;
       ORBI:=SCHNICK(R1,R1R2[2]);
       #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
-      Print("\nSize(ORBI)=",Size(ORBI));
-      Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n");
+      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
       for ORB in ORBI do
         R:=R1+2*ORB;
         D:=DIAG(R);
@@ -582,14 +589,14 @@ SCHNACK:=function(dd,CMPD)
           fi;
         if not ID in GESAMTDILIST[dd] then
           Add(GESAMTDILIST[dd],ID);
-          Print("*\c");
-          else Print(".\c"); fi;
+          if not SAGE then Print("*\c"); fi;
+          else if not SAGE then Print(".\c"); fi; fi;
         od;
       fi; od;
     od;
   Print("\n",List(GESAMTDILIST,i->Size(i)));
-  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],"\n");
-  Exec("date");
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
+  if not SAGE then Exec("date"); fi;
   end;
 
 COMPDIAG5RR:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
@@ -607,4 +614,3 @@ SCHNACK(5,COMPDIAG5RR);#128#158
 SCHNACK(6,COMPDIAG5RR);#256#442
 SCHNACK(7,COMPDIAG5RR);#512#1122
 SCHNACK(8,COMPDIAG5RR);#1024#2945
-
