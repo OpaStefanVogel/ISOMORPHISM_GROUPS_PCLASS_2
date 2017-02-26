@@ -129,7 +129,7 @@ RMINVORTEST:=function(D)
   return [RMIN,VARIANTEN];
   end;
 
-ALPHA:=[0];#global weil von DNEU verändert
+ALPHA:=[0];#global weil von DNEU veraendert
 BETA:=[0];
 
 DNEU:=function(d)
@@ -196,7 +196,7 @@ RMINSUCH:=function(D)
 ERWIND:=[];
 j:=1;k:=1;S:=dmax;
 for i in IteratorOfTuples( [0,1], S ) do
-   Print(".");
+   if not SAGE then Print("."); fi;
 #  Print("\n",i);
   if 3>Sum(i) then 
     ERWIND[k]:=j;j:=j+1;k:=k+1;
@@ -326,7 +326,7 @@ ERGS1[4];
 
 #--------------#
 
-FORTSETZ:=function(HRES,y,D) #setzt HRES,y zu einem gültigen pcgs fort und macht ein PHI daraus
+FORTSETZ:=function(HRES,y,D) #setzt HRES,y zu einem gueltigen pcgs fort und macht ein PHI daraus
   local PHI,i,j,k,HRESNEU,nochnichtgefunden;
   PHI:=[];HRESNEU:=[];
   i:=1;
@@ -417,7 +417,7 @@ STAB:=STABERZ([1..7],[],STAB,D);
 Size(STAB);
 Size(Group(STAB));#6 laut 4788 und 4752R
 
-COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geändertem RETURN
+COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geaendertem RETURN
   #global JKLLISTE;
   local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,DD;
   SD:=Size(D);DD:=[];
@@ -508,9 +508,9 @@ RKVOND(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[1],[1,2],[1,2,3],[0,
 
 R1:=[[1],[0,0],[0,1,0]];
 R2:=[[1],[1,1]];
-SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergänzt
+SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #global COMPDIAGSTABERZ,STABMACH,DOPPELSTAB,HMACH,RKVOND;
-  local D0,D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS;
+  local D0,D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS,dd;
   dd:=Size(R1);
   D0:=DIAG(R1);
   D1:=DIAG(R1{[1..dd-1]});
@@ -601,7 +601,7 @@ SCHNACK:=function(dd,CMPD)
 
 COMPDIAG5RR:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
 
------------
+#-----------
 KANTENZUEGE(10);
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
@@ -610,7 +610,7 @@ GESAMTDILIST:=[[1]];
 SCHNACK(2,COMPDIAG5RR);#16#6
 SCHNACK(3,COMPDIAG5RR);#32#19
 SCHNACK(4,COMPDIAG5RR);#64#60
-SCHNACK(5,COMPDIAG5RR);#128#158
-SCHNACK(6,COMPDIAG5RR);#256#442
-SCHNACK(7,COMPDIAG5RR);#512#1122
-SCHNACK(8,COMPDIAG5RR);#1024#2945
+#SCHNACK(5,COMPDIAG5RR);#128#158
+#SCHNACK(6,COMPDIAG5RR);#256#442
+#SCHNACK(7,COMPDIAG5RR);#512#1122
+#SCHNACK(8,COMPDIAG5RR);#1024#2945
