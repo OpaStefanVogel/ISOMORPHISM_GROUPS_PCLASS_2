@@ -1,0 +1,216 @@
+Read("GRUP2950GESAMTDILIST.txt");
+
+#COMPDIAG5E aus ENDE_IN_SICHT.txt Zeile 1 bis 508 "end;", Variante S:=12; dmax:=S;
+
+
+COMPDIAG5F:=function(dd,D,flag) # wie 5E nur ohne dem letzten repeat
+  local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
+  HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A,NMARK5,ORBZU5,NMARK4A,NMARK5A;
+  if flag=88 then Print("\n  ",D); fi;
+  NMARK2:=0; NMARK3:=0; NMARK4:=0;
+  SD:=Size(D);
+
+  ORBZU:=[];STUFE:=1;
+  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE][1]:=-1;
+  #ORBZU[STUFE]:=List(ORBZU[STUFE],i->[String(i)]);
+  NMARK:=List([1..SD],i->List([1..SD],j->[]));
+  repeat #zB bei [ 256, 56030 ]
+    if flag=88 then Print("\n",ORBZU); fi;
+    Print("#",Size(Collected(ORBZU[STUFE])),"\c");
+    MARK:=[];
+    for i in [1..SD] do
+      MARK[i]:=[-1];
+      for j in [1..SD] do 
+        MARK[i][j]:=[
+          ORBZU[STUFE][i],
+          ORBZU[STUFE][j],
+          ORBZU[STUFE][XORMAT[j][i]]];
+        Add(NMARK[i][j],MARK[i][j]);
+        od;
+      #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
+      MARK[i]:=Collected(MARK[i]{[1..SD]});
+      #Print("\nMARK[",i,"]=",D[i],MARK[i]);
+      #Add(NMARK[i],MARK[i]);
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
+      od;
+    STUFE:=STUFE+1;
+    ORBZU[STUFE]:=[];
+    for i in [1..SD] do for j in [i,i-1..1] do
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+    until ORBZU[STUFE]=ORBZU[STUFE-1];
+  NMARK1:=StructuralCopy(NMARK);
+  ORBZU1:=StructuralCopy(ORBZU);STUFE1:=STUFE;
+  
+  ORBZU:=[];STUFE:=1;
+  ORBZU[STUFE]:=List(D);
+  ORBZU[STUFE][1]:=-1;
+  #ORBZU[STUFE]:=List(ORBZU[STUFE],i->[String(i)]);
+  NMARK:=List([1..SD],i->List([1..SD],j->[]));
+  repeat #zB bei [ 256, 56030 ]
+    if flag=88 then Print("\n",ORBZU); fi;
+    Print("$",Size(Collected(ORBZU[STUFE])),"\c");
+    EXTRAORBZU:=EXTRAORBZUMACH(ORBZU[STUFE]);
+    MARK:=[];
+    for i in [1..SD] do
+      MARK[i]:=[-1];
+      for j in [1..SD] do
+        k:=XORMAT[j][i];
+        NMA:=[
+          ORBZU[STUFE][i],
+          ORBZU[STUFE][j],
+          ORBZU[STUFE][k]];
+        if EXTRAORBZU[j]=EXTRAORBZU[k] then NMA[5]:="Y=Z"; fi;
+        if EXTRAORBZU[i]=EXTRAORBZU[j] then NMA[6]:="X=Y"; fi;
+        #if j in EXTRAORBZU[k] then NMA[7]:="yinZ"; fi;#i?
+        #if i in EXTRAORBZU[j] then NMA[8]:="xinY"; fi;
+        if STUFE=1 then
+          NMA[4]:=(D[i]+1=XORMAT[D[j]+1][D[k]+1]);
+          fi;
+        if NMA[3]>0 then
+          if NMA[3]=NMA[2] then NMA[3]:="y=z"; else
+            if NMA[3]=NMA[1] then NMA[3]:="x=z"; else
+               NMA[3]:="z"; fi; fi;
+          fi;
+        if NMA[2]>0 then
+          if NMA[2]=NMA[1] then NMA[2]:="x=y"; else NMA[2]:="y"; fi;
+          fi;
+        if NMA[1]>0 then NMA[1]:="x"; fi;
+        MARK[i][j]:=NMA;
+        Add(NMARK[i][j],MARK[i][j]);
+        od;
+      #Print("\nMARK[",i,"]=",MARK[i]{[1..SD]});
+      MARK[i]:=Collected(MARK[i]{[1..SD]});
+      #Print("\nMARK[",i,"]=",D[i],MARK[i]);
+      #Add(NMARK[i],MARK[i]);
+      #Print("\nNMARK[",i,"]=",D[i],NMARK[i]);
+      od;
+    STUFE:=STUFE+1;
+    ORBZU[STUFE]:=[-3];
+    for i in [2..SD] do for j in [i,i-1..1] do
+      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
+    until ORBZU[STUFE]=ORBZU[STUFE-1];
+  NMARK2A:=StructuralCopy(NMARK);
+  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
+  NMARK2:=StructuralCopy(NMARK);
+  ORBZU2:=StructuralCopy(ORBZU);
+
+#repeat
+  ORBZU4:=[-4];
+  for i in [2..SD] do
+    for j in [i,i-1..2] do
+      if NMARK[i]=NMARK[j] then ORBZU4[i]:=j; fi; 
+      od; od;
+  UMARK:=[];
+  for i in [1..SD] do 
+    if not IsBound(UMARK[D[i]+1]) then UMARK[D[i]+1]:=[]; fi;
+    Add(UMARK[D[i]+1],StructuralCopy(NMARK[i])); od;
+  for i in [1..2^(LogInt(Size(UMARK)-1,2)+1)] do 
+    if IsBound(UMARK[i]) then UMARK[i]:=Collected(UMARK[i]); 
+      else UMARK[i]:=0; fi; od;
+  UMARKS:=StructuralCopy(UMARK);Sort(UMARKS);
+  UMARK2:=[-3];
+  for i in [1..Size(UMARK)] do
+    for j in [i,i-1..1] do
+      if UMARK[i]=UMARK[j] then UMARK2[i]:=j; fi; 
+      od; od;
+  NMARK:=StructuralCopy(NMARK1);
+  for i in [1..SD] do 
+    for j in [1..SD] do 
+      for k in [1,Size(NMARK[i][j])] do
+        NMA:=NMARK[i][j][k];
+        for l in [1..3] do
+          if k=1 then if NMA[l]>0 then NMA[l]:=UMARK2[NMA[l]+1]; fi; else
+            if NMA[l]>0 then NMA[l]:=ORBZU4[NMA[l]];#NMARK3[NMA[l]]; 
+              fi;
+            fi;
+          od;
+        od;
+      NMARK[i][j]:=[NMARK2A[i][j],NMARK[i][j][Size(NMARK[i][j])],
+        UMARK2[XORMAT[D[j]+1][D[XORMAT[j][i]]+1]]];
+      od;
+    od;
+  NMARKSC:=StructuralCopy(NMARK);
+  for i in [1..SD] do NMARK[i]:=Collected(NMARK[i]); od;
+  ORBZUMERK:=List(ORBZU4);
+  for i in [2..SD] do
+    for j in [i,i-1..2] do
+      if NMARK[i]=NMARK[j] then ORBZU4[i]:=j; fi; 
+      od; od;
+#  until ORBZU4=ORBZUMERK;
+
+  return [ORBZU1[Size(ORBZU1)],NMARK,UMARKS,ORBZU4,NMARK2,NMARKSC,UMARK,UMARK2];
+          #CE1                 CE2   CE3    CE4    CE5    CE6     CE7   CE8
+  end;
+
+
+
+KOMPLIST:=[];
+Komprimiere:=function(CED)
+  local CX,i,j,k;
+  CX:=StructuralCopy(CED);
+  for i in [1..Size(CX)] do
+    for j in [1..Size(CX[i])] do
+      for k in [1..Size(CX[i][j][1])] do
+        if not (CX[i][j][1][k] in KOMPLIST) then Add(KOMPLIST,CX[i][j][1][k]); fi;
+        CX[i][j][1][k]:=Position(KOMPLIST,CX[i][j][1][k]);
+        od;
+      od;
+    od;
+  return Collected(CX);
+  end;
+
+Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];KOMPLIST:=[];
+RANK:=8;
+for i in [1..Size(GESAMTDILIST[RANK])] do
+  Print("\n",Size(Doppelte_Markierungen)," i=",i," \c");
+  R:=GESAMTDILIST[RANK][i];
+  D:=DIAG(R);
+  #Print(R,D," \c");
+  CE:=COMPDIAG5F(RANK,D,0);
+    M:=Size(Collected(CE[1]))-1;#e weg
+    Print(" ",M," \c");
+    M5:=Size(Collected(CE[5]))-1;#e weg
+    Print(M5," \c");
+    M4:=Size(Collected(CE[4]))-1;#e weg
+    Print(M4," \c");
+    MA:=Size(Collected(CE[2]))-1;#e weg
+    Print(MA," \c");
+    CX:=Komprimiere(CE[5]);
+    if [CX,CE[3]] in Liste_der_Markierungen then Add(Doppelte_Markierungen,i); fi;
+    Add(Liste_der_Markierungen,[CX,CE[3]]);
+#  Print(CE,"\c");
+  od;
+Doppelte_Markierungen;
+List(Doppelte_Markierungen,i->Position(Liste_der_Markierungen,Liste_der_Markierungen[i]));
+# [ 1147, 1206, 1511, 1579, 2079 ]
+# [ 1029, 1108, 1255, 1187, 2077 ]
+
+
+##Überschüssiges:
+Liste_der_Markierungen:=[];Liste_der_Id:=[];Doppelte_Markierungen:=[];KOMPLIST:=[];
+RANK:=8;L:=[ 1029, 1108, 1255, 1187, 2077, 1147, 1206, 1511, 1579, 2079 ];
+for i in [1..Size(L)] do
+  Print("\n",Size(Doppelte_Markierungen)," i=",i," \c");
+  R:=GESAMTDILIST[RANK][L[i]];
+  D:=DIAG(R);
+  #Print(R,D," \c");
+  CE:=COMPDIAG5E(RANK,D,0);
+    M:=Size(Collected(CE[1]))-1;#e weg
+    Print(" ",M," \c");
+    M5:=Size(Collected(CE[5]))-1;#e weg
+    Print(M5," \c");
+    M4:=Size(Collected(CE[4]))-1;#e weg
+    Print(M4," \c");
+    MA:=Size(Collected(CE[2]))-1;#e weg
+    Print(MA," \c");
+    CX:=CE[5];
+    #CX:=Komprimiere(CE[5]);
+    if [CX,CE[3]] in Liste_der_Markierungen then Add(Doppelte_Markierungen,i); fi;
+    Liste_der_Markierungen[i]:=[CX,CE[3]];
+#  Print(CE,"\c");
+  od;
+Doppelte_Markierungen;
+List(Doppelte_Markierungen,i->Position(Liste_der_Markierungen,Liste_der_Markierungen[i]));
+#[]
+#[]
