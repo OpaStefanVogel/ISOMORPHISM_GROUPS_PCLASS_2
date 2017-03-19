@@ -204,8 +204,7 @@ for i in [1..Size(L)] do
     Print(M4," \c");
     MA:=Size(Collected(CE[2]))-1;#e weg
     Print(MA," \c");
-    CX:=CE[5];
-    #CX:=Komprimiere(CE[5]);
+    CX:=SortedList(CE[2]);
     if [CX,CE[3]] in Liste_der_Markierungen then Add(Doppelte_Markierungen,i); fi;
     Liste_der_Markierungen[i]:=[CX,CE[3]];
 #  Print(CE,"\c");
