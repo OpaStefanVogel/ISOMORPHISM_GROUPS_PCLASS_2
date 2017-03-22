@@ -3,7 +3,7 @@ Read("GRUP2950GESAMTDILIST.txt");
 #COMPDIAG5E aus ENDE_IN_SICHT.txt Zeile 1 bis 508 "end;", Variante S:=12; dmax:=S;
 
 
-COMPDIAG5F:=function(dd,D,flag) # wie 5E nur ohne dem letzten repeat
+COMPDIAG5G:=function(dd,D,flag) # wie 5E nur ohne dem letzten repeat
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
   HRES,LRES,MRES,PHI0,up,MRET,NMA,ORBZU1,ORBZU2,STUFE,UMARK2,UMARK3,STUFE1,ORBZU4,UMARKS,NMARK2A,NMARK5,ORBZU5,NMARK4A,NMARK5A;
   if flag=88 then Print("\n  ",D); fi;
@@ -195,7 +195,7 @@ for i in [1..Size(L)] do
   R:=GESAMTDILIST[RANK][L[i]];
   D:=DIAG(R);
   #Print(R,D," \c");
-  CE:=COMPDIAG5F(RANK,D,0);
+  CE:=COMPDIAG5G(RANK,D,0);
     M:=Size(Collected(CE[1]))-1;#e weg
     Print(" ",M," \c");
     M5:=Size(Collected(CE[5]))-1;#e weg
