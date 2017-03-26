@@ -401,5 +401,5 @@ List(Doppelte_Markierungen,i->Position(Liste_der_Markierungen,Liste_der_Markieru
 
 for i in [ 1029, 1108, 1255, 1187, 2077 ] do
   R:=GESAMTDILIST[8][i];
-  Print("\n"Das Ergebnis für i=",i," lautet ",R=RMINSUCHAUSFUEHRLICH(DIAG(R)));
+  Print("\nDas Ergebnis für i=",i,R," lautet ",R=RMINSUCHAUSFUEHRLICH(DIAG(R))[1],"\c");
   od;
