@@ -2,6 +2,8 @@ Read("GRUP2950GESAMTDILIST.txt");
 
 #COMPDIAG5E aus ENDE_IN_SICHT.txt Zeile 1 bis 508 "end;", Variante S:=12; dmax:=S;
 
+#DNEU aus EIN_NUES_RMINSUCH.txt
+
 
 COMPDIAG5F:=function(dd,D,flag) # wie 5E nur ohne dem letzten repeat
   local i,j,k,l,SD,ORBZU,ORBZU3,ORBZUMERK,MARK,NMARK,NMARK1,NMARK2,NMARK3,NMARK4,UMARK,
@@ -400,6 +402,15 @@ List(Doppelte_Markierungen,i->Position(Liste_der_Markierungen,Liste_der_Markieru
 #[]
 
 for i in [ 1029, 1108, 1255, 1187, 2077 ] do
+  R:=GESAMTDILIST[8][i];
+  Print("\nDas Ergebnis für i=",i,R," lautet ",R=RMINSUCHAUSFUEHRLICH(DIAG(R))[1],"\c");
+  od;
+
+# [ 1147, 1206, 1511, 1579, 2079 ]
+# [ 1029, 1108, 1255, 1187, 2077 ]
+#nee, ich muss das ja für die obere Zeile machen
+
+for i in [ 1147, 1206, 1511, 1579, 2079 ] do
   R:=GESAMTDILIST[8][i];
   Print("\nDas Ergebnis für i=",i,R," lautet ",R=RMINSUCHAUSFUEHRLICH(DIAG(R))[1],"\c");
   od;
