@@ -412,5 +412,7 @@ for i in [ 1029, 1108, 1255, 1187, 2077 ] do
 
 for i in [ 1147, 1206, 1511, 1579, 2079 ] do
   R:=GESAMTDILIST[8][i];
-  Print("\nDas Ergebnis für i=",i,R," lautet ",R=RMINSUCHAUSFUEHRLICH(DIAG(R))[1],"\c");
+  S:=RMINSUCHAUSFUEHRLICH(DIAG(R))[1];
+  Print("\nDas Ergebnis für i=",i,R," lautet ",R=S,Position(GESAMTDILIST[8],S),"\c");
   od;
+#und da kommt auch die untere Zeile raus, also RMINSUCH geht nicht.
