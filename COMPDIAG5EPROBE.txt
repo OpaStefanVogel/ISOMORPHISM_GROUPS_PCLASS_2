@@ -286,10 +286,18 @@ repeat
           #CE1                 CE2   CE3    CE4    CE5    CE6     CE7   CE8
   end;
 
+REIH:=[0,1,2,3];
+REIH:=[1000,1001,2,3];
+VERGLEICHE:=function(R1,R2)
+  return List(Flat(R1),i->REIH[i+1])>List(Flat(R2),j->REIH[j+1]);
+  end;
+VERGLEICH2:=function(R1,R2)
+  return List(Flat(R1),i->REIH[i+1])=List(Flat(R2),j->REIH[j+1]);
+  end;
 
 RMINSUCHAUSFUEHRLICH:=function(D) #gegenüber RMINSUCH nur j statt ORBZU[j]
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,KRES,LD,ORBZU,ORBS,ONEU;
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,i;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
   #ORBZU:=COMPDIAG6E(S,D,0);
   ORBZU:=COMPDIAG7E(D);
@@ -297,7 +305,7 @@ RMINSUCHAUSFUEHRLICH:=function(D) #gegenüber RMINSUCH nur j statt ORBZU[j]
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
     NEUE_VARIANTEN:=[];
-    RNEU:=[0];
+    RNEU:=[];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
       ORBS:=[];
@@ -306,8 +314,8 @@ RMINSUCHAUSFUEHRLICH:=function(D) #gegenüber RMINSUCH nur j statt ORBZU[j]
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         RR:=List(KRES,i->DNEU(D[i]));
-        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
-        if RR=RNEU then
+        if VERGLEICHE(RR,RNEU) then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
+        if VERGLEICH2(RR,RNEU) then
           LNEU:=List(LRES,j->XORMAT[i][j]);
           ONEU:=List(LNEU,j->j);#nur j statt ORBZU[j];#Print("O");
           if not (ONEU in ORBS) then
@@ -329,7 +337,7 @@ RMINSUCHAUSFUEHRLICH:=function(D) #gegenüber RMINSUCH nur j statt ORBZU[j]
     od;
   return [RMIN,VARIANTEN];
   end;
-
+RMINSUCHAUSFUEHRLICH(DIAG([[1],[3,2]]));
 
 
 KOMPLIST:=[];
@@ -416,3 +424,17 @@ for i in [ 1147, 1206, 1511, 1579, 2079 ] do
   Print("\nDas Ergebnis für i=",i,R," lautet ",R=S,Position(GESAMTDILIST[8],S),"\c");
   od;
 #und da kommt auch die untere Zeile raus, also RMINSUCH geht nicht.
+
+
+##deshalb jetzt Sortierung 1000,1001,2,3
+GESAMTRLIST:=[];
+for RANK in [2..8] do
+  GESAMTRLIST[RANK]:=[];
+  for ii in [1..Size(GESAMTDILIST[RANK])] do
+    Print(RANK," ",ii," ",Size(GESAMTDILIST[RANK])," \c");
+    G:=GESAMTDILIST[RANK][ii];
+    R:=RMINSUCHAUSFUEHRLICH(DIAG(G))[1];
+    GESAMTRLIST[RANK][ii]:=R;
+    Print(R," ",G,"\n");
+    od;
+  od;
