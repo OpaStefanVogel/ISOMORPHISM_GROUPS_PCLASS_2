@@ -710,19 +710,29 @@ STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
   return PHITAB;
   end;
 
-STABMACH2(D1);
+STABMACH(4,D1L);
+P:=STABMACH2(D1);
 
 RMAXSUCH4:=function(D)
-  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,C1,C2,C3;
+  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,PP,L,LMAX,i;
   D1:=List(D,i->i mod 2);
   D2:=List(D,i->Int(i/2));
   D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
   D1MVAR:=RMAXSUCH2(D1);
   D2MVAR:=RMAXSUCH2(D2);
+  PP:=Group(STABMACH2(DIAG(D2MVAR[1])));
   D3MVAR:=RMAXSUCH2(D3);
-  return [D1,D2,D3,D1MVAR,D2MVAR,D3MVAR];
+  L:=List(PP,i->Permuted(Permuted(D3,PermList(D2MVAR[2][1].LRES)^-1),i));
+  for i in L do i[2]:=1-i[2]; od;
+  KMAX:=DIAG(D2MVAR[1]);
+  LMAX:=Maximum(L); LMAX[2]:=1-LMAX[2];
+  DMAX:=KMAX+2*LMAX;Remove(DMAX,1);
+  RMAX:=RKVOND(4,DMAX);
+  return [D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,PP,LMAX,RMAX];
   end;
 
 D:=[ 0, 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ];
 RMINSUCH(D);#[ [ [ 1 ], [ 3, 3 ], [ 3, 3, 1 ], [ 3, 2, 2, 0 ] ],
-RMAXSUCH4(D);
+RM:=RMAXSUCH4(D);Size(RM[7]);
+DX:=DIAG([ [ 0 ], [ 1, 1 ], [ 1, 1, 0 ], [ 1, 1, 1, 0 ] ]);#0011110011110000
+DY:=DIAG([ [ 1 ], [ 1, 1 ], [ 1, 1, 1 ], [ 1, 0, 0, 0 ] ]);#0111111010000001
