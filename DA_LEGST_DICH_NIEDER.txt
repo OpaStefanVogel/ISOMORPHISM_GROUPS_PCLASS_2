@@ -1,4 +1,5 @@
 #Read("DA_LEGST_DICH_NIEDER.txt");
+#funktioniert hat Zeile 604-616, danach neues
 
 SAGE:=true;
 dmax:=10;
@@ -604,7 +605,7 @@ COMPDIAG5RR:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
 #-----------
 KANTENZUEGE(10);
 ERGS1[4];
-ERGS2:=[[[[[1]],[[1]]]]];
+ßERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
 GESAMTDILIST:=[[1]];
 SCHNACK(2,COMPDIAG5RR);#16#6
@@ -614,3 +615,87 @@ SCHNACK(4,COMPDIAG5RR);#64#60
 #SCHNACK(6,COMPDIAG5RR);#256#442
 #SCHNACK(7,COMPDIAG5RR);#512#1122
 #SCHNACK(8,COMPDIAG5RR);#1024#2945
+
+
+--------------------neu ab 2018:
+ProfileFunctions(SCHNACK,SCHNICK,RMINSUCH,COMPDIAG7E);
+DisplayProfile();
+ClearProfile();
+
+D:=[ 0, 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ];
+C:=COMPDIAG7E(D);
+RV:=RMINSUCH(D);
+[ [ [ 1 ], [ 3, 3 ], [ 3, 3, 1 ], [ 3, 2, 2, 0 ] ],
+  [ rec( ALPHA := [ 0, 2, 3, 1 ], BETA := [ 0, 3, 1, 2 ], HRES := [ 7, 4, 14, 8 ],
+          LD := [ , 4, 4, 2, 4, 2, 1, 4, 3, 4, 4, 3, 4, 3, 3, 4 ],
+          LRES := [ 1, 7, 4, 6, 14, 12, 15, 9, 8, 2, 5, 3, 11, 13, 10, 16 ] ) ] ]
+#ALPHA gibt die Umwandlung von 0,1,2,3 in neue an, BETA umgekehrt
+#LD sind die verbrauchten Stellen
+#LRES die Diagonale aus HRES
+#D und R sind beides DK und RK, also die verkürzten D und R
+
+R:=RV[1];
+D:=DIAG(R);
+RVOND(D);
+RKVOND(D);
+
+Ziel ist neues RMAXSUCH auf Basis von XSAMMEL für Folge 3,4,6,7...
+oder ersteinmal RMAXSUCH2 und RMAXSUCH4 auf Basis RMAXSUCH
+
+ D:=[ 0, 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ];
+D1:=[ 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1 ];
+D2:=[ 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1 ];
+2*D1+D2=D;
+C1:=COMPDIAGSTABERZ(D1);
+C2:=COMPDIAGSTABERZ(D2);
+
+RMAXSUCH2:=function(D) #sucht RMAX 
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,ORBZU,ORBS,ONEU;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+  #ORBZU:=COMPDIAG6E(S,D,0);
+  #RMINSUCH#ORBZU:=COMPDIAG7E(D);
+  ORBZU:=COMPDIAGSTABERZ(D);
+  #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  for STUFE in [1..S] do 
+    Print("\nSTUFE=",STUFE);
+    NEUE_VARIANTEN:=[];
+    RNEU:=[0];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        RR:=List(KRES,i->DNEU(D[i]));
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            #RMINSUCH#VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          #Print("P");
+          fi;
+        fi; od;
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    Print(", VARIANTEN=",Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+D1; RMAXSUCH2(D1);
+D2; RMAXSUCH2(D2);
+
+D1L:=List(D1); Remove(D1L,1); STABMACH(4,D1L);
+D2L:=List(D2); Remove(D2L,1); STABMACH(4,D2L);
