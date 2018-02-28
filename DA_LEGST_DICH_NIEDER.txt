@@ -713,6 +713,13 @@ STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
 STABMACH(4,D1L);
 P:=STABMACH2(D1);
 
+RVOND4:=function(D) # erwartet neutrales Element mit
+  local D0,R;
+  D0:=List(D);Remove(D0,1);
+  R:=RKVOND(LogInt(Size(D),2),D0);
+  return R;
+  end;
+
 RMAXSUCH4:=function(D)
   local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,PP,L,LMAX,i;
   D1:=List(D,i->i mod 2);
@@ -726,8 +733,8 @@ RMAXSUCH4:=function(D)
   for i in L do i[2]:=1-i[2]; od;
   KMAX:=DIAG(D2MVAR[1]);
   LMAX:=Maximum(L); LMAX[2]:=1-LMAX[2];
-  DMAX:=KMAX+2*LMAX;Remove(DMAX,1);
-  RMAX:=RKVOND(4,DMAX);
+  DMAX:=KMAX+2*LMAX;
+  RMAX:=RVOND4(DMAX);
   return [D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,PP,LMAX,RMAX];
   end;
 
