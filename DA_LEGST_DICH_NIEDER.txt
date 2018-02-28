@@ -646,8 +646,6 @@ oder ersteinmal RMAXSUCH2 und RMAXSUCH4 auf Basis RMAXSUCH
 D1:=[ 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1 ];
 D2:=[ 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1 ];
 2*D1+D2=D;
-C1:=COMPDIAGSTABERZ(D1);
-C2:=COMPDIAGSTABERZ(D2);
 
 RMAXSUCH2:=function(D) #sucht RMAX 
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
@@ -669,7 +667,8 @@ RMAXSUCH2:=function(D) #sucht RMAX
         #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->DNEU(D[i]));
+        #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
+        RR:=List(KRES,i->D[i]);
         if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -697,5 +696,33 @@ RMAXSUCH2:=function(D) #sucht RMAX
 D1; RMAXSUCH2(D1);
 D2; RMAXSUCH2(D2);
 
-D1L:=List(D1); Remove(D1L,1); STABMACH(4,D1L);
-D2L:=List(D2); Remove(D2L,1); STABMACH(4,D2L);
+C1:=COMPDIAGSTABERZ(D1);
+C2:=COMPDIAGSTABERZ(D2);
+D1L:=List(C1); Remove(D1L,1); STABMACH(4,D1L);
+D2L:=List(C2); Remove(D2L,1); STABMACH(4,D2L);
+
+STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
+  local C,C1,PHITAB;
+  C:=COMPDIAGSTABERZ(D);
+  C1:=List(C); Remove(C1,1);
+  PHITAB:=STABMACH(LogInt(Size(C),2),C1);
+  PHITAB:=List(PHITAB,i->PermList(Concatenation([1],List(ListPerm(i),j->j+1))));
+  return PHITAB;
+  end;
+
+STABMACH2(D1);
+
+RMAXSUCH4:=function(D)
+  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,C1,C2,C3;
+  D1:=List(D,i->i mod 2);
+  D2:=List(D,i->Int(i/2));
+  D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
+  D1MVAR:=RMAXSUCH2(D1);
+  D2MVAR:=RMAXSUCH2(D2);
+  D3MVAR:=RMAXSUCH2(D3);
+  return [D1,D2,D3,D1MVAR,D2MVAR,D3MVAR];
+  end;
+
+D:=[ 0, 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ];
+RMINSUCH(D);#[ [ [ 1 ], [ 3, 3 ], [ 3, 3, 1 ], [ 3, 2, 2, 0 ] ],
+RMAXSUCH4(D);
