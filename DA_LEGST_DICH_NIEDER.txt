@@ -728,7 +728,7 @@ RMAXSUCH4:=function(D)
   D1MVAR:=RMAXSUCH2(D1); S1:=Group(STABMACH2(DIAG(D1MVAR[1])));
   D2MVAR:=RMAXSUCH2(D2); S2:=Group(STABMACH2(DIAG(D2MVAR[1])));
   D3MVAR:=RMAXSUCH2(D3); S3:=Group(STABMACH2(DIAG(D3MVAR[1])));
-  #if D1MVAR[1]<D2MVAR[1] or D1MVAR[1]<D3MVAR[1] then return false; fi;
+  #if D1MVAR[1]>D2MVAR[1] and D2MVAR[1]>D3MVAR[1] then return RVOND4(D); fi;
   HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
   if HMAX=D1MVAR[1] then
     iter:=Iterator(S1);
@@ -797,7 +797,7 @@ RM:=RMAXSUCH4(D);
 DX:=DIAG([ [ 0 ], [ 1, 1 ], [ 1, 1, 0 ], [ 1, 1, 1, 0 ] ]);#0011110011110000
 DY:=DIAG([ [ 1 ], [ 1, 1 ], [ 1, 1, 1 ], [ 1, 0, 0, 0 ] ]);#0111111010000001
 
-#----# 0b SCHNACK weitestgehend ohne RMAXSUCH4 geht, 
+#----# 0b SCHNACK weitestgehend ohne RMAXSUCH4 geht, #-----------#
 #.. dazu oben RMAXSUCH4 von [1] auf [3] machen (alle 1- raus) und 2K+L statt K+2L
 #.. dann GESAMTDILIST in GM sortiert merken
 #.. schließlich in ??? verwerfen wenn D3>D2 ist.
@@ -842,11 +842,12 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
     DDD[i]:=DIAG(Concatenation(R2,[DD[i]])){[2..2^dd]};
     od;
   ORBS:=OrbitsDomain(K,DDD,Permuted);;#Print(Size(ORBS));
+  Add(OM,ORBS);
   #Print(List(ORBS,i->Size(i)));Print("\c");
   D0:=DIAG(R1);Remove(D0,1);
   #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
   #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))))));
-  return List(ORBS,i->RKVOND(dd,i[1]));
+  return Reversed(List(ORBS,i->RKVOND(dd,Maximum(i))));
   end;
 
 SCHNACK:=function(dd,CMPD)
@@ -854,7 +855,7 @@ SCHNACK:=function(dd,CMPD)
   if not SAGE then Exec("date"); fi;
   ts:=Runtime();
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
-  for R1 in ERGS1[dd] do
+  for R1 in Reversed(ERGS1[dd]) do
     if not SAGE then Print("\n***R1=",R1); fi;
     TEILDILIST:=[];
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
@@ -871,16 +872,11 @@ SCHNACK:=function(dd,CMPD)
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
-      if ID<>false then
-        if not ID in TEILDILIST then
-          Add(TEILDILIST,ID);
+        if DIAG(ID)=D then
           Add(ERGS2[dd],[R1,ORB]);
-          fi;
-        if not ID in GESAMTDILIST[dd] then
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
           else if not SAGE then Print(".\c"); fi; fi;
-        fi;
         od;
       fi; od;
     od;
