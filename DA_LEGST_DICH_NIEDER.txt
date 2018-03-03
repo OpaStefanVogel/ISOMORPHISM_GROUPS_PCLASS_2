@@ -729,17 +729,18 @@ RMAXSUCH4:=function(D)
   D1MVAR:=RMAXSUCH2(D1); S1:=Group(STABMACH2(DIAG(D1MVAR[1])));
   D2MVAR:=RMAXSUCH2(D2); S2:=Group(STABMACH2(DIAG(D2MVAR[1])));
   D3MVAR:=RMAXSUCH2(D3); S3:=Group(STABMACH2(DIAG(D3MVAR[1])));
+  Print("\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1]);
   #if DIAG(D2MVAR[1]){[1..SD/2]}=D2{[1..SD/2]} and D2MVAR[1]>D3MVAR[1] then Print("#"); return RVOND4(D); fi;
   #Print("\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],D1MVAR[1]>D2MVAR[1] and D2MVAR[1]>D3MVAR[1],"\n\n");
   HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
   if HMAX=D1MVAR[1] then
-    #iter:=Iterator(S1);
-    #p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
-    #for i in iter do if RMAX then
-    #  q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
-    #  #q[2]:=1-q[2];
-    #  LMAX:=Maximum(LMAX,q);
-    #  fi; od;
+    iter:=Iterator(S1);
+    p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
+    for i in iter do if RMAX then
+      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      #q[2]:=1-q[2];
+      LMAX:=Maximum(LMAX,q);
+      fi; od;
     iter:=Iterator(S1);
     p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
@@ -836,14 +837,16 @@ DGANZNEU:=function(d)
 
 RMINSUCH:=function(D) #Kopie, eigentlich RMAXSUCH, beginnend mit [3] statt mit [1]
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,KRES,LD,ORBZU,ORBS,ONEU,RD,RBIT1;
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,RD,RBIT1,RBIT2;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
-  RD:=RVOND4(D); RBIT1:=List(RD,i->List(i,j->Int(j/2))); #Print(RD,RBIT1);
+  RD:=RVOND4(D); 
+    RBIT1:=List(RD,i->List(i,j->Int(j/2))); #Print(RD,RBIT1);
+    RBIT2:=List(RD,i->List(i,j->j mod 2)); #Print(RBIT2);
   #ORBZU:=COMPDIAG6E(S,D,0);
   ORBZU:=COMPDIAG7E(D);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
   for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
+    Print("\nSTUFE=",STUFE);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
     for V in VARIANTEN do
@@ -853,9 +856,16 @@ RMINSUCH:=function(D) #Kopie, eigentlich RMAXSUCH, beginnend mit [3] statt mit [
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->DGANZNEU(D[i]));#Print("\n",RR,List(RR,j->Int(j/2)),RBIT1[STUFE]);
-        if RR>RNEU and List(RR,j->Int(j/2))>=RBIT1[STUFE] then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
-        if RR=RNEU then
+        RR:=List(KRES,i->DGANZNEU(D[i]));#Print("\n",RR,"\n",RBIT1[STUFE],"\n",RBIT2[STUFE]);
+        if List(RR,j->Int(j/2))>RBIT1[STUFE] then 
+          Print("\na",RR,"\n",RBIT1[STUFE],"\n",RBIT2[STUFE],ALPHA,BETA);
+          return [[[0]],[]]; fi;
+        if List(RR,j->Int(j/2))=RBIT1[STUFE] and List(RR,j->j mod 2)>RBIT2[STUFE] then
+          Print("\nb",RR,"\n",RBIT1[STUFE],"\n",RBIT2[STUFE],ALPHA,BETA); 
+          return [[[0]],[]]; fi;
+        if List(RR,j->Int(j/2))=RBIT1[STUFE] and List(RR,j->j mod 2)=RBIT2[STUFE] then
+          Print("\n",RR,"\n",RBIT1[STUFE],"\n",RBIT2[STUFE],ALPHA,BETA);
+          RNEU:=RR; 
           LNEU:=List(LRES,j->XORMAT[i][j]);
           ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
           if not (ONEU in ORBS) then
