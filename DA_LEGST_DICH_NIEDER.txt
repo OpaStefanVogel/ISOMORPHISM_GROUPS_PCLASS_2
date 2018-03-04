@@ -1026,7 +1026,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
   #ORBZU:=COMPDIAG6E(S,D,0);
   #RMINSUCH#ORBZU:=COMPDIAG7E(D);
-  ORBZU:=COMPDIAGSTABERZ(D);
+  ORBZU:=COMPDIAG7E(D);#wieso stand da COMPDIAGSTABERZ?, Print(ORBZU,RVERGLEICH);
   #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
   for STUFE in [1..S] do 
@@ -1041,8 +1041,8 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
-        RR:=List(KRES,i->D[i]);
-   # if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
+        RR:=List(KRES,i->D[i]);#Print("\n",RR,KRES);
+    #if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
         if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -1058,7 +1058,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
             fi;
           #Print("P");
           fi;
-   #   fi;
+      #fi;
         fi; od;
       od;
     VARIANTEN:=NEUE_VARIANTEN;
@@ -1079,15 +1079,15 @@ RMAXSUCH5:=function(D)
   D3MVAR:=RMAXSUCH2(D3);
   #Print("\n",D,"\n",D1,"\n",D2,"\n",D3,"\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],"\n");
   HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
-  if HMAX=D1MVAR[1] then Print("\n1");
+  if HMAX=D1MVAR[1] then #Print("\n1");
     p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
-    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];Print(2*DIAG(HMAX)+p0,RNEU);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
     if RNEU>RMAX then RMAX:=RNEU; fi;
     p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
-    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];Print(2*DIAG(HMAX)+p0,RNEU);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
     if RNEU>RMAX then RMAX:=RNEU; fi;
     fi;
-  if HMAX=D2MVAR[1] then Print("\n2");
+  if HMAX=D2MVAR[1] then #Print("\n2");
     p0:=Permuted(D1,PermList(D2MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
     if RNEU>RMAX then RMAX:=RNEU; fi;
@@ -1095,7 +1095,7 @@ RMAXSUCH5:=function(D)
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
     if RNEU>RMAX then RMAX:=RNEU; fi;
     fi;
-  if HMAX=D3MVAR[1] then Print("\n3");
+  if HMAX=D3MVAR[1] then #Print("\n3");
     p0:=Permuted(D1,PermList(D3MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
     if RNEU>RMAX then RMAX:=RNEU; fi;
@@ -1159,11 +1159,12 @@ RMAXSUCH:=function(D) # aus RMINSUCH, aber beginnend mit [3]
   end;
 
 SCHNACK:=function(dd,CMPD)
-  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM;
+  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
   if not SAGE then Exec("date"); fi;
   ts:=Runtime(); ZM:=0;
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
-  for R1 in Reversed(ERGS1[dd]) do
+  for rr in [1..Size(ERGS1[dd])] do
+    R1:=Reversed(ERGS1[dd])[rr];
     if not SAGE then Print("\n***R1=",R1); fi;
     TEILDILIST:=[];
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
@@ -1171,7 +1172,7 @@ SCHNACK:=function(dd,CMPD)
       ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
       #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
       if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
-      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
+      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
       for ORB in ORBI do
         R:=2*R1+ORB;
         D:=DIAG(R);
@@ -1181,6 +1182,7 @@ SCHNACK:=function(dd,CMPD)
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
         if not ID in GESAMTDILIST[dd] then
+         #if DIAG(ID)<>D then Print("\n",ID,DIAG(ID),D); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
@@ -1197,7 +1199,7 @@ COMPDIAG5RS:=function(dd,D,flag) if RMAXSUCH4(D)<>[[0]] and RMAXSUCH4(D)<>RMAXSU
 COMPDIAG5RS:=function(dd,D,flag) if RMAXSUCH4(D)=[[0]] and D=DIAG(RMAXSUCH5(D)) then Error(); fi; return RMAXSUCH5(D); end;
 COMPDIAG5RS:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
 COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
-COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D); end;
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D)[1]; end;
 
 ProfileFunctions(SCHNACK,SCHNICK,RMAXSUCH4,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH);
 
