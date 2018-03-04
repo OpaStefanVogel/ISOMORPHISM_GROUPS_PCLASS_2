@@ -721,8 +721,8 @@ RVOND4:=function(D) # erwartet neutrales Element mit
   end;
 
 RMAXSUCH4:=function(D)
-  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,S1,S2,S3,L,HMAX,KMAX,LMAX,i,iter,p0,q,SD,RMAX;
-  SD:=Size(D); RMAX:=true;
+  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,S1,S2,S3,L,HMAX,KMAX,LMAX,i,iter,p0,q,SD,RMAX,RMAXEND;
+  SD:=Size(D); RMAX:=true; RMAXEND:=true;
   D1:=List(D,i->Int(i/2));
   D2:=List(D,i->i mod 2);
   D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
@@ -737,14 +737,14 @@ RMAXSUCH4:=function(D)
     iter:=Iterator(S1);
     p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n12",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
     iter:=Iterator(S1);
     p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n13",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
@@ -753,14 +753,14 @@ RMAXSUCH4:=function(D)
     iter:=Iterator(S2);
     p0:=Permuted(D1,PermList(D2MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n21",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
     iter:=Iterator(S2);
     p0:=Permuted(D3,PermList(D2MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n23",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
@@ -769,19 +769,19 @@ RMAXSUCH4:=function(D)
     iter:=Iterator(S3);
     p0:=Permuted(D1,PermList(D3MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n31",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
     iter:=Iterator(S3);
     p0:=Permuted(D2,PermList(D3MVAR[2][1].LRES)^-1);
     for i in iter do if RMAX then
-      q:=Permuted(p0,i); if q>D2 then RMAX:=false; fi;
+      q:=Permuted(p0,i); if q>D2 then Print("\n32",q); RMAX:=RMAXEND; fi;
       #q[2]:=1-q[2];
       LMAX:=Maximum(LMAX,q);
       fi; od;
     fi;
-  if RMAX and DIAG(HMAX)=D1 then return RVOND4(D); else return [[0]]; fi;
+  #if RMAX and DIAG(HMAX)=D1 then return RVOND4(D); else return [[0]]; fi;
   KMAX:=DIAG(HMAX);
   #LMAX[2]:=1-LMAX[2];
   DMAX:=2*KMAX+LMAX;
@@ -833,20 +833,20 @@ DGANZNEU:=function(d,D1D2D3)
   dneu:=DNEU(d);
   if dneu=0 then return 0; fi;
   if dneu=1 then if D1D2D3[d]<>D1D2D3[3] then AFLAG:=false; fi; return 3; fi;
-  if dneu=2 then if D1D2D3[d]<>D1D2D3[1] then AFLAG:=false; fi; return 1; fi;
-  if dneu=3 then if D1D2D3[d]<>D1D2D3[2] then AFLAG:=false; fi; return 2; fi;
+  if dneu=2 then return 1; fi;
+  if dneu=3 then return 2; fi;
   end;
 
 RMINSUCH:=function(D) #Kopie, eigentlich RMAXSUCH, beginnend mit [3] statt mit [1]
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,KRES,LD,ORBZU,ORBS,ONEU,RD,RBIT1,RBIT2,D1,D2,D3,D1MVAR,D2MVAR,D3MVAR;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
-  D1:=List(D,i->Int(i/2));
-  D2:=List(D,i->i mod 2);
-  D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
-  D1MVAR:=RMAXSUCH2(D1);
-  D2MVAR:=RMAXSUCH2(D2);
-  D3MVAR:=RMAXSUCH2(D3);
+  #D1:=List(D,i->Int(i/2));
+  #D2:=List(D,i->i mod 2);
+  #D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
+  #D1MVAR:=RMAXSUCH2(D1);
+  #D2MVAR:=RMAXSUCH2(D2);
+  #D3MVAR:=RMAXSUCH2(D3);
   #if D2MVAR[1]>D1MVAR[1] or D3MVAR[1]>D2MVAR[1] then return [[[0]],[]]; fi;
   D1:=Collected(COMPDIAGSTABERZ(List(D,i->Int(i/2))));
   D2:=Collected(COMPDIAGSTABERZ(List(D,i->i mod 2)));
@@ -946,7 +946,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #Print(List(ORBS,i->Size(i)));Print("\c");
   D0:=DIAG(R1);Remove(D0,1);
   #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
-  #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))))));
+  #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(R03/04/2018(dd,D0+2*i[1]))))));
   return Reversed(List(ORBS,i->RKVOND(dd,Maximum(i))));
   end;
 
@@ -972,7 +972,7 @@ SCHNACK:=function(dd,CMPD)
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
-        if DIAG(ID)=D then
+        if DIAG(ID) then
           Add(ERGS2[dd],[R1,ORB]);
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
@@ -1018,3 +1018,202 @@ DisplayProfile();
 
 #---# also bis hierher geht nur RMAXSUCH4(D), RMINSUCH ist mit AFLAG verbastelt.
 #---# deshalb das Sortieren neu überlegen.
+
+RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
+  RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
+  #ORBZU:=COMPDIAG6E(S,D,0);
+  #RMINSUCH#ORBZU:=COMPDIAG7E(D);
+  ORBZU:=COMPDIAGSTABERZ(D);
+  #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  for STUFE in [1..S] do 
+    #Print("\nSTUFE=",STUFE);
+    NEUE_VARIANTEN:=[];
+    RNEU:=[0];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
+        RR:=List(KRES,i->D[i]);
+   # if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            #RMINSUCH#VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          #Print("P");
+          fi;
+   #   fi;
+        fi; od;
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+RMAXSUCH5:=function(D)
+  local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,S1,S2,S3,L,HMAX,KMAX,LMAX,i,iter,p0,q,SD,RMAX,RNEU;
+  SD:=Size(D); RMAX:=[[0]];
+  D1:=List(D,i->Int(i/2));
+  D2:=List(D,i->i mod 2);
+  D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
+  D1MVAR:=RMAXSUCH2(D1);
+  D2MVAR:=RMAXSUCH2(D2);
+  D3MVAR:=RMAXSUCH2(D3);
+  #Print("\n",D,"\n",D1,"\n",D2,"\n",D3,"\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],"\n");
+  HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
+  if HMAX=D1MVAR[1] then Print("\n1");
+    p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];Print(2*DIAG(HMAX)+p0,RNEU);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];Print(2*DIAG(HMAX)+p0,RNEU);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    fi;
+  if HMAX=D2MVAR[1] then Print("\n2");
+    p0:=Permuted(D1,PermList(D2MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    p0:=Permuted(D3,PermList(D2MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    fi;
+  if HMAX=D3MVAR[1] then Print("\n3");
+    p0:=Permuted(D1,PermList(D3MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    p0:=Permuted(D2,PermList(D3MVAR[2][1].LRES)^-1);
+    RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
+    if RNEU>RMAX then RMAX:=RNEU; fi;
+    fi;
+  return RMAX;
+  end;
+
+DGANZNEU:=function(d)
+  local dneu;
+  dneu:=DNEU(d);
+  if dneu=0 then return 0; fi;
+  if dneu=1 then return 3; fi;
+  if dneu=2 then return 1; fi;
+  if dneu=3 then return 2; fi;
+  end;
+
+RMAXSUCH:=function(D) # aus RMINSUCH, aber beginnend mit [3]
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,ORBZU,ORBS,ONEU;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+  #ORBZU:=COMPDIAG6E(S,D,0);
+  ORBZU:=COMPDIAG7E(D);
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
+  for STUFE in [1..S] do 
+    #Print("\nSTUFE=",STUFE);
+    NEUE_VARIANTEN:=[];
+    RNEU:=[0];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        RR:=List(KRES,i->DGANZNEU(D[i]));
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          #Print("P");
+          fi;
+        fi; od;
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+SCHNACK:=function(dd,CMPD)
+  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM;
+  if not SAGE then Exec("date"); fi;
+  ts:=Runtime(); ZM:=0;
+  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+  for R1 in Reversed(ERGS1[dd]) do
+    if not SAGE then Print("\n***R1=",R1); fi;
+    TEILDILIST:=[];
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
+      if not SAGE then Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n"); fi;
+      ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
+      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
+      for ORB in ORBI do
+        R:=2*R1+ORB;
+        D:=DIAG(R);
+        #a#Remove(D,1);
+        #a#RV:=RVOND(dd,D);
+        #a#ID:=IdSmallGroup(PcgsOfR(RV));
+        ID:=CMPD(dd,D,false);
+        #a#Print(" ",ID,"\c");
+        if not ID in GESAMTDILIST[dd] then
+          Add(ERGS2[dd],[R1,ORB]); 
+          Add(GESAMTDILIST[dd],ID);
+          if not SAGE then Print("*\c"); fi;
+          else if not SAGE then Print(".\c"); fi; fi;
+        od;
+      fi; od;
+    od;
+  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
+  if not SAGE then Exec("date"); fi;
+  end;
+
+COMPDIAG5RS:=function(dd,D,flag) if RMAXSUCH4(D)<>[[0]] and RMAXSUCH4(D)<>RMAXSUCH5(D) then Error(); fi; return RMAXSUCH5(D); end;
+COMPDIAG5RS:=function(dd,D,flag) if RMAXSUCH4(D)=[[0]] and D=DIAG(RMAXSUCH5(D)) then Error(); fi; return RMAXSUCH5(D); end;
+COMPDIAG5RS:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D); end;
+
+ProfileFunctions(SCHNACK,SCHNICK,RMAXSUCH4,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH);
+
+#-----------
+KANTENZUEGE(10);
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[[[3]]]];
+ClearProfile();ZM:=0;
+SCHNACK(2,COMPDIAG5RS);#16#6
+SCHNACK(3,COMPDIAG5RS);#32#19
+SCHNACK(4,COMPDIAG5RS);#64#60
+#SCHNACK(5,COMPDIAG5RS);#128#158
+#SCHNACK(6,COMPDIAG5RS);#256#442
+#SCHNACK(7,COMPDIAG5RS);#512#1122
+#SCHNACK(8,COMPDIAG5RS);#1024#2945
+DisplayProfile();
+
