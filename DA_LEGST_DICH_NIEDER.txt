@@ -1266,3 +1266,24 @@ SCHNACK(4,COMPDIAG5RS);#64#60
 #SCHNACK(8,COMPDIAG5RS);#1024#2945
 DisplayProfile();
 
+#---Fehlersuche 1226 statt 1222
+GM:=[];
+for ERGEBNIS in ERGS2[7] do
+  R:=2*ERGEBNIS[1]+ERGEBNIS[2];
+  RMAX:=RMINSUCH(DIAG(R))[1];
+  if not RMAX in GM then Add(GM,RMAX); else Error(R); fi;
+  od;
+
+R:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 2, 2 ], [ 3, 2, 2, 3, 3, 3 ],
+  [ 3, 2, 2, 2, 2, 0, 0 ] ];
+R1:=2*ERGS2[7][506][1]+ERGS2[7][506][2];
+R2:=2*ERGS2[7][627][1]+ERGS2[7][627][2];
+RMINSUCH(DIAG(R1))[1]=RMINSUCH(DIAG(R2))[1];#true
+RMAXSUCH(DIAG(R1))[1]=RMAXSUCH(DIAG(R2))[1];#false
+RMAXSUCH5(DIAG(R1))=RMAXSUCH5(DIAG(R2));#false
+RMAXSUCH5(DIAG(R1))=RMAXSUCH(DIAG(R1))[1];#true
+RMAXSUCH5(DIAG(R2))=RMAXSUCH(DIAG(R2))[1];#true
+
+#mit
+R1:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 3, 3 ], [ 3, 3, 2, 2, 2, 2 ], [ 3, 3, 3, 2, 2, 0, 0 ] ];
+R2:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 2, 2 ], [ 3, 2, 2, 3, 3, 3 ], [ 3, 2, 2, 2, 2, 0, 0 ] ];
