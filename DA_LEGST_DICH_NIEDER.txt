@@ -1026,11 +1026,11 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
   #ORBZU:=COMPDIAG6E(S,D,0);
   #RMINSUCH#ORBZU:=COMPDIAG7E(D);
-  ORBZU:=COMPDIAG7E(D);#wieso stand da COMPDIAGSTABERZ?, Print(ORBZU,RVERGLEICH);
+  ORBZU:=COMPDIAG7E(D); Print("\nORBZU:",ORBZU,RVERGLEICH); #wieso stand da COMPDIAGSTABERZ?, 
   #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
   for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
+    Print("\nSTUFE=",STUFE);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
     for V in VARIANTEN do
@@ -1047,6 +1047,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
           ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          ONEU:=List(LNEU,j->j);
           if not (ONEU in ORBS) then
             Add(ORBS,ONEU);
             VNEU:=StructuralCopy(V);
@@ -1063,7 +1064,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     Add(RMIN,RNEU);
-    #Print(", VARIANTEN=",Size(VARIANTEN));
+    Print(", VARIANTEN=",Size(VARIANTEN));
     od;
   return [RMIN,VARIANTEN];
   end;
@@ -1077,31 +1078,31 @@ RMAXSUCH5:=function(D)
   D1MVAR:=RMAXSUCH2(D1);
   D2MVAR:=RMAXSUCH2(D2);
   D3MVAR:=RMAXSUCH2(D3);
-  #Print("\n",D,"\n",D1,"\n",D2,"\n",D3,"\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],"\n");
+  Print("\n",D,"\n",D1,"\n",D2,"\n",D3,"\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],"\n");
   HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
-  if HMAX=D1MVAR[1] then #Print("\n1");
+  if HMAX=D1MVAR[1] then Print("\n1");
     p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     fi;
-  if HMAX=D2MVAR[1] then #Print("\n2");
+  if HMAX=D2MVAR[1] then Print("\n2");
     p0:=Permuted(D1,PermList(D2MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     p0:=Permuted(D3,PermList(D2MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     fi;
-  if HMAX=D3MVAR[1] then #Print("\n3");
+  if HMAX=D3MVAR[1] then Print("\n3");
     p0:=Permuted(D1,PermList(D3MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     p0:=Permuted(D2,PermList(D3MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi;
+    if RNEU>RMAX then RMAX:=RNEU; fi;Print(RMAX);
     fi;
   return RMAX;
   end;
@@ -1287,3 +1288,9 @@ RMAXSUCH5(DIAG(R2))=RMAXSUCH(DIAG(R2))[1];#true
 #mit
 R1:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 3, 3 ], [ 3, 3, 2, 2, 2, 2 ], [ 3, 3, 3, 2, 2, 0, 0 ] ];
 R2:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 2, 2 ], [ 3, 2, 2, 3, 3, 3 ], [ 3, 2, 2, 2, 2, 0, 0 ] ];
+
+RMAXSUCH25(DIAG(2*ERGS2[7][506][1]+ERGS2[7][506][2]))[1];#..23012
+RMAXSUCH25(DIAG(ERGS2[7][506][1]+2*ERGS2[7][506][2]))[1];#..23012
+RMAXSUCH25(DIAG(2*ERGS2[7][627][1]+ERGS2[7][627][2]))[1];#..22122
+RMAXSUCH25(DIAG(ERGS2[7][627][1]+2*ERGS2[7][627][2]))[1];#..22112
+
