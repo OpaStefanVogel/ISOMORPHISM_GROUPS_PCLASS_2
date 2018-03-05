@@ -1202,7 +1202,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   D0:=DIAG(R1);Remove(D0,1);
   #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
   #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(R03/04/2018(dd,D0+2*i[1]))))));
-  return Reversed(List(ORBS,i->RKVOND(dd,Maximum(i))));
+  return Reversed(SortedList(List(ORBS,i->RKVOND(dd,Maximum(i)))));
   end;
 
 SCHNACK:=function(dd,CMPD)
