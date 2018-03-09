@@ -1294,3 +1294,92 @@ RMAXSUCH25(DIAG(ERGS2[7][506][1]+2*ERGS2[7][506][2]))[1];#..23012
 RMAXSUCH25(DIAG(2*ERGS2[7][627][1]+ERGS2[7][627][2]))[1];#..22122
 RMAXSUCH25(DIAG(ERGS2[7][627][1]+2*ERGS2[7][627][2]))[1];#..22112
 
+#-----#----jetzt RMAXSUCH2 ausbessern
+
+RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
+  RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
+  #ORBZU:=COMPDIAG6E(S,D,0);
+  #RMINSUCH#ORBZU:=COMPDIAG7E(D);
+  ORBZU:=COMPDIAG7E(D); Print("\nORBZU:",ORBZU,RVERGLEICH); #wieso stand da COMPDIAGSTABERZ?, 
+  #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  D1:=List(D,i->Int(i/2));
+  D2:=List(D,i->i mod 2);
+  S1:=Group(STABMACH2(D1));
+  S2:=Group(STABMACH2(D2));
+  SX:=Intersection(S1,S2); Print("\nSX=",List(SX));
+  for STUFE in [1..S] do 
+    Print("\nSTUFE=",STUFE);
+    for V in VARIANTEN do Print("\n",V.LRES); od;
+    MENGS:=List(VARIANTEN,i->i.LRES); Print("\nMENGS=",MENGS);
+    GOINGS:=Orbits(SX,MENGS,OnTuples); Print("\nGOINGS=",GOINGS);
+    BOINGS:=List(GOINGS,i->i[1]); Print("\nBOINGS=",BOINGS);
+    NEUE_VARIANTEN:=[];
+    RNEU:=[0];
+    for V in VARIANTEN do if V.LRES in BOINGS then
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
+        RR:=List(KRES,i->D[i]);#Print("\n",RR,KRES);
+    #if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          #ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          ONEU:=List(LNEU,j->j);
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            #RMINSUCH#VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          #Print("P");
+          fi;
+      #fi;
+        fi; od;
+      fi; od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+
+for ERGEBNIS in ERGS2[3]{[2]} do
+  R:=2*ERGEBNIS[1]+ERGEBNIS[2];
+  Print("\n\n",R);
+  RMAX:=RMAXSUCH25(DIAG(R))[1];
+  Print("\n",RMAX);
+  od;
+
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
+
+ProfileFunctions(SCHNACK,SCHNICK,RMAXSUCH4,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH,RMAXSUCH25);
+
+#-----------
+KANTENZUEGE(10);
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[[[3]]]];
+ClearProfile();ZM:=0;
+SCHNACK(2,COMPDIAG5RS);#16#6
+SCHNACK(3,COMPDIAG5RS);#32#19
+SCHNACK(4,COMPDIAG5RS);#64#60
+#SCHNACK(5,COMPDIAG5RS);#128#158
+#SCHNACK(6,COMPDIAG5RS);#256#442
+#SCHNACK(7,COMPDIAG5RS);#512#1122
+#SCHNACK(8,COMPDIAG5RS);#1024#2945
+DisplayProfile();
+
