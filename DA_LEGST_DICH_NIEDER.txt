@@ -1316,7 +1316,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
     #for V in VARIANTEN do Print("\n",V.LRES); od;
-    MENGS:=List(VARIANTEN,i->i.LRES); 
+    MENGS:=List(VARIANTEN,i->List(i.HRES)); 
     #Print("\nMENGS=",MENGS);
     GOINGS:=Orbits(SX,MENGS,OnTuples); 
     #Print("\nGOINGS=",GOINGS);
@@ -1324,7 +1324,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
     #Print("\nBOINGS=",BOINGS);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
-    for V in VARIANTEN do if V.LRES in BOINGS then
+    for V in VARIANTEN do if V.HRES in BOINGS then
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
       ORBS:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
