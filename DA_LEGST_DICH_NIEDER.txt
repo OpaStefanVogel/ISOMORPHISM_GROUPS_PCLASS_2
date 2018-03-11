@@ -1321,7 +1321,7 @@ RVOND4:=function(D) # erwartet neutrales Element mit
 RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
-  GANZ_NEUE_VARIANTEN;
+  GANZ_NEUE_VARIANTEN,GNV;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
   RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
   #ORBZU:=COMPDIAG6E(S,D,0);
@@ -1337,13 +1337,13 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
-    Print("\nSTUFE=",STUFE);
-    Print(", VARIANTEN=",Size(VARIANTEN));
+    #Print("\nSTUFE=",STUFE);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
     #for V in VARIANTEN do Print("\n",V.LRES); od;
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
     for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
       ORBS:=[];
       GANZ_NEUE_VARIANTEN:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
@@ -1353,7 +1353,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
         #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
         RR:=List(KRES,i->D[i]);#Print("\n",RR,KRES);
     #if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
-        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR>RNEU then NEUE_VARIANTEN:=[]; GANZ_NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
           #ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
@@ -1371,7 +1371,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
           fi;
       #fi;
         fi; od;
-      Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
+      #Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
       MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
       #Print("\nMENGS=",MENGS,Size(MENGS));
       GOINGS:=Orbits(SX,MENGS,OnTuples); 
@@ -1379,16 +1379,15 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
       BOINGS:=List(GOINGS,i->i[1]);
       #Print("\nBOINGS=",BOINGS);
       GANZ_NEUE_VARIANTEN:=Filtered(GANZ_NEUE_VARIANTEN,i->(i.HRES in BOINGS));
-      Print("\n  Filtered(GANZ_NEUE_VARIANTEN)=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
-      MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
-      #Print("\nMENGS=",MENGS);
-      #SZ:=Stabilizer(SX,MENGS[1],OnTuples);
-      #Print("\nSize(SZ)=",Size(SZ));
+      #Print("\n  Filtered(GANZ_NEUE_VARIANTEN)=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
+      for GNV in GANZ_NEUE_VARIANTEN do
+        GNV.SX:=Stabilizer(SX,GNV.HRES,OnTuples);
+        od;
       NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
       od;
     Add(RMIN,RNEU);
     VARIANTEN:=NEUE_VARIANTEN;
-    Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     od;
   return [RMIN,VARIANTEN];
   end;
