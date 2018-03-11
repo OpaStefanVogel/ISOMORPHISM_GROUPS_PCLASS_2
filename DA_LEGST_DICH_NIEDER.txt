@@ -1320,7 +1320,8 @@ RVOND4:=function(D) # erwartet neutrales Element mit
 
 RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS;
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
+  GANZ_NEUE_VARIANTEN;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
   RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
   #ORBZU:=COMPDIAG6E(S,D,0);
@@ -1328,27 +1329,23 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   ORBZU:=COMPDIAG7E(D); 
   #Print("\nORBZU:",ORBZU,RVERGLEICH); #wieso stand da COMPDIAGSTABERZ?, 
   #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
   D1:=List(D,i->Int(i/2));
   D2:=List(D,i->i mod 2);
   S1:=Group(STABMACH2(D1));
   S2:=Group(STABMACH2(D2));
   SX:=Intersection(S1,S2); 
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
+    Print("\nSTUFE=",STUFE);
+    Print(", VARIANTEN=",Size(VARIANTEN));
     #for V in VARIANTEN do Print("\n",V.LRES); od;
-    MENGS:=List(VARIANTEN,i->List(i.HRES)); 
-    #Print("\nMENGS=",MENGS);
-    GOINGS:=Orbits(SX,MENGS,OnTuples); 
-    #Print("\nGOINGS=",GOINGS);
-    BOINGS:=List(GOINGS,i->i[1]);
-    #Print("\nBOINGS=",BOINGS);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
-    for V in VARIANTEN do if V.HRES in BOINGS then
+    for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
       ORBS:=[];
+      GANZ_NEUE_VARIANTEN:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
         #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
@@ -1368,16 +1365,30 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
             VNEU.LRES:=Concatenation(LRES,LNEU);
             for i in LNEU do VNEU.LD[i]:=STUFE; od;
             #RMINSUCH#VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
-            Add(NEUE_VARIANTEN,VNEU);
+            Add(GANZ_NEUE_VARIANTEN,VNEU);
             fi;
           #Print("P");
           fi;
       #fi;
         fi; od;
-      fi; od;
-    VARIANTEN:=NEUE_VARIANTEN;
+      Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
+      MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
+      #Print("\nMENGS=",MENGS,Size(MENGS));
+      GOINGS:=Orbits(SX,MENGS,OnTuples); 
+      #Print("\nGOINGS=",GOINGS);
+      BOINGS:=List(GOINGS,i->i[1]);
+      #Print("\nBOINGS=",BOINGS);
+      GANZ_NEUE_VARIANTEN:=Filtered(GANZ_NEUE_VARIANTEN,i->(i.HRES in BOINGS));
+      Print("\n  Filtered(GANZ_NEUE_VARIANTEN)=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
+      MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
+      #Print("\nMENGS=",MENGS);
+      #SZ:=Stabilizer(SX,MENGS[1],OnTuples);
+      #Print("\nSize(SZ)=",Size(SZ));
+      NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
+      od;
     Add(RMIN,RNEU);
-    #Print(", VARIANTEN=",Size(VARIANTEN));
+    VARIANTEN:=NEUE_VARIANTEN;
+    Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     od;
   return [RMIN,VARIANTEN];
   end;
