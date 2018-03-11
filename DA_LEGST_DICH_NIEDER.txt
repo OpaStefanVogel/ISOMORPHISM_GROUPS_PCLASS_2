@@ -1294,11 +1294,33 @@ RMAXSUCH25(DIAG(ERGS2[7][506][1]+2*ERGS2[7][506][2]))[1];#..23012
 RMAXSUCH25(DIAG(2*ERGS2[7][627][1]+ERGS2[7][627][2]))[1];#..22122
 RMAXSUCH25(DIAG(ERGS2[7][627][1]+2*ERGS2[7][627][2]))[1];#..22112
 
-#-----#----jetzt RMAXSUCH2 ausbessern
+
+
+
+
+
+#-----#----jetzt RMAXSUCH25 ausbessern, benötigt
+#RMAXSUCH2
+
+STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
+  local C,C1,PHITAB;
+  C:=COMPDIAGSTABERZ(D);
+  C1:=List(C); Remove(C1,1);
+  PHITAB:=STABMACH(LogInt(Size(C),2),C1);
+  PHITAB:=List(PHITAB,i->PermList(Concatenation([1],List(ListPerm(i),j->j+1))));
+  return PHITAB;
+  end;
+
+RVOND4:=function(D) # erwartet neutrales Element mit
+  local D0,R;
+  D0:=List(D);Remove(D0,1);
+  R:=RKVOND(LogInt(Size(D),2),D0);
+  return R;
+  end;
 
 RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2;
+  HRES,KRES,LD,ORBZU,ORBS,ONEU,RVERGLEICH,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
   RVERGLEICH:=List(RVOND4(D),i->List(i,j->Int(j/2)));
   #ORBZU:=COMPDIAG6E(S,D,0);
@@ -1320,7 +1342,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
     #Print("\nMENGS=",MENGS);
     GOINGS:=Orbits(SX,MENGS,OnTuples); 
     #Print("\nGOINGS=",GOINGS);
-    BOINGS:=List(GOINGS,i->i[1]); 
+    BOINGS:=List(GOINGS,i->i[1]);
     #Print("\nBOINGS=",BOINGS);
     NEUE_VARIANTEN:=[];
     RNEU:=[0];
@@ -1360,13 +1382,21 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   return [RMIN,VARIANTEN];
   end;
 
+#---Versuche, SX zu verkleinern:
+RB0:=[ [ 3 ], [ 3, 3 ], [ 3, 3, 2 ] ];
+RB1:=[ [ 3 ], [ 2, 2 ], [ 2, 2, 3 ], [ 2, 2, 3, 0 ], [ 2, 2, 3, 0, 0 ], [ 2, 2, 3, 0, 0, 0 ] ];
+RB2:=[ [ 3 ], [ 2, 2 ], [ 2, 2, 2 ], [ 2, 3, 2, 2 ], [ 2, 3, 2, 2, 0 ], [ 2, 3, 2, 2, 0, 0 ],  [ 2, 3, 2, 2, 0, 0, 0 ] ];
 
-for ERGEBNIS in ERGS2[3]{[2]} do
-  R:=2*ERGEBNIS[1]+ERGEBNIS[2];
-  Print("\n\n",R);
-  RMAX:=RMAXSUCH25(DIAG(R))[1];
-  Print("\n",RMAX);
-  od;
+RMAXSUCH25(DIAG(RB0));
+RMAXSUCH25(DIAG(RB1));
+#RMAXSUCH25(DIAG(RB2));
+
+#for ERGEBNIS in ERGS2[3]{[2]} do
+#  R:=2*ERGEBNIS[1]+ERGEBNIS[2];
+#  Print("\n\n",R);
+#  RMAX:=RMAXSUCH25(DIAG(R))[1];
+#  Print("\n",RMAX);
+#  od;
 
 RMAXSUCH5:=function(D)
   local D1,D2,D3,D1MVAR,D2MVAR,D3MVAR,S1,S2,S3,L,HMAX,KMAX,LMAX,i,iter,p0,q,SD,RMAX,RNEU;
@@ -1411,7 +1441,7 @@ RMAXSUCH5:=function(D)
 
 COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
 
-ProfileFunctions(SCHNACK,SCHNICK,RMAXSUCH4,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH,RMAXSUCH25);
+ProfileFunctions(SCHNACK,SCHNICK,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH25);
 
 #-----------
 KANTENZUEGE(10);
@@ -1428,4 +1458,3 @@ SCHNACK(4,COMPDIAG5RS);#64#60
 #SCHNACK(7,COMPDIAG5RS);#512#1122
 #SCHNACK(8,COMPDIAG5RS);#1024#2945
 DisplayProfile();
-
