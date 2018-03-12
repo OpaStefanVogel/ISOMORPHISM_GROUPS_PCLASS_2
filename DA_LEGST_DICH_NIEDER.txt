@@ -1230,8 +1230,8 @@ SCHNACK:=function(dd,CMPD)
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
         if not ID in GESAMTDILIST[dd] then
-        #if Size(ID[Size(ID)])=Size(ID) and DIAG(ID)=D then
-          if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
+        #if DIAG(ID)=D then
+          #if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
@@ -1404,6 +1404,10 @@ RMAXSUCH25(DIAG(RB0));
 #RMAXSUCH25(DIAG(RB1));
 #RMAXSUCH25(DIAG(RB2));
 
+#DIAG(ID)=D geht nicht wegen
+#RMAXSUCH25(DIAG([ [ 3 ], [ 3, 3 ], [ 3, 3, 2 ], [ 3, 3, 2, 2 ], [ 3, 3, 2, 2, 0 ] ]));
+#[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ ], [ ] ]
+
 #for ERGEBNIS in ERGS2[3]{[2]} do
 #  R:=2*ERGEBNIS[1]+ERGEBNIS[2];
 #  Print("\n\n",R);
@@ -1426,26 +1430,26 @@ RMAXSUCH5:=function(D)
   if HMAX=D1MVAR[1] then #Print("\n1");
     p0:=Permuted(D2,PermList(D1MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     p0:=Permuted(D3,PermList(D1MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];#Print(2*DIAG(HMAX)+p0,RNEU);
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     fi;
   if HMAX=D2MVAR[1] then #Print("\n2");
     p0:=Permuted(D1,PermList(D2MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     p0:=Permuted(D3,PermList(D2MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     fi;
   if HMAX=D3MVAR[1] then #Print("\n3");
     p0:=Permuted(D1,PermList(D3MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     p0:=Permuted(D2,PermList(D3MVAR[2][1].LRES)^-1);
     RNEU:=RMAXSUCH25(2*DIAG(HMAX)+p0)[1];
-    if RNEU>RMAX then RMAX:=RNEU; fi; #Print(RMAX);
+    if RNEU>RMAX then RMAX:=RNEU; fi;
     fi;
   return RMAX;
   end;
