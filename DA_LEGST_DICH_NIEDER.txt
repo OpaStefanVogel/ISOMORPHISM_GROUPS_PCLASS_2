@@ -1229,9 +1229,9 @@ SCHNACK:=function(dd,CMPD)
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
-        #if not ID in GESAMTDILIST[dd] then
-        if Size(ID[Size(ID)])=Size(ID) and DIAG(ID)=D then
-          if DIAG(ID)<>D then Print("\n",ID,DIAG(ID),D); fi;
+        if not ID in GESAMTDILIST[dd] then
+        #if Size(ID[Size(ID)])=Size(ID) and DIAG(ID)=D then
+          if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
@@ -1344,7 +1344,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
     #Print(", VARIANTEN=",Size(VARIANTEN));
     #for V in VARIANTEN do Print("\n",V.LRES); od;
     NEUE_VARIANTEN:=[];
-    RNEU:=[0];
+    RNEU:=[];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
       ORBS:=[];
@@ -1355,7 +1355,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
         RR:=List(KRES,i->D[i]);#Print("\n",RR,KRES);
-    if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
+    #if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
         if RR>RNEU then NEUE_VARIANTEN:=[]; GANZ_NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -1372,19 +1372,19 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
             fi;
           #Print("P");
           fi;
-      fi;
+      #fi;
         fi; od;
       #Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
-      MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
+      MENGS:=List(GANZ_NEUE_VARIANTEN,i->i.HRES[Size(i.HRES)]); 
       #Print("\nMENGS=",MENGS,Size(MENGS));
-      GOINGS:=Orbits(SX,MENGS,OnTuples); 
+      GOINGS:=Orbits(SX,MENGS);#,OnTuples); 
       #Print("\nGOINGS=",GOINGS);
       BOINGS:=List(GOINGS,i->i[1]);
       #Print("\nBOINGS=",BOINGS);
-      GANZ_NEUE_VARIANTEN:=Filtered(GANZ_NEUE_VARIANTEN,i->(i.HRES in BOINGS));
+      GANZ_NEUE_VARIANTEN:=Filtered(GANZ_NEUE_VARIANTEN,i->(i.HRES[Size(i.HRES)] in BOINGS));
       #Print("\n  Filtered(GANZ_NEUE_VARIANTEN)=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
       for GNV in GANZ_NEUE_VARIANTEN do
-        GNV.SX:=Stabilizer(SX,GNV.HRES,OnTuples);
+        GNV.SX:=Stabilizer(SX,GNV.HRES[STUFE]);#,OnTuples);
         od;
       NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
       od;
