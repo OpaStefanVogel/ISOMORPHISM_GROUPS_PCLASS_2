@@ -1229,8 +1229,9 @@ SCHNACK:=function(dd,CMPD)
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
         ID:=CMPD(dd,D,false);
         #a#Print(" ",ID,"\c");
-        if not ID in GESAMTDILIST[dd] then
-         #if DIAG(ID)<>D then Print("\n",ID,DIAG(ID),D); fi;
+        #if not ID in GESAMTDILIST[dd] then
+        if Size(ID[Size(ID)])=Size(ID) and DIAG(ID)=D then
+          if DIAG(ID)<>D then Print("\n",ID,DIAG(ID),D); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
@@ -1354,7 +1355,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
         RR:=List(KRES,i->D[i]);#Print("\n",RR,KRES);
-    #if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
+    if List(RR,i->Int(i/2))=RVERGLEICH[STUFE] then
         if RR>RNEU then NEUE_VARIANTEN:=[]; GANZ_NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
         if RR=RNEU then
           LNEU:=List(LRES,j->XORMAT[i][j]);
@@ -1371,7 +1372,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
             fi;
           #Print("P");
           fi;
-      #fi;
+      fi;
         fi; od;
       #Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
       MENGS:=List(GANZ_NEUE_VARIANTEN,i->List(i.HRES)); 
@@ -1453,7 +1454,7 @@ RMAXSUCH5:=function(D)
 
 COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
 
-ProfileFunctions(SCHNACK,SCHNICK,RMINSUCH,COMPDIAGSTABERZ,STABMACH2,RMAXSUCH2,RMAXSUCH5,RMAXSUCH25);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH5,RMAXSUCH25);
 
 #-----------
 KANTENZUEGE(10);
