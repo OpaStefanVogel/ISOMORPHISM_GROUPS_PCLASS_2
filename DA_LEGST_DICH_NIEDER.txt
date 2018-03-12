@@ -1198,7 +1198,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
     DDD[i]:=DIAG(Concatenation(R2,[DD[i]])){[2..2^dd]};
     od;
   ORBS:=OrbitsDomain(K,DDD,Permuted);;#Print(Size(ORBS));
-  Add(OM,ORBS);
+  #Add(OM,ORBS);
   #Print(List(ORBS,i->Size(i)));Print("\c");
   D0:=DIAG(R1);Remove(D0,1);
   #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
@@ -1299,8 +1299,10 @@ RMAXSUCH25(DIAG(ERGS2[7][627][1]+2*ERGS2[7][627][2]))[1];#..22112
 
 
 
-#-----#----jetzt RMAXSUCH25 ausbessern, benötigt
+#-----#----jetzt RMAXSUCH25 ausbessern, benötigt außerdem noch die aktuellen 
 #RMAXSUCH2
+#SCHNICK
+#SCHNACK2
 
 STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
   local C,C1,PHITAB;
@@ -1398,7 +1400,7 @@ RB1:=[ [ 3 ], [ 2, 2 ], [ 2, 2, 3 ], [ 2, 2, 3, 0 ], [ 2, 2, 3, 0, 0 ], [ 2, 2, 
 RB2:=[ [ 3 ], [ 2, 2 ], [ 2, 2, 2 ], [ 2, 3, 2, 2 ], [ 2, 3, 2, 2, 0 ], [ 2, 3, 2, 2, 0, 0 ],  [ 2, 3, 2, 2, 0, 0, 0 ] ];
 
 RMAXSUCH25(DIAG(RB0));
-RMAXSUCH25(DIAG(RB1));
+#RMAXSUCH25(DIAG(RB1));
 #RMAXSUCH25(DIAG(RB2));
 
 #for ERGEBNIS in ERGS2[3]{[2]} do
@@ -1415,9 +1417,9 @@ RMAXSUCH5:=function(D)
   D2:=List(D,i->i mod 2);
   D3:=List(D,i->((i mod 2)+Int(i/2)) mod 2);
   if D1=D2 then return RVOND4(D); fi;
-  D1MVAR:=RMAXSUCH2(D1);
-  D2MVAR:=RMAXSUCH2(D2);
-  D3MVAR:=RMAXSUCH2(D3);
+  D1MVAR:=RMAXSUCH25(D1);
+  D2MVAR:=RMAXSUCH25(D2);
+  D3MVAR:=RMAXSUCH25(D3);
   #Print("\n",D,"\n",D1,"\n",D2,"\n",D3,"\n",D1MVAR[1],"\n",D2MVAR[1],"\n",D3MVAR[1],"\n");
   HMAX:=Maximum(D1MVAR[1],D2MVAR[1],D3MVAR[1]); LMAX:=[];
   if HMAX=D1MVAR[1] then #Print("\n1");
