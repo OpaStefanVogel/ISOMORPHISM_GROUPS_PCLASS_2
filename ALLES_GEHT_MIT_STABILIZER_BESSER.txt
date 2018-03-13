@@ -756,6 +756,15 @@ RMINSUCH:=function(D) #sucht RMIN mit Umbenennen
   return [RMIN,VARIANTEN];
   end;
 
+#Test auf ERGS2 von RMAXSUCH
+#ZM:=[];
+#for i in [1..60] do
+#  RMIN:=RMINSUCH(DIAG(2*ERGS2[4][i][1]+ERGS2[4][i][2]))[1];
+#  Print(RMIN,"\n");
+#  if RMIN in ZM then Error(); fi;
+#  Add(ZM,RMIN);
+#  od;
+
 SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #global COMPDIAGSTABERZ,STABMACH,DOPPELSTAB,HMACH,RKVOND;
   local D0,D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS,dd;
@@ -841,8 +850,6 @@ SCHNACK:=function(dd,CMPD)
   if not SAGE then Exec("date"); fi;
   end;
 
-
-
 COMPDIAG5RS:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
 
 ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMINSUCH);
@@ -855,11 +862,14 @@ for i in [1..4] do
     od;
   ERGS1[i]:=SortedList(ERGS1[i]);
   od;
+Add(ERGS1[2],[[0],[0,0]],1);
+Add(ERGS1[3],[[0],[0,0],[0,0,0]],1);
+Add(ERGS1[4],[[0],[0,0],[0,0,0],[0,0,0,0]],1);
 
 ERGS1[4];
-ERGS2:=[[[[[1]],[[1]]]]];
-ERGS2[1][1];[[[1]],[[1]]];
-GESAMTDILIST:=[[[[0]]]];
+ERGS2:=[[[[[0]],[[0]]],[[[0]],[[1]]]]];
+ERGS2[1][1];[[[0]],[[1]]];
+GESAMTDILIST:=[[[[1]]]];
 ClearProfile();ZM:=0;
 SCHNACK(2,COMPDIAG5RS);#16#6
 SCHNACK(3,COMPDIAG5RS);#32#19
@@ -869,3 +879,5 @@ SCHNACK(4,COMPDIAG5RS);#64#60
 #SCHNACK(7,COMPDIAG5RS);#512#1122
 #SCHNACK(8,COMPDIAG5RS);#1024#2945
 DisplayProfile();
+
+#Ergehnis, bei dd=3 fehlt 1.
