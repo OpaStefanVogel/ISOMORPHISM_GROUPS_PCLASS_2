@@ -1439,6 +1439,15 @@ RMAXSUCH5:=function(D)
   return RMAX;
   end;
 
+DGANZNEU:=function(d)
+  local dneu;
+  dneu:=DNEU(d);
+  if dneu=0 then return 0; fi;
+  if dneu=1 then return 3; fi;
+  if dneu=2 then return 1; fi;
+  if dneu=3 then return 2; fi;
+  end;
+
 RMAXSUCH6:=function(D) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
