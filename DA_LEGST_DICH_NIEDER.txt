@@ -1321,7 +1321,7 @@ RVOND4:=function(D) # erwartet neutrales Element mit
   return R;
   end;
 
-RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
+RMAXSUCH25:=function(D) #sucht RMAX ohne Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
   GANZ_NEUE_VARIANTEN,GNV,i,j;
@@ -1331,7 +1331,7 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
   D2:=List(D,i->i mod 2);
   S1:=Group(STABMACH2(D1));
   S2:=Group(STABMACH2(D2));
-  SX:=Intersection(S1,S2); 
+  SX:=Intersection(S1,S2);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
@@ -1371,8 +1371,8 @@ RMAXSUCH25:=function(D) #sucht RMAX und zwar so daß D1 erhalten bleibt
       NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
       od;
     Add(RMIN,RNEU);
-    for GNV in NEUE_VARIANTEN do
-      GNV.SX:=Stabilizer(GNV.SX,GNV.HRES[STUFE]);
+    for V in NEUE_VARIANTEN do
+      V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
@@ -1439,11 +1439,71 @@ RMAXSUCH5:=function(D)
   return RMAX;
   end;
 
+RMAXSUCH6:=function(D) #sucht RMAX mit Umbenennen
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
+  GANZ_NEUE_VARIANTEN,GNV,i,j,MALPHA;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
+  D1:=List(D,i->Int(i/2));
+  D2:=List(D,i->i mod 2);
+  S1:=Group(STABMACH2(D1));
+  S2:=Group(STABMACH2(D2));
+  SX:=Intersection(S1,S2);
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
+  #Print("\nSX=",List(SX));
+  for STUFE in [1..S] do 
+    #Print("\nSTUFE=",STUFE);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
+    #for V in VARIANTEN do Print("\n",V.LRES); od;
+    NEUE_VARIANTEN:=[];
+    RNEU:=[];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
+      MENGS:=[];MALPHA:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
+        if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
+        if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
+        fi; od;
+      #Print("\nMENGS=",MENGS,Size(MENGS));
+      GOINGS:=Orbits(SX,MENGS);
+      #Print("\nGOINGS=",GOINGS);
+      BOINGS:=List(GOINGS,i->i[1]);
+      #Print("\nBOINGS=",BOINGS);
+      GANZ_NEUE_VARIANTEN:=[];
+      for i in BOINGS do
+        VNEU:=StructuralCopy(V);
+        Add(VNEU.HRES,i);
+        LNEU:=List(LRES,j->XORMAT[i][j]);
+        VNEU.LRES:=Concatenation(LRES,LNEU);
+        for j in LNEU do VNEU.LD[j]:=STUFE; od;
+        VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
+        Add(GANZ_NEUE_VARIANTEN,VNEU);        
+        od;
+      #Print("\n  GANZ_NEUE_VARIANTEN=",List(GANZ_NEUE_VARIANTEN,i->i.HRES),Size(GANZ_NEUE_VARIANTEN));
+      NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
+      od;
+    Add(RMIN,RNEU);
+    for V in NEUE_VARIANTEN do
+      V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
 
 
 COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH5(D); end;
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D)[1]; end;
+COMPDIAG5RS:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
+COMPDIAG5RS:=function(dd,D,flag) if RMAXSUCH(D)[1]<>RMAXSUCH6(D)[1] then Error(); fi; return RMAXSUCH(D)[1]; end;
+COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH6(D)[1]; end;
 
-ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH5,RMAXSUCH25);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH5,RMAXSUCH25,RMAXSUCH6);
 
 #-----------
 KANTENZUEGE(10);
