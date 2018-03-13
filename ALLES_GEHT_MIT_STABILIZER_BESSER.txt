@@ -700,11 +700,11 @@ DisplayProfile();
 
 
 #--alles auf RMIN umschreiben
-RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
-  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
+RMINSUCH:=function(D) #sucht RMIN mit Umbenennen
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
   HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
   GANZ_NEUE_VARIANTEN,GNV,i,j,MALPHA;
-  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[]; 
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[]; 
   D1:=List(D,i->Int(i/2));
   D2:=List(D,i->i mod 2);
   S1:=Group(STABMACH2(D1));
@@ -717,7 +717,7 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
     #Print(", VARIANTEN=",Size(VARIANTEN));
     #for V in VARIANTEN do Print("\n",V.LRES); od;
     NEUE_VARIANTEN:=[];
-    RNEU:=[];
+    RNEU:=[9999];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
       MENGS:=[];MALPHA:=[];
@@ -725,8 +725,8 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
-        if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
+        RR:=List(KRES,i->DNEU(D[i]));#Error("\n",RR,KRES);
+        if RR<RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         fi; od;
       #Print("\nMENGS=",MENGS,Size(MENGS));
@@ -746,14 +746,14 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         od;
       NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
       od;
-    Add(RMAX,RNEU);
+    Add(RMIN,RNEU);
     for V in NEUE_VARIANTEN do
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     od;
-  return [RMAX,VARIANTEN];
+  return [RMIN,VARIANTEN];
   end;
 
 SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
@@ -800,7 +800,7 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   D0:=DIAG(R1);Remove(D0,1);
   #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
   #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(R03/04/2018(dd,D0+2*i[1]))))));
-  return Reversed(SortedList(List(ORBS,i->RKVOND(dd,Maximum(i)))));
+  return SortedList(List(ORBS,i->RKVOND(dd,Minimum(i))));
   end;
 
 SCHNACK:=function(dd,CMPD)
@@ -809,7 +809,7 @@ SCHNACK:=function(dd,CMPD)
   ts:=Runtime(); ZM:=0;
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for rr in [1..Size(ERGS1[dd])] do
-    R1:=Reversed(ERGS1[dd])[rr];
+    R1:=ERGS1[dd][rr];
     if not SAGE then Print("\n***R1=",R1); fi;
     TEILDILIST:=[];
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
@@ -843,16 +843,23 @@ SCHNACK:=function(dd,CMPD)
 
 
 
-COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D)[1]; end;
+COMPDIAG5RS:=function(dd,D,flag) return RMINSUCH(D)[1]; end;
 
-ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMINSUCH);
 
 #-----------
 KANTENZUEGE(10);
+for i in [1..4] do
+  for j in [1..Size(ERGS1[i])] do
+    ERGS1[i][j]:=RMINSUCH(DIAG(ERGS1[i][j]))[1];
+    od;
+  ERGS1[i]:=SortedList(ERGS1[i]);
+  od;
+
 ERGS1[4];
 ERGS2:=[[[[[1]],[[1]]]]];
 ERGS2[1][1];[[[1]],[[1]]];
-GESAMTDILIST:=[[[[3]]]];
+GESAMTDILIST:=[[[[0]]]];
 ClearProfile();ZM:=0;
 SCHNACK(2,COMPDIAG5RS);#16#6
 SCHNACK(3,COMPDIAG5RS);#32#19
