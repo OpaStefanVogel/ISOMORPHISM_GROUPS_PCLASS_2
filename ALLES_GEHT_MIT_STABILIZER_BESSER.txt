@@ -526,13 +526,15 @@ RVOND4:=function(D) # erwartet neutrales Element mit
   return R;
   end;
 
-DGANZNEU:=function(d) #zuerst die 3 wegen Suche Maximum
-  local dneu;
-  dneu:=DNEU(d);
-  if dneu=0 then return 0; fi;
-  if dneu=1 then return 3; fi;
-  if dneu=2 then return 1; fi;
-  if dneu=3 then return 2; fi;
+DGANZNEU:=function(d) #
+  local dneu,i;
+  if not IsBound(ALPHA[d+1]) then
+    dneu:=Size(BETA);
+    for i in [1..dneu] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
+    for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
+    fi;
+  dneu:=ALPHA[d+1];
+  if dneu=0 then return 0; else return 4-dneu; fi;
   end;
 
 RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
