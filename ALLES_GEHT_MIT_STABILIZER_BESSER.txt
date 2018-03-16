@@ -595,48 +595,36 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
 
 SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #global COMPDIAGSTABERZ,STABMACH,DOPPELSTAB,HMACH,RKVOND;
-  local D0,D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS,dd;
+  local D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS,dd;
   dd:=Size(R1);
-  D0:=DIAG(R1);
-  D1:=DIAG(R1{[1..dd-1]});
+  D1:=DIAG(R1);
   D2:=DIAG(R2);
   #folgendes aus S:=STABAUSD4(dd-1,D);
   D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
+  S1:=STABMACH(dd,D1);
   D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
-  S1:=STABMACH(dd-1,D1);
-  if not SAGE then Print("\nDOPPELSTAB S1: \c"); t:=Runtime(); fi;
-  SD1:=DOPPELSTAB(dd,S1);
-  if not SAGE then Print(Runtime()-t); fi;
   S2:=STABMACH(dd-1,D2);
   if not SAGE then Print("\nDOPPELSTAB S2: \c"); t:=Runtime(); fi;
   SD2:=DOPPELSTAB(dd,S2);
   if not SAGE then Print(Runtime()-t); fi;
-  if not SAGE then Print("\nIntersection(S1,S2): \c"); t:=Runtime(); fi;
-  S:=Intersection(Group(SD1),Group(SD2));
-  if not SAGE then Print(Runtime()-t); fi;
   if not SAGE then Print("\nHMACH: \c"); t:=Runtime(); fi;
   H:=HMACH(dd);
   if not SAGE then Print(Runtime()-t); fi;
-  if not SAGE then Print("\nConcatenation(List(S),H): \c"); t:=Runtime(); fi;
-  K:=Group(Concatenation(SmallGeneratingSet(S),H));
+  if not SAGE then Print("\nConcatenation(SD2,H): \c"); t:=Runtime(); fi;
+  K:=Group(Concatenation(SD2,H));
   if not SAGE then Print(Runtime()-t); fi;
-  D0:=COMPDIAGSTABERZ(D0);Remove(D0,1);
-  S0:=STABMACH(dd,D0);
-  if not SAGE then Print("\nIntersection(S0,K): \c"); t:=Runtime(); fi;
-  K:=Intersection(Group(S0),K);
+  if not SAGE then Print("\nIntersection(S1,K): \c"); t:=Runtime(); fi;
+  K:=Intersection(Group(S1),K);
   if not SAGE then Print(Runtime()-t); fi;
-
   DD:=Tuples([0..1],dd);;#Print(Size(DD));
   DDD:=[];
   for i in [1..2^dd] do
     DDD[i]:=DIAG(Concatenation(R2,[DD[i]])){[2..2^dd]};
     od;
   ORBS:=OrbitsDomain(K,DDD,Permuted);;#Print(Size(ORBS));
-  #Add(OM,ORBS);
   #Print(List(ORBS,i->Size(i)));Print("\c");
-  D0:=DIAG(R1);Remove(D0,1);
-  #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D0+2*i[1]))));
-  #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(R03/04/2018(dd,D0+2*i[1]))))));
+  #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D1+2*i[1]))));
+  #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,D1+2*i[1]))))));
   return Reversed(SortedList(List(ORBS,i->RKVOND(dd,Maximum(i)))));
   end;
 
