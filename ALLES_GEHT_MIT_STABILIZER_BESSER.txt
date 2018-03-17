@@ -1,9 +1,8 @@
-#Read("DA_LEGST_DICH_NIEDER.txt");
-#funktioniert hat Zeile 604-616, danach neues
+#Read("ALLES_GEHT_MIT_STABILIZER_BESSER.txt");
 
 SAGE:=true;
-dmax:=10;
-#dmax:=12;
+#dmax:=10;
+dmax:=12;
 
 XORMAT:=[[1]];
 for i in [1..dmax] do
@@ -508,7 +507,7 @@ RKVOND:=function(dd,D)
 RKVOND(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[1],[1,2],[1,2,3],[0,0,0,0]];
 
 
-#-----bis hierher unverändert aus DA_LEGST_DICH_NIEDER.txt, ab hier neu 2018:
+#-----bis hierher unveraendert aus DA_LEGST_DICH_NIEDER.txt, ab hier neu 2018:
 
 STABMACH2:=function(D) #beginnt mit D und mit neutralem Element
   local C,C1,PHITAB;
@@ -628,6 +627,8 @@ SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
   return Reversed(SortedList(List(ORBS,i->RKVOND(dd,Maximum(i)))));
   end;
 
+ERGS2:=[];
+GESAMTDILIST:=[];
 SCHNACK:=function(dd,CMPD)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
   if not SAGE then Exec("date"); fi;
@@ -688,3 +689,70 @@ SCHNACK(4,COMPDIAG5RS);#64#60
 #SCHNACK(8,COMPDIAG5RS);#1024#2945
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
+
+ERGS22:=[];
+for i in [1..Size(ERGS2)] do
+  ERGS22[i]:=[];
+  for j in [1..Size(ERGS2[i])] do
+    ERGS22[i][j]:=2*ERGS2[i][j][1]+ERGS2[i][j][2];
+    od;
+  ERGS22[i]:=SortedList(ERGS22[i]);
+  od;
+
+KURZSCHNACK:=function(dd,CMPD)
+  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
+  if not SAGE then Exec("date"); fi;
+  ts:=Runtime(); ZM:=0;
+  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+  for rr in [1..Size(ERGS1[dd])] do R1:=Reversed(ERGS1[dd])[rr]; if dd=2 or not 0 in R1[dd-2] then
+    if not SAGE then Print("\n***R1=",R1); fi;
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] and R1{[1..dd-2]}=R1R2[2]{[1..dd-2]} then
+      if not SAGE then Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n"); fi;
+      ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
+      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2[2],"...\n");
+      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
+      for ORB in ORBI do
+        R:=2*R1+ORB;
+        D:=DIAG(R);
+        #a#Remove(D,1);
+        #a#RV:=RVOND(dd,D);
+        #a#ID:=IdSmallGroup(PcgsOfR(RV));
+        ID:=CMPD(dd,D,false);
+        #a#Print(" ",ID,"\c");
+        if not ID in GESAMTDILIST[dd] then
+        #if DIAG(ID)=D then
+          #if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
+          Add(ERGS2[dd],[R1,ORB]); 
+          Add(GESAMTDILIST[dd],ID);
+          if not SAGE then Print("*\c"); fi;
+          else if not SAGE then Print(".\c"); fi; fi;
+        od;
+      fi; od;
+    fi; od;
+  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
+  if not SAGE then Exec("date"); fi;
+  end;
+
+#-----------
+KANTENZUEGE(dmax);
+ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+ERGS2[1][1];[[[1]],[[1]]];
+GESAMTDILIST:=[[[[3]]]];
+ClearProfile();ZM:=0;
+KURZSCHNACK(2,COMPDIAG5RS);#16
+KURZSCHNACK(3,COMPDIAG5RS);#32
+KURZSCHNACK(4,COMPDIAG5RS);#64
+KURZSCHNACK(5,COMPDIAG5RS);#128
+KURZSCHNACK(6,COMPDIAG5RS);#256
+KURZSCHNACK(7,COMPDIAG5RS);#512
+KURZSCHNACK(8,COMPDIAG5RS);#1024
+KURZSCHNACK(9,COMPDIAG5RS);#2048
+KURZSCHNACK(10,COMPDIAG5RS);#4096
+#KURZSCHNACK(11,COMPDIAG5RS);#8192
+#KURZSCHNACK(12,COMPDIAG5RS);#16384
+DisplayProfile();
+#dd:=6;;List(SortedList(ERGS2[dd]),i->2*i[1]+i[2]));
+#PrintTo("ERGS2NUR2.txt","ERGS2:=",ERGS2,";");
