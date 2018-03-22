@@ -538,8 +538,7 @@ DGANZNEU:=function(d) #
 
 RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,
-  GANZ_NEUE_VARIANTEN,GNV,i,j,MALPHA;
+  HRES,KRES,LD,S1,S2,SX,D1,D2,MENGS,GOINGS,BOINGS,i,j,MALPHA;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[]; 
   D1:=List(D,i->Int(i/2));
   D2:=List(D,i->i mod 2);
@@ -570,7 +569,6 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
       #Print("\nGOINGS=",GOINGS);
       BOINGS:=List(GOINGS,i->i[1]);
       #Print("\nBOINGS=",BOINGS);
-      GANZ_NEUE_VARIANTEN:=[];
       for i in BOINGS do
         VNEU:=StructuralCopy(V);
         Add(VNEU.HRES,i);
@@ -578,9 +576,8 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         VNEU.LRES:=Concatenation(LRES,LNEU);
         for j in LNEU do VNEU.LD[j]:=STUFE; od;
         VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
-        Add(GANZ_NEUE_VARIANTEN,VNEU);        
+        Add(NEUE_VARIANTEN,VNEU);        
         od;
-      NEUE_VARIANTEN:=Concatenation(NEUE_VARIANTEN,GANZ_NEUE_VARIANTEN);
       od;
     Add(RMAX,RNEU);
     for V in NEUE_VARIANTEN do
