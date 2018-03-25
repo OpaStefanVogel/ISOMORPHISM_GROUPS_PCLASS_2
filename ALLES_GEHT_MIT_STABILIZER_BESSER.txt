@@ -1232,7 +1232,7 @@ DGANZNEU:=function(d) #
     dneu:=Size(BETA);
     for i in [1..dneu] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
     for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
-    Print("\n",d," ",dneu,ALPHA,BETA);
+    #Print("\n",d," ",dneu,ALPHA,BETA);
     fi;
   dneu:=ALPHA[d+1];
   if dneu=0 then return 0; else return 4-dneu; fi;
@@ -1270,7 +1270,9 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->[DGANZNEU(D[i]),C1[i]+C2[i]+C3[i]]);#Error("\n",RR,KRES);
+        #RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
+        RR:=List(KRES,i->[DGANZNEU(D[i]),C1[i]+C2[i]+C3[i]]);
+        #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]])]);
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         fi; od;
@@ -1294,12 +1296,12 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
-    Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     #Print("\n  STUFE=",STUFE," VARIANTEN=",Size(VARIANTEN));
     od;
-  Print("\nC1=",C1);
-  Print("\nC2=",C2);
-  Print("\nC3=",C3);
+  #Print("\nC1=",C1);
+  #Print("\nC2=",C2);
+  #Print("\nC3=",C3);
   return [RMAX,VARIANTEN];
   end;
 
