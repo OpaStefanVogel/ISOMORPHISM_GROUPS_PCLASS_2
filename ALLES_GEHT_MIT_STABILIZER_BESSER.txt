@@ -1415,6 +1415,21 @@ DOPPELSCHNACK111:=function(dd)
         od;
       fi; od;
     od;
+
+  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",[ 1, 2, 6, 18, 69, 124, 460, 715],Runtime()-ts,"\n");
+  ERGS2ALT:=ERGS2[dd]; ERGS2[dd]:=[]; GESAMTDILIST[dd]:=[];
+  for R1R2 in ERGS2ALT do
+    R:=2*R1R2[1]+R1R2[2];
+    D:=DIAG(R);
+    ID:=RMAXSUCH(D)[1];
+    if not ID in GESAMTDILIST[dd] then
+      Add(ERGS2[dd],R1R2); 
+      Add(GESAMTDILIST[dd],ID);
+      if not SAGE then Print("*\c"); fi;
+      else if not SAGE then Print(".\c"); fi; fi;
+    od;
+
   Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
   Print("\n",[ 1, 2, 6, 18, 69, 124, 460, 715],Runtime()-ts,"\n");
   #Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
