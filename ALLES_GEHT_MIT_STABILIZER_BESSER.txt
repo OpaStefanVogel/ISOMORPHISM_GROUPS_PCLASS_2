@@ -1734,7 +1734,7 @@ DisplayProfile();
 
 RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA;
+  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   D1:=List(D,i->Int((i mod 4)/2));
   C1:=COMPDIAGSTABERZ(D1);
@@ -1770,9 +1770,11 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         #RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
-        RR:=List(KRES,i->[DGANZNEU(D[i]),C1[i]+C2[i]+C3[i]]);
+        #RR:=List(KRES,i->[DGANZNEU(D[i]),C1[i]+C2[i]+C3[i]]);
         #RR:=List(KRES,i->[DGANZNEU(D[i]),CSWAHL(i,ALPHA,BETA,[C1,C2,C3])]);#geht nich
         #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]]))]);
+        RRR:=List(KRES,i->DGANZNEU(D[i]));
+        RR:=[List(RRR,i->Int(i/2)),RRR mod 2]; 
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         od;
@@ -1800,7 +1802,7 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   return [RMAX,VARIANTEN];
   end;
 
-SCHNACK:=function(dd,CMPD)
+SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
   if not SAGE then Exec("date"); fi;
   ts:=Runtime(); ZM:=0;
@@ -1821,7 +1823,7 @@ SCHNACK:=function(dd,CMPD)
         #a#Remove(D,1);
         #a#RV:=RVOND(dd,D);
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
-        ID:=CMPD(dd,D,false);
+        ID:=RMAXSUCH(D)[1];
         #a#Print(" ",ID,"\c");
         if not ID in GESAMTDILIST[dd] then
         #if DIAG(ID)=D then
