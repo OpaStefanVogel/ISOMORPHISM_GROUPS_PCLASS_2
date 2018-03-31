@@ -1732,9 +1732,10 @@ DisplayProfile();
 
 #----RMAXSUCH Versuch mit hintereinandergestelltem RMAX
 
-RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
+RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR;
+  HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR;
+  D:=DIAG(R);
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   D1:=List(D,i->Int((i mod 4)/2));
   C1:=COMPDIAGSTABERZ(D1);
@@ -1774,7 +1775,9 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         #RR:=List(KRES,i->[DGANZNEU(D[i]),CSWAHL(i,ALPHA,BETA,[C1,C2,C3])]);#geht nich
         #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]]))]);
         RRR:=List(KRES,i->DGANZNEU(D[i]));
-        RR:=[List(RRR,i->Int(i/2)),RRR mod 2]; 
+        RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
+        if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
+        #if RR[1]>List(R[STUFE],i->Int(i/2)) or RR[1]=List(R[STUFE],i->Int(i/2)) and RR[2]>List(R[STUFE],i->i mod 2) then return [false,false]; fi;
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         od;
@@ -1819,19 +1822,19 @@ SCHNACK:=function(dd)
       if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
       for ORB in ORBI do
         R:=2*R1+ORB;
-        D:=DIAG(R);
         #a#Remove(D,1);
         #a#RV:=RVOND(dd,D);
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
-        ID:=RMAXSUCH(D)[1];
+        ID:=RMAXSUCH(R)[1];
         #a#Print(" ",ID,"\c");
-        if not ID in GESAMTDILIST[dd] then
+        if ID<>false and not ID in GESAMTDILIST[dd] then
         #if DIAG(ID)=D then
           #if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
+          #if 2*ID[Size(R)][1]+ID[Size(R)][2]<>R[Size(R)] then Error("\n",ID,"\n",R,"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],ID);
           if not SAGE then Print("*\c"); fi;
-          else if not SAGE then Print(".\c"); fi; fi;
+          else if not SAGE then if ID=false then Print(":\c"); else Print(".\c"); fi; fi; fi;
         od;
       fi; od;
     od;
@@ -1846,12 +1849,12 @@ KANTENZUEGE(dmax);
 ERGS2:=[[[[[1]],[[1]]]]];
 GESAMTDILIST:=[[[[3]]]];
 ClearProfile();ZM:=0;
-SCHNACK(2,COMPDIAG5RS);#16#6
-SCHNACK(3,COMPDIAG5RS);#32#19
-SCHNACK(4,COMPDIAG5RS);#64#60
-#SCHNACK(5,COMPDIAG5RS);#128#158
-#SCHNACK(6,COMPDIAG5RS);#256#442
-#SCHNACK(7,COMPDIAG5RS);#512#1122
-#SCHNACK(8,COMPDIAG5RS);#1024#2945
+SCHNACK(2);#16#6
+SCHNACK(3);#32#19
+SCHNACK(4);#64#60
+#SCHNACK(5);#128#158
+#SCHNACK(6);#256#442
+#SCHNACK(7);#512#1122
+#SCHNACK(8);#1024#2945
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
