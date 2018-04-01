@@ -1922,11 +1922,11 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   D1:=List(D,i->Int((i mod 4)/2)); R1:=RMAXSUCH2(D1)[1];
   C1:=COMPDIAGSTABERZ(D1);
   S1:=Group(STABMACH2(C1));
-  D2:=List(D,i->i mod 2); R2:=RMAXSUCH2(D2)[1]; if R3>R1 then return [false,false]; fi;
+  D2:=List(D,i->i mod 2); R2:=RMAXSUCH2(D2)[1]; if R2>R1 then return [false,"y"]; fi;
   C2:=COMPDIAGSTABERZ(D2);
   S2:=Group(STABMACH2(C2));
   SX:=Intersection(S1,S2);
-  D3:=(D1+D2) mod 2; R3:=RMAXSUCH2(D3)[1]; if R2>R1 then return [false,false]; fi;
+  D3:=(D1+D2) mod 2; R3:=RMAXSUCH2(D3)[1]; if R3>R1 then return [false,"z"]; fi;
   C3:=COMPDIAGSTABERZ(D3);
   #Print("\n",R1,"\n",R2,"\n",R3);
   #D4:=List(D,i->Int(i/4));
@@ -2013,16 +2013,16 @@ SCHNACK:=function(dd)
         #a#Remove(D,1);
         #a#RV:=RVOND(dd,D);
         #a#ID:=IdSmallGroup(PcgsOfR(RV));
-        ID:=RMAXSUCH(R)[1];
+        ID:=RMAXSUCH(R);
         #a#Print(" ",ID,"\c");
-        if ID<>false and not ID in GESAMTDILIST[dd] then
+        if ID[1]<>false and not ID[1] in GESAMTDILIST[dd] then
         #if DIAG(ID)=D then
           #if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
           #if 2*ID[Size(R)][1]+ID[Size(R)][2]<>R[Size(R)] then Error("\n",ID,"\n",R,"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
-          Add(GESAMTDILIST[dd],ID);
+          Add(GESAMTDILIST[dd],ID[1]);
           if not SAGE then Print("*\c"); fi;
-          else if not SAGE then if ID=false then Print(":\c"); else Print(".\c"); fi; fi; fi;
+          else if not SAGE then if ID[1]=false then Print(ID[2],"\c"); else Print(".\c"); fi; fi; fi;
         od;
       fi; od;
     od;
