@@ -1776,7 +1776,7 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
         #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]]))]);
         RRR:=List(KRES,i->DGANZNEU(D[i]));
         RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
-        if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
+        #if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
         #if RR[1]>List(R[STUFE],i->Int(i/2)) or RR[1]=List(R[STUFE],i->Int(i/2)) and RR[2]>List(R[STUFE],i->i mod 2) then return [false,false]; fi;
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
@@ -1802,8 +1802,13 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   #Print("\nC1=",C1);
   #Print("\nC2=",C2);
   #Print("\nC3=",C3);
-  return [RMAX,VARIANTEN];
+  return [TransposedMat(RMAX),VARIANTEN];
   end;
+
+#for i in [1..154] do if GESAMTDILIST[5][i]<>ERGS2[5][i] then Print(i," "); fi; od;
+#64 90 91 93 94 96 97 98 99 100 101 102 103 104
+#i:=64;;ERGS2[5][i];GESAMTDILIST[5][i];
+#RMAXSUCH([[3],[2,2]])[1];
 
 SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
