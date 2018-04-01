@@ -1734,7 +1734,7 @@ DisplayProfile();
 
 RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR,MEN;
+  HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR,MEN,HRSV;
   D:=DIAG(R);
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   D1:=List(D,i->Int((i mod 4)/2));
@@ -1759,26 +1759,32 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
     NEUE_VARIANTEN:=[];
     RNEU:=[];
     for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX; S1:=S1;
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX; S1:=V.S1;
       MEN:=Filtered([2..SD],i->not IsBound(LD[i]));
       #Print("\n",MEN);
       MEN:=Orbits(S1,MEN);
-      #Print(MEN);
-      #MENGS:=[MENGS];
-      for MENGS in MEN do
-        MENGS:=Filtered(MENGS,i->not IsBound(LD[i]));#Print(MENGS);
-        i:=MENGS[1];
-        KRES:=[i];
-        for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
-        RRR:=List(KRES,i->DGANZNEU(D[i]));
-        RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
-        #if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
-        #if RR[1]=List(R[STUFE],i->Int(i/2)) then
-if 1=1 then
+      #Print("\nMENO=",MEN);
+      HRSV:=[2,3,5,9,17,33,65];#Print(HRSV[STUFE]);
+      #MEN:=[MEN];
+      for MENGS in MEN do 
+        MENGS:=Filtered(MENGS,i->not IsBound(LD[i]));
+        for i in MENGS do
+          i:=MENGS[1];
+          KRES:=[i];
+          for j in HRES do Add(KRES,XORMAT[i][j]); od;
+          ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+          RRR:=List(KRES,i->DGANZNEU(D[i]));
+          RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
+          #if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
+          od;
+        #if RR[1]=List(R[STUFE],i->Int(i/2)) then 
+        #if 1=1 then
+   if 1=1 or HRSV[STUFE] in MENGS then
+
+      MENGS:=Filtered(MENGS,i->not IsBound(LD[i]));#Print(MENGS);
       GOINGS:=Orbits(SX,MENGS);
       #Print("\nGOINGS=",GOINGS);
-      BOINGS:=List(GOINGS,i->i[1]);
+      BOINGS:=List(GOINGS,i->Intersection(MENGS,i)[1]);
       #Print("\nBOINGS=",BOINGS);
       MENGS:=[]; MALPHA:=[];
       for i in BOINGS do
@@ -1790,10 +1796,10 @@ if 1=1 then
         #RR:=List(KRES,i->[DGANZNEU(D[i]),CSWAHL(i,ALPHA,BETA,[C1,C2,C3])]);#geht nich
         #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]]))]);
         RRR:=List(KRES,i->DGANZNEU(D[i]));
-        RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
+        RR:=[List(RRR,i->Int(i/2)),RRR mod 2];#Print(RR);
         #if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
-        #if RR[1]>List(R[STUFE],i->Int(i/2)) or RR[1]=List(R[STUFE],i->Int(i/2)) and RR[2]>List(R[STUFE],i->i mod 2) then return [false,false]; fi;
-        if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
+        #if RR[1]=List(R[STUFE],i->Int(i/2)) and RR[2]>List(R[STUFE],i->i mod 2) then return [false,false]; fi;
+        if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi; #Print("\n",RR,HRES,i); 
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         od;
       for i in MENGS do
@@ -1824,7 +1830,7 @@ if 1=1 then
 #for i in [1..154] do if GESAMTDILIST[5][i]<>ERGS2[5][i] then Print(i," "); fi; od;
 #64 90 91 93 94 96 97 98 99 100 101 102 103 104
 #i:=64;;ERGS2[5][i];GESAMTDILIST[5][i];
-#i:=64;;ERGS2[5][i];RMAXSUCH(2*ERGS2[5][i][1]+ERGS2[5][i][2])[1];
+#RMAXSUCH([[3],[2,2]])[1];
 
 SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
