@@ -1734,7 +1734,7 @@ DisplayProfile();
 
 RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR;
+  HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,RRR,MEN;
   D:=DIAG(R);
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   D1:=List(D,i->Int((i mod 4)/2));
@@ -1750,7 +1750,7 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
   #C4:=COMPDIAGSTABERZ(D4);
   #S4:=Group(STABMACH2(C4));
   #SX:=Intersection(S1,S2,S4);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX, S1:=S1)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
@@ -1759,9 +1759,19 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
     NEUE_VARIANTEN:=[];
     RNEU:=[];
     for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX; S1:=S1;
       MENGS:=Filtered([2..SD],i->not IsBound(LD[i]));
-      GOINGS:=Orbits(SX,MENGS);
+      MENGS:=Orbits(S1,MENGS);
+      for MEN in MENGS do
+        i:=MEN[1];
+        KRES:=i;
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        RRR:=List(KRES,i->DGANZNEU(D[i]));
+        RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
+        if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
+        if RR[1]=List(R[STUFE],i->Int(i/2)) then
+
+      GOINGS:=Orbits(SX,MEN);
       #Print("\nGOINGS=",GOINGS);
       BOINGS:=List(GOINGS,i->i[1]);
       #Print("\nBOINGS=",BOINGS);
@@ -1790,10 +1800,11 @@ RMAXSUCH:=function(R) #sucht RMAX mit Umbenennen
         VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
         Add(NEUE_VARIANTEN,VNEU);        
         od;
-      od;
+      fi; od; od;
     Add(RMAX,RNEU);
     for V in NEUE_VARIANTEN do
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
+      V.S1:=Stabilizer(V.S1,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
