@@ -1914,21 +1914,21 @@ RMAXSUCH2:=function(D) #sucht RMAX
   end;
 
 DINIT:=function(di)
-  if di=1 then return [[[3,2,1],[3,2,1]],[[3,1,2],[2,3,1]]]; fi;
-  if di=2 then return [[[1,3,2],[1,3,2]],[[2,3,1],[3,1,2]]]; fi;
-  if di=3 then return [[[1,2,3],[1,2,3]],[[2,1,3],[2,1,3]]]; fi;
+  if di=1 then return [[[0,3,2,1],[0,3,2,1]],[[0,3,1,2],[0,2,3,1]]]; fi;
+  if di=2 then return [[[0,1,3,2],[0,1,3,2]],[[0,2,3,1],[0,3,1,2]]]; fi;
+  if di=3 then return [[[0,1,2,3],[0,1,2,3]],[[0,2,1,3],[0,2,1,3]]]; fi;
   end;
 
-DGANZNEU:=function(di)
+DPRUEFNEU:=function(di)
   return ALPHA[di+1];
   end;
 
 RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
   HRES,KRES,LD,S1,S2,S3,SX,D,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,
-  RRR,R1,R2,R3,ABLISTE,ABL;
+  RRR,R1,R2,R3,ABLISTE,ABL,RC1,CS,REMO;
   D:=DIAG(R);
-  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
+  SD:=Size(D); S:=Size(R); STUFE:=0; RMAX:=[];
   D1:=List(D,i->Int((i mod 4)/2)); R1:=RMAXSUCH2(D1)[1];
   C1:=COMPDIAGSTABERZ(D1);
   S1:=Group(STABMACH2(C1));
@@ -1943,7 +1943,16 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
   #C4:=COMPDIAGSTABERZ(D4);
   #S4:=Group(STABMACH2(C4));
   #SX:=Intersection(S1,S2,S4);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
+  CS:=[C1,C2,C3];
+  RC1:=StructuralCopy(R1);
+  for i in [1..S] do
+    RC1[i]:=[RC1[i],[C1[2^(i-1)+1]]];
+    for j in [1..i-1] do
+      Add(RC1[i][2],C1[2^(i-1)+1+2^(j-1)]);
+      od;
+    od;
+  Print("\nRC1=",RC1,C1);
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0,1],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
@@ -1962,21 +1971,29 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
       for i in BOINGS do
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         ABLISTE:=[[ALPHA,BETA]];
-        if ALPHA=[0] and D[i]>0 then ABLISTE:=DINIT(D[i)); fi;
-        for ABL in ABLISTE do
-          ALPHA:=ABL[1]; BETA:=ABL[2];
+        if ALPHA=[0] and D[i]>0 then ABLISTE:=DINIT(D[i]); fi;
+        for ABL in ABLISTE do 
+          #Print("\nABL=",ABL);
+          ALPHA:=List(ABL[1]); BETA:=List(ABL[2]);
           KRES:=[i];
           for j in HRES do Add(KRES,XORMAT[i][j]); od;
           #RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
           #RR:=List(KRES,i->[DGANZNEU(D[i]),C1[i]+C2[i]+C3[i]]);
           #RR:=List(KRES,i->[DGANZNEU(D[i]),CSWAHL(i,ALPHA,BETA,[C1,C2,C3])]);#geht n.
           #RR:=List(KRES,i->[DGANZNEU(D[i]),Reversed(SortedList([C1[i],C2[i],C3[i]]))]);
-          RRR:=List(KRES,i->DGANZNEU(D[i]));
-          RR:=[List(RRR,i->Int(i/2)),RRR mod 2];
+          RRR:=List(KRES,i->DPRUEFNEU(D[i]));
+          RR:=[List(RRR,i->Int(i/2)),List(RRR,i->i mod 2)];
+          #RRR:=List(KRES,i->[DPRUEFNEU(D[i]),CS[BETA[2]][i]]);
+          #RR:=[List(RRR,i->Int(i[1]/2)),List(RRR,i->i[2]),List(RRR,i->i[1] mod 2)];
+          #Print("\n",RR,ALPHA);
           #if RR[1]>List(R[STUFE],i->Int(i/2)) then return [false,false]; fi;
           #if RR[1]>List(R[STUFE],i->Int(i/2)) or RR[1]=List(R[STUFE],i->Int(i/2)) and RR[2]>List(R[STUFE],i->i mod 2) then return [false,false]; fi;
           if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
-          if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
+          if RR=RNEU then Add(MENGS,i); Add(MALPHA,[ALPHA,BETA]); fi;
+    # if RR{[1,2]}=RC1[STUFE] then
+    #      if RR[3]>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR[3]; fi;
+    #      if RR[3]=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
+    #   fi;
           od;
         od;
       for i in MENGS do
@@ -1985,7 +2002,8 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
         LNEU:=List(LRES,j->XORMAT[i][j]);
         VNEU.LRES:=Concatenation(LRES,LNEU);
         for j in LNEU do VNEU.LD[j]:=STUFE; od;
-        VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
+        REMO:=Remove(MALPHA,1);
+        VNEU.ALPHA:=List(REMO[1]); VNEU.BETA:=List(REMO[2]);
         Add(NEUE_VARIANTEN,VNEU);        
         od;
       od;
@@ -1994,19 +2012,21 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
-    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i),Size(VARIANTEN));
     #Print("\n  STUFE=",STUFE," VARIANTEN=",Size(VARIANTEN));
     od;
   #Print("\nC1=",C1);
   #Print("\nC2=",C2);
   #Print("\nC3=",C3);
+  #Print("\nR   =",R);
+  #Print("\nRMAX=",RMAX);
   return [TransposedMat(RMAX),VARIANTEN];
   end;
 
 #for i in [1..154] do if GESAMTDILIST[5][i]<>ERGS2[5][i] then Print(i," "); fi; od;
 #64 90 91 93 94 96 97 98 99 100 101 102 103 104
 #i:=64;;ERGS2[5][i];GESAMTDILIST[5][i];
-#RMAXSUCH([[3],[2,2]])[1];
+#RMAXPRUEF([[3],[2,2]])[1];
 
 SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
