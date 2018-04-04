@@ -1934,11 +1934,13 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
   D1:=List(D,i->Int((i mod 4)/2)); R1:=RMAXSUCH2(D1)[1];
   C1:=COMPDIAGSTABERZ(D1);
   S1:=Group(STABMACH2(C1));
-  D2:=List(D,i->i mod 2); R2:=RMAXSUCH2(D2)[1]; if R2>R1 then return [false,"y"]; fi;
+  D2:=List(D,i->i mod 2); 
+  R2:=RMAXSUCH2(D2)[1]; if GLOBAB=[] and R2>R1 then return [false,"y"]; fi;
   C2:=COMPDIAGSTABERZ(D2);
   S2:=Group(STABMACH2(C2));
   SX:=Intersection(S1,S2);
-  D3:=(D1+D2) mod 2; R3:=RMAXSUCH2(D3)[1]; if R3>R1 then return [false,"z"]; fi;
+  D3:=(D1+D2) mod 2; 
+  R3:=RMAXSUCH2(D3)[1]; if GLOBAB=[] and R3>R1 then return [false,"z"]; fi;
   C3:=COMPDIAGSTABERZ(D3);
   #Print("\n",R1,"\n",R2,"\n",R3);
   #D4:=List(D,i->Int(i/4));
@@ -2010,14 +2012,14 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
           #Print("\nRR=",RR,"\n   ",RC1[STUFE],ALPHA,RD2[STUFE],RNEU);
      if RR{[1,2]}=RC1[STUFE] then
           #Print("=",RR{[1,3]}>RNEU);
-          if RR[3]>RD2[STUFE] then
+          if GLOBAB=[] and RR[3]>RD2[STUFE] then
 #  Print("\nRR =",RR);
 #  Print("\nR  =",R);
 #  Print("\nRC1=",RC1);
 #  Print("\n C1=",C1);
 #  Print("\nRD2=",RD2);
 #  Print("\nRMAX=",TransposedMat(RMAX));
-            return [false,"s"]; fi;
+            return [false,STUFE]; fi;
           if RR{[1,3]}>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; MALPHA:=[]; RNEU:=RR{[1,3]}; fi;
           if RR{[1,3]}=RNEU then Add(MENGS,i); Add(MALPHA,[ALPHA,BETA]); fi;
           #Print("\nMENGS,MALPHA=",MENGS,MALPHA);
@@ -2067,7 +2069,7 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
 SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
   if not SAGE then Exec("date"); fi;
-  ts:=Runtime(); ZM:=0;
+  ts:=Runtime(); ZM:=0; GLOBAB:=[];
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for rr in [1..Size(ERGS1[dd])] do
     R1:=Reversed(ERGS1[dd])[rr];
@@ -2103,28 +2105,38 @@ SCHNACK:=function(dd)
   end;
 
 POSTBOOSTER:=function(dd)
-  local i,R,RR,R1,R2,R3,RNEU;
+  local i,R,RR,R1,R2,R3,RNEU,ERGS2ZUSATZ;
+  ERGS2ZUSATZ:=[];
   for i in [1..Size(ERGS2[dd])] do
-    Print("\n",i);
+    Print(i," \c");
     RR:=ERGS2[dd][i];
     R:=2*RR[1]+RR[2];
     R1:=RR[1];
     R2:=RMAXSUCH2(DIAG(RR[2]))[1];
     R3:=RMAXSUCH2(DIAG((R1+RR[2]) mod 2))[1];
-    Print(" ",R1=R2," ",R1=R3);
+    #Print(" ",R1=R2," ",R1=R3);
     if R1=R2 then
       GLOBAB:=[[[0,3,1,2],[0,2,3,1]],[[0,2,1,3],[0,2,1,3]]];
       RNEU:=RMAXPRUEF(R)[1];
-      if not (RNEU in GESAMTDILIST[dd]) then Error(); fi;
+      if not (RNEU in GESAMTDILIST[dd]) then 
+        Print("R2 neu "); 
+        Add(ERGS2ZUSATZ,RNEU);
+        fi;
       GLOBAB:=[];
       fi;
     if R1=R3 then
       GLOBAB:=[[[0,3,2,1],[0,3,2,1]],[[0,2,3,1],[0,3,1,2]]];
       RNEU:=RMAXPRUEF(R)[1];
-      if not (RNEU in GESAMTDILIST[dd]) then Error(); fi;
+      Add(ERGS2ZUSATZ,RNEU);
+      if not (RNEU in GESAMTDILIST[dd]) then 
+        Print("R3 neu "); 
+        Add(ERGS2ZUSATZ,RNEU);
+        fi;
       GLOBAB:=[];
       fi;
     od;
+  ERGS2[dd]:=Reversed(SortedList(Union(ERGS2[dd],ERGS2ZUSATZ)));
+  Print("\n");
   end;
 
 
@@ -2134,12 +2146,13 @@ KANTENZUEGE(dmax);
 ERGS2:=[[[[[1]],[[1]]]]];
 GESAMTDILIST:=[[[[3]]]];
 ClearProfile();ZM:=0;
-SCHNACK(2);#16#6
-SCHNACK(3);#32#19
-SCHNACK(4);#64#60
-#SCHNACK(5);#128#158
-#SCHNACK(6);#256#442
-#SCHNACK(7);#512#1122
-#SCHNACK(8);#1024#2945
+SCHNACK(2); POSTBOOSTER(2);#16#6
+SCHNACK(3); POSTBOOSTER(3);#32#19
+SCHNACK(4); POSTBOOSTER(4);#64#60
+#SCHNACK(5); POSTBOOSTER(5);#128#158
+#SCHNACK(6); POSTBOOSTER(6);#256#442
+#SCHNACK(7); POSTBOOSTER(7);#512#1122
+#SCHNACK(8); POSTBOOSTER(8);#1024#2945
+#SCHNACK(9); POSTBOOSTER(9);#1024#????
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
