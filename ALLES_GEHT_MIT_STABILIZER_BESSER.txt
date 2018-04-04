@@ -2004,10 +2004,17 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
           RR:=[List(RRR,i->Int(i[1]/2)),List(RRR,i->i[2]),List(RRR,i->i[1] mod 2)];
         LNEU:=List(V.LRES,j->XORMAT[i][j]);
         RR[2]:=List(LNEU,i->CS[BETA[2]][i]);
-          #Print("\nRR=",RR,"\n   ",RC1[STUFE],ALPHA,R2[STUFE]);
+          #Print("\nRR=",RR,"\n   ",RC1[STUFE],ALPHA,RD2[STUFE]);
      if RR{[1,2]}=RC1[STUFE] then
           #Print("=");
-          if RR[3]>RD2[STUFE] then return [false,"s"]; fi;
+          if RR[3]>RD2[STUFE] then
+#  Print("\nRR =",RR);
+#  Print("\nR  =",R);
+#  Print("\nRC1=",RC1);
+#  Print("\n C1=",C1);
+#  Print("\nRD2=",RD2);
+#  Print("\nRMAX=",TransposedMat(RMAX));
+            return [false,"s"]; fi;
           if RR{[1,3]}>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR{[1,3]}; fi;
           if RR{[1,3]}=RNEU then Add(MENGS,i); Add(MALPHA,[ALPHA,BETA]); fi;
        fi;
@@ -2035,8 +2042,11 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
   #Print("\nC1=",C1);
   #Print("\nC2=",C2);
   #Print("\nC3=",C3);
+  #Print("\nR1=",R1);
+  #Print("\nR2=",R2);
+  #Print("\nR3=",R3);
   #Print("\nR   =",R);
-  #Print("\nRMAX=",RMAX);
+  #Print("\nRMAX=",TransposedMat(RMAX));
   return [TransposedMat(RMAX),VARIANTEN];
   end;
 
@@ -2048,6 +2058,7 @@ RMAXPRUEF:=function(R) #sucht RMAX mit Umbenennen
 #RMAXPRUEF([[3],[3,0]])[1];
 #RMAXPRUEF([[3],[0,0]])[1];
 #for i in [1..154] do if GESAMTDILIST[5][i]<>RMAXPRUEF(2*ERGS2[5][i][1]+ERGS2[5][i][2]); then Print(i," "); fi; od;
+#RR:=ERGS2MERK[6][124]; R:=2*RR[1]+RR[2]; RMAXPRUEF(R);
 
 SCHNACK:=function(dd)
   local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
@@ -2086,6 +2097,19 @@ SCHNACK:=function(dd)
   Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
   if not SAGE then Exec("date"); fi;
   end;
+
+POSTBOOSTER:=function(dd)
+  local i,RR,R1,R2,R3;
+  for i in [1..Size(ERGS2[dd])] do
+    Print("\n",i);
+    RR:=ERGS2[dd][i];
+    R1:=RR[1];
+    R2:=RMAXSUCH2(DIAG(RR[2]))[1];
+    R3:=RMAXSUCH2(DIAG((R1+RR[2]) mod 2))[1];
+    Print(" ",R1=R2," ",R1=R3);
+    od;
+  end;
+
 
 #-----------
 KANTENZUEGE(dmax);
