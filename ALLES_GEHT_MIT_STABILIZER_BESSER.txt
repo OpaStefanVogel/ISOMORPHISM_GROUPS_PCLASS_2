@@ -2100,8 +2100,8 @@ SCHNACK:=function(dd)
       fi; od;
     od;
   Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
-  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
-  Print("\n",[ 1, 6, 19, 63, 174, 508, 11??, ????],Runtime()-ts,"\n");
+  Print("\n[ 1, 6, 19, 60, 158, 442, 1122, 2945]",Runtime()-ts);
+  Print("\n[ 1, 6, 19, 63, 174, 508, 1333, xxxx]\n");
   if not SAGE then Exec("date"); fi;
   end;
 
