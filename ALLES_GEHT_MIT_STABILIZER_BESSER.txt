@@ -2119,7 +2119,7 @@ POSTBOOSTER:=function(dd)
     if R1=R2 then
       GLOBAB:=[[[0,3,1,2],[0,2,3,1]],[[0,2,1,3],[0,2,1,3]]];
       RNEU:=RMAXPRUEF(R)[1];
-      if not (RNEU in GESAMTDILIST[dd]) then 
+      if not (RNEU in ERGS2[dd]) then 
         Print("R2 neu "); 
         Add(ERGS2ZUSATZ,RNEU);
         fi;
@@ -2129,7 +2129,7 @@ POSTBOOSTER:=function(dd)
       GLOBAB:=[[[0,3,2,1],[0,3,2,1]],[[0,2,3,1],[0,3,1,2]]];
       RNEU:=RMAXPRUEF(R)[1];
       Add(ERGS2ZUSATZ,RNEU);
-      if not (RNEU in GESAMTDILIST[dd]) then 
+      if not (RNEU in ERGS2[dd]) then 
         Print("R3 neu "); 
         Add(ERGS2ZUSATZ,RNEU);
         fi;
@@ -2352,3 +2352,14 @@ VORSCHNACK(4);#64#60
 #SCHNACK(9);#2048#????
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
+
+#-----auf zu YSAMMEL-----
+dd:=2;for iii in [1..Size(ERGS1[dd])] do Print("\n",iii,COMPDIAGSTABERZ(DIAG(ERGS1[dd][iii]))); od;
+
+R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]];
+COMPDIAGSTABERZ(DIAG(R{[1..3]}));
+#also 2->3 geht und 4->5 und 6->7
+R2:=[[1],[1,1]];COMPDIAGSTABERZ(DIAG(R2));
+R4:=[[1],[0,0],[1,1,1],[1,1,1,1]];COMPDIAGSTABERZ(DIAG(R4));
+R6:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[1,1,1,1,1,1]];COMPDIAGSTABERZ(DIAG(R6));
+
