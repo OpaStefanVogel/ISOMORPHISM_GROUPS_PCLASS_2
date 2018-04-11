@@ -2354,6 +2354,61 @@ DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
 
 #-----auf zu YSAMMEL-----
+COMPDIAGSTABERZY:=function(D)
+  local RET,ALPH;
+  ALPH:=[0,1,3,2];
+  RET:=COMPDIAGSTABERZ(D);
+  RET:=List(RET,i->ALPH[i+1]);
+  return RET;
+  end;
+
+RMAXSUCH2:=function(D) #sucht RMAX 
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
+  HRES,KRES,LD,ORBZU,ORBS,ONEU;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
+  #ORBZU:=COMPDIAG6E(S,D,0);
+  #RMINSUCH#ORBZU:=COMPDIAG7E(D);
+  ORBZU:=COMPDIAGSTABERZY(D);
+  #RMINSUCH#VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
+  for STUFE in [1..S] do 
+    #Print("\nSTUFE=",STUFE);
+    NEUE_VARIANTEN:=[];
+    RNEU:=[0];
+    for V in VARIANTEN do
+      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
+      ORBS:=[];
+      for i in [2..SD] do if not IsBound(LD[i]) then
+        #RMINSUCH#ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
+        KRES:=[i];
+        for j in HRES do Add(KRES,XORMAT[i][j]); od;
+        #RMINSUCH#RR:=List(KRES,i->DNEU(D[i]));
+        RR:=List(KRES,i->D[i]);
+        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
+        if RR=RNEU then
+          LNEU:=List(LRES,j->XORMAT[i][j]);
+          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
+          if not (ONEU in ORBS) then
+            Add(ORBS,ONEU);
+            VNEU:=StructuralCopy(V);
+            Add(VNEU.HRES,i);
+            VNEU.LRES:=Concatenation(LRES,LNEU);
+            for i in LNEU do VNEU.LD[i]:=STUFE; od;
+            #RMINSUCH#VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
+            Add(NEUE_VARIANTEN,VNEU);
+            fi;
+          #Print("P");
+          fi;
+        fi; od;
+      od;
+    VARIANTEN:=NEUE_VARIANTEN;
+    Add(RMIN,RNEU);
+    #Print(", VARIANTEN=",Size(VARIANTEN));
+    od;
+  return [RMIN,VARIANTEN];
+  end;
+
+
 dd:=2;for iii in [1..Size(ERGS1[dd])] do Print("\n",iii,COMPDIAGSTABERZ(DIAG(ERGS1[dd][iii]))); od;
 
 R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]];
@@ -2362,4 +2417,5 @@ COMPDIAGSTABERZ(DIAG(R{[1..3]}));
 R2:=[[1],[1,1]];COMPDIAGSTABERZ(DIAG(R2));
 R4:=[[1],[0,0],[1,1,1],[1,1,1,1]];COMPDIAGSTABERZ(DIAG(R4));
 R6:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[1,1,1,1,1,1]];COMPDIAGSTABERZ(DIAG(R6));
-
+#R2, R4, R6 ist 2, 4, 6 mit komplementierter Fortsetzung, 3, 5, 7 ist mit Mark 3.
+#4 und R4 sind Fortsetzung von R3 mit ignorierter Markierung 3
