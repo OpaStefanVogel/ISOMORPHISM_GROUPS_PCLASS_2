@@ -433,7 +433,6 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
         RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
-        if STUFE=S then Add(ALLMENGS,RR); fi;
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         fi; od;
@@ -536,9 +535,20 @@ DisplayProfile();
 #neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
 #---------------------
 
-RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
+DOPPELSTAB2:=function(C) #beginnt mit D und mit neutralem Element
+  local C1,PHITAB;
+  #C:=COMPDIAGSTABERZ(D);
+  C1:=List(C); Remove(C1,1);
+  PHITAB:=STABMACH(LogInt(Size(C),2),C1);
+  PHITAB:=DOPPELSTAB(LogInt(Size(C),2)+1,PHITAB);
+  PHITAB:=List(PHITAB,i->PermList(Concatenation([1],List(ListPerm(i),j->j+1))));
+  return PHITAB;
+  end;
+
+RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA;
+  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
+  H1,H2,K1,K2,T1,T2,SY,SZ;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
@@ -548,24 +558,41 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   #C3:=COMPDIAGSTABERZ(D3);  
   S1:=Group(STABMACH2(C1));
   S2:=Group(STABMACH2(C2));
+  SX:=Intersection(S1,S2);
+  H1:=D1{[1..SD/2]};
+  H2:=D2{[1..SD/2]};
+  K1:=COMPDIAGSTABERZ(H1);
+  K2:=COMPDIAGSTABERZ(H2);
+  T1:=Group(DOPPELSTAB2(K1));
+  T2:=Group(DOPPELSTAB2(K2));
+  SY:=Intersection(T1,T2,S1);
+  SZ:=Group(Concatenation(MinimalGeneratingSet(SX),MinimalGeneratingSet(SY)));
+  return [SZ,SY,SX,C1,C2,K1,K2,T1,T2];
+  end;
+
+RR:=ERGS2[4][3]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
+ORB:=Orbit(RVAR[1],D,Permuted);
+RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
+ORB:=Orbit(RVAR[1],D,Permuted);
+#da muss (3,4)(5,6)(9,10)(15,16) rein
+
   #S3:=Group(STABMACH2(C3));
-  SX:=Intersection(S1,S2); #,S3);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
-    #Print(", VARIANTEN=",Size(VARIANTEN));
-    #for V in VARIANTEN do Print("\n",V.LRES); od;
+    Print("\nSTUFE=",STUFE);
+    Print(", VARIANTEN=",Size(VARIANTEN));
+    for V in VARIANTEN do Print("\n",V.LRES); od;
     NEUE_VARIANTEN:=[];
     RNEU:=[];
     for V in VARIANTEN do
       HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
-      MENGS:=[];MALPHA:=[];
+      MENGS:=[];MALPHA:=[];ALLMENGS:=[];
       for i in [2..SD] do if not IsBound(LD[i]) then
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
+        RR:=List(KRES,i->D[i]);#Error("\n",RR,KRES);
         if STUFE=S then Add(ALLMENGS,RR); fi;
         if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
@@ -582,6 +609,7 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
         VNEU.LRES:=Concatenation(LRES,LNEU);
         for j in LNEU do VNEU.LD[j]:=STUFE; od;
         VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
+        VNEU.ALLMENGS:=ALLMENGS;
         Add(NEUE_VARIANTEN,VNEU);        
         od;
       od;
@@ -590,14 +618,30 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
-    #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+    Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     od;
-  return [RMAX,VARIANTEN];
+  return [RMAX,VARIANTEN,ALLMENGS];
   end;
 
 
 
-RR:=ERGS2[4][2];
-R:=2*RR[1]+RR[2];
-D:=DIAG(R);
-RMAX:=RMAXSUCH(D);
+RR:=ERGS2[4][2]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RMAX:=RMAXVAR(D);
+
+R:=[[3],[3,3],[3,3,3],[3,3,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
+
+R:=[[3],[3,3],[3,3,3],[3,3,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[3,3,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[3,2,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,3,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
+
+R:=[[3],[3,3],[3,3,3],[3,3,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[3,2,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[3,2,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,3,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,3,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,2,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
+
+R:=[[3],[3,3],[3,3,3],[3,2,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,3,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,2,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
+R:=[[3],[3,3],[3,3,3],[2,2,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
