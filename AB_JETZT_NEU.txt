@@ -1,6 +1,6 @@
 #Read("AB_JETZT_NEU.txt"); #ab 20180709
 #aus ALLES_GEHT_MIT_STABILIZER_BESSER.txt nur die ersten 700 Zeilen
-
+#RMINSUCH, RMINVORSUCH, COMPDIAG7E, COMPDIAG6E entfernt, SCHNICK mit allen DDD
 
 
 SAGE:=true; #fuer if not SAGE then Print...
@@ -16,7 +16,9 @@ for i in [1..dmax] do
       XORMAT[j+n2][k+n2]:=XORMAT[j][k];
       XORMAT[j+n2][k]:=XORMAT[j][k]+n2;
       od; od; od;
+
 #---------#
+
 Diagonale:=function(G,flag)
   local HRES,i,j,D,DD,DDD,RET,RA,PC;
   RA:=RankPGroup(G);
@@ -49,149 +51,6 @@ Diagonale(SmallGroup(4,1),0);
 Diagonale(SmallGroup(8,2),0);
 Diagonale(SmallGroup(16,3),0);
 Diagonale(SmallGroup(256,55750),1);
-
-COMPDIAG6E:=function(dd,D,flag)#neu
-  local i,j,k,l,SD,ORBZU,MARK,NMARK,STUFE;
-  SD:=Size(D);
-  ORBZU:=[]; STUFE:=1;
-  ORBZU[STUFE]:=List(D);
-  ORBZU[STUFE][1]:=-1;
-  repeat
-    if flag=88 then Print("\n",ORBZU); fi;
-    Print("#",Size(Collected(ORBZU[STUFE])),"\c");
-    MARK:=[];
-    for i in [1..SD] do
-      MARK[i]:=[-1];
-      for j in [1..SD] do 
-        MARK[i][j]:=[
-          ORBZU[STUFE][i],
-          ORBZU[STUFE][j],
-          ORBZU[STUFE][XORMAT[j][i]]];
-        od;
-      MARK[i]:=Collected(MARK[i]{[1..SD]});
-      od;
-    STUFE:=STUFE+1;
-    ORBZU[STUFE]:=[];
-    for i in [1..SD] do for j in [i,i-1..1] do
-      if MARK[i]=MARK[j] and ORBZU[STUFE-1][i]=ORBZU[STUFE-1][j] then ORBZU[STUFE][i]:=j; fi; od; od;
-    until ORBZU[STUFE]=ORBZU[STUFE-1];  
-  return ORBZU[STUFE];
-  end;
-
-COMPDIAG7E:=function(D)
-  local i,j,SD,ORBZU,ORBZUMERK,MARK;
-  SD:=Size(D); ORBZU:=List(D);
-  repeat
-    MARK:=[];
-    for i in [1..SD] do
-      MARK[i]:=[];
-      for j in [1..SD] do MARK[i][j]:=[ORBZU[j],ORBZU[XORMAT[j][i]]]; od;
-      MARK[i]:=Collected(MARK[i]);
-      od;
-    ORBZUMERK:=ORBZU; ORBZU:=[1];
-    for i in [2..SD] do for j in [i,i-1..2] do
-      if MARK[i]=MARK[j] and ORBZUMERK[i]=ORBZUMERK[j] then ORBZU[i]:=j; fi; od; od;
-    until ORBZU=ORBZUMERK;  
-  return ORBZU;
-  end;
-
-RMINVORTEST:=function(D)
-  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,LD,ORBZU,ORBS,ONEU;
-  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
-  ORBZU:=COMPDIAG6E(S,D,0);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1])];
-  for STUFE in [1..S] do
-    NEUE_VARIANTEN:=[];
-    RNEU:=[9999];
-    for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
-      ORBS:=[];
-      for i in [2..SD] do if not IsBound(LD[i]) then
-        RR:=[D[i]];
-        for j in HRES do Add(RR,D[XORMAT[i][j]]); od;
-        if RR<RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;
-        if RR=RNEU then
-          LNEU:=List(LRES,j->XORMAT[i][j]);
-          ONEU:=List(LNEU,j->ORBZU[j]);
-          if not (ONEU in ORBS) then
-            Add(ORBS,ONEU);
-            VNEU:=StructuralCopy(V);
-            Add(VNEU.HRES,i);
-            VNEU.LRES:=Concatenation(LRES,LNEU);
-            for i in LNEU do VNEU.LD[i]:=STUFE; od;
-            Add(NEUE_VARIANTEN,VNEU);
-            fi;
-          fi;
-        fi; od;
-      od;
-    VARIANTEN:=NEUE_VARIANTEN;
-    Add(RMIN,RNEU);
-    od;
-  return [RMIN,VARIANTEN];
-  end;
-
-ALPHA:=[0];#global weil von DNEU veraendert
-BETA:=[0];
-
-DNEU:=function(d)
-  local dneu,i;
-  if not IsBound(ALPHA[d+1]) then
-    dneu:=Size(BETA);
-    for i in [dneu,dneu-1..1] do Add(BETA,XORMAT[d+1][BETA[i]+1]-1); od;
-    for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
-    fi;
-  dneu:=ALPHA[d+1];
-  return dneu;
-  end;
-
-#DNEU(2);ALPHA;BETA;
-#DNEU(7);ALPHA;BETA;
-#DNEU(6);ALPHA;BETA;
-
-RMINSUCH:=function(D)
-  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMIN,RNEU,
-  HRES,KRES,LD,ORBZU,ORBS,ONEU;
-  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMIN:=[];
-  #ORBZU:=COMPDIAG6E(S,D,0);
-  ORBZU:=COMPDIAG7E(D);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0])];
-  for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
-    NEUE_VARIANTEN:=[];
-    RNEU:=[0];
-    for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;
-      ORBS:=[];
-      for i in [2..SD] do if not IsBound(LD[i]) then
-        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
-        KRES:=[i];
-        for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->DNEU(D[i]));
-        if RR>RNEU then NEUE_VARIANTEN:=[]; RNEU:=RR; fi;#max geht schneller als min
-        if RR=RNEU then
-          LNEU:=List(LRES,j->XORMAT[i][j]);
-          ONEU:=List(LNEU,j->ORBZU[j]);#Print("O");
-          if not (ONEU in ORBS) then
-            Add(ORBS,ONEU);
-            VNEU:=StructuralCopy(V);
-            Add(VNEU.HRES,i);
-            VNEU.LRES:=Concatenation(LRES,LNEU);
-            for i in LNEU do VNEU.LD[i]:=STUFE; od;
-            VNEU.ALPHA:=ALPHA; VNEU.BETA:=List(BETA);
-            Add(NEUE_VARIANTEN,VNEU);
-            fi;
-          #Print("P");
-          fi;
-        fi; od;
-      od;
-    VARIANTEN:=NEUE_VARIANTEN;
-    Add(RMIN,RNEU);
-    #Print(", VARIANTEN=",Size(VARIANTEN));
-    od;
-  return [RMIN,VARIANTEN];
-  end;
-
 
 #---------#
 
@@ -420,7 +279,7 @@ Size(Group(STAB));#6 laut 4788 und 4752R
 
 COMPDIAGSTABERZ:=function(D)#aus COMPDIAG4 mit geaendertem RETURN
   #global JKLLISTE;
-  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,RET2,reti,SD,DD;
+  local RET,i,j,k,l,jkl,jkli,dj,dk,dl,SD,DD;
   SD:=Size(D);DD:=[];
   for i in [1..SD] do DD[i]:=D[i]+2; od;
   for jkli in [1..(SD-1)*(SD-2)/6] do
@@ -530,6 +389,9 @@ RVOND4:=function(D) # erwartet neutrales Element mit
   return R;
   end;
 
+ALPHA:=[0];#global weil von DNEU veraendert
+BETA:=[0];
+
 DGANZNEU:=function(d) #
   local dneu,i;
   if not IsBound(ALPHA[d+1]) then
@@ -599,53 +461,28 @@ RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   return [RMAX,VARIANTEN];
   end;
 
-SCHNICK:=function(R1,R2)#alle Fortsetzungen von R1 konstant und R2 ergaenzt
+SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #global COMPDIAGSTABERZ,STABMACH,DOPPELSTAB,HMACH,RKVOND;
   local D1,D2,DD,DDD,S0,S1,S2,SD,SD1,SD2,H,K,t,ORBS,dd;
   dd:=Size(R1);
-  D1:=DIAG(R1);
-  D2:=DIAG(R2);
-  #folgendes aus S:=STABAUSD4(dd-1,D);
-  D1:=COMPDIAGSTABERZ(D1);Remove(D1,1);
-  S1:=STABMACH(dd,D1);
-  D2:=COMPDIAGSTABERZ(D2);Remove(D2,1);
-  S2:=STABMACH(dd-1,D2);
-  if not SAGE then Print("\nDOPPELSTAB S2: \c"); t:=Runtime(); fi;
-  SD2:=DOPPELSTAB(dd,S2);
-  if not SAGE then Print(Runtime()-t); fi;
-  if not SAGE then Print("\nHMACH: \c"); t:=Runtime(); fi;
-  H:=HMACH(dd);
-  if not SAGE then Print(Runtime()-t); fi;
-  if not SAGE then Print("\nConcatenation(SD2,H): \c"); t:=Runtime(); fi;
-  K:=Group(Concatenation(SD2,H));
-  if not SAGE then Print(Runtime()-t); fi;
-  if not SAGE then Print("\nIntersection(S1,K): \c"); t:=Runtime(); fi;
-  K:=Intersection(Group(S1),K);
-  if not SAGE then Print(Runtime()-t); fi;
   DD:=Tuples([0..1],dd);;#Print(Size(DD));
   DDD:=[];
   for i in [1..2^dd] do
     DDD[i]:=DIAG(Concatenation(R2,[DD[i]])){[2..2^dd]};
     od;
-  ORBS:=OrbitsDomain(K,DDD,Permuted);;#Print(Size(ORBS));
-  #Print(List(ORBS,i->Size(i)));Print("\c");
-  #List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,2*D1+i[1]))));
-  #Print(Collected(List(ORBS,i->IdSmallGroup(PcgsOfR(RVOND(dd,2*D1+i[1]))))));
-  if not SAGE then Print("\nvon Size(DDD)=",Size(DDD)," auf Size(ORBS)=",Size(ORBS)); fi;
-  return Reversed(SortedList(List(ORBS,i->RKVOND(dd,Maximum(i)))));
+  return Reversed(List(DDD,i->RKVOND(dd,i)));
   end;
 
 ERGS2:=[];
 GESAMTDILIST:=[];
-SCHNACK:=function(dd,CMPD)
-  local jj,R,R1,R1R2,TEILDILIST,ORBI,ORB,ID,ts,ZM,rr;
+SCHNACK:=function(dd,RMAXSUCH)
+  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD;
   if not SAGE then Exec("date"); fi;
   ts:=Runtime(); ZM:=0;
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for rr in [1..Size(ERGS1[dd])] do
     R1:=Reversed(ERGS1[dd])[rr];
     if not SAGE then Print("\n***R1=",R1); fi;
-    TEILDILIST:=[];
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
       if not SAGE then Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n"); fi;
       ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
@@ -655,16 +492,14 @@ SCHNACK:=function(dd,CMPD)
       for ORB in ORBI do
         R:=2*R1+ORB;
         D:=DIAG(R);
-        #a#Remove(D,1);
-        #a#RV:=RVOND(dd,D);
-        #a#ID:=IdSmallGroup(PcgsOfR(RV));
-        ID:=CMPD(dd,D,false);
+        #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
         #a#Print(" ",ID,"\c");
-        if not ID in GESAMTDILIST[dd] then
-        #if DIAG(ID)=D then
-          #if DIAG(ID)<>D then Print("\n",ID,"\n",RVOND4(D),"\n"); fi;
+        RMAX:=RMAXSUCH(D)[1];
+        if not RMAX in GESAMTDILIST[dd] then
+        #if DIAG(RMAX)=D then
+          #if DIAG(MAX)<>D then Print("\n",RMAX,"\n",RVOND4(D),"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
-          Add(GESAMTDILIST[dd],ID);
+          Add(GESAMTDILIST[dd],RMAX);
           if not SAGE then Print("*\c"); fi;
           else if not SAGE then Print(".\c"); fi; fi;
         od;
@@ -677,8 +512,6 @@ SCHNACK:=function(dd,CMPD)
 
 
 
-COMPDIAG5RS:=function(dd,D,flag) return RMAXSUCH(D)[1]; end;
-
 ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy);
 
 #-----------
@@ -687,13 +520,13 @@ KANTENZUEGE(10);
 ERGS2:=[[[[[1]],[[1]]]]];
 GESAMTDILIST:=[[[[3]]]];
 ClearProfile();ZM:=0;
-SCHNACK(2,COMPDIAG5RS);#16#6
-SCHNACK(3,COMPDIAG5RS);#32#19
-SCHNACK(4,COMPDIAG5RS);#64#60
-#SCHNACK(5,COMPDIAG5RS);#128#158
-#SCHNACK(6,COMPDIAG5RS);#256#442
-#SCHNACK(7,COMPDIAG5RS);#512#1122
-#SCHNACK(8,COMPDIAG5RS);#1024#2945
+SCHNACK(2,RMAXSUCH);#16#6
+SCHNACK(3,RMAXSUCH);#32#19
+SCHNACK(4,RMAXSUCH);#64#60
+#SCHNACK(5,RMAXSUCH);#128#158
+#SCHNACK(6,RMAXSUCH);#256#442
+#SCHNACK(7,RMAXSUCH);#512#1122
+#SCHNACK(8,RMAXSUCH);#1024#2945
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
 
