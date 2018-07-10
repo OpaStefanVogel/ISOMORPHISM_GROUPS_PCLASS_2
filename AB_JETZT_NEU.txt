@@ -1,7 +1,7 @@
 #Read("AB_JETZT_NEU.txt"); #ab 20180709
 #aus ALLES_GEHT_MIT_STABILIZER_BESSER.txt nur die ersten 700 Zeilen
 #RMINSUCH, RMINVORSUCH, COMPDIAG7E, COMPDIAG6E entfernt, SCHNICK mit allen DDD
-
+#DGANZNEU war auf 8-dneu eingestellt. Dazu auch C3 wieder mit reinmachen.
 
 SAGE:=true; #fuer if not SAGE then Print...
 dmax:=10; #dmax:=12;
@@ -400,23 +400,23 @@ DGANZNEU:=function(d) #
     for i in [1..dneu] do ALPHA[BETA[dneu+i]+1]:=dneu+i-1; od;
     fi;
   dneu:=ALPHA[d+1];
-  if dneu=0 then return 0; else return 8-dneu; fi;
+  if dneu=0 then return 0; else return 4-dneu; fi; # auch 8-dneu
   end;
 
 RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
   HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
-  D3:=List(D,i->Int(i/4));
+  #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
   D2:=List(D,i->i mod 2);
   C1:=COMPDIAGSTABERZ(D1);
   C2:=COMPDIAGSTABERZ(D2);
-  C3:=COMPDIAGSTABERZ(D3);  
+  #C3:=COMPDIAGSTABERZ(D3);  
   S1:=Group(STABMACH2(C1));
   S2:=Group(STABMACH2(C2));
-  S3:=Group(STABMACH2(C3));
-  SX:=Intersection(S1,S2,S3);
+  #S3:=Group(STABMACH2(C3));
+  SX:=Intersection(S1,S2); #,S3);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
@@ -482,9 +482,9 @@ SCHNACK:=function(dd,RMAXSUCH)
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for rr in [1..Size(ERGS1[dd])] do
     R1:=Reversed(ERGS1[dd])[rr];
-    if not SAGE then Print("\n***R1=",R1); fi;
+    if not SAGE then Print("\n\n*********R1=",R1,"**********"); fi;
     for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
-      if not SAGE then Print("\n...R1,R1R2=\n",R1,"\n",R1R2,"\n"); fi;
+      if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
       ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
       #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
       if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
@@ -500,8 +500,8 @@ SCHNACK:=function(dd,RMAXSUCH)
           #if DIAG(MAX)<>D then Print("\n",RMAX,"\n",RVOND4(D),"\n"); fi;
           Add(ERGS2[dd],[R1,ORB]); 
           Add(GESAMTDILIST[dd],RMAX);
-          if not SAGE then Print("*\c"); fi;
-          else if not SAGE then Print(".\c"); fi; fi;
+          if not SAGE then Print("*",Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
+          else if not SAGE then Print(".",Position(GESAMTDILIST[dd],RMAX),"\c"); fi; fi;
         od;
       fi; od;
     od;
@@ -530,3 +530,13 @@ SCHNACK(4,RMAXSUCH);#64#60
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
 
+
+#---------------------
+#neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
+#---------------------
+
+
+RR:=ERGS2[4][1];
+R:=2*RR[1]+RR[2];
+D:=DIAG(R);
+RMAX:=RMAXSUCH(D);
