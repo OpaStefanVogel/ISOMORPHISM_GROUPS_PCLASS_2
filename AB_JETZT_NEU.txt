@@ -563,9 +563,26 @@ RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   return FORB;
   end;
 
+BITVERGLEICHER:=function(D)
+  local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET;
+  D1:=List(D,i->Int(i/2));
+  D2:=List(D,i->i mod 2);
+  D3:=(D1+D2) mod 2;
+  R1:=RMAXSUCH(D1)[1];
+  R2:=RMAXSUCH(D2)[1];
+  R3:=RMAXSUCH(D3)[1];
+  #P1:=Position(ERG1,R1/3);
+  #P2:=Position(ERG1,R2/3); if P2=fail then P2:=0; fi;
+  #P3:=Position(ERG1,R3/3); if P3=fail then P3:=0; fi;
+  RET:=[R1,R2,R3];
+  return RET;
+  end;
+
+BITVERGLEICHER(D);
+
 UMTAUSCHLISTE:=[];
 SCHNACK:=function(dd,RMAXSUCH)
-  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV;
+  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR;
   if not SAGE then Exec("date"); fi;
   ts:=Runtime(); ZM:=0; UMTAUSCHLISTE:=[];
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
@@ -584,8 +601,10 @@ SCHNACK:=function(dd,RMAXSUCH)
         D:=DIAG(R);
         #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
         #a#Print(" ",ID,"\c");
-        RMAX:=RMAXSUCH(D)[1];
         RVAR:=RMAXVAR(D);
+        BVAR:=BITVERGLEICHER(D);
+    if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
+        RMAX:=RMAXSUCH(D)[1];
         RVARLIST:=Concatenation(RVARLIST,RVAR);
         #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
         if not RMAX in GESAMTDILIST[dd] then
@@ -597,6 +616,7 @@ SCHNACK:=function(dd,RMAXSUCH)
           else if not SAGE then Print("."); fi; fi;
         if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
         Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
+      fi;
         fi; od;
       fi; od;
     od;
@@ -648,7 +668,7 @@ ORB:=Orbit(RVAR[1],D,Permuted);
 Remove(D,1);
 STAB:=STABERZ([8..15],[1,2,4],[],D);
 #nach S1 statt SX geht ERGS2[4][4] bis ERGS2[4][12] richtig:
-RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
+RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D); BITVERGLEICHER(D);
 ORB:=Orbit(RVAR[1],D,Permuted);
 FORB:=Filtered(ORB,i->(i{[1..8]}=ORB[1]{[1..8]}));
 
