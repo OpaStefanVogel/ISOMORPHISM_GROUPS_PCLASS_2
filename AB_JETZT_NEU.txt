@@ -563,18 +563,34 @@ RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   return FORB;
   end;
 
+ERGS1CMP:=[];
+for i in [1..dmax] do
+  ERGS1CMP[i]:=[];
+  for j in [1..Size(ERGS1[i])] do
+    ERGS1CMP[i][j]:=Collected(COMPDIAGSTABERZ(DIAG(ERGS1[i][j])));
+    od;
+  od;
+
+
 BITVERGLEICHER:=function(D)
-  local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET;
+  local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET,C1,C2,C3,dd;
+  dd:=LogInt(Size(D),2);
   D1:=List(D,i->Int(i/2));
   D2:=List(D,i->i mod 2);
   D3:=(D1+D2) mod 2;
-  R1:=RMAXSUCH(D1)[1];
-  R2:=RMAXSUCH(D2)[1];
-  R3:=RMAXSUCH(D3)[1];
+  C1:=Collected(COMPDIAGSTABERZ(D1));
+  C2:=Collected(COMPDIAGSTABERZ(D2));
+  C3:=Collected(COMPDIAGSTABERZ(D3));
+  P1:=Position(ERGS1CMP[dd],C1);
+  P2:=Position(ERGS1CMP[dd],C2); if P2=fail then P2:=0; fi;
+  P3:=Position(ERGS1CMP[dd],C3); if P3=fail then P3:=0; fi;
+  #R1:=RMAXSUCH(D1)[1];
+  #R2:=RMAXSUCH(D2)[1];
+  #R3:=RMAXSUCH(D3)[1];
   #P1:=Position(ERG1,R1/3);
   #P2:=Position(ERG1,R2/3); if P2=fail then P2:=0; fi;
   #P3:=Position(ERG1,R3/3); if P3=fail then P3:=0; fi;
-  RET:=[R1,R2,R3];
+  RET:=[P1,P2,P3];
   return RET;
   end;
 
