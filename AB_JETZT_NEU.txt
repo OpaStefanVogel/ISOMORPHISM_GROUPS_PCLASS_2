@@ -566,8 +566,8 @@ RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   T1:=Group(DOPPELSTAB2(K1));
   T2:=Group(DOPPELSTAB2(K2));
   SY:=Intersection(T1,T2,S1);
-  SZ:=Group(Concatenation(MinimalGeneratingSet(SX),MinimalGeneratingSet(SY)));
-  return [SZ,SY,SX,C1,C2,K1,K2,T1,T2];
+  SZ:=Group(Concatenation(SmallGeneratingSet(S1),SmallGeneratingSet(SY)));
+  return [SZ,SY,SX,S1,C1,C2,K1,K2,T1,T2];
   end;
 
 RR:=ERGS2[4][3]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
@@ -575,6 +575,13 @@ ORB:=Orbit(RVAR[1],D,Permuted);
 RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
 ORB:=Orbit(RVAR[1],D,Permuted);
 #da muss (3,4)(5,6)(9,10)(15,16) rein
+Remove(D,1);
+STAB:=STABERZ([8..15],[1,2,4],[],D);
+#nach S1 statt SX geht ERGS2[4][4] bis ERGS2[4][12] richtig:
+RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
+ORB:=Orbit(RVAR[1],D,Permuted);
+FORB:=Filtered(ORB,i->(i{[1..8]}=ORB[1]{[1..8]}));
+
 
   #S3:=Group(STABMACH2(C3));
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
