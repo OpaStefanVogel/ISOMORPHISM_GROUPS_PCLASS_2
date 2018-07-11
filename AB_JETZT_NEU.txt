@@ -617,10 +617,10 @@ SCHNACK:=function(dd,RMAXSUCH)
         D:=DIAG(R);
         #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
         #a#Print(" ",ID,"\c");
-        RVAR:=RMAXVAR(D);
         BVAR:=BITVERGLEICHER(D);
     if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
         RMAX:=RMAXSUCH(D)[1];
+        RVAR:=RMAXVAR(D);
         RVARLIST:=Concatenation(RVARLIST,RVAR);
         #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
         if not RMAX in GESAMTDILIST[dd] then
@@ -655,7 +655,7 @@ ClearProfile();ZM:=0;
 SCHNACK(2,RMAXSUCH);#16#6
 SCHNACK(3,RMAXSUCH);#32#19
 SCHNACK(4,RMAXSUCH);#64#60
-#SCHNACK(5,RMAXSUCH);#128#158
+#SCHNACK(5,RMAXSUCH);#128#158#239
 #SCHNACK(6,RMAXSUCH);#256#442
 #SCHNACK(7,RMAXSUCH);#512#1122
 #SCHNACK(8,RMAXSUCH);#1024#2945
