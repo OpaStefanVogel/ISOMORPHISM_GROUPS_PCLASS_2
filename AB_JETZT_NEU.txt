@@ -378,6 +378,7 @@ STABMACH2:=function(C) #beginnt mit D und mit neutralem Element
   #C:=COMPDIAGSTABERZ(D);
   C1:=List(C); Remove(C1,1);
   PHITAB:=STABMACH(LogInt(Size(C),2),C1);
+  #PHITAB:=DOPPELSTAB(LogInt(Size(C),2)+1,PHITAB); #fuer DOPPELSTAB2
   PHITAB:=List(PHITAB,i->PermList(Concatenation([1],List(ListPerm(i),j->j+1))));
   return PHITAB;
   end;
@@ -473,83 +474,15 @@ SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
   return Reversed(List(DDD,i->RKVOND(dd,i)));
   end;
 
-ERGS2:=[];
-GESAMTDILIST:=[];
-SCHNACK:=function(dd,RMAXSUCH)
-  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD;
-  if not SAGE then Exec("date"); fi;
-  ts:=Runtime(); ZM:=0;
-  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
-  for rr in [1..Size(ERGS1[dd])] do
-    R1:=Reversed(ERGS1[dd])[rr];
-    if not SAGE then Print("\n\n*********R1=",R1,"**********"); fi;
-    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
-      if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
-      ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
-      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
-      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
-      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
-      for ORB in ORBI do
-        R:=2*R1+ORB;
-        D:=DIAG(R);
-        #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
-        #a#Print(" ",ID,"\c");
-        RMAX:=RMAXSUCH(D)[1];
-        if not RMAX in GESAMTDILIST[dd] then
-        #if DIAG(RMAX)=D then
-          #if DIAG(MAX)<>D then Print("\n",RMAX,"\n",RVOND4(D),"\n"); fi;
-          Add(ERGS2[dd],[R1,ORB]); 
-          Add(GESAMTDILIST[dd],RMAX);
-          if not SAGE then Print("*",Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
-          else if not SAGE then Print(".",Position(GESAMTDILIST[dd],RMAX),"\c"); fi; fi;
-        od;
-      fi; od;
-    od;
-  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
-  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
-  if not SAGE then Exec("date"); fi;
-  end;
-
-
-
-ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy);
-
-#-----------
-KANTENZUEGE(10);
-#ERGS1[4];
-ERGS2:=[[[[[1]],[[1]]]]];
-GESAMTDILIST:=[[[[3]]]];
-ClearProfile();ZM:=0;
-SCHNACK(2,RMAXSUCH);#16#6
-SCHNACK(3,RMAXSUCH);#32#19
-SCHNACK(4,RMAXSUCH);#64#60
-#SCHNACK(5,RMAXSUCH);#128#158
-#SCHNACK(6,RMAXSUCH);#256#442
-#SCHNACK(7,RMAXSUCH);#512#1122
-#SCHNACK(8,RMAXSUCH);#1024#2945
-DisplayProfile();
-#dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
-
-
 #---------------------
 #neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
 #---------------------
 
-DOPPELSTAB2:=function(C) #beginnt mit D und mit neutralem Element
-  local C1,PHITAB;
-  #C:=COMPDIAGSTABERZ(D);
-  C1:=List(C); Remove(C1,1);
-  PHITAB:=STABMACH(LogInt(Size(C),2),C1);
-  PHITAB:=DOPPELSTAB(LogInt(Size(C),2)+1,PHITAB);
-  PHITAB:=List(PHITAB,i->PermList(Concatenation([1],List(ListPerm(i),j->j+1))));
-  return PHITAB;
-  end;
-
 RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
-  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
+  local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
+  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
   H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB;
-  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
+  SD:=Size(D); S:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
   D2:=List(D,i->i mod 2);
@@ -563,14 +496,18 @@ RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   return FORB;
   end;
 
+#RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D); BITVERGLEICHER(D);
+#ORB:=Orbit(RVAR[1],D,Permuted);
+#FORB:=Filtered(ORB,i->(i{[1..8]}=ORB[1]{[1..8]}));
+
+
 ERGS1CMP:=[];
 for i in [1..dmax] do
   ERGS1CMP[i]:=[];
   for j in [1..Size(ERGS1[i])] do
     ERGS1CMP[i][j]:=Collected(COMPDIAGSTABERZ(DIAG(ERGS1[i][j])));
     od;
-  od;
-
+  od; # nicht wundern wenn es hier etwas dauert
 
 BITVERGLEICHER:=function(D)
   local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET,C1,C2,C3,dd;
@@ -584,18 +521,14 @@ BITVERGLEICHER:=function(D)
   P1:=Position(ERGS1CMP[dd],C1);
   P2:=Position(ERGS1CMP[dd],C2); if P2=fail then P2:=0; fi;
   P3:=Position(ERGS1CMP[dd],C3); if P3=fail then P3:=0; fi;
-  #R1:=RMAXSUCH(D1)[1];
-  #R2:=RMAXSUCH(D2)[1];
-  #R3:=RMAXSUCH(D3)[1];
-  #P1:=Position(ERG1,R1/3);
-  #P2:=Position(ERG1,R2/3); if P2=fail then P2:=0; fi;
-  #P3:=Position(ERG1,R3/3); if P3=fail then P3:=0; fi;
   RET:=[P1,P2,P3];
   return RET;
   end;
 
-BITVERGLEICHER(D);
+#BITVERGLEICHER(D);
 
+ERGS2:=[];
+GESAMTDILIST:=[];
 UMTAUSCHLISTE:=[];
 SCHNACK:=function(dd,RMAXSUCH)
   local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR;
@@ -621,7 +554,7 @@ SCHNACK:=function(dd,RMAXSUCH)
     if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
         RMAX:=RMAXSUCH(D)[1];
         RVAR:=RMAXVAR(D);
-        RVARLIST:=Concatenation(RVARLIST,RVAR);
+        RVARLIST:=Union(RVARLIST,RVAR);
         #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
         if not RMAX in GESAMTDILIST[dd] then
         #if DIAG(RMAX)=D then
@@ -632,7 +565,7 @@ SCHNACK:=function(dd,RMAXSUCH)
           else if not SAGE then Print("."); fi; fi;
         if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
         Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
-      fi;
+      else Print(".\c"); fi;
         fi; od;
       fi; od;
     od;
@@ -644,7 +577,7 @@ SCHNACK:=function(dd,RMAXSUCH)
 
 
 
-ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy,BITVERGLEICHER,Orbit);
 
 #-----------
 KANTENZUEGE(10);
@@ -661,100 +594,123 @@ SCHNACK(4,RMAXSUCH);#64#60
 #SCHNACK(8,RMAXSUCH);#1024#2945
 DisplayProfile();
 #dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
-  
-  
-  S2:=Group(STABMACH2(C2));
-  SX:=Intersection(S1,S2);
-  H1:=D1{[1..SD/2]};
-  H2:=D2{[1..SD/2]};
-  K1:=COMPDIAGSTABERZ(H1);
-  K2:=COMPDIAGSTABERZ(H2);
-  T1:=Group(DOPPELSTAB2(K1));
-  T2:=Group(DOPPELSTAB2(K2));
-  SY:=Intersection(T1,T2,S1);
-  SZ:=Group(Concatenation(SmallGeneratingSet(S1),SmallGeneratingSet(SY)));
-  return [SZ,SY,SX,S1,C1,C2,K1,K2,T1,T2];
-  end;
 
-RR:=ERGS2[4][3]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
-ORB:=Orbit(RVAR[1],D,Permuted);
-RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D);
-ORB:=Orbit(RVAR[1],D,Permuted);
-#da muss (3,4)(5,6)(9,10)(15,16) rein
-Remove(D,1);
-STAB:=STABERZ([8..15],[1,2,4],[],D);
-#nach S1 statt SX geht ERGS2[4][4] bis ERGS2[4][12] richtig:
-RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RVAR:=RMAXVAR(D); BITVERGLEICHER(D);
-ORB:=Orbit(RVAR[1],D,Permuted);
-FORB:=Filtered(ORB,i->(i{[1..8]}=ORB[1]{[1..8]}));
+#--mit RMAXVAR RMAX bestimmen
 
-
-  #S3:=Group(STABMACH2(C3));
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
-  #Print("\nSX=",List(SX));
-  for STUFE in [1..S] do 
-    Print("\nSTUFE=",STUFE);
-    Print(", VARIANTEN=",Size(VARIANTEN));
-    for V in VARIANTEN do Print("\n",V.LRES); od;
-    NEUE_VARIANTEN:=[];
-    RNEU:=[];
-    for V in VARIANTEN do
-      HRES:=V.HRES;LRES:=V.LRES;LD:=V.LD;SX:=V.SX;
-      MENGS:=[];MALPHA:=[];ALLMENGS:=[];
-      for i in [2..SD] do if not IsBound(LD[i]) then
-        ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
-        KRES:=[i];
-        for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        RR:=List(KRES,i->D[i]);#Error("\n",RR,KRES);
-        if STUFE=S then Add(ALLMENGS,RR); fi;
-        if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
-        if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
-        fi; od;
-      #Print("\nMENGS=",MENGS,Size(MENGS));
-      GOINGS:=Orbits(SX,MENGS);
-      #Print("\nGOINGS=",GOINGS);
-      BOINGS:=List(GOINGS,i->i[1]);
-      #Print("\nBOINGS=",BOINGS);
-      for i in BOINGS do
-        VNEU:=StructuralCopy(V);
-        Add(VNEU.HRES,i);
-        LNEU:=List(LRES,j->XORMAT[i][j]);
-        VNEU.LRES:=Concatenation(LRES,LNEU);
-        for j in LNEU do VNEU.LD[j]:=STUFE; od;
-        VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
-        VNEU.ALLMENGS:=ALLMENGS;
-        Add(NEUE_VARIANTEN,VNEU);        
-        od;
-      od;
-    Add(RMAX,RNEU);
-    for V in NEUE_VARIANTEN do
-      V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
-      od;
-    VARIANTEN:=NEUE_VARIANTEN;
-    Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
+RMAXVAR2:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
+  local SD,S,STUFE,D1,D2,D3,C1,C2,C3,CI,S1,ORB,FORB;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0;
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  ORB:=Orbit(S1,D2,Permuted);
+  for CI in ORB do Print("\n",CI,RMAXSUCH(2*D1+CI)[1]); od;
+  ORB:=Orbit(S1,C2,Permuted);
+  #FORB:=Filtered(ORB,i->(i{[1..SD/2]}=D2{[1..SD/2]}));
+  #FORB:=List(FORB,i->i{[SD/2+1..SD]});
+  for CI in ORB do
+    if CI=COMPDIAGSTABERZ(List(CI,i->i mod 2)) then Print("#"); else Error("."); fi;
     od;
-  return [RMAX,VARIANTEN,ALLMENGS];
+  return ORB;
+  end;
+
+RMAXVAR3:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
+  local SD,S,STUFE,D1,D2,D3,C1,C2,C3,CI,S1,ORB,FORB;
+  SD:=Size(D); S:=LogInt(SD,2); STUFE:=0;
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  #C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  ORB:=Orbit(S1,D2,Permuted);
+  return Maximum(2*D1+ORB);
+  end;
+
+RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG(R); BITVERGLEICHER(D); RVAR:=RMAXVAR3(D);
+
+R:=[[3],[3,2]]; D:=DIAG(R); BITVERGLEICHER(D); RVAR:=RMAXVAR3(D);
+
+dd:=4; for i in [1..Size(ERGS2[dd])] do 
+  RR:=ERGS2[dd][i]; 
+  R:=2*RR[1]+RR[2]; 
+  Print("\n",i,R);
+  D:=DIAG(R); 
+  Print(" ",BITVERGLEICHER(D)); 
+  RVAR:=RMAXVAR2(D);
+  od;
+
+ERGS2:=[];
+GESAMTDILIST:=[];
+UMTAUSCHLISTE:=[];
+SCHNACK:=function(dd,RMAXSUCH)
+  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR;
+  if not SAGE then Exec("date"); fi;
+  ts:=Runtime(); ZM:=0; UMTAUSCHLISTE:=[];
+  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+  for rr in [1..Size(ERGS1[dd])] do
+    R1:=Reversed(ERGS1[dd])[rr];
+    if not SAGE then Print("\n\n*********R1=",R1,"**********"); fi;
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
+      if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
+      ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
+      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
+      RVARLIST:=[];
+      for ORB in ORBI do DV:=DIAG(ORB); if not (DV{[Size(DV)/2+1..Size(DV)]} in RVARLIST) then
+        R:=2*R1+ORB;
+        D:=DIAG(R);
+        #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
+        #a#Print(" ",ID,"\c");
+        BVAR:=BITVERGLEICHER(D);
+    if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
+        #RMAX:=RMAXSUCH(D)[1];
+        RVAR:=RMAXVAR(D);
+        RVARLIST:=Union(RVARLIST,RVAR);
+        #RMAXVAR2(D);
+        #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
+        if RMAXVAR3(D)=D then RMAX:=RMAXSUCH(D)[1]; if not RMAX in GESAMTDILIST[dd] then
+        #if DIAG(RMAX)=D then
+          #if DIAG(MAX)<>D then Print("\n",RMAX,"\n",RVOND4(D),"\n"); fi;
+          Add(ERGS2[dd],[R1,ORB]); 
+          Add(GESAMTDILIST[dd],RMAX);
+          if not SAGE then Print("*"); fi;
+          else if not SAGE then Print("."); fi; fi;
+        if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
+        Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
+      fi;
+      else Print(".\c"); fi;
+        fi; od;
+      fi; od;
+    od;
+  Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
+  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
+  if not SAGE then Exec("date"); fi;
   end;
 
 
 
-RR:=ERGS2[4][2]; R:=2*RR[1]+RR[2]; D:=DIAG(R); RMAX:=RMAXVAR(D);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy,BITVERGLEICHER,Orbit);
 
-R:=[[3],[3,3],[3,3,3],[3,3,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
-
-R:=[[3],[3,3],[3,3,3],[3,3,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[3,3,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[3,2,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,3,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
-
-R:=[[3],[3,3],[3,3,3],[3,3,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[3,2,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[3,2,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,3,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,3,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,2,3,3]]; RMAX:=RMAXSUCH(DIAG(R));
-
-R:=[[3],[3,3],[3,3,3],[3,2,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,3,2,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,2,3,2]]; RMAX:=RMAXSUCH(DIAG(R));
-R:=[[3],[3,3],[3,3,3],[2,2,2,3]]; RMAX:=RMAXSUCH(DIAG(R));
+#-----------
+KANTENZUEGE(10);
+#ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+GESAMTDILIST:=[[[[3]]]];
+ClearProfile();ZM:=0;
+SCHNACK(2,RMAXSUCH);#16#6
+SCHNACK(3,RMAXSUCH);#32#19
+SCHNACK(4,RMAXSUCH);#64#60
+#SCHNACK(5,RMAXSUCH);#128#158#178
+#SCHNACK(6,RMAXSUCH);#256#442
+#SCHNACK(7,RMAXSUCH);#512#1122
+#SCHNACK(8,RMAXSUCH);#1024#2945
+DisplayProfile();
+#dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
