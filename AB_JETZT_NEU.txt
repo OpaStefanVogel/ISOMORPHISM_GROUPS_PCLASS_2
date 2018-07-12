@@ -538,38 +538,42 @@ SCHNACK:=function(dd,RMAXSUCH)
   for rr in [1..Size(ERGS1[dd])] do
     R1:=Reversed(ERGS1[dd])[rr];
     if not SAGE then Print("\n\n*********R1=",R1,"**********"); fi;
-    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; if R1{[1..dd-1]}=R1R2[1] then
-      if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
-      ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
-      #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
-      if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
-      if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
-      RVARLIST:=[];
-      for ORB in ORBI do DV:=DIAG(ORB); if not (DV{[Size(DV)/2+1..Size(DV)]} in RVARLIST) then
-        R:=2*R1+ORB;
-        D:=DIAG(R);
-        #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
-        #a#Print(" ",ID,"\c");
-        BVAR:=BITVERGLEICHER(D);
-    if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
-        #RMAX:=RMAXSUCH(D)[1];
-        RVAR:=RMAXVAR(D);
-        RVARLIST:=Union(RVARLIST,RVAR[2]);
-        #RMAXVAR2(D);
-        #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
-        if RVAR[1]=D then RMAX:=RMAXSUCH(D)[1]; if not RMAX in GESAMTDILIST[dd] then
-        #if DIAG(RMAX)=D then
-          #if DIAG(MAX)<>D then Print("\n",RMAX,"\n",RVOND4(D),"\n"); fi;
-          Add(ERGS2[dd],[R1,ORB]); 
-          Add(GESAMTDILIST[dd],RMAX);
-          if not SAGE then Print("*"); fi;
-          else if not SAGE then Print("."); fi; fi;
-        if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
-        Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
-      fi;
-      else Print(".\c"); fi;
-        fi; od;
-      fi; od;
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; 
+      if R1{[1..dd-1]}=R1R2[1] then
+        if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
+        ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
+        #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+        if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+        if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),"\n"); fi;
+        RVARLIST:=[];
+        for ORB in ORBI do DV:=DIAG(ORB);
+          if not (DV{[Size(DV)/2+1..Size(DV)]} in RVARLIST) then
+            R:=2*R1+ORB;
+            D:=DIAG(R);
+            #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
+            #a#Print(" ",ID,"\c");
+            BVAR:=BITVERGLEICHER(D);
+            if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
+              #RMAX:=RMAXSUCH(D)[1];
+              RVAR:=RMAXVAR(D);
+              RVARLIST:=Union(RVARLIST,RVAR[2]);
+              #RMAXVAR2(D);
+              #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
+              if RVAR[1]=D then 
+                RMAX:=RMAXSUCH(D)[1]; 
+                if not RMAX in GESAMTDILIST[dd] then
+                  Add(ERGS2[dd],[R1,ORB]); 
+                  Add(GESAMTDILIST[dd],RMAX);
+                  if not SAGE then Print("*"); fi;
+                  else if not SAGE then Print("."); fi; fi;
+                if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
+                Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
+                else Print("G\c"); fi; #wenn schon in GESAMTDILIST
+              else Print("B\c"); fi; #wenn BVAR[1] nicht max
+            else Print("R\c"); fi; #wenn schon in RVARLIST
+          od;
+        fi;
+      od;
     od;
   Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
   Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
