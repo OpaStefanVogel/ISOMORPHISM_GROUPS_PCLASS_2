@@ -667,9 +667,12 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   D2:=List(D,i->i mod 2);
   #D3:=(D1+D2) mod 2;
   C1:=COMPDIAGSTABERZ(D1);
-  #C2:=COMPDIAGSTABERZ(D2);
+  C2:=COMPDIAGSTABERZ(D2);
   #C3:=COMPDIAGSTABERZ(D3);
   S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  SX:=Intersection(S1,S2); Print(Size(SX),"\c");
+  S1:=RightTransversal(S1,SX);
   FLIST:=[];
   for i in ERGS2[dd-1] do
     if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,Flat(i[2])); fi;
