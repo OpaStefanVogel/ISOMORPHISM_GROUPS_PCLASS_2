@@ -478,6 +478,8 @@ SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
 #neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
 #---------------------
 
+izu01:=function(i) if i then return 1; else return 0; fi; end;
+
 RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
   LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
@@ -485,22 +487,23 @@ RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   SD:=Size(D); dd:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
-  D2:=List(D,i->i mod 2);
-  D3:=(D1+D2) mod 2;
+  D2:=List(D,i->(i mod 2)=1);
+  #D3:=(D1+D2) mod 2;
   C1:=COMPDIAGSTABERZ(D1);
   #C2:=COMPDIAGSTABERZ(D2);
   #C3:=COMPDIAGSTABERZ(D3);  
   S1:=Group(STABMACH2(C1));
   FLIST:=[];
   for i in ERGS2[dd-1] do
-    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,DIAG(i[2])); fi;
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,List(DIAG(i[2]),i->i=1)); fi;
     od;
   FLIST:=SortedList(FLIST);
   ORB:=Orbit(S1,D2,Permuted);
-  ORB:=Concatenation(ORB,(D1+ORB) mod 2);
+  #ORB:=Concatenation(ORB,(D1+ORB) mod 2);
+  ORB:=Concatenation(ORB,List(ORB,i->List([1..SD],function(j) if D1[j]=1 then return not i[j]; else return i[j]; fi; end )));
   FORB:=Filtered(ORB,i->(i{[1..SD/2]} in FLIST));
-  #FORB:=List(FORB,i->i{[SD/2+1..SD]});
-  return [2*D1+Maximum(FORB),FORB,FLIST];
+  FORB:=List(FORB,i->List(i,izu01));
+  return [2*D1+Maximum(FORB),FORB];
   end;
 
 #RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG6(R); RVAR:=RMAXVAR(D); BITVERGLEICHER(D);
@@ -604,7 +607,7 @@ ClearProfile();ZM:=0;
 SCHNACK(2,RMAXSUCH);#16#6
 SCHNACK(3,RMAXSUCH);#32#19
 SCHNACK(4,RMAXSUCH);#64#60
-#SCHNACK(5,RMAXSUCH);#128#158#239,178,132,103,82
+#SCHNACK(5,RMAXSUCH);#128#158#239,178,132,103,82,93
 #SCHNACK(6,RMAXSUCH);#256#442
 #SCHNACK(7,RMAXSUCH);#512#1122
 #SCHNACK(8,RMAXSUCH);#1024#2945
@@ -653,6 +656,39 @@ R;RVAR[1];
 #
 #--------------
 
+izu01:=function(i) if i then return 1; else return 0; fi; end;
+
+RMAXVARNEU:=function(D) #nur zum Testen und Weitersuchen
+  local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
+  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
+  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST;
+  SD:=Size(D); dd:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->(i mod 2)=1);
+  #D3:=(D1+D2) mod 2;
+  C1:=COMPDIAGSTABERZ(D1);
+  #C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  FLIST:=[];
+  for i in ERGS2[dd-1] do
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,List(DIAG(i[2]),i->i=1)); fi;
+    od;
+  FLIST:=SortedList(FLIST);
+  ORB:=Orbit(S1,D2,Permuted);
+  #ORB:=Concatenation(ORB,(D1+ORB) mod 2);
+  ORB:=Concatenation(ORB,List(ORB,i->List([1..SD],function(j) if D1[j]=1 then return not i[j]; else return i[j]; fi; end )));
+  FORB:=Filtered(ORB,i->(i{[1..SD/2]} in FLIST));
+  FORB:=List(FORB,i->List(i,izu01));
+  return [2*D1+Maximum(FORB),FORB,FLIST,ORB,S1];
+  end;
+
+R:=[[3],[2,3]];D:=DIAG(R);
+RU:=RMAXVARNEU(D);;RU[1];
+#RV:=RMAXSUCHVAR(D);;RV[1];
+RU[2];RU[3];RU;
+#RMAXVAR:=RMAXVARNEU;
 
 RMAXSUCHVAR:=function(D) #RMAXSUCH mit RMAXVAR-Ergebnis
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
@@ -714,8 +750,8 @@ RMAXSUCHVAR:=function(D) #RMAXSUCH mit RMAXVAR-Ergebnis
 
 R:=[[3],[2,3]];D:=DIAG(R);
 RU:=RMAXVAR(D);;RU[1];
-RV:=RMAXSUCHVAR(D);;RV[1];
-
+#RV:=RMAXSUCHVAR(D);;RV[1];
+RU[2];RU[3];RU;
 
 
 
