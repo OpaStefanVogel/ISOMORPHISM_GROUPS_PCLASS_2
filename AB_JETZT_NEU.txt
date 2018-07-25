@@ -657,10 +657,11 @@ R;RVAR[1];
 
 izu01:=function(i) if i then return 1; else return 0; fi; end;
 
+PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
 RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
   LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
-  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,PX,D2PHI;
+  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,D2PHI;
   SD:=Size(D); dd:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
@@ -680,10 +681,11 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   FLIST:=SortedList(FLIST);
   ORB:=[];
   FORB:=[];
-  PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
   for phi in S1 do
-    D2PHI:=List(OnTuples(PX,phi),i->D2[i]);
+    D2PHI:=List(OnTuples(PX,phi^-1),i->D2[i]);
     if D2PHI{[1..15]} in FLIST then Add(FORB,D2PHI); fi;
+    #D2PHI:=(D1{PX}+D2PHI) mod 2;
+    #if D2PHI{[1..15]} in FLIST then Add(FORB,D2PHI); fi;
     od;
   return [2*D1{PX}+Maximum(FORB),Set(FORB),FLIST,ORB,S1];
   end;
@@ -693,8 +695,10 @@ R2:=[[1],[1,1],[1,1,0],[1,0,1,0],[0,0,0,1,1],[0,1,0,1,0,1]];
 R:=2*R1+R2;
 D:=DIAG(R);
 RFLAT:=Flat(R);
-#RM1:=RMAXVAR(D);
+#RM1:=RMAXVAR(D);;
 RM2:=RMAXVARNEU(D,RFLAT);
+Set(List(RM1[2],i->i{PX}))=RM2[2];
+
 
 
 R:=[[3],[2,3]];D:=DIAG(R);
