@@ -657,37 +657,55 @@ R;RVAR[1];
 
 izu01:=function(i) if i then return 1; else return 0; fi; end;
 
-RMAXVARNEU:=function(D) #nur zum Testen und Weitersuchen
+RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
   LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
-  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST;
+  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,PX,D2PHI;
   SD:=Size(D); dd:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
-  D2:=List(D,i->(i mod 2)=1);
+  D2:=List(D,i->i mod 2);
   #D3:=(D1+D2) mod 2;
   C1:=COMPDIAGSTABERZ(D1);
   #C2:=COMPDIAGSTABERZ(D2);
-  #C3:=COMPDIAGSTABERZ(D3);  
+  #C3:=COMPDIAGSTABERZ(D3);
   S1:=Group(STABMACH2(C1));
   FLIST:=[];
   for i in ERGS2[dd-1] do
-    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,List(DIAG(i[2]),i->i=1)); fi;
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,DIAG(i[2])); fi;
     od;
   FLIST:=SortedList(FLIST);
-  ORB:=Orbit(S1,D2,Permuted);
-  #ORB:=Concatenation(ORB,(D1+ORB) mod 2);
-  ORB:=Concatenation(ORB,List(ORB,i->List([1..SD],function(j) if D1[j]=1 then return not i[j]; else return i[j]; fi; end )));
-  FORB:=Filtered(ORB,i->(i{[1..SD/2]} in FLIST));
-  FORB:=List(FORB,i->List(i,izu01));
+  ORB:=[];
+  FORB:=[];
+  PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
+  for phi in S1 do
+    D2PHI:=Permuted(D2,phi);
+    if D2PHI{[1..SD/2]} in FLIST then Add(FORB,D2PHI); fi;
+    od;
   return [2*D1+Maximum(FORB),FORB,FLIST,ORB,S1];
   end;
+
+R1:=[[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1]];
+R2:=[[1],[1,1],[1,1,0],[1,0,1,0],[0,0,0,1,1],[0,1,0,1,0,1]];
+R:=2*R1+R2;
+D:=DIAG(R);
+RFLAT:=Flat(R);
+RM1:=RMAXVAR(D);
+RM2:=RMAXVARNEU(D,RFLAT);
+Set(RM1[2])=Set(RM2[2]);#ist true
+
 
 R:=[[3],[2,3]];D:=DIAG(R);
 RU:=RMAXVARNEU(D);;RU[1];
 #RV:=RMAXSUCHVAR(D);;RV[1];
 RU[2];RU[3];RU;
 #RMAXVAR:=RMAXVARNEU;
+#----erstes for phi in S1:
+S1:=RU[5];
+RFLAT:=[0,3,2,3];
+ORB:=Orbit(S1,[1,2,3,4],OnTuples);
+for phi in S1 do Print("\n",List(OnTuples([1,2,3,4],phi),i->D[i])); od;
+
 
 RMAXSUCHNEU:=function(D) #RMAXSUCH mit RMAXVAR-Ergebnis
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
