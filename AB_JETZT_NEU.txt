@@ -679,10 +679,10 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   FORB:=[];
   PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
   for phi in S1 do
-    D2PHI:=Permuted(D2,phi);
-    if D2PHI{[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25]} in FLIST then Add(FORB,D2PHI); fi;
+    D2PHI:=List(OnTuples(PX,phi),i->D2[i]);
+    if D2PHI{[1..15]} in FLIST then Add(FORB,D2PHI); fi;
     od;
-  return [2*D1+Maximum(FORB),FORB,FLIST,ORB,S1];
+  return [2*D1{PX}+Maximum(FORB),Set(FORB),FLIST,ORB,S1];
   end;
 
 R1:=[[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1]];
@@ -690,9 +690,8 @@ R2:=[[1],[1,1],[1,1,0],[1,0,1,0],[0,0,0,1,1],[0,1,0,1,0,1]];
 R:=2*R1+R2;
 D:=DIAG(R);
 RFLAT:=Flat(R);
-RM1:=RMAXVAR(D);
+#RM1:=RMAXVAR(D);
 RM2:=RMAXVARNEU(D,RFLAT);
-Set(RM1[2])=Set(RM2[2]);#ist true
 
 
 R:=[[3],[2,3]];D:=DIAG(R);
