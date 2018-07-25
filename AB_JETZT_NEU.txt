@@ -672,7 +672,7 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   S1:=Group(STABMACH2(C1));
   FLIST:=[];
   for i in ERGS2[dd-1] do
-    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,DIAG(i[2])); fi;
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,Flat(i[2])); fi;
     od;
   FLIST:=SortedList(FLIST);
   ORB:=[];
@@ -680,7 +680,7 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
   for phi in S1 do
     D2PHI:=Permuted(D2,phi);
-    if D2PHI{[1..SD/2]} in FLIST then Add(FORB,D2PHI); fi;
+    if D2PHI{[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25]} in FLIST then Add(FORB,D2PHI); fi;
     od;
   return [2*D1+Maximum(FORB),FORB,FLIST,ORB,S1];
   end;
