@@ -512,11 +512,6 @@ RMAXVAR:=function(D) #nur zum Testen und Weitersuchen
   RM:=2*D1{PX}+Maximum(FORB);
   RET:=[];
   for i in [1..dd] do RET[i]:=[]; for j in [1..i] do Add(RET[i],Remove(RM,1)); od; od;
-for k in [1..Size(FORB)] do
-  D2PHI:=FORB[k]; FORB[k]:=[];
-  for i in [1..dd] do FORB[k][i]:=[]; for j in [1..i] do Add(FORB[k][i],Remove(D2PHI,1)); od; od;
-  FORB[k]:=DIAG(FORB[k]);
-  od;
   return [DIAG(RET),FORB,FLIST,ORB,S1];
   end;
 
@@ -571,9 +566,8 @@ SCHNACK:=function(dd,RMAXSUCH)
         #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
         if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
         if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),", Size(RVARLIST)=",Size(RVARLIST),"\n"); fi;
-        for ORB in ORBI do DV:=DIAG(ORB);
+        for ORB in ORBI do DV:=Flat(ORB);
           if not (DV in RVARLIST) then
-          #if not (DV{[Size(DV)/2+1..Size(DV)]} in RVARLIST) then
             R:=2*R1+ORB;
             D:=DIAG(R);
             #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
@@ -584,7 +578,6 @@ SCHNACK:=function(dd,RMAXSUCH)
               RVAR:=RMAXVAR(D);
               RVARLIST:=Union(RVARLIST,RVAR[2]);
               #RMAXVAR2(D);
-              #Print("\n",DV{[Size(DV)/2+1..Size(DV)]}," in ",RVARLIST);
               if RVAR[1]=D then 
                 if BVAR[1]>BVAR[2] and BVAR[1]>BVAR[3] then RMAX:=D; Print("d\c");
                   else Print("s\c"); RMAX:=RMAXSUCH(D)[1]; fi;
@@ -621,7 +614,7 @@ ClearProfile();ZM:=0;
 SCHNACK(2,RMAXSUCH);#16#6
 SCHNACK(3,RMAXSUCH);#32#19
 SCHNACK(4,RMAXSUCH);#64#60
-#SCHNACK(5,RMAXSUCH);#128#158#239,178,132,103,82,93
+#SCHNACK(5,RMAXSUCH);#128#158#239,178,132,103,82,93,71
 #SCHNACK(6,RMAXSUCH);#256#442
 #SCHNACK(7,RMAXSUCH);#512#1122
 #SCHNACK(8,RMAXSUCH);#1024#2945
