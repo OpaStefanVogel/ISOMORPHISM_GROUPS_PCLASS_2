@@ -477,32 +477,47 @@ SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
 #neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
 #---------------------
 
-izu01:=function(i) if i then return 1; else return 0; fi; end;
+PXX:=[[2],[3,4],[5,6,7],[9,10,11,13],[17,18,19,21,25],[33,34,35,37,41,49]];
 
-RMAXVAR:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
+RMAXVAR:=function(D) #nur zum Testen und Weitersuchen
   local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
-  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
-  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST;
-  SD:=Size(D); dd:=LogInt(SD,2);
+  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,k,MALPHA,ALLMENGS,
+  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,PX,D2PHI,ddd,RM,RET;
+  SD:=Size(D); dd:=LogInt(SD,2); PX:=Flat(PXX{[1..dd]}); ddd:=dd*(dd-1)/2;
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
-  D2:=List(D,i->(i mod 2)=1);
+  D2:=List(D,i->i mod 2);
   #D3:=(D1+D2) mod 2;
   C1:=COMPDIAGSTABERZ(D1);
-  #C2:=COMPDIAGSTABERZ(D2);
-  #C3:=COMPDIAGSTABERZ(D3);  
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);
   S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  SX:=Intersection(S1,S2); Print(Size(SX),"\c");
+  S1:=RightTransversal(S1,SX);
   FLIST:=[];
   for i in ERGS2[dd-1] do
-    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,List(DIAG(i[2]),i->i=1)); fi;
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,Flat(i[2])); fi;
     od;
   FLIST:=SortedList(FLIST);
-  ORB:=Orbit(S1,D2,Permuted);
-  #ORB:=Concatenation(ORB,(D1+ORB) mod 2);
-  ORB:=Concatenation(ORB,List(ORB,i->List([1..SD],function(j) if D1[j]=1 then return not i[j]; else return i[j]; fi; end )));
-  FORB:=Filtered(ORB,i->(i{[1..SD/2]} in FLIST));
-  FORB:=List(FORB,i->List(i,izu01));
-  return [2*D1+Maximum(FORB),FORB];
+  ORB:=[];
+  FORB:=[];
+  for phi in S1 do
+    D2PHI:=List(OnTuples(PX,phi^-1),i->D2[i]);
+    if D2PHI{[1..ddd]} in FLIST then Add(FORB,D2PHI); fi;
+    D2PHI:=(D1{PX}+D2PHI) mod 2;
+    if D2PHI{[1..ddd]} in FLIST then Add(FORB,D2PHI); fi;
+    od;
+  FORB:=Set(FORB);
+  RM:=2*D1{PX}+Maximum(FORB);
+  RET:=[];
+  for i in [1..dd] do RET[i]:=[]; for j in [1..i] do Add(RET[i],Remove(RM,1)); od; od;
+for k in [1..Size(FORB)] do
+  D2PHI:=FORB[k]; FORB[k]:=[];
+  for i in [1..dd] do FORB[k][i]:=[]; for j in [1..i] do Add(FORB[k][i],Remove(D2PHI,1)); od; od;
+  FORB[k]:=DIAG(FORB[k]);
+  od;
+  return [DIAG(RET),FORB,FLIST,ORB,S1];
   end;
 
 #RR:=ERGS2[4][4]; R:=2*RR[1]+RR[2]; D:=DIAG6(R); RVAR:=RMAXVAR(D); BITVERGLEICHER(D);
@@ -657,12 +672,12 @@ R;RVAR[1];
 
 izu01:=function(i) if i then return 1; else return 0; fi; end;
 
-PX:=[2, 3,4, 5,6,7, 9,10,11,13, 17,18,19,21,25,  33,34,35,37,41,49];
-RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
+PXX:=[[2],[3,4],[5,6,7],[9,10,11,13],[17,18,19,21,25],[33,34,35,37,41,49]];
+RMAXVAR:=function(D) #nur zum Testen und Weitersuchen
   local SD,S,dd,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,
-  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,ALLMENGS,
-  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,D2PHI;
-  SD:=Size(D); dd:=LogInt(SD,2);
+  LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,k,MALPHA,ALLMENGS,
+  H1,H2,K1,K2,T1,T2,SY,SZ,ORB,FORB,FLIST,PX,D2PHI,ddd,RM,RET;
+  SD:=Size(D); dd:=LogInt(SD,2); PX:=Flat(PXX{[1..dd]}); ddd:=dd*(dd-1)/2;
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
   D2:=List(D,i->i mod 2);
@@ -683,11 +698,20 @@ RMAXVARNEU:=function(D,RFLAT) #nur zum Testen und Weitersuchen
   FORB:=[];
   for phi in S1 do
     D2PHI:=List(OnTuples(PX,phi^-1),i->D2[i]);
-    if D2PHI{[1..15]} in FLIST then Add(FORB,D2PHI); fi;
-    #D2PHI:=(D1{PX}+D2PHI) mod 2;
-    #if D2PHI{[1..15]} in FLIST then Add(FORB,D2PHI); fi;
+    if D2PHI{[1..ddd]} in FLIST then Add(FORB,D2PHI); fi;
+    D2PHI:=(D1{PX}+D2PHI) mod 2;
+    if D2PHI{[1..ddd]} in FLIST then Add(FORB,D2PHI); fi;
     od;
-  return [2*D1{PX}+Maximum(FORB),Set(FORB),FLIST,ORB,S1];
+  FORB:=Set(FORB);
+  RM:=2*D1{PX}+Maximum(FORB);
+  RET:=[];
+  for i in [1..dd] do RET[i]:=[]; for j in [1..i] do Add(RET[i],Remove(RM,1)); od; od;
+for k in [1..Size(FORB)] do
+  D2PHI:=FORB[k]; FORB[k]:=[];
+  for i in [1..dd] do FORB[k][i]:=[]; for j in [1..i] do Add(FORB[k][i],Remove(D2PHI,1)); od; od;
+  FORB[k]:=DIAG(FORB[k]);
+  od;
+  return [DIAG(RET),FORB,FLIST,ORB,S1];
   end;
 
 R1:=[[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1]];
@@ -696,9 +720,9 @@ R:=2*R1+R2;
 D:=DIAG(R);
 RFLAT:=Flat(R);
 #RM1:=RMAXVAR(D);;
-RM2:=RMAXVARNEU(D,RFLAT);
-Set(List(RM1[2],i->i{PX}))=RM2[2];
-
+RM2:=RMAXVARNEU(D);
+Set(List(RM1[2],i->i{Flat(PXX{[1..6]})}))=RM2[2];
+RMAXVAR:=RMAXVARNEU;
 
 
 R:=[[3],[2,3]];D:=DIAG(R);
