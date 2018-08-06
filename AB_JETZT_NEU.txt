@@ -689,10 +689,10 @@ FLISTSET:=function(D) #Liste vorhandener D2 zu einem festen D1
 
 RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);FLIST:=FLISTSET(D);
 
-
 RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
-  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,POINTS;
+  HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,POINTS,
+  FLIST,FL,ddd;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
@@ -704,12 +704,16 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   S2:=Group(STABMACH2(C2));
   #S3:=Group(STABMACH2(C3));
   SX:=Intersection(S1,S2); #,S3);
+  FLIST:=FLISTSET(D);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
-    #Print("\nSTUFE=",STUFE);
-    #Print(", VARIANTEN=",Size(VARIANTEN));
-    #for V in VARIANTEN do Print("\n",V.LRES); od;
+    Print("\nSTUFE=",STUFE);
+    Print(", VARIANTEN=",Size(VARIANTEN));
+    for V in VARIANTEN do Print("\n  ",V.LRES); od;
+    ddd:=2^(STUFE-1);
+    if STUFE<S then FL:=Set(List(FLIST,i->i{[1..ddd]})); fi;
+    Print("\n  FL=",FL);
     NEUE_VARIANTEN:=[];
     RNEU:=[];
     for V in VARIANTEN do
@@ -748,5 +752,4 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   end;
 
 
-RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];
-
+RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);RM[1]=RN2[1];
