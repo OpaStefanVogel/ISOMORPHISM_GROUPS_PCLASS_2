@@ -705,7 +705,7 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   #S3:=Group(STABMACH2(C3));
   SX:=Intersection(S1,S2); #,S3);
   FLIST:=FLISTSET(D);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX,D2N:=[])];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX,D2N:=[],R:=[])];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
@@ -734,7 +734,7 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
         #if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         D1N:=List(RR,j->Int(j/2));
         D2NEU:=Concatenation(V.D2N,List(RR,j->j mod 2));#Print("RR,D1N,D2NEU=",RR,D1N,D2NEU);
-        if (D1N=D1{PXX[STUFE]}) and ((D2NEU in FL) or (STUFE=S)) then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA,D2NEU]; fi;
+        if (D1N=D1{PXX[STUFE]}) and ((D2NEU in FL) or (STUFE=S)) then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA,D2NEU,RR]; fi;
         od;
       for i in MENGS do
         VNEU:=StructuralCopy(V);
@@ -744,6 +744,7 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
         for j in LNEU do VNEU.LD[j]:=STUFE; od;
         VNEU.ALPHA:=List(MALPHA[i][1]); VNEU.BETA:=List(MALPHA[i][2]);
         VNEU.D2N:=List(MALPHA[i][3]);
+        Add(VNEU.R,MALPHA[i][4]);
         Add(NEUE_VARIANTEN,VNEU);        
         od;
       od;
@@ -754,8 +755,8 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
     VARIANTEN:=NEUE_VARIANTEN;
     #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
     od;
-  return [RMAX,VARIANTEN];
+  return [Maximum(List(VARIANTEN,i->i.R)),Set(List(VARIANTEN,i->i.D2N))];
   end;
 
 
-RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);;RM[2]=Set(List(RN2[2],i->i.D2N));
+RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);RM[1]=RN2[1];RM[2]=RN2[2];
