@@ -708,13 +708,13 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX,D2N:=[])];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
-    Print("\nSTUFE=",STUFE);
+    #Print("\nSTUFE=",STUFE);
     #Print(", VARIANTEN=",Size(VARIANTEN));
     #for V in VARIANTEN do Print("\n  ",V.LRES); od;
-    for V in VARIANTEN do Print("\n  ",V.D2N); od;
+    #for V in VARIANTEN do Print("\n  ",V.D2N); od;
     ddd:=STUFE*(STUFE+1)/2;
     if STUFE<S then FL:=Set(List(FLIST,i->i{[1..ddd]})); fi;
-    Print("\n  FL=",FL);
+    #Print("\n  FL=",FL);
     NEUE_VARIANTEN:=[];
     RNEU:=[];
     for V in VARIANTEN do
@@ -728,12 +728,12 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
         for j in HRES do Add(KRES,XORMAT[i][j]); od;
-        #RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
-        RR:=List(KRES,i->D[i]);
+        RR:=List(KRES,i->DGANZNEU(D[i]));#Error("\n",RR,KRES);
+        #RR:=List(KRES,i->D[i]);
         #if RR>RNEU then NEUE_VARIANTEN:=[]; MENGS:=[]; RNEU:=RR; fi;
         #if RR=RNEU then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA]; fi;
         D1N:=List(RR,j->Int(j/2));
-        D2NEU:=Concatenation(V.D2N,List(RR,j->j mod 2));Print("RR,D1N,D2NEU=",RR,D1N,D2NEU);
+        D2NEU:=Concatenation(V.D2N,List(RR,j->j mod 2));#Print("RR,D1N,D2NEU=",RR,D1N,D2NEU);
         if (D1N=D1{PXX[STUFE]}) and ((D2NEU in FL) or (STUFE=S)) then Add(MENGS,i); MALPHA[i]:=[ALPHA,BETA,D2NEU]; fi;
         od;
       for i in MENGS do
@@ -758,4 +758,4 @@ RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   end;
 
 
-RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);;RM[1]=RN2[1];
+RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);;RM[2]=Set(List(RN2[2],i->i.D2N));
