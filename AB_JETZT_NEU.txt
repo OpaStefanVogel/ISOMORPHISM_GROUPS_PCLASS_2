@@ -675,7 +675,22 @@ RMAXVARSCHNELL:=function(D) #sucht Varianten zu RMAX ohne Umbenennen
   return [RET,FORB,FLIST,ORB,S1];
   end;
 
-RMAXSUCH:=function(D) #sucht RMAX mit Umbenennen
+FLISTSET:=function(D) #Liste vorhandener D2 zu einem festen D1
+  local SD,dd,D1,FLIST;
+  SD:=Size(D); dd:=LogInt(SD,2);
+  D1:=List(D,i->Int((i mod 4)/2));
+  FLIST:=[];
+  for i in ERGS2[dd-1] do
+    if DIAG(i[1])=D1{[1..SD/2]} then Add(FLIST,Flat(i[2])); fi;
+    od;
+  FLIST:=SortedList(FLIST);
+  return FLIST;
+  end;
+
+RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);FLIST:=FLISTSET(D);
+
+
+RMAXVARSCHNELL2:=function(D) #sucht RMAX mit Umbenennen und ob D2 in ERGS2
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
   HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,POINTS;
   SD:=Size(D); S:=LogInt(SD,2); STUFE:=0; RMAX:=[];
