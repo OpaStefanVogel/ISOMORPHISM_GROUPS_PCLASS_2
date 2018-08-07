@@ -463,7 +463,7 @@ RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ER
   #S3:=Group(STABMACH2(C3));
   SX:=Intersection(S1,S2); #,S3);
   FLIST:=FLISTSET(D);
-  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],SX:=SX,D2N:=[],R:=[],S1:=S1)];
+  VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],D2N:=[],R:=[],S1:=S1,SX:=SX)];
   #Print("\nSX=",List(SX));
   for STUFE in [1..S] do 
     #Print("\nSTUFE=",STUFE);
@@ -482,6 +482,7 @@ RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ER
       GOINGS:=Orbits(SX,POINTS);
       GOINGS:=List(GOINGS,i->Filtered(i,j->not IsBound(LD[j]))); 
       BOINGS:=List(GOINGS,i->i[1]);
+      #BOINGS:=POINTS;
       for i in BOINGS do
         ALPHA:=List(V.ALPHA);BETA:=List(V.BETA);
         KRES:=[i];
@@ -509,7 +510,7 @@ RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ER
     Add(RMAX,RNEU);
     for V in NEUE_VARIANTEN do
       V.SX:=Stabilizer(V.SX,V.HRES[STUFE]);
-      V.S1:=Stabilizer(V.S1,V.HRES[STUFE]);
+      #V.S1:=Stabilizer(V.S1,V.HRES[STUFE]);
       od;
     VARIANTEN:=NEUE_VARIANTEN;
     #Print("\n  VARIANTEN=",List(VARIANTEN,i->i.HRES),Size(VARIANTEN));
@@ -616,7 +617,7 @@ ClearProfile();ZM:=0;
 SCHNACK(2);#16#6
 SCHNACK(3);#32#19
 SCHNACK(4);#64#60
-#SCHNACK(5);#128#158#239,178,132,103,82,93,71,165
+#SCHNACK(5);#128#158#239,178,132,103,82,93,71,165,133
 #SCHNACK(6);#256#442
 #SCHNACK(7);#512#1122
 #SCHNACK(8);#1024#2945
