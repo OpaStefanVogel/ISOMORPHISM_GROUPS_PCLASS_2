@@ -3,7 +3,7 @@
 #RMINSUCH, RMINVORSUCH, COMPDIAG7E, COMPDIAG6E entfernt, SCHNICK mit allen DDD
 #DGANZNEU war auf 8-dneu eingestellt. Dazu auch C3 wieder mit reinmachen.
 
-SAGE:=false; #true; #fuer if not SAGE then Print...
+SAGE:=true; #fuer if not SAGE then Print...
 dmax:=10; #dmax:=12;
 
 XORMAT:=[[1]]; # XOR-Matrix XOR[i][j]=(i-1)xor(j-1)+1;
@@ -404,7 +404,7 @@ DGANZNEU:=function(d) #
   if dneu=0 then return 0; else return 4-dneu; fi; # auch 8-dneu
   end;
 
-#DGANZNEU(2);ALPHA;BETA;DGANZNEU(3);ALPHA;BETA;
+#ALPHA:=[0];BETA:=[0];DGANZNEU(2);ALPHA;BETA;DGANZNEU(3);ALPHA;BETA;
 
 SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
   #global COMPDIAGSTABERZ,STABMACH,DOPPELSTAB,HMACH,RKVOND;
@@ -419,7 +419,7 @@ SCHNICK:=function(R1,R2) #alle Fortsetzungen von R1 konstant und R2 ergaenzt
   end;
 
 #---------------------
-#neuer Versuch, aus RMAXSUCH auch andere mögliche R herauslesen:
+#neuer Versuch, aus RMAXSUCH auch andere moegliche R herauslesen:
 #---------------------
 
 PXX:=[
@@ -435,6 +435,7 @@ PXX:=[
   [513,]
   ];
 
+ERGS2:=[];
 FLISTSET:=function(D) #Liste vorhandener D2 zu einem festen D1
   local SD,dd,D1,FLIST;
   SD:=Size(D); dd:=LogInt(SD,2);
@@ -449,7 +450,34 @@ FLISTSET:=function(D) #Liste vorhandener D2 zu einem festen D1
 
 #RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);FLIST:=FLISTSET(D);
 
-RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ERGS2
+KANTENZUEGE(dmax);
+ERGS1CMP:=[];
+for i in [1..dmax] do
+  ERGS1CMP[i]:=[];
+  for j in [1..Size(ERGS1[i])] do
+    ERGS1CMP[i][j]:=Collected(COMPDIAGSTABERZ(DIAG(ERGS1[i][j])));
+    od;
+  od; # nicht wundern wenn es hier etwas dauert
+
+BITVERGLEICHER:=function(D)
+  local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET,C1,C2,C3,dd;
+  dd:=LogInt(Size(D),2);
+  D1:=List(D,i->Int(i/2));
+  D2:=List(D,i->i mod 2);
+  D3:=(D1+D2) mod 2;
+  C1:=Collected(COMPDIAGSTABERZ(D1));
+  C2:=Collected(COMPDIAGSTABERZ(D2));
+  C3:=Collected(COMPDIAGSTABERZ(D3));
+  P1:=Position(ERGS1CMP[dd],C1);
+  P2:=Position(ERGS1CMP[dd],C2); if P2=fail then P2:=0; fi;
+  P3:=Position(ERGS1CMP[dd],C3); if P3=fail then P3:=0; fi;
+  RET:=[P1,P2,P3];
+  return RET;
+  end;
+
+#BITVERGLEICHER(D);
+
+RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unveraendert und D2 in ERGS2
   local SD,S,STUFE,LRES,LNEU,V,VNEU,VARIANTEN,NEUE_VARIANTEN,RR,RMAX,RNEU,
   HRES,KRES,LD,S1,S2,S3,SX,D1,D2,D3,C1,C2,C3,MENGS,GOINGS,BOINGS,i,j,MALPHA,POINTS,
   FLIST,FL,ddd,D1N,D2NEU,D1P,BVAR;
@@ -468,7 +496,7 @@ RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ER
   BVAR:=BITVERGLEICHER(D);
   VARIANTEN:=[rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0],BETA:=[0],D2N:=[],R:=[],S1:=S1,SX:=SX)];
   if BVAR[1]>BVAR[2] and BVAR[1]>BVAR[3] then
-    Print("+\c");
+    if not SAGE then Print("+\c"); fi;
     VARIANTEN:=[
       rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0,3,2,1],BETA:=[0,3,2,1],D2N:=[],R:=[],S1:=S1,SX:=SX),
       rec(LD:=[],HRES:=[],LRES:=[1],ALPHA:=[0,3,1,2],BETA:=[0,2,3,1],D2N:=[],R:=[],S1:=S1,SX:=SX)
@@ -532,43 +560,15 @@ RMAXVAR:=function(D) #sucht RMAX mit Umbenennen bei D1 unverändert und D2 in ER
   return [Maximum(List(VARIANTEN,i->i.R)),Set(List(VARIANTEN,i->i.D2N))];
   end;
 
-#RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);RN:=RMAXVARSCHNELL(D);#RM[1]=RN[1];RN2:=RMAXVARSCHNELL2(D);RM[1]=RN2[1];RM[2]=RN2[2];
-
-
-KANTENZUEGE(dmax);
-ERGS1CMP:=[];
-for i in [1..dmax] do
-  ERGS1CMP[i]:=[];
-  for j in [1..Size(ERGS1[i])] do
-    ERGS1CMP[i][j]:=Collected(COMPDIAGSTABERZ(DIAG(ERGS1[i][j])));
-    od;
-  od; # nicht wundern wenn es hier etwas dauert
-
-BITVERGLEICHER:=function(D)
-  local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET,C1,C2,C3,dd;
-  dd:=LogInt(Size(D),2);
-  D1:=List(D,i->Int(i/2));
-  D2:=List(D,i->i mod 2);
-  D3:=(D1+D2) mod 2;
-  C1:=Collected(COMPDIAGSTABERZ(D1));
-  C2:=Collected(COMPDIAGSTABERZ(D2));
-  C3:=Collected(COMPDIAGSTABERZ(D3));
-  P1:=Position(ERGS1CMP[dd],C1);
-  P2:=Position(ERGS1CMP[dd],C2); if P2=fail then P2:=0; fi;
-  P3:=Position(ERGS1CMP[dd],C3); if P3=fail then P3:=0; fi;
-  RET:=[P1,P2,P3];
-  return RET;
-  end;
-
-#BITVERGLEICHER(D);
+#RR:=ERGS2[5][2];R:=2*RR[1]+RR[2];D:=DIAG(R);RM:=RMAXVAR(D);
 
 ERGS2:=[];
 GESAMTDILIST:=[];
 UMTAUSCHLISTE:=[];
 SCHNACK:=function(dd)
-  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR;
+  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR,RVAR;
   if not SAGE then Exec("date"); fi;
-  ts:=Runtime(); ZM:=0; UMTAUSCHLISTE:=[];
+  ts:=Runtime(); ZM:=0; #UMTAUSCHLISTE:=[];
   ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
   for rr in [1..Size(ERGS1[dd])] do
     RVARLIST:=[];
@@ -589,29 +589,21 @@ SCHNACK:=function(dd)
             #a#Print(" ",ID,"\c");
             BVAR:=BITVERGLEICHER(D);
             if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
-              #RMAX:=RMAXSUCH(D)[1];
-              Print("*\c");
+              if not SAGE then Print("*",Size(GESAMTDILIST[dd])+1,"\c"); fi;
               RVAR:=RMAXVAR(D);
               RVARLIST:=Union(RVARLIST,RVAR[2]);
-              #RMAXVAR2(D);
               if RVAR[1]=R then 
                 RMAX:=R; 
-                #Print("d\c");
-                #if not RMAX in GESAMTDILIST[dd] then
-                  Add(ERGS2[dd],[R1,ORB]); 
-                  Add(GESAMTDILIST[dd],RMAX);
-                #  if not SAGE then Print("*"); fi;
-                #  else if not SAGE then Print("."); fi; fi;#schon in GESAMTDILIST
-                if not SAGE then Print(Position(GESAMTDILIST[dd],RMAX),"\c"); fi;
-                Add(UMTAUSCHLISTE,Position(GESAMTDILIST[dd],RMAX));
-                else Error("G\c"); fi; #wenn D kleiner RVAR
-              else Print("B\c"); fi; #wenn BVAR[1] nicht max
-            else Print("R\c"); fi; #wenn schon in RVARLIST
+                Add(ERGS2[dd],[R1,ORB]); 
+                Add(GESAMTDILIST[dd],RMAX);
+                else Error("G\c"); fi; #wenn R ungleich RVAR[1]
+              else if not SAGE then Print("B\c"); fi; fi; #wenn BVAR[1] nicht max
+            else if not SAGE then Print("R\c"); fi; fi; #wenn schon in RVARLIST
           od;
         fi;
       od;
     od;
-  Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
+  #Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
   Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
   Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
   if not SAGE then Exec("date"); fi;
@@ -619,7 +611,7 @@ SCHNACK:=function(dd)
 
 
 
-ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXSUCH,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy,BITVERGLEICHER,Orbit,Union);
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy,BITVERGLEICHER,Orbit,Union);
 
 #-----------
 KANTENZUEGE(dmax);
