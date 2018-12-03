@@ -1,0 +1,8 @@
+#zuvor AB_JETZT_NEU.txt, mit Aut(G) weiter unterteilen.
+#verwende ERGS2 aus GAP_WORKSPACE von 20180318
+
+ASUCH:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET;
+  RET:=DIAG(R);
+  return RET;
+  end;
