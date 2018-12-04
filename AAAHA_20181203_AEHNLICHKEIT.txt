@@ -2,7 +2,7 @@
 #verwende ERGS2 aus GAP_WORKSPACE von 20180318
 
 ASUCH:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
-  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX;
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
   SD:=Size(D); S:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
   D1:=List(D,i->Int((i mod 4)/2));
@@ -16,8 +16,22 @@ ASUCH:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   SX:=Intersection(S1,S2); #,S3);
   TX:=ConjugacyClasses(SX);
   VX:=List([1..Size(TX)],i->Orbits(Group(List(TX[i])),[1..SD]));
-  RET:=[SX,C1,C2,TX,VX];
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  WX:=Collected(List(VX,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));
+  RET:=[SX,C1,C2,TX,VX,WX];
   return RET;
   end;
 
 R:=[[3],[3,3],[3,3,3]];D:=DIAG(R);ASUCH(D);
+dd:=5;GA:=[];for i in [1..Size(ERGS2[dd])] do
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH(D)[6];
+  if not (WX in GA) then Add(GA,WX); else Error(i," schon drin als ",Position(GA,WX)); fi;
+  od;
+#Ergebnis: 61 als 22, 67 als 49
+
+i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); WX1:=ASUCH(D1)[6];
+i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); WX2:=ASUCH(D2)[6];
+WX1=WX2;D1;D2;
