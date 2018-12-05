@@ -177,8 +177,38 @@ dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
   Add(GA,WX);
   od;
 
+### achso, ASUCH2 ohne ConjugacyClass ist ja dann auch sinnvoll
+ASUCH2:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  #S3:=Group(STABMACH2(C3));
+  SX:=Intersection(S1,S2); #,S3);
+  #TX:=ConjugacyClasses(SX);
+  TX:=0;
+  #VX:=List([1..Size(TX)],i->Orbits(Group(List(TX[i])),[1..SD]));
+  VX:=Orbits(SX,[1..SD]);
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  #WX:=Collected(List(VX,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));
+  WX:=Collected(List(VX,v->Collected(List(v,i->[C1[i],C2[i]]))));
+  RET:=[SX,C1,C2,TX,VX,WX];
+  return RET;
+  end;
+
+dd:=5; i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);
+dd:=5; i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
 AUTBIT2:=function(D)
-  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,W1;
+  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,V1,W1;
   DRD1:=DIAG(RVOND(dd,D));
   G1:=PcgsOfR(RVOND(dd,D));
   A1:=AutomorphismGroup(G1);
@@ -207,10 +237,10 @@ dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
   Print(".\c");
   R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
   D:=DIAG(R);
-  WX:=ASUCH(D)[6];
+  WX:=ASUCH2(D)[6];
   if WX in GA then 
     j:=Position(GA,WX);
-    Print("\n",i," ",j,"\c");
+    Print("\n",Size(ERGS2[dd])," ",i," ",j,"\c");
     W1:=AUTBIT2(D);
     R2:=2*ERGS2[dd][j][1]+ERGS2[dd][j][2];
     D2:=DIAG(R2);
