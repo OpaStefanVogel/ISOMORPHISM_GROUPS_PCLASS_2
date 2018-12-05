@@ -36,14 +36,14 @@ dd:=5;GA:=[];for i in [1..Size(ERGS2[dd])] do
     A1:=AutomorphismGroup(G1);
     P1:=GeneratorsOfGroup(G1){[dd+1,dd+2]};
     Q1:=Orbits(A1,Group(P1));
-    Print("\n",Q1,"\c");
+    Print("\n",Size(A1)," ",Q1,"\c");
     R2:=2*ERGS2[dd][j][1]+ERGS2[dd][j][2];
     D2:=DIAG(R2);
     G2:=PcgsOfR(RVOND(dd,D2));
     A2:=AutomorphismGroup(G2);
     P2:=GeneratorsOfGroup(G2){[dd+1,dd+2]};
     Q2:=Orbits(A2,Group(P2));
-    Print("\n",Q2,"\c");
+    Print("\n",Size(A2)," ",Q2,"\c");
     #Error(i," schon drin als ",Position(GA,WX)); 
     fi;
   Add(GA,WX);
@@ -81,8 +81,8 @@ ASUCH2:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   return RET;
   end;
 
-i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);
-i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+dd:=5;i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);
+dd:=5;i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
 AX1[6]=AX2[6];#D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
 
 dd:=5;i:=49; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);;
@@ -92,3 +92,26 @@ dd:=6;i:=55; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1
 dd:=6;i:=47; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);;
 AX1[6]=AX2[6];#D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
 
+dd:=5;i:=22;#i:=61;
+dd:=6;i:=47;#i:=55;
+R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); #AX1:=ASUCH2(D1);
+#dd:=5;i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+    DRD1:=DIAG(RVOND(dd,D1));
+    G1:=PcgsOfR(RVOND(dd,D1));
+    A1:=AutomorphismGroup(G1);
+#    B1:=ConjugacyClasses(A1);
+#    P1:=GeneratorsOfGroup(G1){[dd+1,dd+2]};
+#    Q1:=Orbits(A1,Group(P1));
+#    Print("\n",Q1,"\c");
+    L1:=List(G1);
+    M1:=GeneratorsOfGroup(A1);
+    P1:=List(M1,m->PermListList(OnTuples(L1,m),L1));
+    T1:=ConjugacyClasses(Group(P1));;
+    V1:=List([1..Size(T1)],i->Orbits(Group(List(T1[i])),[1..Size(DRD1)]));;
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  D1:=List(DRD1,i->Int((i mod 4)/2));
+  D2:=List(DRD1,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+    W1:=Collected(List(V1,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));;
