@@ -250,3 +250,19 @@ dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
   Add(GA,WX);
   od;
 
+####Ergebnis: true bei
+dd:=7;i1:=327;i2:=359;
+#dd:=7;i1:=1006;i2:=1007;
+
+#dd:=8;i1:=143;i2:=144;
+#dd:=8;i1:=402;i2:=403;
+#dd:=8;i1:=410;i2:=411;
+#dd:=8;i1:=460;i2:=461;
+#dd:=8;i1:=2315;i2:=2329;
+#dd:=8;i1:=2317;i2:=2319;
+#dd:=8;i1:=2319;i2:=2317;
+#und vermutlich noch mehr
+
+R1:=2*ERGS2[dd][i1][1]+ERGS2[dd][i1][2]; D1:=DIAG(R1); W1:=AUTBIT2(D1);
+R2:=2*ERGS2[dd][i2][1]+ERGS2[dd][i2][2]; D2:=DIAG(R2); W2:=AUTBIT2(D2);
+W1;W2;W1=W2;
