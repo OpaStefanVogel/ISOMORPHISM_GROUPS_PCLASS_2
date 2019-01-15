@@ -1,4 +1,19 @@
 #Read("./GITHUB/ISOMORPHISM_GROUPS_PCLASS_2/AAAHA_20190109_ENUM5.txt");
+
+FM1:=MappingByFunction(GF(4),GF(4),function(s)
+  if s=0*Z(2) then return s; fi;
+  if s=Z(2) then return s; fi;
+  if s=Z(4) then return Z(4)^2; fi;
+  if s=Z(4)^2 then return Z(4); fi;
+  end);
+FM2:=MappingByFunction(GF(4),GF(4),function(s)
+  if s=0*Z(2) then return s; fi;
+  if s=Z(2) then return Z(4); fi;
+  if s=Z(4) then return Z(4)^2; fi;
+  if s=Z(4)^2 then return Z(2); fi;
+  end);
+FM:=Group(FM1,FM2);
+
 #d=1;
 G2:=Z(2)*[
 #  a b   c
@@ -17,6 +32,8 @@ VK:=GF(2)^1;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
 Size(VK);Size(ORBK);
+ORBGN:=Orbits(FM,ORBG,OnSetTuples);;
+Size(ORBGN);
 
 
 #d=2;
@@ -32,15 +49,17 @@ GZ:=Z(2)*[
   [1,0,0]
   ];
 AG:=Group(G2,GZ);Size(AG);
-VG:=GF(2)^3;
+VG:=GF(4)^3;
 ORBG:=OrbitsDomain(AG,VG);;
 ORBG:=List(ORBG,i->AsSet(i));;
 Size(VG);Size(ORBG);
 AK:=Group(G2,TransposedMat(GZ));Size(AK);
-VK:=GF(2)^3;
+VK:=GF(4)^3;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
 Size(VK);Size(ORBK);
+ORBGN:=Orbits(FM,ORBG,OnSetTuples);;
+Size(ORBGN);
 
 
 #d=3;
@@ -62,15 +81,17 @@ GZ:=Z(2)*[
   [0,0,0,0,0,1]
   ];
 AG:=Group(G2,GZ);Size(AG);
-VG:=GF(2)^6;
+VG:=GF(4)^6;
 ORBG:=OrbitsDomain(AG,VG);;
 ORBG:=List(ORBG,i->AsSet(i));;
 Size(VG);Size(ORBG);
 AK:=Group(G2,TransposedMat(GZ));Size(AK);
-VK:=GF(2)^6;
+VK:=GF(4)^6;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
 Size(VK);Size(ORBK);
+ORBGN:=Orbits(FM,ORBG,OnSetTuples);;
+Size(ORBGN);
 
 
 #d=4:
@@ -100,15 +121,17 @@ GZ:=Z(2)*[
   [0,0,0,0,0,0,0,0,0,1]
   ];
 AG:=Group(G2,GZ);Size(AG);
-VG:=GF(2)^10;
+VG:=GF(4)^10;
 ORBG:=OrbitsDomain(AG,VG);;
 ORBG:=List(ORBG,i->AsSet(i));;
 Size(VG);Size(ORBG);
 AK:=Group(G2,TransposedMat(GZ));Size(AK);
-VK:=GF(2)^10;
+VK:=GF(4)^10;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
 Size(VK);Size(ORBK);
+ORBGN:=Orbits(FM,ORBG,OnSetTuples);;
+Size(ORBGN);
 
 
 #d=5:
@@ -148,14 +171,20 @@ GZ:=Z(2)*[
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
   ];
 AG:=Group(G2,GZ);Size(AG);
-VG:=GF(2)^15;
+VG:=GF(4)^15;
 ORBG:=OrbitsDomain(AG,VG);;
 ORBG:=List(ORBG,i->AsSet(i));;
 Size(VG);Size(ORBG);
 AK:=Group(G2,TransposedMat(GZ));Size(AK);
-VK:=GF(2)^15;
+VK:=GF(4)^15;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
 Size(VK);Size(ORBK);
+ORBGN:=Orbits(FM,ORBG,OnSetTuples);;
+Size(ORBGN);
+
+#weitere vergebliche Versuche
+AU:=AutomorphismGroup(ElementaryAbelianGroup(2));
+VE:=EnumeratorOfTuples([0..3],3);
 
 
