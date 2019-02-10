@@ -175,7 +175,7 @@ VG:=GF(4)^15;
 ORBG:=OrbitsDomain(AG,VG);;
 ORBG:=List(ORBG,i->AsSet(i));;
 Size(VG);Size(ORBG);
-AK:=Group(G2,TransposedMat(GZ));Size(AK);
+AK:=Group(G2,TransposedMat(GZ));Size(AK);#G2^4=TransposedMat(G2)
 VK:=GF(4)^15;
 ORBK:=OrbitsDomain(AK,VK);;
 ORBK:=List(ORBK,i->AsSet(i));;
