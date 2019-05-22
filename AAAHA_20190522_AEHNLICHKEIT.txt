@@ -8,7 +8,7 @@ RVONDD(2,D); #ergibt falsch [[0],[0,0],[0,0,0],[3,3,3,3,3]] basta
 
 
 
-#aus AAAHA_20181203_AEHNLICHKEIT.txt
+#aus AAAHA_20181203_AEHNLICHKEIT.txt, korrigiert um DKORR:
 ERGS22:=0;
 ERGS2NUR2:=0;
 GESAMTDILIST:=0;
@@ -44,6 +44,7 @@ dd:=5;GA:=[];for i in [1..Size(ERGS2[dd])] do
   if WX in GA then 
     j:=Position(GA,WX);
     Print("\n",i," ",j,"\c");
+    Remove(D,1);
     G1:=PcgsOfR(RVOND(dd,D));
     A1:=AutomorphismGroup(G1);
     P1:=GeneratorsOfGroup(G1){[dd+1,dd+2]};
@@ -71,8 +72,9 @@ i:=67; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH(D2);
 AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
 
 ASUCH2:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
-  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX,DRD;
-  DRD:=DIAG(RVOND(dd,D));
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX,DRD,DKORR;
+  DKORR:=List(D); Remove(DKORR,1);
+  DRD:=DIAG(RVOND(dd,DKORR));
   SD:=Size(DRD); S:=LogInt(SD,2);
   #D3:=List(DRD,i->Int(i/4));
   D1:=List(DRD,i->Int((i mod 4)/2));
@@ -133,9 +135,10 @@ R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); #AX1:=ASUCH2(D1);
 ##### ob Aut(G) auch ohne ConjugacyClass reicht
 ###zusammenpack in eine Funktion
 AUTBIT:=function(D)
-  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,W1;
-  DRD1:=DIAG(RVOND(dd,D));
-  G1:=PcgsOfR(RVOND(dd,D));
+  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,W1,DKORR;
+  DKORR:=List(D); Remove(DKORR,1);
+  DRD1:=DIAG(RVOND(dd,DKORR));
+  G1:=PcgsOfR(RVOND(dd,DKORR));
   A1:=AutomorphismGroup(G1);
   L1:=List(G1);
   M1:=GeneratorsOfGroup(A1);
@@ -204,9 +207,10 @@ dd:=5; i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D
 AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
 
 AUTBIT2:=function(D)
-  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,V1,W1;
-  DRD1:=DIAG(RVOND(dd,D));
-  G1:=PcgsOfR(RVOND(dd,D));
+  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,V1,W1,DKORR;
+  DKORR:=List(D); Remove(DKORR,1);
+  DRD1:=DIAG(RVOND(dd,DKORR));
+  G1:=PcgsOfR(RVOND(dd,DKORR));
   A1:=AutomorphismGroup(G1);
   L1:=List(G1);
   #M1:=GeneratorsOfGroup(A1);
@@ -247,7 +251,6 @@ dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
   od;
 
 ####Ergebnis: true bei
-< HE
 dd:=7;i1:=327;i2:=359;
 #dd:=7;i1:=1006;i2:=1007;
 
@@ -270,7 +273,3 @@ dd:=5;i1:=22;i2:=61;
 R1:=2*ERGS2[dd][i1][1]+ERGS2[dd][i1][2]; D1:=DIAG(R1); W1:=AUTBIT2(D1);
 R2:=2*ERGS2[dd][i2][1]+ERGS2[dd][i2][2]; D2:=DIAG(R2); W2:=AUTBIT2(D2);
 W1;W2;W1=W2;
-
-
-
-
