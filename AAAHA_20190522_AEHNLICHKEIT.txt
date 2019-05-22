@@ -8,4 +8,269 @@ RVONDD(2,D); #ergibt falsch [[0],[0,0],[0,0,0],[3,3,3,3,3]] basta
 
 
 
+#aus AAAHA_20181203_AEHNLICHKEIT.txt
+ERGS22:=0;
+ERGS2NUR2:=0;
+GESAMTDILIST:=0;
+
+ASUCH:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  #S3:=Group(STABMACH2(C3));
+  SX:=Intersection(S1,S2); #,S3);
+  TX:=ConjugacyClasses(SX);
+  VX:=List([1..Size(TX)],i->Orbits(Group(List(TX[i])),[1..SD]));
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  WX:=Collected(List(VX,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));
+  RET:=[SX,C1,C2,TX,VX,WX];
+  return RET;
+  end;
+
+R:=[[3],[3,3],[3,3,3]];D:=DIAG(R);ASUCH(D);
+dd:=5;GA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH(D)[6];
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Print("\n",i," ",j,"\c");
+    G1:=PcgsOfR(RVOND(dd,D));
+    A1:=AutomorphismGroup(G1);
+    P1:=GeneratorsOfGroup(G1){[dd+1,dd+2]};
+    Q1:=Orbits(A1,Group(P1));
+    Print("\n",Size(A1)," ",Q1,"\c");
+    R2:=2*ERGS2[dd][j][1]+ERGS2[dd][j][2];
+    D2:=DIAG(R2);
+    G2:=PcgsOfR(RVOND(dd,D2));
+    A2:=AutomorphismGroup(G2);
+    P2:=GeneratorsOfGroup(G2){[dd+1,dd+2]};
+    Q2:=Orbits(A2,Group(P2));
+    Print("\n",Size(A2)," ",Q2,"\c");
+    #Error(i," schon drin als ",Position(GA,WX)); 
+    fi;
+  Add(GA,WX);
+  od;
+#Ergebnis: 61 als 22, 67 als 49
+
+i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH(D1);
+i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH(D2);
+AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
+i:=49; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH(D1);
+i:=67; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH(D2);
+AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
+ASUCH2:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX,DRD;
+  DRD:=DIAG(RVOND(dd,D));
+  SD:=Size(DRD); S:=LogInt(SD,2);
+  #D3:=List(DRD,i->Int(i/4));
+  D1:=List(DRD,i->Int((i mod 4)/2));
+  D2:=List(DRD,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  #S3:=Group(STABMACH2(C3));
+  SX:=Intersection(S1,S2); #,S3);
+  TX:=ConjugacyClasses(SX);
+  VX:=List([1..Size(TX)],i->Orbits(Group(List(TX[i])),[1..SD]));
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  WX:=Collected(List(VX,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));
+  RET:=[SX,C1,C2,TX,VX,WX];
+  return RET;
+  end;
+
+dd:=5;i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);
+dd:=5;i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+AX1[6]=AX2[6];#D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
+dd:=5;i:=49; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);;
+dd:=5;i:=67; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);;
+AX1[6]=AX2[6];#D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+dd:=6;i:=55; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);;
+dd:=6;i:=47; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);;
+AX1[6]=AX2[6];#D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
+dd:=5;i:=22;#i:=61;
+#dd:=6;i:=47;#i:=55;
+R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); #AX1:=ASUCH2(D1);
+#dd:=5;i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+    DRD1:=DIAG(RVOND(dd,D1));
+    G1:=PcgsOfR(RVOND(dd,D1));
+    A1:=AutomorphismGroup(G1);
+#    B1:=ConjugacyClasses(A1);
+#    P1:=GeneratorsOfGroup(G1){[dd+1,dd+2]};
+#    Q1:=Orbits(A1,Group(P1));
+#    Print("\n",Q1,"\c");
+    L1:=List(G1);
+    M1:=GeneratorsOfGroup(A1);
+    P1:=List(M1,m->PermListList(OnTuples(L1,m),L1));
+    T1:=ConjugacyClasses(Group(P1));;
+    V1:=List([1..Size(T1)],i->Orbits(Group(List(T1[i])),[1..Size(DRD1)]));;
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  D1:=List(DRD1,i->Int((i mod 4)/2));
+  D2:=List(DRD1,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+    W1:=Collected(List(V1,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));;
+
+
+
+##### ob Aut(G) auch ohne ConjugacyClass reicht
+###zusammenpack in eine Funktion
+AUTBIT:=function(D)
+  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,W1;
+  DRD1:=DIAG(RVOND(dd,D));
+  G1:=PcgsOfR(RVOND(dd,D));
+  A1:=AutomorphismGroup(G1);
+  L1:=List(G1);
+  M1:=GeneratorsOfGroup(A1);
+  P1:=List(M1,m->PermListList(OnTuples(L1,m),L1));
+  Q1:=Orbits(Group(P1),[1..Size(DRD1)]);
+  D1:=List(DRD1,i->Int((i mod 4)/2));
+  D2:=List(DRD1,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  W1:=Collected(List(Q1,v->Collected(List(v,i->[C1[i],C2[i]]))));
+  return W1;
+  end;
+
+dd:=5;i1:=22;i2:=61;
+#dd:=5;i1:=49;i2:=67;
+#dd:=6;i1:=47;i2:=55;
+R1:=2*ERGS2[dd][i1][1]+ERGS2[dd][i1][2]; D1:=DIAG(R1); W1:=AUTBIT(D1);
+R2:=2*ERGS2[dd][i2][1]+ERGS2[dd][i2][2]; D2:=DIAG(R2); W2:=AUTBIT(D2);
+W1;W2;W1=W2;
+
+dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH(D)[6];
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Print("\n",i," ",j,"\c");
+    W1:=AUTBIT(D);
+    R2:=2*ERGS2[dd][j][1]+ERGS2[dd][j][2];
+    D2:=DIAG(R2);
+    W2:=AUTBIT(D2);
+    Print(" ",W1=W2,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+
+### achso, ASUCH2 ohne ConjugacyClass ist ja dann auch sinnvoll
+ASUCH2:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  #C3:=COMPDIAGSTABERZ(D3);  
+  S1:=Group(STABMACH2(C1));
+  S2:=Group(STABMACH2(C2));
+  #S3:=Group(STABMACH2(C3));
+  SX:=Intersection(S1,S2); #,S3);
+  #TX:=ConjugacyClasses(SX);
+  TX:=0;
+  #VX:=List([1..Size(TX)],i->Orbits(Group(List(TX[i])),[1..SD]));
+  VX:=Orbits(SX,[1..SD]);
+  #WX:=List(VX,v->List(v,w->List(w,i->-i)));
+  #WX:=List(VX,v->List(v,w->List(w,i->[C1[i],C2[i]])));
+  #WX:=Collected(List(VX,v->Collected(List(v,w->Collected(List(w,i->[C1[i],C2[i]]))))));
+  WX:=Collected(List(VX,v->Collected(List(v,i->[C1[i],C2[i]]))));
+  RET:=[SX,C1,C2,TX,VX,WX];
+  return RET;
+  end;
+
+dd:=5; i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH2(D1);
+dd:=5; i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH2(D2);
+AX1[6]=AX2[6];D1;D2;AX1[5];AX2[5];AX1[1];AX2[1];
+
+AUTBIT2:=function(D)
+  local DRD1,G1,A1,L1,M1,P1,Q1,D1,D2,C1,C2,V1,W1;
+  DRD1:=DIAG(RVOND(dd,D));
+  G1:=PcgsOfR(RVOND(dd,D));
+  A1:=AutomorphismGroup(G1);
+  L1:=List(G1);
+  #M1:=GeneratorsOfGroup(A1);
+  #P1:=List(M1,m->PermListList(OnTuples(L1,m),L1));
+  #Q1:=Orbits(Group(P1),[1..Size(DRD1)]);
+  Q1:=Orbits(A1,G1);
+  V1:=List(Q1,q->List(q,e->Position(L1,e)));
+  D1:=List(DRD1,i->Int((i mod 4)/2));
+  D2:=List(DRD1,i->i mod 2);
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  W1:=Collected(List(V1,v->Collected(List(v,i->[C1[i],C2[i]]))));
+  return [W1,C1,C2,V1];
+  end;
+
+dd:=5;i1:=22;i2:=61;
+#dd:=5;i1:=49;i2:=67;
+#dd:=6;i1:=47;i2:=55;
+R1:=2*ERGS2[dd][i1][1]+ERGS2[dd][i1][2]; D1:=DIAG(R1); W1:=AUTBIT2(D1);
+R2:=2*ERGS2[dd][i2][1]+ERGS2[dd][i2][2]; D2:=DIAG(R2); W2:=AUTBIT2(D2);
+W1;W2;W1=W2;
+
+dd:=6;GA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH2(D)[6];
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Print("\n",Size(ERGS2[dd])," ",i," ",j,"\c");
+    W1:=AUTBIT2(D);
+    R2:=2*ERGS2[dd][j][1]+ERGS2[dd][j][2];
+    D2:=DIAG(R2);
+    W2:=AUTBIT2(D2);
+    Print(" ",W1=W2,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+
+####Ergebnis: true bei
+< HE
+dd:=7;i1:=327;i2:=359;
+#dd:=7;i1:=1006;i2:=1007;
+
+#dd:=8;i1:=143;i2:=144;
+#dd:=8;i1:=402;i2:=403;
+#dd:=8;i1:=410;i2:=411;
+#dd:=8;i1:=460;i2:=461;
+#dd:=8;i1:=2315;i2:=2329;
+#dd:=8;i1:=2317;i2:=2319;
+#dd:=8;i1:=2319;i2:=2317;
+#und vermutlich noch mehr
+
+=======
+dd:=5;i1:=22;i2:=61;
+#dd:=5;i1:=49;i2:=67;
+#dd:=6;i1:=47;i2:=55;
+#dd:=7;i1:=327;i2:=359;
+#dd:=7;i1:=1006;i2:=1007;
+>>>>>>> 660c40dcfccf75ea778dde79c7655cb2507a568e
+R1:=2*ERGS2[dd][i1][1]+ERGS2[dd][i1][2]; D1:=DIAG(R1); W1:=AUTBIT2(D1);
+R2:=2*ERGS2[dd][i2][1]+ERGS2[dd][i2][2]; D2:=DIAG(R2); W2:=AUTBIT2(D2);
+W1;W2;W1=W2;
+
+
+
 
