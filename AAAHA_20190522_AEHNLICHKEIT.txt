@@ -1,0 +1,11 @@
+#Auf Radio GAP_WORKSPACE mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10, PcgsOfR.txt, und in AAAHA_20181203_AEHNLICHKEIT.txt da stimmt was nicht.
+
+#Also zuerst mal aus ERGS2 echte Gruppen machen mit PcgsOfR:
+dd:=2;
+R:=2*ERGS2[dd][2][1]+ERGS2[dd][2][2]; #[[3],[3,2], für PcgsOfR(R) muss das [[0],[0,0],[3,3,3],[3,3,3,2]] sein, also los:
+D:=DIAG(R); #ergibt [0,3,3,2]
+RVONDD(2,D); #ergibt falsch [[0],[0,0],[0,0,0],[3,3,3,3,3]] basta
+
+
+
+
