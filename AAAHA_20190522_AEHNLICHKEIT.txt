@@ -307,7 +307,7 @@ W1;W2;W1[1]=W2[1];
 
 
 
-#####jetzt nochmal 
+#####jetzt nochmal aus Sicht x^2
 ASUCH3:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
   SD:=Size(D); S:=LogInt(SD,2);
@@ -349,3 +349,43 @@ dd:=5;GA:=[];for i in [1..Size(ERGS2[dd])] do
     fi;
   Add(GA,WX);
   od;
+
+ASUCH4:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,i,j,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  TX:=D;
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  VX:=Collected(VX);
+  RET:=VX;
+  return RET;
+  end;
+
+R:=[[3],[3,2]]; D:=DIAG(R); ASUCH4(D);
+i:=22; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH4(D1);
+i:=61; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH4(D2);
+AX1=AX2;
+
+dd:=8;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH3(D);
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Add(GAA,[i,j]);
+    Print("\n",i," ",j,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+GAA;
+#gap> GAA;
+#[ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 1672 ], [ 2102, 2094 ], [ 2104, 2094 ], [ 2115, 2067 ], [ 2185, 2099 ], [ 2188, 2125 ], [ 2192, 1880 ], [ 2550, 2548 ] ]
+
