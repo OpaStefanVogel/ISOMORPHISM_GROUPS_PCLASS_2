@@ -502,7 +502,7 @@ SCHNACK:=function(dd)
         #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
         if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
         if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),", Size(RVARLIST)=",Size(RVARLIST),"\n"); fi;
-        for ORB in ORBI do DV:=Flat(ORB);
+        for ORB in ORBI do DV:=Flat(ORB);Print("\nDV=",DV);
           if not (DV in RVARLIST) then
             R:=2*R1+ORB;
             D:=DIAG(R);
@@ -511,13 +511,23 @@ SCHNACK:=function(dd)
             BVAR:=BITVERGLEICHER(D);
             if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
               if not SAGE then Print("*",Size(GESAMTDILIST[dd])+1,"\c"); fi;
-              RVAR:=RMAXVAR(D);
-              RVARLIST:=Union(RVARLIST,RVAR[2]);
-              if RVAR[1]=R then 
-                RMAX:=R; 
+              
+#              RVAR:=RMAXVAR(D);Print("@\c");
+#              RVARLIST:=Union(RVARLIST,RVAR[2]);
+#              if RVAR[1]=R then 
+#                RMAX:=R; 
+#                Add(ERGS2[dd],[R1,ORB]); 
+#                Add(GESAMTDILIST[dd],RMAX);
+#                else Error("G\c"); fi; #wenn R ungleich RVAR[1]
+               
+              RVAR:=ASUCH5(D);
+#              RVARLIST:=Union(RVARLIST,DV);
+              if not(RVAR in GESAMTDILIST[dd]) then
                 Add(ERGS2[dd],[R1,ORB]); 
-                Add(GESAMTDILIST[dd],RMAX);
-                else Error("G\c"); fi; #wenn R ungleich RVAR[1]
+                Add(GESAMTDILIST[dd],RVAR);
+                else Print("ErrorG\c"); fi; #eigentlich Error("G\c"); fi; #wenn R ungleich RVAR[1]
+
+  
               else if not SAGE then Print("B\c"); fi; fi; #wenn BVAR[1] nicht max
             else if not SAGE then Print("R\c"); fi; fi; #wenn schon in RVARLIST
           od;
