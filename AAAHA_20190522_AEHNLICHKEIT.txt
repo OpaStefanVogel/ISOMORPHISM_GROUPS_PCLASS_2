@@ -1,4 +1,5 @@
-#Auf Radio GAP_WORKSPACE mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10, PcgsOfR.txt, und in AAAHA_20181203_AEHNLICHKEIT.txt da stimmt was nicht.
+#Auf Radio GAP_WORKSPACE mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10, PcgsOfR.txt, AB_JETZT_NEU.txt 
+#und in AAAHA_20181203_AEHNLICHKEIT.txt da stimmt was nicht.
 
 #Also zuerst mal aus ERGS2 echte Gruppen machen mit PcgsOfR:
 dd:=2;
@@ -431,3 +432,120 @@ for ij in [ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 
   Print(ij,AX1=AX2,"\n");
   od;
 #aber merken: ASUCH4, ASUCH5 mit COMPDIAGSTABERZ macht nur [655,569 ],[713,705] true!!
+
+dd:=8;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH5(D);
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Add(GAA,[i,j]);
+    Print("\n",i," ",j,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+
+##### mit allen Autom. 3,2,1.
+ASUCH6:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX,i,j;
+  SD:=Size(D); S:=LogInt(SD,2);
+  TX:=D;
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  Print(VX);
+  WX:=Set(VX);
+  TX:=List([1..SD],i->Position(WX,VX[i]));
+  #Print(TX);
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  VX:=Collected(VX);
+  RET:=VX;
+  return RET;
+  end;
+
+R:=[[3],[3,2]];D:=DIAG(R);ASUCH6(D);
+
+
+##### ASUCH in SCHNACK einbauen
+
+ERGS2:=[];
+GESAMTDILIST:=[];
+UMTAUSCHLISTE:=[];
+SCHNACK:=function(dd)
+  local jj,R,R1,R1R2,RMAX,ORBI,ORB,ID,ts,ZM,rr,DD,DDD,RVARLIST,DV,BVAR,RVAR;
+  if not SAGE then Exec("date"); fi;
+  ts:=Runtime(); ZM:=0; #UMTAUSCHLISTE:=[];
+  ERGS2[dd]:=[];GESAMTDILIST[dd]:=[];
+  for rr in [1..Size(ERGS1[dd])] do
+    RVARLIST:=[];
+    R1:=Reversed(ERGS1[dd])[rr];
+    if not SAGE then Print("\n\n*********R1=",R1,"**********"); fi;
+    for jj in [1..Size(ERGS2[dd-1])] do R1R2:=ERGS2[dd-1][jj]; 
+      if R1{[1..dd-1]}=R1R2[1] then
+        if not SAGE then Print("\n\nR1,R1R2[2]=\n",R1,"\n",R1R2[2]); fi;
+        ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
+        #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
+        if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
+        if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),", Size(RVARLIST)=",Size(RVARLIST),"\n"); fi;
+        for ORB in ORBI do DV:=Flat(ORB);
+          if not (DV in RVARLIST) then
+            R:=2*R1+ORB;
+            D:=DIAG(R);
+            #a#Remove(D,1);RV:=RVOND(dd,D);ID:=IdSmallGroup(PcgsOfR(RV));
+            #a#Print(" ",ID,"\c");
+            BVAR:=BITVERGLEICHER(D);
+            if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
+              if not SAGE then Print("*",Size(GESAMTDILIST[dd])+1,"\c"); fi;
+              RVAR:=RMAXVAR(D);
+              RVARLIST:=Union(RVARLIST,RVAR[2]);
+              if RVAR[1]=R then 
+                RMAX:=R; 
+                Add(ERGS2[dd],[R1,ORB]); 
+                Add(GESAMTDILIST[dd],RMAX);
+                else Error("G\c"); fi; #wenn R ungleich RVAR[1]
+              else if not SAGE then Print("B\c"); fi; fi; #wenn BVAR[1] nicht max
+            else if not SAGE then Print("R\c"); fi; fi; #wenn schon in RVARLIST
+          od;
+        fi;
+      od;
+    od;
+  #Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
+  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
+  if not SAGE then Exec("date"); fi;
+  end;
+
+
+
+ProfileFunctions(SCHNACK,SCHNICK,COMPDIAGSTABERZ,STABMACH2,Stabilizer,Orbits,RMAXVAR,Concatenation,DGANZNEU,Add,Group,List,StructuralCopy,BITVERGLEICHER,Orbit,Union);
+
+#-----------
+KANTENZUEGE(dmax);
+#ERGS1[4];
+ERGS2:=[[[[[1]],[[1]]]]];
+GESAMTDILIST:=[[[[3]]]];
+ClearProfile();ZM:=0;
+SCHNACK(2);#16#6
+SCHNACK(3);#32#19
+SCHNACK(4);#64#60
+#SCHNACK(5);#128#158#239,178,132,103,82,93,71,165,133,121,102
+#SCHNACK(6);#256#442
+#SCHNACK(7);#512#1122
+#SCHNACK(8);#1024#2945
+DisplayProfile();
+#dd:=4;;Reversed(List(ERGS2[dd],i->2*i[1]+i[2]));
