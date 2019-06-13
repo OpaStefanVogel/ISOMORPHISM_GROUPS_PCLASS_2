@@ -392,6 +392,7 @@ GAA;
 #[ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 1672 ], [ 2102, 2094 ], [ 2104, 2094 ], [ 2115, 2067 ], [ 2185, 2099 ], [ 2188, 2125 ], [ 2192, 1880 ], [ 2550, 2548 ] ]
 
 #####Doppelrunde
+A5flag:=true;
 ASUCH5:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   local RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX,WWX,i,j;
   SD:=Size(D); S:=LogInt(SD,2);
@@ -410,22 +411,24 @@ ASUCH5:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   TX:=List([1..SD],i->Position(WX,VX[i]));
   #Print(TX);
   VX:=[];
-  for i in [1..SD] do
-    WX:=[];
-    for j in [1..SD] do
-       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
-       od;
-    WX:=Collected(WX);
-    Add(VX,WX);
-    od;
-  VX:=Collected(VX);
+  if A5flag then
+    for i in [1..SD] do
+      WX:=[];
+      for j in [1..SD] do
+        Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+        od;
+      WX:=Collected(WX);
+      Add(VX,WX);
+      od;
+    VX:=Collected(VX);
+    fi;
   RET:=[WWX,VX];
   return RET;
   end;
 
-dd:=8;
-i:=2550; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH5(D1);
-i:=2548; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH5(D2);
+dd:=8;ERGS2:=StructuralCopy(ERGS2MERK);;
+i:=2550; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH5(D1);;
+i:=2548; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH5(D2);;
 AX1=AX2;
 for ij in [ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 1672 ], [ 2102, 2094 ], [ 2104, 2094 ], [ 2115, 2067 ], [ 2185, 2099 ], [ 2188, 2125 ], [ 2192, 1880 ], [ 2550, 2548 ] ] do
   i:=ij[1]; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH5(D1);
@@ -455,20 +458,31 @@ F312:=[0,3,1,2];
 F321:=[0,3,2,1];
 
 ASUCH6:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
-  return Minimum(
+  return Set([
     ASUCH5(D),
     ASUCH5(List(D,i->F132[i+1])),
     ASUCH5(List(D,i->F213[i+1])),
     ASUCH5(List(D,i->F231[i+1])),
     ASUCH5(List(D,i->F312[i+1])),
     ASUCH5(List(D,i->F321[i+1]))
-    );
+    ]);
   end;
 
 R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH6(D);;
 R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);;
 R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);;
 A2=A3;
+
+dd:=8;ERGS2:=StructuralCopy(ERGS2MERK);;
+i:=2550; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH6(D1);;
+i:=2548; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH6(D2);;
+AX1=AX2;
+for ij in [ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 1672 ], [ 2102, 2094 ], [ 2104, 2094 ], [ 2115, 2067 ], [ 2185, 2099 ], [ 2188, 2125 ], [ 2192, 1880 ], [ 2550, 2548 ] ] do
+  i:=ij[1]; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH6(D1);
+  i:=ij[2]; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH6(D2);
+  Print(ij,AX1=AX2,"\n");
+  od;
+#aber merken: ASUCH4, ASUCH5 mit COMPDIAGSTABERZ macht nur [655,569 ],[713,705] true!!
 
 ##### ASUCH in SCHNACK einbauen
 
@@ -490,8 +504,8 @@ SCHNACK:=function(dd)
         ORBI:=SCHNICK(R1,R1R2[2]); ZM:=ZM+Size(ORBI);
         #1#Print("\nORBI=",ORBI,Size(ORBI),"\n",R1R2,"...\n");
         if not SAGE then Print("\nSize(ORBI)=",Size(ORBI)); fi;
-        if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(GESAMTDILIST[dd])=",Size(GESAMTDILIST[dd]),", Size(RVARLIST)=",Size(RVARLIST),"\n"); fi;
-        for ORB in ORBI do DV:=Flat(ORB);Print("\nDV=",DV);
+        if not SAGE then Print("\n",jj," von ",Size(ERGS2[dd-1])," in ",rr," von ",Size(ERGS1[dd]),": Size(ERGS2[dd])=",Size(ERGS2[dd]),", Size(RVARLIST)=",Size(RVARLIST),"\n"); fi;
+        for ORB in ORBI do DV:=Flat(ORB);#Print("\nDV=",DV);
           if not (DV in RVARLIST) then
             R:=2*R1+ORB;
             D:=DIAG(R);
@@ -499,7 +513,7 @@ SCHNACK:=function(dd)
             #a#Print(" ",ID,"\c");
             BVAR:=BITVERGLEICHER(D);
             if BVAR[1]>=BVAR[2] and BVAR[1]>=BVAR[3] then
-              if not SAGE then Print("*",Size(GESAMTDILIST[dd])+1,"\c"); fi;
+              #if not SAGE then Print("*\c"); fi;
               
 #              RVAR:=RMAXVAR(D);Print("@\c");
 #              RVARLIST:=Union(RVARLIST,RVAR[2]);
@@ -509,12 +523,16 @@ SCHNACK:=function(dd)
 #                Add(GESAMTDILIST[dd],RMAX);
 #                else Error("G\c"); fi; #wenn R ungleich RVAR[1]
                
-              RVAR:=ASUCH6(D);
+              RVAR:=ASUCH5(D);
 #              RVARLIST:=Union(RVARLIST,DV);
               if not(RVAR in GESAMTDILIST[dd]) then
+                if not SAGE then Print("*\c"); fi;
+                RVAR:=ASUCH6(D);
+                #if not SAGE then Print("/",Size(RVAR),"\c"); fi;
+                GESAMTDILIST[dd]:=Concatenation(GESAMTDILIST[dd],RVAR);
                 Add(ERGS2[dd],[R1,ORB]); 
-                Add(GESAMTDILIST[dd],RVAR);
-                else Print("ErrorG\c"); fi; #eigentlich Error("G\c"); fi; #wenn R ungleich RVAR[1]
+                if not SAGE then Print(Size(ERGS2[dd]),"\c"); fi;
+                else Print("E\c"); fi; #eigentlich Error("G\c"); fi; #wenn R ungleich RVAR[1]
 
   
               else if not SAGE then Print("B\c"); fi; fi; #wenn BVAR[1] nicht max
@@ -524,7 +542,7 @@ SCHNACK:=function(dd)
       od;
     od;
   #Print("\nUMTAUSCHLISTE=",Collected(UMTAUSCHLISTE));
-  Print("\n",List(GESAMTDILIST,i->Size(i)),ZM);
+  Print("\n",List(ERGS2,i->Size(i)),ZM);
   Print("\n",[ 1, 6, 19, 60, 158, 442, 1122, 2945],Runtime()-ts,"\n");
   if not SAGE then Exec("date"); fi;
   end;
