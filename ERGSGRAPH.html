@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ERGSGRAPH</title>
+  <meta charset="utf-8"/>
+  <style type="text/css">
+v { display: inline-flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; max-width: 800px;}
+h { display: flex; flex-direction: row-reverse; align-items: flex-end;  background-color: LightGreen; border:solid; margin: 8px; flex-wrap:no-wrap; overflow: auto; min-height:160px; }
+e { display: flex; background-color: white; }
+e:active { background-color: green; }
+.selected { background-color: aquamarine; }
+uu {position:fixed;
+  top: 0em;
+  left:50em;
+  }
+    </style>
+  <script src="ERGS2_2945_20180813" type="application/ecmascript"></script>
+  <script type="application/ecmascript">
+function MyIndexOf(arr,elem) {
+  ind=-1;
+  for (var i=0;i<arr.length;i++) {
+    if (arr[i].toString()==elem.toString()) { ind=i; }
+    }
+  return ind;
+  } 
+
+function ergänzen(h,spalte,zeile) {
+  v=document.createElement("v");
+  zeil=zeile;
+  while (zeil<ERGS[spalte].length && ERGS[spalte][zeile][0].toString()==ERGS[spalte][zeil][0].toString()) {
+    e=document.createElement("e");
+    if (spalte==3) {
+      e.appendChild(document.createTextNode(ERGS[spalte][zeil].toString()));
+      } else {
+        e.appendChild(document.createTextNode(ERGS[spalte][zeil][1]));
+        }
+    v.appendChild(e);
+    zeil=zeil+1;
+    }
+  h.appendChild(v);
+  if (spalte>3) {
+    indd=MyIndexOf(ERGS[spalte-1],ERGS[spalte][zeile][0]);
+    ergänzen(h,spalte-1,indd);
+    }
+  }
+
+function komplettergänzen(spalte,zeile) {
+  div=document.getElementById("hier");
+  h=document.createElement("h");
+  div.appendChild(h);
+  h.appendChild(document.createTextNode(spalte+" "+zeile));
+  ergänzen(h,spalte,zeile);
+  }
+
+function allesergänzen() {
+  for (var i=000;i<142;i++) {
+    komplettergänzen(6,i);
+    }
+  
+  }
+
+function init() {
+  A=[1,,3,[4,5,6,
+  [7,8,9,[10,11,12]]]];
+//  alert(A);
+//  alert(A[3]);
+//  alert(A[3][3]);
+//  alert(77);
+//  alert(ERGSP[3]);
+//  alert(ERGSP[4]);
+  
+  }
+  </script>
+  </head>
+<body onload="init();allesergänzen()">
+<v id="hier">
+hallo
+  </v>
+  <script type="application/ecmascript">
+alert(ERGS2[0]);
+//alert(ERGS2[1]);
+
+function vergleicheZweiArrays(arr1,arr2) {
+  var ret=true;
+  if (arr1[0][0]!=undefined) {
+    for (var i=0;i<arr1.length;i++) {
+//      alert(arr1[i]+" "+arr2[i]);
+//      alert(vergleicheZweiArrays(arr1[i],arr2[i]));
+      if (vergleicheZweiArrays(arr1[i],arr2[i])==false) ret=false;
+      }
+    } else {
+      for (var i=0;i<arr1.length;i++) {
+        if (arr1[i]!=arr2[i]) ret=false;
+        }
+      }
+  return ret;
+  }
+
+//alert(vergleicheZweiArrays([1,2,3],[1,2,3]));
+//alert(vergleicheZweiArrays([1,2,3],[1,2,4]));
+//alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,4]]));
+//alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,5]]));
+
+for (var dd=0;dd<8;dd++) { 
+//  alert(dd);
+  var counter=0;
+  for (var i=0;i<ERGS2[dd].length;i++) {
+    if (i==0 || vergleicheZweiArrays(ERGS2[dd][i][0],ERGS2[dd][i-1][0])==false) {
+      counter=0;
+      var e=document.createElement("div");
+      e.appendChild(document.createTextNode(ERGS2[dd][i][0].toString()));
+      e.setAttribute("style","background-color:red");
+      document.getElementById("hier").appendChild(e);
+      }
+    counter=counter+1;
+    var e=document.createElement("div");
+    e.appendChild(document.createTextNode(counter+" "+ERGS2[dd][i][1].toString()));
+    document.getElementById("hier").appendChild(e);
+    }
+  }
+
+    </script>
+  </body>
+  </html>
