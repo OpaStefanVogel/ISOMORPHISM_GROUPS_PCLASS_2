@@ -25,7 +25,7 @@ function MyIndexOf(arr,elem) {
   return ind;
   } 
 
-function ergänzen(h,spalte,zeile) {
+function ergaenzen(h,spalte,zeile) {
   v=document.createElement("v");
   zeil=zeile;
   while (zeil<ERGS[spalte].length && ERGS[spalte][zeile][0].toString()==ERGS[spalte][zeil][0].toString()) {
@@ -41,21 +41,21 @@ function ergänzen(h,spalte,zeile) {
   h.appendChild(v);
   if (spalte>3) {
     indd=MyIndexOf(ERGS[spalte-1],ERGS[spalte][zeile][0]);
-    ergänzen(h,spalte-1,indd);
+    ergaenzen(h,spalte-1,indd);
     }
   }
 
-function komplettergänzen(spalte,zeile) {
+function komplettergaenzen(spalte,zeile) {
   div=document.getElementById("hier");
   h=document.createElement("h");
   div.appendChild(h);
   h.appendChild(document.createTextNode(spalte+" "+zeile));
-  ergänzen(h,spalte,zeile);
+  ergaenzen(h,spalte,zeile);
   }
 
-function allesergänzen() {
+function allesergaenzen() {
   for (var i=000;i<142;i++) {
-    komplettergänzen(6,i);
+    komplettergaenzen(6,i);
     }
   
   }
@@ -73,7 +73,7 @@ function init() {
   }
   </script>
   </head>
-<body onload="init();allesergänzen()">
+<body onload="init();allesergaenzen()">
 <v id="hier">
 hallo
   </v>
@@ -109,13 +109,13 @@ for (var dd=0;dd<8;dd++) {
     if (i==0 || vergleicheZweiArrays(ERGS2[dd][i][0],ERGS2[dd][i-1][0])==false) {
       counter=0;
       var e=document.createElement("div");
-      e.appendChild(document.createTextNode(ERGS2[dd][i][0].toString()));
+      e.appendChild(document.createTextNode(ERGS2[dd][i][0].toString().replace(/,/g,"")));
       e.setAttribute("style","background-color:red");
       document.getElementById("hier").appendChild(e);
       }
     counter=counter+1;
     var e=document.createElement("div");
-    e.appendChild(document.createTextNode(counter+" "+ERGS2[dd][i][1].toString()));
+    e.appendChild(document.createTextNode(counter+" "+ERGS2[dd][i][1].toString().replace(/,/g,"")));
     document.getElementById("hier").appendChild(e);
     }
   }
