@@ -5,9 +5,9 @@
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
   <style type="text/css">
-v { display: inline-flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; max-width: 800px;}
-h { display: flex; flex-direction: row-reverse; align-items: flex-end;  background-color: LightGreen; border:solid; margin: 8px; flex-wrap:no-wrap; overflow: auto; min-height:160px; }
-e { display: flex; background-color: white; }
+h { display: inline-flex; flex-direction: row; align-items: flex-start;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
+v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; }
+e { display: flex; white-space: pre; }
 e:active { background-color: green; }
 .selected { background-color: aquamarine; }
 uu {position:fixed;
@@ -73,12 +73,10 @@ function init() {
   }
   </script>
   </head>
-<body onload="init();allesergaenzen()">
-<v id="hier">
-hallo
-  </v>
+<body onload="init();#allesergaenzen()">
+  <div><h id="hier"></h></div>
   <script type="application/ecmascript">
-alert(ERGS2[0]);
+//alert(ERGS2[0]);
 //alert(ERGS2[1]);
 
 function vergleicheZweiArrays(arr1,arr2) {
@@ -102,21 +100,25 @@ function vergleicheZweiArrays(arr1,arr2) {
 //alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,4]]));
 //alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,5]]));
 
+  var col=document.getElementById("hier");
+
 for (var dd=0;dd<8;dd++) { 
 //  alert(dd);
+  h=document.createElement("v");
+  col.appendChild(h);
   var counter=0;
   for (var i=0;i<ERGS2[dd].length;i++) {
     if (i==0 || vergleicheZweiArrays(ERGS2[dd][i][0],ERGS2[dd][i-1][0])==false) {
       counter=0;
-      var e=document.createElement("div");
+      var e=document.createElement("e");
       e.appendChild(document.createTextNode(ERGS2[dd][i][0].toString().replace(/,/g,"")));
       e.setAttribute("style","background-color:red");
-      document.getElementById("hier").appendChild(e);
+      h.appendChild(e);
       }
     counter=counter+1;
-    var e=document.createElement("div");
+    var e=document.createElement("e");
     e.appendChild(document.createTextNode(counter+" "+ERGS2[dd][i][1].toString().replace(/,/g,"")));
-    document.getElementById("hier").appendChild(e);
+    h.appendChild(e);
     }
   }
 
