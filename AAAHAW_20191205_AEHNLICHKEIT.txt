@@ -1,0 +1,42 @@
+#gap -L GAP_WORKSPACE #mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10 und PcgsOfR.txt.
+##weiterer Versuch: Markierung verfeinern mit Aut(Aut(G)) oder wenigstens mit ConjugacyClasses
+
+KANTENZUEGE(10);
+
+#0zuerst RVOND wenn nur 0,1 in D:
+RVOND1:=function(dd,D)
+  local d,j,R,RI;
+  R:=[[0]];
+  for d in [1..dd] do
+    RI:=[D[2^(d-1)],D[2^(d-1)]];
+    for j in [2..d] do
+      Add(RI,D[2^(d-1)+2^(j-2)]);
+      od;
+    Add(R,RI);
+    od;
+  return R;
+  end;
+#RVOND1(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[0],[1,1],[1,1,2],[1,1,2,3],[0,0,0,0,0]];
+
+#1zuerst als Probe aus ERGS1 echte Gruppen machen mit PcgsOfR:
+dd:=2;
+R:=ERGS1[dd][1]; #[[1],[1,1]], für PcgsOfR(R) muss das [[0],[1,1],[1,1,1]] sein, also los:
+D:=DIAG(R); #ergibt [0,1,1,1]
+Remove(D,1);
+RVOND1(2,D); #[[0],[1,1],[1,1,1]]
+G:=PcgsOfR(RVOND(dd,D)); IdSmallGroup(G); #müsste irgendein [8,x] sein
+
+
+#2wenn das bis hierher funktioniert, dann Versuch zusätzliche Markierung finden:
+
+dd:=2; 
+i:=1;
+R:=ERGS1[dd][i];
+D:=DIAG(R); 
+  SD:=Size(D);
+  C:=COMPDIAGSTABERZ(D);
+  S:=Group(STABMACH(C)); #hier vorsichtshalber nochmal mit Aut(G) vergleichen
+  T:=ConjugacyClasses(S);
+  V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));
+  W:=Collected(List(V,v->Collected(List(v,w->Collected(List(w,i->C[i]))))));
+
