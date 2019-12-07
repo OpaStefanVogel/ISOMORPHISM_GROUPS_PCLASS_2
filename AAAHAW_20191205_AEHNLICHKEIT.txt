@@ -1,8 +1,6 @@
 #gap -L GAP_WORKSPACE #mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10 und PcgsOfR.txt.
 ##weiterer Versuch: Markierung verfeinern mit Aut(Aut(G)) oder wenigstens mit ConjugacyClasses
-
-KANTENZUEGE(10);
-
+#Read("PcgsOfR.txt");
 #0zuerst RVOND wenn nur 0,1 in D:
 RVOND1:=function(dd,D)
   local d,j,R,RI;
@@ -19,24 +17,45 @@ RVOND1:=function(dd,D)
 #RVOND1(4,[ 1, 1, 2, 1, 2, 3, 2, 0, 0, 0, 2, 0, 2, 3, 3 ]);[[0],[1,1],[1,1,2],[1,1,2,3],[0,0,0,0,0]];
 
 #1zuerst als Probe aus ERGS1 echte Gruppen machen mit PcgsOfR:
-dd:=2;
-R:=ERGS1[dd][1]; #[[1],[1,1]], für PcgsOfR(R) muss das [[0],[1,1],[1,1,1]] sein, also los:
+dd:=4;
+R:=ERGS1[dd][6]; #[[1],[1,1]], für PcgsOfR(R) muss das [[0],[1,1],[1,1,1]] sein, also los:
 D:=DIAG(R); #ergibt [0,1,1,1]
 Remove(D,1);
-RVOND1(2,D); #[[0],[1,1],[1,1,1]]
-G:=PcgsOfR(RVOND(dd,D)); IdSmallGroup(G); #müsste irgendein [8,x] sein
+RD:=RVOND1(dd,D);[[0],[1,1],[1,1,1]];
+G:=PcgsOfR(RD); IdSmallGroup(G); #müsste irgendein [8,x] sein
+
+for dd in [1..7] do #IdSmallGroup nur bis 256=2*2^7
+  Print("\n");
+  for i in [1..Size(ERGS1[dd])] do
+    R:=ERGS1[dd][i];
+    D:=DIAG(R);
+    Remove(D,1);
+    RD:=RVOND1(dd,D);
+    G:=PcgsOfR(RD); 
+    ID:=IdSmallGroup(G);
+    Print(ID);
+    od;
+  od;
 
 
 #2wenn das bis hierher funktioniert, dann Versuch zusätzliche Markierung finden:
 
-dd:=2; 
+dd:=3; 
 i:=1;
 R:=ERGS1[dd][i];
 D:=DIAG(R); 
   SD:=Size(D);
   C:=COMPDIAGSTABERZ(D);
-  S:=Group(STABMACH(C)); #hier vorsichtshalber nochmal mit Aut(G) vergleichen
+  S:=Group(STABMACH2(C)); #hier vorsichtshalber nochmal mit Aut(G) vergleichen
   T:=ConjugacyClasses(S);
+  U:=Orbits(S,[1..SD]);
   V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));
   W:=Collected(List(V,v->Collected(List(v,w->Collected(List(w,i->C[i]))))));
-
+#Zwischenergebnis:
+#U=  [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 7, 6, 8 ] ]
+#V=[ [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ], [ 8 ] ], 
+#    [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5, 6, 7, 8 ] ], 
+#    [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5, 8 ], [ 6, 7 ] ], 
+#    [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 8 ], [ 6, 7 ] ], 
+#    [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 6, 7, 8 ] ] ]
+#das ist schon mal eine Verfeinerung 2/3 und 58/67
