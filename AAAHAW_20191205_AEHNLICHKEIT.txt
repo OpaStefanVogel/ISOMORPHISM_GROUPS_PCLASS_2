@@ -40,10 +40,7 @@ for dd in [1..7] do #IdSmallGroup nur bis 256=2*2^7
 
 #2wenn das bis hierher funktioniert, dann Versuch zusätzliche Markierung finden:
 
-dd:=3; 
-i:=1;
-R:=ERGS1[dd][i];
-D:=DIAG(R); 
+VERFEINERUNG:=function(D)
   SD:=Size(D);
   C:=COMPDIAGSTABERZ(D);
   S:=Group(STABMACH2(C)); #hier vorsichtshalber nochmal mit Aut(G) vergleichen
@@ -51,6 +48,14 @@ D:=DIAG(R);
   U:=Orbits(S,[1..SD]);
   V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));
   W:=Collected(List(V,v->Collected(List(v,w->Collected(List(w,i->C[i]))))));
+  return [C,U,V,W];
+  end;
+
+dd:=3; 
+i:=1;
+R:=ERGS1[dd][i];
+D:=DIAG(R);
+VERFEINERUNG(D);
 #Zwischenergebnis:
 #U=  [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 7, 6, 8 ] ]
 #V=[ [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ], [ 8 ] ], 
@@ -59,3 +64,13 @@ D:=DIAG(R);
 #    [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 8 ], [ 6, 7 ] ], 
 #    [ [ 1 ], [ 2, 3 ], [ 4 ], [ 5, 6, 7, 8 ] ] ]
 #das ist schon mal eine Verfeinerung 2/3 und 58/67
+
+dd:=1;R:=[[1]];D:=DIAG(R); VERFEINERUNG(D);#nix brauchbares
+dd:=2;R:=[[1],[0,0]];D:=DIAG(R); VERFEINERUNG(D);#[ 3, 7, 11, 15 ], [ 4, 8, 12, 16 ]
+dd:=2;R:=[[1],[1,1]];D:=DIAG(R); VERFEINERUNG(D);#[ 2, 6 ], [ 3, 7 ], [ 4, 8 ]
+dd:=3;R:=[[1],[0,0],[1,1,1]];D:=DIAG(R); VERFEINERUNG(D);#[ 2, 10 ], [ 3, 11 ], [ 4, 12 ], [ 5, 13 ], [ 6, 14 ], [ 7, 15 ], [ 8, 16 ]
+dd:=4;R:=[[1],[0,0],[1,1,1],[0,0,0,0]];D:=DIAG(R); VERFEINERUNG(D);# [ 2, 18 ], [ 3, 19 ]... und [ 2, 6, 5 ], [ 7, 12, 14 ] 
+dd:=4;R:=[[1],[0,0],[1,1,1],[1,1,1,1]];D:=DIAG(R); VERFEINERUNG(D);# [ 2, 18 ], [ 3, 19 ],
+dd:=5;R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];D:=DIAG(R); VERFEINERUNG(D);# [ 2, 34 ], [ 3, 35 ], 
+
+dd:=dd+1; D:=Concatenation(D,D); VERFEINERUNG(D);
