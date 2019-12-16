@@ -549,9 +549,9 @@ ASUCH7:=function(D)
     WX:=[]; for k in [1..PPSIZE] do WX[k]:=[]; od;
     for j in [1..SD] do 
        TXI:=[TX[i],TX[j],TX[XORMAT[i][j]]];
-       for k in [1..PPSIZE] do Add(WX[k],Permuted(TXI,PP[k])); od;
+       for k in [1..PPSIZE] do Add(WX[k],Permuted(TXI,PP[k])*[1,4,16]); od;
        od;
-    for k in [1..PPSIZE] do Add(VX[k],Collected(WX[k])); od;
+    for k in [1..PPSIZE] do Add(VX[k],Collected(WX[k])*[1,64]); od;
     od;
   for k in [1..PPSIZE] do VX[k]:=Collected(VX); od;
   RET:=Minimum(VX);
