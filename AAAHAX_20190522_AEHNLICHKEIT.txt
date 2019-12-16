@@ -499,6 +499,43 @@ for ij in [ [ 655, 569 ], [ 713, 705 ] ] do
   i:=ij[2]; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH6(D2);
   Print(ij,AX1=AX2,"\n");
   od;
+
+
+PP:=[(),(1,2),(1,3),(2,3),(1,2,3),(3,2,1)];
+ASUCH6:=function(D)
+  local A,B,i,Pi,MAX;
+  A:=ASUCH3(D);
+  MAX:=[];
+  for i in [1..6] do
+    Pi:=PP[i];
+    B:=SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)),b[2]])),a[2]]));
+    if B>MAX then MAX:=B; fi;
+    od;
+  return MAX;
+  end;
+R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH3(D);;
+R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH3(D);;
+R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH3(D);;
+A1=A2;A2=A3;A3=A1;
+R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH6(D);;
+R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);;
+R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);;
+A1=A2;A2=A3;A3=A1;
+
+dd:=8;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH6(D);
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Add(GAA,[i,j]);
+    Print("\n",i," ",j,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+
+
 #####
 
 
