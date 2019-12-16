@@ -522,7 +522,7 @@ R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);;
 R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);;
 A1=A2;A2=A3;A3=A1;
 
-dd:=8;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+dd:=5;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
   Print(".\c");
   R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
   D:=DIAG(R);
@@ -535,8 +535,59 @@ dd:=8;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
   Add(GA,WX);
   od;
 
+##### das sollte auch zusammen in einem einzigen ASUCH7 gehen:
+PP:=Group((1,2),(1,2,3));
+ASUCH3:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local i,RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  D3:=(D1+D2) mod 2;
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  C3:=COMPDIAGSTABERZ(D3);
+  TX:=List([1..SD],i->[C1[i],C2[i],C3[i]]);
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  VX:=Collected(VX);
+  RET:=VX;
+  return RET;
+  end;
 
-#####
+dd:=5;
+DAUERSUCH:=function(dd)
+  local i;
+  GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+  Print(".\c");
+  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+  D:=DIAG(R);
+  WX:=ASUCH7(D);
+  if WX in GA then 
+    j:=Position(GA,WX);
+    Add(GAA,[i,j]);
+    Print("\n",i," ",j,"\c");
+    fi;
+  Add(GA,WX);
+  od;
+  end;
+  
+for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd); Print(GAA); od;
+
+
+
+
+
+
+
+
 
 
 
