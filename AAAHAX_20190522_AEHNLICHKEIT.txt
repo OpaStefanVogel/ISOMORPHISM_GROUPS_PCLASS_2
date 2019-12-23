@@ -508,7 +508,7 @@ ASUCH6:=function(D)
   MAX:=[];
   for i in [1..6] do
     Pi:=PP[i];
-    B:=SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)),b[2]])),a[2]]));
+    B:=SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)*[1,4,0])*[1,16,256],b[2]])),a[2]]));
     if B>MAX then MAX:=B; fi;
     od;
   return MAX;
@@ -536,12 +536,12 @@ dd:=5;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
   od;
 
 ##### das sollte auch zusammen in einem einzigen ASUCH7 gehen:
-PP:=Group((1,2),(1,2,3)); PPSIZE:=Size(PP);
+PP:=List(Group((1,2),(1,2,3))); PPSIZE:=Size(PP);
 ASUCH7:=function(D) 
   local i,j,k,RET,SD,S,DI,CI,TX,VX,WX,TXI;
   SD:=Size(D); S:=LogInt(SD,2);
   #D3:=List(D,i->Int(i/4));
-  DI:=[List(D,i->Int((i mod 4)/2)),List(D,i->i mod 2),(D1+D2) mod 2];
+  DI:=[List(D,i->Int((i mod 4)/2)),List(D,i->i mod 2),List(D,i->(Int((i mod 4)/2)+i mod 2) mod 2)];
   CI:=List(DI,D->COMPDIAGSTABERZ(D));
   TX:=List([1..SD],i->[CI[1][i],CI[2][i],CI[3][i]]);
   VX:=[]; for k in [1..PPSIZE] do VX[k]:=[]; od;
@@ -559,13 +559,13 @@ ASUCH7:=function(D)
   end;
 
 dd:=5;
-DAUERSUCH:=function(dd)
+DAUERSUCH:=function(dd,ASUCH)
   local i;
   GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
   Print(".\c");
   R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
   D:=DIAG(R);
-  WX:=ASUCH7(D);
+  WX:=ASUCH(D);
   if WX in GA then 
     j:=Position(GA,WX);
     Add(GAA,[i,j]);
@@ -575,7 +575,8 @@ DAUERSUCH:=function(dd)
   od;
   end;
   
-for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd); Print(GAA); od;
+for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH7); Print(GAA); od; #ha, langsamer!
+for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od;
 
 
 
