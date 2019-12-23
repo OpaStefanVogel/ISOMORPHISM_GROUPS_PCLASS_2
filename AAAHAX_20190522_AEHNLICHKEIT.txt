@@ -492,14 +492,35 @@ for ij in [ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 
 
 
 ##### Einschub: ASUCH6 mit ASUCH3: [ 655, 569 ], [ 713, 705 ]
-ASUCH5:=ASUCH3;
-dd:=8;
-for ij in [ [ 655, 569 ], [ 713, 705 ] ] do
-  i:=ij[1]; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH6(D1);
-  i:=ij[2]; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH6(D2);
-  Print(ij,AX1=AX2,"\n");
-  od;
+ASUCH3:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
+  local i,RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  #D3:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  D3:=(D1+D2) mod 2;
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  C3:=COMPDIAGSTABERZ(D3);
+  TX:=List([1..SD],i->[C1[i],C2[i],C3[i]]);
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  VX:=Collected(VX);
+  RET:=VX;
+  return RET;
+  end;
 
+R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH3(D);;
+R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH3(D);;
+R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH3(D);;
+A1=A2;A2=A3;A3=A1;
 
 PP:=[(),(1,2),(1,3),(2,3),(1,2,3),(3,2,1)];
 ASUCH6:=function(D)
@@ -513,52 +534,19 @@ ASUCH6:=function(D)
     od;
   return MAX;
   end;
-R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH3(D);;
-R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH3(D);;
-R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH3(D);;
-A1=A2;A2=A3;A3=A1;
+
 R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH6(D);;
 R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);;
 R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);;
 A1=A2;A2=A3;A3=A1;
 
-dd:=5;GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
-  Print(".\c");
-  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
-  D:=DIAG(R);
-  WX:=ASUCH6(D);
-  if WX in GA then 
-    j:=Position(GA,WX);
-    Add(GAA,[i,j]);
-    Print("\n",i," ",j,"\c");
-    fi;
-  Add(GA,WX);
+dd:=8;
+for ij in [ [ 655, 569 ], [ 713, 705 ] ] do
+  i:=ij[1]; R1:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D1:=DIAG(R1); AX1:=ASUCH6(D1);
+  i:=ij[2]; R2:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2]; D2:=DIAG(R2); AX2:=ASUCH6(D2);
+  Print(ij,AX1=AX2,"\n");
   od;
 
-##### das sollte auch zusammen in einem einzigen ASUCH7 gehen:
-PP:=List(Group((1,2),(1,2,3))); PPSIZE:=Size(PP);
-ASUCH7:=function(D) 
-  local i,j,k,RET,SD,S,DI,CI,TX,VX,WX,TXI;
-  SD:=Size(D); S:=LogInt(SD,2);
-  #D3:=List(D,i->Int(i/4));
-  DI:=[List(D,i->Int((i mod 4)/2)),List(D,i->i mod 2),List(D,i->(Int((i mod 4)/2)+i mod 2) mod 2)];
-  CI:=List(DI,D->COMPDIAGSTABERZ(D));
-  TX:=List([1..SD],i->[CI[1][i],CI[2][i],CI[3][i]]);
-  VX:=[]; for k in [1..PPSIZE] do VX[k]:=[]; od;
-  for i in [1..SD] do
-    WX:=[]; for k in [1..PPSIZE] do WX[k]:=[]; od;
-    for j in [1..SD] do 
-       TXI:=[TX[i],TX[j],TX[XORMAT[i][j]]];
-       for k in [1..PPSIZE] do Add(WX[k],Permuted(TXI,PP[k])*[1,4,16]); od;
-       od;
-    for k in [1..PPSIZE] do Add(VX[k],Collected(WX[k])*[1,64]); od;
-    od;
-  for k in [1..PPSIZE] do VX[k]:=Collected(VX); od;
-  RET:=Minimum(VX);
-  return RET;
-  end;
-
-dd:=5;
 DAUERSUCH:=function(dd,ASUCH)
   local i;
   GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
@@ -575,8 +563,7 @@ DAUERSUCH:=function(dd,ASUCH)
   od;
   end;
   
-for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH7); Print(GAA); od; #ha, langsamer!
-for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od;
+for dd in [8..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od;
 
 
 
