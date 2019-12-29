@@ -535,9 +535,22 @@ ASUCH6:=function(D)
   return MAX;
   end;
 
-R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH6(D);;
-R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);;
-R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);;
+hhh:=function(A,Pi)
+  return SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)),b[2]])),a[2]]));
+  end; 
+
+PPP:=Group((1,2),(1,2,3)); Size(PPP);
+ASUCH6:=function(D)
+  local A,B,i,Pi,MAX;
+  A:=ASUCH3(D);
+  MAX:=[];
+  MAX:=Maximum(Orbit(PPP,A,hhh));
+  return MAX;
+  end;
+
+R:=[[3],[3,3]];D:=DIAG(R);A1:=ASUCH6(D);
+R:=[[3],[3,2]];D:=DIAG(R);A2:=ASUCH6(D);
+R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH6(D);
 A1=A2;A2=A3;A3=A1;
 
 dd:=8;
@@ -563,7 +576,7 @@ DAUERSUCH:=function(dd,ASUCH)
   od;
   end;
   
-for dd in [8..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od;
+for dd in [1..5] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
 
 
 
