@@ -576,9 +576,31 @@ DAUERSUCH:=function(dd,ASUCH)
   od;
   end;
   
-for dd in [1..5] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
+for dd in [1..6] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
 
 
+TABLE1:=[,,,,
+  [[51,1],[45,6],[21,15],[2,1]], #2^5=32
+  [[267,1],[260,7],[192,54],[55,28]], #2^6=64
+  [[2328,1],[2319,9],[2150,151],[997,604],[164,15]], #2^7=128
+  [[56092,1],[56082,10],[55626,433],[26973,26065],[6732,3566],[542,4]], #2^8=256
+  [[,1],[,12],[,1112],[,2948829],[,5829109],[,6709],[,1]], #2^9=512
+  ];
+
+for n in [5..5] do
+  TN:=TABLE1[n];
+  S:=Size(TN);
+  for d in [n-2,n-3..n-S+1] do
+    TND:=TN[n-d+1];
+    Print("\nn=",n," 2^n=",2^n," d=",d,TND);
+    for i in [TND[1]..TND[1]+TND[2]-1] do
+      Print("\n",i," ",Diagonale(SmallGroup(2^n,i),0));
+      od;
+    od;
+  od;
+
+List([55..55+28-1],i->Diagonale(SmallGroup(64,i),0));
+List([192..192+28-1],i->Diagonale(SmallGroup(64,i),0));
 
 
 
