@@ -560,20 +560,25 @@ for ij in [ [ 655, 569 ], [ 713, 705 ] ] do
   Print(ij,AX1=AX2,"\n");
   od;
 
-DAUERSUCH:=function(dd,ASUCH)
-  local i;
-  GA:=[];GAA:=[];for i in [1..Size(ERGS2[dd])] do
+ADDGAA:=function(i,D)
   Print(".\c");
-  R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
-  D:=DIAG(R);
-  WX:=ASUCH(D);
+  WX:=ASUCH6(D);
   if WX in GA then 
     j:=Position(GA,WX);
     Add(GAA,[i,j]);
     Print("\n",i," ",j,"\c");
     fi;
   Add(GA,WX);
-  od;
+  end;
+
+DAUERSUCH:=function(dd,ASUCH)
+  local i;
+  GA:=[];GAA:=[];
+  for i in [1..Size(ERGS2[dd])] do 
+    R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
+    D:=DIAG(R);
+    ADDGAA(i,D);
+    od;
   end;
   
 for dd in [1..6] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
@@ -587,20 +592,21 @@ TABLE1:=[,,,,
   [[,1],[,12],[,1112],[,2948829],[,5829109],[,6709],[,1]], #2^9=512
   ];
 
-for n in [5..5] do
+for n in [5..7] do
   TN:=TABLE1[n];
   S:=Size(TN);
   for d in [n-2,n-3..n-S+1] do
-    TND:=TN[n-d+1];
+    TND:=TN[n-d+1]; GA:=[]; GAA:=[];
     Print("\nn=",n," 2^n=",2^n," d=",d,TND);
     for i in [TND[1]..TND[1]+TND[2]-1] do
-      Print("\n",i," ",Diagonale(SmallGroup(2^n,i),0));
+      D:=Diagonale(SmallGroup(2^n,i),0);
+      Add(D,0,1);
+      #Print("\n",i," ",D);
+      ADDGAA(i,D);
       od;
     od;
   od;
 
-List([55..55+28-1],i->Diagonale(SmallGroup(64,i),0));
-List([192..192+28-1],i->Diagonale(SmallGroup(64,i),0));
 
 
 
