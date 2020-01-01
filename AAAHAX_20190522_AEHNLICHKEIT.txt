@@ -527,9 +527,9 @@ ASUCH6:=function(D)
   local A,B,i,Pi,MAX;
   A:=ASUCH3(D);
   MAX:=[];
-  for i in [1..6] do
+  for i in [1..1] do
     Pi:=PP[i];
-    B:=SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)*[1,4,0])*[1,16,256],b[2]])),a[2]]));
+    B:=SortedList(List(A,a->[SortedList(List(a[1],b->[List(b[1],c->Permuted(c,Pi)*[1,1,1])*[1,16,256],b[2]])),a[2]]));
     if B>MAX then MAX:=B; fi;
     od;
   return MAX;
@@ -581,7 +581,7 @@ DAUERSUCH:=function(dd,ASUCH)
     od;
   end;
   
-for dd in [1..6] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
+for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
 
 
 TABLE1:=[,,,,
