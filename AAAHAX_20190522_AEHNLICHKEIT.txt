@@ -607,7 +607,7 @@ TABLE1:=[,,,,
   [[,1],[,12],[,1112],[,2948829],[,5829109],[,6709],[,1]], #2^9=512
   ];
 
-for n in [5..7] do
+for n in [5..8] do
   TN:=TABLE1[n];
   S:=Size(TN);
   for d in [n-2,n-3..n-S+1] do
@@ -624,7 +624,7 @@ for n in [5..7] do
     od;
   od;
 
-CSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
+BSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
   local i,RET,SD,S,D1,D2,D3,D4,D5,D6,D7,C1,C2,C3,C4,C5,C6,C7,TX,VX,WX;
   SD:=Size(D); S:=LogInt(SD,2);
   D4:=List(D,i->Int(i/4));
@@ -644,7 +644,7 @@ CSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
   C6:=COMPDIAGSTABERZ(D6);
   C7:=COMPDIAGSTABERZ(D7);
   #Print("\n",C1,"\n",C2,"\n",C3,"\n",C4,"\n",C5,"\n",C6,"\n",C7,"\n");
-  TX:=List([1..SD],i->[C1[i],C2[i],C3[i],C4[i],C5[i],C6[i],C7[i]]*[1,1,1,1,1,1,1]);
+  TX:=List([1..SD],i->[C1[i],C2[i],C3[i],C4[i],C5[i],C6[i],C7[i]]);#*[1,1,1,1,1,1,1]
   VX:=[];
   for i in [1..SD] do
     WX:=[];
@@ -660,6 +660,13 @@ CSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
   end;
 
 PPP4:=Group((1,3)(5,7),(1,2,4)(3,6,5)); Size(PPP4);
+CSUCH4:=function(D,nd)
+  local A,B,i,Pi,MAX;
+  A:=BSUCH4(D,nd);
+  MAX:=[];
+  MAX:=Maximum(Orbit(PPP4,A,hhh));
+  return MAX;
+  end;
 
 
 
