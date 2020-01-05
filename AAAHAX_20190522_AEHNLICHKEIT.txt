@@ -659,6 +659,8 @@ CSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
   return RET;
   end;
 
+PPP4:=Group((1,3)(5,7),(1,2,4)(3,6,5)); Size(PPP4);
+
 
 
 
