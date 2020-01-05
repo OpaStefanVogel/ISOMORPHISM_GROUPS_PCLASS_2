@@ -491,6 +491,12 @@ for ij in [ [ 655, 569 ], [ 713, 705 ], [ 1067, 1054 ], [ 1276, 1133 ], [ 1784, 
 
 
 
+
+
+
+
+
+
 ##### Einschub: ASUCH6 mit ASUCH3: [ 655, 569 ], [ 713, 705 ]
 ASUCH3:=function(D) #Sucht Aehnlichkeiten der Diagonalelemente
   local i,RET,SD,S,D1,D2,C1,C2,S1,S2,SX,TX,VX,WX;
@@ -523,7 +529,7 @@ R:=[[3],[2,2]];D:=DIAG(R);A3:=ASUCH3(D);;
 A1=A2;A2=A3;A3=A1;
 
 PP:=[(),(1,2),(1,3),(2,3),(1,2,3),(3,2,1)];
-ASUCH6:=function(D)
+ASUCH6:=function(D,nd)
   local A,B,i,Pi,MAX;
   A:=ASUCH3(D);
   MAX:=[];
@@ -560,9 +566,9 @@ for ij in [ [ 655, 569 ], [ 713, 705 ] ] do
   Print(ij,AX1=AX2,"\n");
   od;
 
-ADDGAA:=function(i,D)
+ADDGAA:=function(i,D,ASUCHX,nd)
   Print(".\c");
-  WX:=ASUCH6(D);
+  WX:=ASUCHX(D,nd);
   if WX in GA then 
     j:=Position(GA,WX);
     Add(GAA,[i,j]);
@@ -571,17 +577,26 @@ ADDGAA:=function(i,D)
   Add(GA,WX);
   end;
 
-DAUERSUCH:=function(dd,ASUCH)
+DAUERSUCH:=function(dd,ASUCHX,nd)
   local i;
   GA:=[];GAA:=[];
   for i in [1..Size(ERGS2[dd])] do 
     R:=2*ERGS2[dd][i][1]+ERGS2[dd][i][2];
     D:=DIAG(R);
-    ADDGAA(i,D);
+    ADDGAA(i,D,ASUCHX,nd);
     od;
   end;
   
-for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6); Print(GAA); od; time;
+for dd in [1..8] do Print("\ndd=",dd,"\n"); DAUERSUCH(dd,ASUCH6,2); Print(GAA); od; time;
+
+
+
+
+##############################################################
+#
+#
+#
+##############################################################
 
 
 TABLE1:=[,,,,
@@ -602,11 +617,47 @@ for n in [5..7] do
       D:=Diagonale(SmallGroup(2^n,i),0);
       Add(D,0,1);
       #Print("\n",i," ",D);
-      ADDGAA(i,D);
+      if n-d=2 then ADDGAA(i,D,ASUCH6,n-d); fi;
+      if n-d=3 then ADDGAA(i,D,CSUCH4,n-d); fi;
+      if n-d>=4 then Print("*"); fi;
       od;
     od;
   od;
 
+CSUCH4:=function(D,nd) #Sucht Aehnlichkeiten der Diagonalelemente
+  local i,RET,SD,S,D1,D2,D3,D4,D5,D6,D7,C1,C2,C3,C4,C5,C6,C7,TX,VX,WX;
+  SD:=Size(D); S:=LogInt(SD,2);
+  D4:=List(D,i->Int(i/4));
+  D1:=List(D,i->Int((i mod 4)/2));
+  D2:=List(D,i->i mod 2);
+  D3:=(D1+D2) mod 2;
+  D5:=(D1+D4) mod 2;
+  D6:=(D2+D4) mod 2;
+  D7:=(D1+D2+D4) mod 2;
+  #Print("\n",D1,"\n",D2,"\n",D3,"\n",D4,"\n",D5,"\n",D6,"\n",D7,"\n");
+  #D3:=(D1+D2) mod 2;
+  C1:=COMPDIAGSTABERZ(D1);
+  C2:=COMPDIAGSTABERZ(D2);
+  C3:=COMPDIAGSTABERZ(D3);
+  C4:=COMPDIAGSTABERZ(D4);
+  C5:=COMPDIAGSTABERZ(D5);
+  C6:=COMPDIAGSTABERZ(D6);
+  C7:=COMPDIAGSTABERZ(D7);
+  #Print("\n",C1,"\n",C2,"\n",C3,"\n",C4,"\n",C5,"\n",C6,"\n",C7,"\n");
+  TX:=List([1..SD],i->[C1[i],C2[i],C3[i],C4[i],C5[i],C6[i],C7[i]]*[1,1,1,1,1,1,1]);
+  VX:=[];
+  for i in [1..SD] do
+    WX:=[];
+    for j in [1..SD] do
+       Add(WX,[TX[i],TX[j],TX[XORMAT[i][j]]]);
+       od;
+    WX:=Collected(WX);
+    Add(VX,WX);
+    od;
+  VX:=Collected(VX);
+  RET:=VX;
+  return RET;
+  end;
 
 
 
