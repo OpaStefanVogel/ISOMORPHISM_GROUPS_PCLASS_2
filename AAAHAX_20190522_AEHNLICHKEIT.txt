@@ -607,8 +607,8 @@ TABLE1:=[,,,,
   [[,1],[,12],[,1112],[,2948829],[,5829109],[,6709],[,1]], #2^9=512
   ];
 
-TABLE1SUCH:=function(SUCHX)
-  for n in [5..8] do
+TABLE1SUCH:=function(SUCHX,n1,n2)
+  for n in [n1..n2] do
     TN:=TABLE1[n];
     S:=Size(TN);
     for d in [n-2,n-3..n-S+1] do
@@ -672,7 +672,7 @@ CSUCH3:=function(D,nd)
   return MAX;
   end;
 
-TABLE1SUCH(CSUCH3);
+TABLE1SUCH(CSUCH3,5,8);
 
 BITVERGLEICHER2:=function(D)
   local dd,D1,D2,D3,C1,C2,C3,P1,P2,P3,RET;
@@ -721,25 +721,41 @@ BITVERGLEICHER3:=function(D)
 DSUCH3:=function(D,nd)
   local A,B,C,P,PP,i,j,MIN;
   A:=BSUCH3(D,nd);
-  B:=BITVERGLEICHER(D);
+  B:=BITVERGLEICHER3(D);Orbit(PPP,B,Permuted);
   C:=Sortex(B);
   Print("\nB=",B," C=",C);
   P:=[];
-  for i in [1..2^nd-1] do
-    for j in [i+1..2^nd-1] do
-      if B[i]=B[j] then Add(P,(i,j)); fi;
-      od;
+  for i in [1..2^nd-2] do
+    if B[i]=B[i+1] then Add(P,(i,i+1)); fi;
     od;
   Print(" P=",P);
   PP:=Group(P);
-  Print(" Size(PP)=",Size(PP));
+  Print(" Size(PP)=",Size(PP),"\c");
   MIN:=Minimum(Orbit(PP,A,hhh));
   return MIN;
   end;
 
-TABLE1SUCH(DSUCH3);
+TABLE1SUCH(DSUCH3,5,6);time;20248
 
+ESUCH3:=function(D,nd)
+  local A,B,C,P,PP,i,j,MIN;
+  A:=BSUCH3(D,nd);
+  B:=BITVERGLEICHER3(D);
+  Orbit(PPP3,B,Permuted);
+  C:=Sortex(B);
+  Print("\nB=",B," C=",C);
+  P:=[];
+  for i in [1..2^nd-2] do
+    if B[i]=B[i+1] then Add(P,(i,i+1)); fi;
+    od;
+  Print(" P=",P);
+  PP:=Group(P);
+  Print(" Size(PP)=",Size(PP),"\c");
+  MIN:=Minimum(Orbit(PP,A,hhh));
+  return MIN;
+  end;
 
+TABLE1SUCH(ESUCH3,5,6);time;20000
 
 
 
