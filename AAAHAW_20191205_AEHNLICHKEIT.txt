@@ -1,6 +1,7 @@
 #gap -L GAP_WORKSPACE #mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10 und PcgsOfR.txt.
 ##weiterer Versuch: Markierung verfeinern mit Aut(Aut(G)) oder wenigstens mit ConjugacyClasses
 #Read("PcgsOfR.txt");
+#Read("AB_JETZT_NEU.txt");
 #0zuerst RVOND wenn nur 0,1 in D:
 RVOND1:=function(dd,D)
   local d,j,R,RI;
