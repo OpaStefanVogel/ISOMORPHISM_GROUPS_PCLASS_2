@@ -96,3 +96,25 @@ dd:=4;R:=[[1],[0,0],[1,1,1],[1,1,1,1]];D:=DIAG(R); VERFEINERUNG(D);# [ 2, 18 ], 
 dd:=5;R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];D:=DIAG(R); VERFEINERUNG(D);# [ 2, 34 ], [ 3, 35 ], 
 
 dd:=dd+1; D:=Concatenation(D,D); VERFEINERUNG(D);
+                                                                                            a
+                                                a                       a           a   a b b
+                        a           a     a  b  b           a     a  b  b     a  b  b c c c c
+            a     a  b  b     a  b  b  c  c  c  c     a  b  b  c  c  c  c  d  d  d  d d d d d
+   e  a  b  b  c  c  c  c  d  d  d  d  d  d  d  d  f  f  f  f  f  f  f  f  f  f  f  f f f f f 
+#[ 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 0 1 0 0 ]
+      x        x  x  y              y     y           x        x  x  y              y   y
+#×:1, 0, 1, 1, 
+#x=[ 2, 6, 5, 22, 21, 18 ], y=[ 7, 12, 14, 28, 30, 23 ], 
+
+#statt x^2=0 x^2=2 bei y^2=(yx)^2 für alle y
+#statt x^2=1 x^2=3 bei y^2!=(yx)^2 für alle y
+
+#x×y=x·1·y
+#1×1=1
+#0×0=1
+
+#x×y=x·a^-1·y
+#a×a=a also neutrales Element
+#e×e=a^-1=a
+
+#gebraucht wird sowas wie wenn x^2=y^2=1 und (xy)^2!=0, darf aber 0^_ sein
