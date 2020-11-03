@@ -2,6 +2,7 @@
 ##weiterer Versuch: Markierung verfeinern mit Aut(Aut(G)) oder wenigstens mit ConjugacyClasses
 #Read("PcgsOfR.txt");
 #Read("AB_JETZT_NEU.txt"); bis Ausgabe "....." reicht
+#die schweren waren  [ 655, 569 ], [ 713, 705 ] in AAAHAX Zeile 500
 #0zuerst RVOND wenn nur 0,1 in D:
 RVOND1:=function(dd,D)
   local d,j,R,RI;

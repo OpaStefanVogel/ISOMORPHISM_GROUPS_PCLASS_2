@@ -114,12 +114,32 @@ function init() {
       h.appendChild(e);
       }
     }
+  Testlauf();
   }
 //alert(ERGS2[4].length+" "+ERGS2[5].length+" "+ERGS2[6].length+" "+ERGS2[7].length);
+
+var Logtext;
+function Logfile(Logtext) {
+  document.getElementById("Logfile").firstChild.nodeValue=Logtext;
+  }
+
+function DIAG(R) {
+  return "???";
+  }
+
+function Testlauf() {
+  //[655,569 ],[713,705] 
+  //alert(ERGS2[7][654].join("+")+"\n---\n"+ERGS2[7][568].join("+"));
+  Logtext="["+ERGS2[3][6][1].join("],[")+"]\n---\n["+ERGS2[3][5][1].join("],[")+"]\n\n";
+  //111111111111110110010101001010001110
+  //111111111111110111010110110010111000
+  Logtext=Logtext+"D="+DIAG(ERGS2[3][6][1])+"\n";
+  Logfile(Logtext);
+  }
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
-Tabelle TABLE 1 aus [1], XXX=wird hier nicht benötigt:
+Tabelle TABLE 1 aus ...:
 <table style="text-align:center" border="1">
   <tr><th>2</th><td>4</td><td>8</td><td>16</td><td>32</td><td>64</td><td>128</td><td>256</td><td>512</td><td>1024</td></tr>
   <tr><td>1</td><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -132,6 +152,7 @@ Tabelle TABLE 1 aus [1], XXX=wird hier nicht benötigt:
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>12</td><td>2933</td></tr>
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>13</td></tr>
   </table>
+  <div id="Logfile" style="white-space:pre-wrap"> </div>
   <div><h id="hier"></h></div>
   </body>
   </html>
