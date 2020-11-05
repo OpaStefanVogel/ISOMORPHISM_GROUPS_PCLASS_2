@@ -181,6 +181,24 @@ function MARKZAHL1(DD) {
     }
   return MARK.sort();
   }
+
+function DREHMARK(DD) {
+  var MARK=[0,0,0,0];
+  var SD=DD.length;
+  for (i=0;i<SD;i++) {
+    var a=true;
+    if (DD[i]==0) {
+      for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
+      if (a) MARK[2]=MARK[2]+1; else MARK[0]=MARK[0]+1;
+      } else {
+        for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
+        if (a) MARK[3]=MARK[3]+1; else MARK[1]=MARK[1]+1;
+        }
+    //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
+    }
+  return MARK.sort();
+  }
+
 /*
 for x in G do
     a:=true;
@@ -203,7 +221,7 @@ function Testlauf() {
   //111111111111110 111010 1101100 10111000
   var DD=DIAG(ERGS2[3][6][1]);
   var M=MARKZAHL(DD);
-  Logtext=Logtext+"DD="+DD+"\n"+M+"\n";
+  Logtext=Logtext+"DD="+DD+"\n"+M+"\n\n";
   var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
   //var DD0=DIAG(ERGS2[7][654][0]);
   var M0=MARKZAHL(DD0);
@@ -214,7 +232,7 @@ function Testlauf() {
   Logtext=Logtext+"DD1="+DD1+"\n"+M1+"\n";
   var DD1Q=[]; for (i=0;i<DD1.length;i++) DD1Q[i]=DD0[i]^DD1[i];
   var M1Q=MARKZAHL(DD1Q);
-  Logtext=Logtext+"DD1Q"+DD1Q+"\n"+M1Q+"\n";
+  Logtext=Logtext+"DD1Q"+DD1Q+"\n"+M1Q+"\n\n";
   var DD2=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,0],[1,1,1,0,1,0],[1,1,0,1,1,0,0],[1,0,1,1,1,0,0,0]]);
   //var DD2=DIAG(ERGS2[7][568][1]);
   var M2=MARKZAHL(DD2);
@@ -243,6 +261,10 @@ function Testlauf() {
   var DD2Q=[]; for (i=0;i<DD2.length;i++) DD2Q[i]=DD0[i]^DD2[i];
   var M2Q=MARKZAHL(DD2Q);
   Logtext=Logtext+"DD2Q"+DD2Q+"\n"+M2Q+"\n\n";
+
+  var DD1W=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0]]);
+  var M1W=MARKZAHL(DD1W);
+  Logtext=Logtext+"DD1W"+DD1W+"\n"+M1W+"\n\n";
 
 
   Logfile(Logtext);

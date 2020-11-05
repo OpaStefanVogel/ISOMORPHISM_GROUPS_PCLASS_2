@@ -55,10 +55,13 @@ VERFEINERUNG:=function(D)
   C:=COMPDIAGSTABERZ(D);
   S:=Group(STABMACH2(C)); #hier vorsichtshalber nochmal mit Aut(G) vergleichen
   T:=ConjugacyClasses(S);
-  U:=Orbits(S,[1..SD]);
-  V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));
+  Print("T",Size(T),"\c");
+  #U:=Orbits(S,[1..SD]);
+  V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));#auch nur [2]
+  Print("V\c");
   WS:=Collected(List(V,v->List(v,w->SortedList(w))));
-  W:=Collected(List(V,v->Collected(List(v,w->Collected(List(w,i->C[i]))))));
+  Print("WS\c");
+  #W:=Collected(List(V,v->Collected(List(v,w->Collected(List(w,i->C[i]))))));
   return [C,Collected(C),WS];
   end;
 
@@ -214,8 +217,22 @@ dd:=dd+1; D:=Concatenation(D,D); VERFEINERUNG(D);
             a     a  b  b     a  b  b  c  c  c  c     a  b  b  c  c  c  c  d  d  d  d d d d d
    e  a  b  b  c  c  c  c  d  d  d  d  d  d  d  d  f  f  f  f  f  f  f  f  f  f  f  f f f f f 
 #[ 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 0 1 0 0 ]
- [ 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1,0,0,0,1,
-      x        x  x  y              y     y           x        x  x  y              y   y
+#     x        x  x  y              y     y           x        x  x  y              y   y
+#[ 2, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1,0,0,0,1, 
+#     x        x  x  y              y     y        x  x  y     X     x  x  y     x  x       y
+#  0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1,0,1,0,0 
+#           y     y           y        x  x  y        y        x  x  y              y   y
+
+#   a   a   a   a   a   a   a   a    a   a   a   a   a   a   a   a
+# 0,x,0,0,x,x,1,0,0,0,0,1,0,1,0,0, x,x,1,0,1,0,x,x,1,0,x,x,0,0,0,1,
+# 0,0,0,1,0,1,0,0,0,1,0,0,x,x,1,0, 0,1,0,0,x,x,1,0,0,0,0,1,0,1,0,0,
+# 1,1,1,0,1,0,1,1,1,0,1,1,0,0,0,1, 1,0,1,1,0,0,0,1,1,1,1,0,1,0,1,1,
+# 1,0,1,1,0,0,0,1,1,1,1,0,1,0,1,1, 0,0,0,1,0,1,0,0,0,1,0,0,1,1,1,0,
+# 0,0,0,1,0,1,0,0,0,1,0,0,1,1,1,0, 0,1,0,0,1,1,1,0,0,0,0,1,0,1,0,0,
+# 0,1,0,0,1,1,1,0,0,0,0,1,0,1,0,0, 1,1,1,0,1,0,1,1,1,0,1,1,0,0,0,1,
+# 0,1,0,0,1,1,1,0,0,0,0,1,0,1,0,0, 1,1,1,0,1,0,1,1,1,0,1,1,0,0,0,1,
+# 0,0,0,1,0,1,0,0,0,1,0,0,1,1,1,0, 0,1,0,0,1,1,1,0,0,0,0,1,0,1,0,0
+135,120,1
 #×:1, 0, 1, 1, 
 #x=[ 2, 6, 5, 22, 21, 18 ], y=[ 7, 12, 14, 28, 30, 23 ], 
 a c ac, a f af, a bcf abcf, a bdf abdf, c f cf, c bf bcf,
