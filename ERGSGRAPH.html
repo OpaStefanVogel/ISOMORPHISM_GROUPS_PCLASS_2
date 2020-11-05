@@ -124,7 +124,31 @@ function Logfile(Logtext) {
   }
 
 function DIAG(R) {
-  return "???";
+  var dd=R.length;
+  var D=[0];
+  for (var i=0;i<dd;i++) {
+    D[2**i]=R[i][0];
+    for (var j=0;j<i;j++) {
+      D[2**i+2**j]=R[i][j+1];
+      }
+    }
+  for (i=0;i<2**dd;i++) {
+    if (typeof D[i]=="undefined") {
+      Logtext=Logtext+"\nD["+i+"]=";
+      var Bitpos=1;
+      var B=[];
+      for (var j=0;j<3;j++) {
+        while ((i&Bitpos)==0) Bitpos=Bitpos*2;
+        Logtext=Logtext+Bitpos+"+";
+        B[j]=Bitpos;
+        Bitpos=Bitpos*2;
+        }
+      Logtext=Logtext+" B="+B+" :::"+(i&~B[0])+" "+(i&~B[1])+" "+(i&~B[2])+" "+(i&~B[0]&~B[1])+" "+(i&~B[0]&~B[2])+" "+(i&~B[1]&~B[2])+" :::"+(i&~B[0])+" "+(i&~B[1])+" "+(i&~B[0]&~B[1])+" "+(B[0])+" "+(B[1])+" "+(B[0]|B[1]);
+//D[i]=(D[i&~B[0]]+D[i&~B[1]]+D[i&~B[2]]+D[i&~B[0]&~B[1]]+D[i&~B[0]&~B[2]]+D[i&~B[1]&~B[2]])%2;
+D[i]=(D[i&~B[0]]+D[i&~B[1]]+D[i&~B[0]&~B[1]]+D[B[0]]+D[B[1]]+D[B[0]|B[1]])%2;
+      }
+    }
+  return dd+", ["+D+"]";
   }
 
 function Testlauf() {
@@ -133,7 +157,8 @@ function Testlauf() {
   Logtext="["+ERGS2[3][6][1].join("],[")+"]\n---\n["+ERGS2[3][5][1].join("],[")+"]\n\n";
   //111111111111110110010101001010001110
   //111111111111110111010110110010111000
-  Logtext=Logtext+"D="+DIAG(ERGS2[3][6][1])+"\n";
+  var DD=DIAG(ERGS2[3][6][1]);
+  Logtext=Logtext+"D="+DD+"\n";
   Logfile(Logtext);
   }
   </script>
@@ -152,7 +177,7 @@ Tabelle TABLE 1 aus ...:
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>12</td><td>2933</td></tr>
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>13</td></tr>
   </table>
-  <div id="Logfile" style="white-space:pre-wrap"> </div>
+  <div id="Logfile" style="white-space:pre-wrap; font-family:Courier,monospace; font-size:70%"> </div>
   <div><h id="hier"></h></div>
   </body>
   </html>
