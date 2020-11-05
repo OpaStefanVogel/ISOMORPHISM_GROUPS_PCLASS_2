@@ -134,33 +134,118 @@ function DIAG(R) {
     }
   for (i=0;i<2**dd;i++) {
     if (typeof D[i]=="undefined") {
-      Logtext=Logtext+"\nD["+i+"]=";
+//      Logtext=Logtext+"\nD["+i+"]=";
       var Bitpos=1;
       var B=[];
       for (var j=0;j<3;j++) {
         while ((i&Bitpos)==0) Bitpos=Bitpos*2;
-        Logtext=Logtext+Bitpos+"+";
+//        Logtext=Logtext+Bitpos+"+";
         B[j]=Bitpos;
         Bitpos=Bitpos*2;
         }
-      Logtext=Logtext+" B="+B+" :::"+(i&~B[0])+" "+(i&~B[1])+" "+(i&~B[2])+" "+(i&~B[0]&~B[1])+" "+(i&~B[0]&~B[2])+" "+(i&~B[1]&~B[2])+" :::"+(i&~B[0])+" "+(i&~B[1])+" "+(i&~B[0]&~B[1])+" "+(B[0])+" "+(B[1])+" "+(B[0]|B[1]);
-//D[i]=(D[i&~B[0]]+D[i&~B[1]]+D[i&~B[2]]+D[i&~B[0]&~B[1]]+D[i&~B[0]&~B[2]]+D[i&~B[1]&~B[2]])%2;
-D[i]=(D[i&~B[0]]+D[i&~B[1]]+D[i&~B[0]&~B[1]]+D[B[0]]+D[B[1]]+D[B[0]|B[1]])%2;
+//      Logtext=Logtext+" B="+B+" :::"+(i&~B[0])+" "+(i&~B[1])+" "+(i&~B[0]&~B[1])+" "+(B[0])+" "+(B[1])+" "+(B[0]|B[1]);
+      D[i]=(D[i&~B[0]]+D[i&~B[1]]+D[i&~B[0]&~B[1]]+D[B[0]]+D[B[1]]+D[B[0]|B[1]])%2;
       }
     }
-  return dd+", ["+D+"]";
+  return D;
   }
+
+function MARKZAHL(DD) {
+  var MARK=[];alert(DD);
+  var SD=DD.length;alert(SD);
+  for (i=0;i<SD;i++) {
+    var a=0;
+    for (var j=0;j<SD;j++) {
+      if (DD[i^j]!=DD[j]) a=a+1;
+      }
+    if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
+    }
+  return MARK.sort();
+  }
+
+function MARKZAHL(DD) {
+  var MARK=[0,0,0,0];
+  var SD=DD.length;
+  for (i=0;i<SD;i++) {
+    var a=true;
+    if (DD[i]==0) {
+      for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
+      if (a) MARK[2]=MARK[2]+1; else MARK[0]=MARK[0]+1;
+      } else {
+        for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
+        if (a) MARK[3]=MARK[3]+1; else MARK[1]=MARK[1]+1;
+        }
+    //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
+    }
+  return MARK.sort();
+  }
+/*
+for x in G do
+    a:=true;
+    if x^2=e then
+      for y in G do if a then if not y^2=(y*x)^2 then a:=false; fi; fi; od;
+      if a then MERK[3]:=MERK[3]+1; else MERK[1]:=MERK[1]+1; fi;
+      else
+        for y in G do if a then if y^2=(y*x)^2 then a:=false; fi; fi; od;
+        if a then MERK[4]:=MERK[4]+1; else MERK[2]:=MERK[2]+1; fi;
+        fi;
+    od;
+*/
+
 
 function Testlauf() {
   //[655,569 ],[713,705] 
   //alert(ERGS2[7][654].join("+")+"\n---\n"+ERGS2[7][568].join("+"));
   Logtext="["+ERGS2[3][6][1].join("],[")+"]\n---\n["+ERGS2[3][5][1].join("],[")+"]\n\n";
-  //111111111111110110010101001010001110
-  //111111111111110111010110110010111000
+  //111111111111110 110010 1010010 10001110
+  //111111111111110 111010 1101100 10111000
   var DD=DIAG(ERGS2[3][6][1]);
-  Logtext=Logtext+"D="+DD+"\n";
+  var M=MARKZAHL(DD);
+  Logtext=Logtext+"DD="+DD+"\n"+M+"\n";
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
+  //var DD0=DIAG(ERGS2[7][654][0]);
+  var M0=MARKZAHL(DD0);
+  Logtext=Logtext+"DD0="+DD0+"\n"+M0+"\n";
+  var DD1=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,0],[1,1,0,0,1,0],[1,0,1,0,0,1,0],[1,0,0,0,1,1,1,0]]);
+  //var DD1=DIAG(ERGS2[7][654][1]);
+  var M1=MARKZAHL(DD1);
+  Logtext=Logtext+"DD1="+DD1+"\n"+M1+"\n";
+  var DD1Q=[]; for (i=0;i<DD1.length;i++) DD1Q[i]=DD0[i]^DD1[i];
+  var M1Q=MARKZAHL(DD1Q);
+  Logtext=Logtext+"DD1Q"+DD1Q+"\n"+M1Q+"\n";
+  var DD2=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,0],[1,1,1,0,1,0],[1,1,0,1,1,0,0],[1,0,1,1,1,0,0,0]]);
+  //var DD2=DIAG(ERGS2[7][568][1]);
+  var M2=MARKZAHL(DD2);
+  Logtext=Logtext+"DD2="+DD2+"\n"+M2+"\n";
+  var DD2Q=[]; for (i=0;i<DD2.length;i++) DD2Q[i]=DD0[i]^DD2[i];
+  var M2Q=MARKZAHL(DD2Q);
+  Logtext=Logtext+"DD2Q"+DD2Q+"\n"+M2Q+"\n\n";
+
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
+  //var DD0=DIAG(ERGS2[7][654][0]);
+  var M0=MARKZAHL(DD0);
+  Logtext=Logtext+"DD0="+DD0+"\n"+M0+"\n";
+  var DD1=DIAG([[1],[1,1],[1,1,1],[1,1,1,0],[1,1,0,1,1],[1,0,1,1,1,0],[1,0,0,1,1,1,1],[1,0,0,1,0,0,0,0]]);
+//1, 1,1, 1,1,1, 1,1,1,0, 1,1,0,1,1, 1,0,1,1,1,0, 1,0,0,1,1,1,1, 1,0,0,1,0,0,0,0
+  //var DD1=DIAG(ERGS2[7][712][1]);
+  var M1=MARKZAHL(DD1);
+  Logtext=Logtext+"DD1="+DD1+"\n"+M1+"\n";
+  var DD1Q=[]; for (i=0;i<DD1.length;i++) DD1Q[i]=DD0[i]^DD1[i];
+  var M1Q=MARKZAHL(DD1Q);
+  Logtext=Logtext+"DD1Q"+DD1Q+"\n"+M1Q+"\n";
+  var DD2=DIAG([[1],[1,1],[1,1,1],[1,1,1,0],[1,1,1,0,0],[1,1,0,1,1,0],[1,0,1,1,0,1,0],[0,1,1,0,1,0,0,1]]);
+//1, 1,1, 1,1,1, 1,1,1,0, 1,1,1,0,0, 1,1,0,1,1,0, 1,0,1,1,0,1,0, 0,1,1,0,1,0,0,1
+  //var DD2=DIAG(ERGS2[7][704][1]);
+  var M2=MARKZAHL(DD2);
+  Logtext=Logtext+"DD2="+DD2+"\n"+M2+"\n";
+  var DD2Q=[]; for (i=0;i<DD2.length;i++) DD2Q[i]=DD0[i]^DD2[i];
+  var M2Q=MARKZAHL(DD2Q);
+  Logtext=Logtext+"DD2Q"+DD2Q+"\n"+M2Q+"\n\n";
+
+
   Logfile(Logtext);
   }
+
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
@@ -177,6 +262,164 @@ Tabelle TABLE 1 aus ...:
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>12</td><td>2933</td></tr>
   <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>13</td></tr>
   </table>
+Tabelle aus ...
+<table align="center" border="1">
+<tr>
+  <td>2<sup>2</sup></td>
+  <td>2<sup>3</sup></td>
+  <td>2<sup>4</sup></td>
+  <td>2<sup>5</sup></td>
+  <td>2<sup>6</sup></td>
+  <td>2<sup>7</sup></td>
+  <td>2<sup>8</sup></td>
+  <td>2<sup>9</sup></td>
+  <td>2<sup>10</sup></td>
+  </tr>
+<tr>
+  <td>[4,1]<br/> 2·(1+1)</td>
+  <td>[8,2]<br/> 4·(1+1)</td>
+  <td>[16,10]<br/> 8·(1+1)</td>
+  <td>[32,45]<br/> 16·(1+1)</td>
+  <td>[64,260]<br/> 32·(1+1)</td>
+  <td>[128,2319]<br/> 64·(1+1)</td>
+  <td>[256,56082]<br/> 128·(1+1)</td>
+  <td>[512,10494201]<br/> 256·(1+1)</td>
+  <td><br/>512·(1+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td>[8,3]<br/> 2·(2+1+1)</td>
+  <td>[16,11]<br/> 4·(2+1+1)</td>
+  <td>[32,46]<br/> 8·(2+1+1)</td>
+  <td>[64,261]<br/> 16·(2+1+1)</td>
+  <td>[128,2320]<br/> 32·(2+1+1)</td>
+  <td>[256,56083]<br/> 64·(2+1+1)</td>
+  <td>[512,10494202]<br/> 128·(2+1+1)</td>
+  <td><br/>256·(2+1+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td>[8,4]<br/> 2·(3+1)</td>
+  <td>[16,12]<br/> 4·(3+1)</td>
+  <td>[32,47]<br/> 8·(3+1)</td>
+  <td>[64,262]<br/> 16·(3+1)</td>
+  <td>[128,2321]<br/> 32·(3+1)</td>
+  <td>[256,56084]<br/> 64·(3+1)</td>
+  <td>[512,10494203]<br/> 128·(3+1)</td>
+  <td><br/>256·(3+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td></td>
+  <td>[16,13]<br/> 2·(3+3+1+1)</td>
+  <td>[32,48]<br/> 4·(3+3+1+1)</td>
+  <td>[64,263]<br/> 8·(3+3+1+1)</td>
+  <td>[128,2322]<br/> 16·(3+3+1+1)</td>
+  <td>[256,56085]<br/> 32·(3+3+1+1)</td>
+  <td>[512,10494204]<br/> 64·(3+3+1+1)</td>
+  <td><br/>128·(3+3+1+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td>[32,49]<br/> 2·(9+6+1)</td>
+  <td>[64,264]<br/> 4·(9+6+1)</td>
+  <td>[128,2323]<br/> 8·(9+6+1)</td>
+  <td>[256,56086]<br/> 16·(9+6+1)</td>
+  <td>[512,10494205]<br/> 32·(9+6+1)</td>
+  <td><br/>64·(9+6+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td>[32,50]<br/> 2·(10+5+1)</td>
+  <td>[64,265]<br/> 4·(10+5+1</td>
+  <td>[128,2324]<br/> 8·(10+5+1)</td>
+  <td>[256,56087]<br/> 16·(10+5+1)</td>
+  <td>[512,10494206]<br/> 32·(10+5+1)</td>
+  <td><br/>64·(10+5+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[64,266]<br/> 2·(15+15+1+1)</td>
+  <td>[128,2325]<br/> 4·(15+15+1+1)</td>
+  <td>[256,56088]<br/> 8·(15+15+1+1)</td>
+  <td>[512,10494207]<br/> 16·(15+15+1+1)</td>
+  <td><br/>32·(15+15+1+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[128,2326]<br/> 2·(35+28+1)</td>
+  <td>[256,56089]<br/> 4·(35+28+1)</td>
+  <td>[512,10494208]<br/> 8·(35+28+1)</td>
+  <td><br/>16·(35+28+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[128,2327]<br/> 2·(36+27+1)</td>
+  <td>[256,56090]<br/> 4·(36+27+1)</td>
+  <td>[512,10494209]<br/> 8·(36+27+1)</td>
+  <td><br/>16·(36+27+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[256,56091]<br/> 2·(63+63+1+1)</td>
+  <td>[512,10494210]<br/> 4·(63+63+1+1)</td>
+  <td><br/>8·(63+63+1+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[512,10494211]<br/> 2·(135+120+1)</td>
+  <td><br/>4·(135+120+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[512,10494212]<br/> 2·(136+119+1)</td>
+  <td><br/>4·(136+119+1)</td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td><br/>2·(255+255+1+1)</td>
+  </tr>
+  </table>
+
   <div id="Logfile" style="white-space:pre-wrap; font-family:Courier,monospace; font-size:70%"> </div>
   <div><h id="hier"></h></div>
   </body>
