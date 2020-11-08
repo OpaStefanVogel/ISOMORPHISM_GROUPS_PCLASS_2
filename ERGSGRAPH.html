@@ -212,6 +212,16 @@ for x in G do
     od;
 */
 
+function KREISE(DD) {
+  var K=[];
+  var SD=DD.length;
+  for (i=0;i<SD;i++) {
+    if (DD[i]==1) {
+      for (var j=i+1;j<SD;j++) if (j<(i^j)&&DD[j]==1&&DD[i^j]==1) K.push([i,j,i^j]);
+      }
+    }
+  return K;
+  }
 
 function Testlauf() {
   //[655,569 ],[713,705] 
@@ -222,6 +232,13 @@ function Testlauf() {
   var DD=DIAG(ERGS2[3][6][1]);
   var M=MARKZAHL(DD);
   Logtext=Logtext+"DD="+DD+"\n"+M+"\n\n";
+  Logtext=Logtext+KREISE(DD).join("\n")+"\n\n";
+
+  var DD=DIAG([[1],[0,0],[1,1,1],[0,0,0,0]]);
+  var M=MARKZAHL(DD);
+  Logtext=Logtext+"DD="+DD+"\n"+M+"\n\n";
+  Logtext=Logtext+KREISE(DD).join("\n")+"\n\n";
+
   var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
   //var DD0=DIAG(ERGS2[7][654][0]);
   var M0=MARKZAHL(DD0);
@@ -266,7 +283,8 @@ function Testlauf() {
   var M1W=MARKZAHL(DD1W);
   Logtext=Logtext+"DD1W"+DD1W+"\n"+M1W+"\n\n";
 
-
+  Logtext=Logtext+KREISE(DD1W).join("\n")+"\n\n";
+  
   Logfile(Logtext);
   }
 
