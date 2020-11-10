@@ -214,13 +214,34 @@ for x in G do
 
 function KREISE(DD) {
   var K=[];
+  AMERK=[];
   var SD=DD.length;
   for (i=0;i<SD;i++) {
     if (DD[i]==1) {
-      for (var j=i+1;j<SD;j++) if (j<(i^j)&&DD[j]==1&&DD[i^j]==1) K.push([i,j,i^j]);
+      for (var j=i+1;j<SD;j++) if (j<(i^j)&&DD[j]==1&&DD[i^j]==1) {
+        K.push([i,j,i^j]);
+        MERKE(i,j);
+        MERKE(i,i^j);
+        MERKE(j,i);
+        MERKE(j,i^j);
+        MERKE(i^j,i);
+        MERKE(i^j,j);
+        }
       }
     }
   return K;
+  }
+
+var AMERK=[];
+function MERKE(i,j) {
+  if (typeof AMERK[i]=="undefined") AMERK[i]=[];
+  AMERK[i][j]=1;
+  }
+  
+function AZAHL(i,j) {
+  var z=0;
+  for (var k=0;k<AMERK[i].length;k++) if ((typeof AMERK[i][k]!="undefined")&&(typeof AMERK[j][k]!="undefined")) z=z+1;
+  return z;
   }
 
 function Testlauf() {
@@ -283,8 +304,13 @@ function Testlauf() {
   var M1W=MARKZAHL(DD1W);
   Logtext=Logtext+"DD1W"+DD1W+"\n"+M1W+"\n\n";
 
-  Logtext=Logtext+KREISE(DD1W).join("\n")+"\n\n";
+  Logtext=Logtext+KREISE(DD1W).join("\n")+"\n\n"+AMERK[1]+"\n"+AMERK[6]+"\n"+AZAHL(1,6)+"\n";
   
+  for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
+    Logtext=Logtext+j;  
+    for (var i=0;i<AMERK.length;i++) if (AMERK[i]) if (AZAHL(i,j)==28) Logtext=Logtext+"."; else Logtext=Logtext+":";
+    Logtext=Logtext+"\n";
+    }
   Logfile(Logtext);
   }
 
