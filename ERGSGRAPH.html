@@ -326,7 +326,7 @@ function Testlauf() {
     Logtext=Logtext+"\n";
     }
 
-  Logtext=Logtext+'xxxx<span>y</span>\n<a href="DD1U">DD1U</a>\n';
+  Logtext=Logtext+'xxxx<span id="DD1U">DD1U</spabn>\n';
   var DD1U=DIAG([[1],[0,0],[1,1,1],[1,1,1,1]]);
   var M1U=MARKZAHL(DD1U);
   Logtext=Logtext+"DD1U"+DD1U+"\n"+M1U+"\n\n";
@@ -346,7 +346,7 @@ function Testlauf() {
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
-<div style="position:fixed; top:200px; left:600px;" ><a href="#Tabelle2">Tabelle 2</a></div>
+<div style="position:fixed; top:0px; left:600px; background-color:yellow; border:solid;" ><a href="#Tabelle2">Tabelle 2</a><br/><a href="#DD1U">DD1U</a></div>
 
 Tabelle TABLE 1 aus ...:
 <table style="text-align:center" border="1">
