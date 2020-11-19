@@ -166,7 +166,7 @@ function MARKZAHL(DD) {
   return MARK.sort(function (x,y) {return y-x}).slice(0,4);
   }
 
-function MARKZAHL1(DD) {
+function MARKZAHL(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
   for (i=0;i<SD;i++) {
@@ -326,7 +326,19 @@ function Testlauf() {
     Logtext=Logtext+"\n";
     }
 
-  Logtext=Logtext+'xxxx<span id="DD1U">DD1U</spabn>\n';
+  for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
+    for (var k=1;k<AMERK.length;k++) if (AMERK[k]) if (AZAHL(j,k)==4) {
+      for (var l=1;l<AMERK.length;l++) if (AMERK[l]) {
+        if (AZAHL(j,l)==4&&AZAHL(k,l)==4) {
+          //alert("R "+j+" "+k+" "+l);
+          Logtext=Logtext+"R "+j+" "+k+" "+l+"\n";
+          }
+        }
+      }
+    }
+  Logtext=Logtext+"\n";
+
+  Logtext=Logtext+'xxxx<span id="DD1U">DD1U</span>\n';
   var DD1U=DIAG([[1],[0,0],[1,1,1],[1,1,1,1]]);
   var M1U=MARKZAHL(DD1U);
   Logtext=Logtext+"DD1U"+DD1U+"\n"+M1U+"\n\n";
@@ -339,6 +351,32 @@ function Testlauf() {
     Logtext=Logtext+"\n";
     }
 
+  Logtext=Logtext+'xxxx<span id="DD1T">[64,266]: DD1T=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]]</span>\n';
+//  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]]);
+  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]]);
+  var M1V=MARKZAHL(DD1V);
+  Logtext=Logtext+"DD1V"+DD1V+"\n"+M1V+"\n\n";
+
+  Logtext=Logtext+KREISE(DD1V).join("\n")+"\n\n"+AZAHL(1,6)+"\n";
+
+  for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
+    Logtext=Logtext+j;  
+    for (var i=0;i<AMERK.length;i++) if (AMERK[i]) if (AZAHL(i,j)==4) Logtext=Logtext+"."+AZAHL(i,j); else Logtext=Logtext+":"+AZAHL(i,j);
+    Logtext=Logtext+"\n";
+    }
+
+  for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
+    for (var k=1;k<AMERK.length;k++) if (AMERK[k]) if (AZAHL(j,k)==4) {
+      for (var l=1;l<AMERK.length;l++) if (AMERK[l]) {
+        if (AZAHL(j,l)==4&&AZAHL(k,l)==4) {
+          //alert("R "+j+" "+k+" "+l);
+          Logtext=Logtext+"R "+j+" "+k+" "+l+"\n";
+          }
+        }
+      }
+    }
+  Logtext=Logtext+"\n";
+
 
   Logfile(Logtext);
   }
@@ -346,7 +384,9 @@ function Testlauf() {
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
-<div style="position:fixed; top:0px; left:600px; background-color:yellow; border:solid;" ><a href="#Tabelle2">Tabelle 2</a><br/><a href="#DD1U">DD1U</a></div>
+<div style="position:fixed; top:0px; left:600px;"><span style=" background-color:yellow; border:none;" ><a href="#Tabelle2">Tabelle 2</a>
+<br/><a href="#DD1U">DD1U</a>
+<br/><a href="#DD1T">[64,266]</a></span></div>
 
 Tabelle TABLE 1 aus ...:
 <table style="text-align:center" border="1">
@@ -530,7 +570,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   </tr>
   </table>
 
-  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; max-height:400px; white-space:pre-wrap; font-family:Courier,monospace; font-size:70%"> </div>
+  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; max-height:400px; width:80%; border:solid; border-color:grey; white-space:pre-wrap; font-family:Courier,monospace; font-size:70%"> </div>
   <div><h id="hier"></h></div>
   </body>
   </html>
