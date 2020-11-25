@@ -58,6 +58,7 @@ VERFEINERUNG:=function(D)
   Print("T",Size(T),"\c");
   #U:=Orbits(S,[1..SD]);
   V:=List([1..Size(T)],i->Orbits(Group(List(T[i])),[1..SD]));#auch nur [2]
+#  V:=List([3],i->Orbits(Group(List(T[i])),[2]));#nur [3] [2]
   Print("V\c");
   WS:=Collected(List(V,v->List(v,w->SortedList(w))));
   Print("WS\c");
@@ -332,4 +333,52 @@ TABELLE:=[
 [ 512, 10494211 ], [ 2, [ 135, 120, 1, 0 ], [ 135, 120, 1, 0 ] ],
 [ 512, 10494212 ], [ 2, [ 136, 119, 1, 0 ], [ 119, 136, 1, 0 ] ],
 ];
+
+for n in [2..8] do
+  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+    G:=SmallGroup(2^n,index);
+    Print(IdSmallGroup(G),", ",Size(OrbitsDomain(AutomorphismGroup(G),G)),",\n");
+    od;
+  od;
+
+for n in [2..8] do
+  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+    G:=SmallGroup(2^n,index);
+    Print(IdSmallGroup(G),", ",Size(ConjugacyClasses(G)),",\n");
+    od;
+  od;
+
+for n in [2..5] do
+  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+    G:=SmallGroup(2^n,index);
+    Print("\n-------------------------\n",IdSmallGroup(G),",\n");
+    Display(CharacterTable(G));
+    od;
+  od;
+
+F:=FreeGroup("e","f","a","b","c","d");AssignGeneratorVariables(F);
+R:=ParseRelators([e,f,a,b,c,d],"e^2=e, f^2=e, \
+  a^2=f, \
+  b^2=(a*b)^2=e,  \
+  c^2=(a*c)^2=(b*c)^2=f, \
+  d^2=(a*d)^2=(b*d)^2=(c*d)^2=f \
+  ");
+G:=F/R;
+IdSmallGroup(G);
+T:=CharacterTable(G);Display(T);
+
+F:=FreeGroup("e","f","a","b","c","d","g","h");AssignGeneratorVariables(F);
+R:=ParseRelators([e,f,a,b,c,d,g,h],"e^2=e, f^2=e, \
+  a^2=f, \
+  b^2=(a*b)^2=e,  \
+  c^2=(a*c)^2=(b*c)^2=f, \
+  d^2=(a*d)^2=(b*d)^2=(c*d)^2=f, \
+  g^2=e^2, (a*g)^2=a^2, (b*g)^2=b^2, (c*g)^2=c^2, (d*g)^2=d^2, \
+  h^2=e^2, (a*h)^2=a^2, (b*h)^2=b^2, (c*h)^2=c^2, (d*h)^2=d^2, (d*h)^2=d^2 \
+  ");
+G:=F/R;
+P:=Image(IsomorphismPermGroup(G));
+IdSmallGroup(P);
+T:=CharacterTable(G);Display(T);
+
 
