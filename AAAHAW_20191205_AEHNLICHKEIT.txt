@@ -271,6 +271,24 @@ MARKZAHL:=function(G)
   end;
 G:=SmallGroup(256,56082);
 MARKZAHL(G);
+
+MARKZAHL:=function(G)
+  local x,y,MERK,MGES,n,a,e;
+  MGES:=[];
+  e:=Identity(G);
+  n:=Size(G);
+  for x in G do
+    MERK:=[];
+    for y in G do Add(MERK,[x^2,y^2,(x*y)^2]); od;
+    Add(MGES,Collected(MERK));
+    od;
+#[ [ [ [ 112, 128, 112 ], 112 ], [ [ 144, 128, 144 ], 140 ], [ [ 144, 256, 144 ], 4 ] ] ]
+  MGES:=Reversed(SortedList(List(Collected(MGES),i->i[2])));
+  g:=Gcd(MGES);
+  return [g,MGES/g];
+  end;
+G:=SmallGroup(256,56082);
+MARKZAHL(G);
   
 for n in [2..9] do
   for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
