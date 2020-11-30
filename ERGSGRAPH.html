@@ -190,8 +190,29 @@ function MARKZAHL2(DD) {
     MARK[i]=[];
     for (var j=0;j<SD;j++) MARK[i].push([DD[i],DD[j],DD[i^j]]);
     MARK[i].sort();
+    var j=1;
+    while (j<SD) { 
+      if (MARK[i][j-1].toString()==MARK[i][j].toString()) MARK[i][j-1]=j-1; 
+      j=j+1
+      }
+    var RET="";
+    for (var j=0;j<SD;j++) {
+      if (MARK[i][j].toString()!=j.toString()) RET=RET+j+": ["+MARK[i][j]+"]  ";
+      }
+    MARK[i]=RET;
     }
-  return MARKZAHL0(DD)+"\n"+MARK.sort().join("\n");//.sort(function (x,y) {return y-x}).slice(0,4);
+  MARK.sort();
+  var i=1;
+  while (i<SD) { 
+    if (MARK[i-1].toString()==MARK[i].toString()) MARK[i-1]=i-1; 
+    i=i+1;
+    }
+  var RET="";
+  //alert(MARK.join("\n"));
+  for (var i=0;i<SD;i++) { //alert(i+"\n"+MARK[i]);
+    if (MARK[i].toString()!=i.toString()) RET=RET+i+" "+MARK[i]+"\n";
+    }  
+  return MARKZAHL0(DD)+"\n"+RET;
   }
 
 function MARKZAHL(DD) { return MARKZAHL2(DD) }
@@ -261,42 +282,98 @@ function AZAHL(i,j) {
 function Testlauf() {
 
   //[655,569 ],[713,705] 
-  //alert(ERGS2[7][654].join("+")+"\n---\n"+ERGS2[7][568].join("+"));
+  //alert(ERGS2[7][654].join("\n")+"\n---\n"+ERGS2[7][568].join("\n"));
+  //alert(ERGS2[1][0].join("\n")+"\n---\n"+ERGS2[1][1].join("\n"));
   Logtext="["+ERGS2[3][6][1].join("],[")+"]\n---\n["+ERGS2[3][5][1].join("],[")+"]\n\n";
   //111111111111110 110010 1010010 10001110
   //111111111111110 111010 1101100 10111000
+
+  var DD0=DIAG([[1],[1,1]]);
+  var M0=MARKZAHL0(DD0);
+  Logtext=Logtext+M0+"\n";
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1]]);
+  var M0=MARKZAHL0(DD0);
+  Logtext=Logtext+M0+"\n";
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1]]);
+  var M0=MARKZAHL0(DD0);
+  Logtext=Logtext+M0+"\n";
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
+  var M0=MARKZAHL0(DD0);
+  Logtext=Logtext+M0+"\n";
+  var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1]]);
+  var M0=MARKZAHL0(DD0);
+  Logtext=Logtext+M0+"\n";
+
+  //alert(ERGS2[3].length);
+  for (var i=0;i<60;i++) {
+    var DD=DIAG(ERGS2[3][i][0]);
+    var M0=MARKZAHL0(DD);
+    var DD=DIAG(ERGS2[3][i][1]);
+    var M1=MARKZAHL0(DD);
+    Logtext=Logtext+i+": "+M0+" + "+M1+"\n";
+    }
+
+  var DD0=DIAG(ERGS2[3][12][0]);
+  var DD1=DIAG(ERGS2[3][12][1]);
+  var DD12=[]; for (i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHL(DD12);
+  Logtext=Logtext+"ERGS2[3][12] DD12="+DD12+"\n"+M12+"\n";
+
+  var DD0=DIAG(ERGS2[3][14][0]);
+  var DD1=DIAG(ERGS2[3][14][1]);
+  var DD12=[]; for (i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHL(DD12);
+  Logtext=Logtext+"ERGS2[3][14] DD12="+DD12+"\n"+M12+"\n";
+
+  var DD0=DIAG(ERGS2[3][16][0]);
+  var DD1=DIAG(ERGS2[3][16][1]);
+  var DD12=[]; for (i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHL(DD12);
+  Logtext=Logtext+"ERGS2[3][16] DD12="+DD12+"\n"+M12+"\n";
+
+//Logfile(Logtext);return;
+
   var DD=DIAG(ERGS2[3][6][1]);
   var M=MARKZAHL(DD);
   Logtext=Logtext+"DD="+DD+"\n"+M+"\n\n";
   Logtext=Logtext+KREISE(DD).join("\n")+"\n\n";
+//Logfile(Logtext);return;
 
   var DD=DIAG([[1],[0,0],[1,1,1],[0,0,0,0]]);
   var M=MARKZAHL(DD);
   Logtext=Logtext+"DD="+DD+"\n"+M+"\n\n";
   Logtext=Logtext+KREISE(DD).join("\n")+"\n\n";
+//Logfile(Logtext);return;
 
   var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
   //var DD0=DIAG(ERGS2[7][654][0]);
-  var M0=MARKZAHL(DD0);
+  var M0=MARKZAHL0(DD0);
   Logtext=Logtext+"DD0="+DD0+"\n"+M0+"\n";
   var DD1=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,0],[1,1,0,0,1,0],[1,0,1,0,0,1,0],[1,0,0,0,1,1,1,0]]);
   //var DD1=DIAG(ERGS2[7][654][1]);
-  var M1=MARKZAHL(DD1);
+  var M1=MARKZAHL0(DD1);
   Logtext=Logtext+"DD1="+DD1+"\n"+M1+"\n";
-  var DD12=[]; for (i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHL(DD12);
-  Logtext=Logtext+"DD1="+DD12+"\n"+M12+"\n";
-Logfile(Logtext);return;
+  var DD01=[]; for (i=0;i<DD1.length;i++) DD01[i]=2*DD0[i]+DD1[i];
+  var M01=MARKZAHL(DD01);
+  Logtext=Logtext+"DD01="+DD01+"\n"+M01+"\n";
+//Logfile(Logtext);return;
+
   var DD1Q=[]; for (i=0;i<DD1.length;i++) DD1Q[i]=DD0[i]^DD1[i];
-  var M1Q=MARKZAHL(DD1Q);
+  var M1Q=MARKZAHL0(DD1Q);
   Logtext=Logtext+"DD1Q"+DD1Q+"\n"+M1Q+"\n\n";
+
   var DD2=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,0],[1,1,1,0,1,0],[1,1,0,1,1,0,0],[1,0,1,1,1,0,0,0]]);
   //var DD2=DIAG(ERGS2[7][568][1]);
-  var M2=MARKZAHL(DD2);
+  var M2=MARKZAHL0(DD2);
   Logtext=Logtext+"DD2="+DD2+"\n"+M2+"\n";
+  var DD02=[]; for (i=0;i<DD2.length;i++) DD02[i]=2*DD0[i]+DD2[i];
+  var M02=MARKZAHL(DD02);
+  Logtext=Logtext+"DD02="+DD02+"\n"+M02+"\n";
   var DD2Q=[]; for (i=0;i<DD2.length;i++) DD2Q[i]=DD0[i]^DD2[i];
-  var M2Q=MARKZAHL(DD2Q);
+  var M2Q=MARKZAHL0(DD2Q);
   Logtext=Logtext+"DD2Q"+DD2Q+"\n"+M2Q+"\n\n";
+alert("ERGS2[8]{[655,569]} sind gleich: "+(M01==M02));
+Logfile(Logtext);return;
 
   var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
   //var DD0=DIAG(ERGS2[7][654][0]);
@@ -587,7 +664,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   </tr>
   </table>
 
-  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; max-height:400px; width:80%; border:solid; border-color:grey; white-space:pre-wrap; font-family:Courier,monospace; font-size:70%"> </div>
+  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; max-height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div><h id="hier"></h></div>
   </body>
   </html>
