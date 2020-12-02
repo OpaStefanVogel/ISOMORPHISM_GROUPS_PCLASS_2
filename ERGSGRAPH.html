@@ -216,6 +216,9 @@ function MARKZAHL2(DD) {
   }
 
 function MARKZAHL3(DD) {
+  var DDNEU=[];
+  var MARKS="";
+  var MARKL=[];
   var MARK=[];
   var SD=DD.length;
   for (var i=0;i<SD;i++) {
@@ -232,6 +235,13 @@ function MARKZAHL3(DD) {
       if (MARK[i][j].toString()!=j.toString()) RET=RET+j+": ["+MARK[i][j]+"]  ";
       }
     MARK[i]=RET;
+    MARKS=RET.toString();
+    var ind=MARKL.indexOf(MARKS);
+    if (ind==-1) {
+       MARKL.push(MARKS);
+       ind=MARKL.length-1;
+       }
+    DDNEU[i]=ind; 
     }
   MARK.sort();
   var i=1;
@@ -244,10 +254,27 @@ function MARKZAHL3(DD) {
   for (var i=0;i<SD;i++) { //alert(i+"\n"+MARK[i]);
     if (MARK[i].toString()!=i.toString()) RET=RET+i+" "+MARK[i]+"\n";
     }  
+  return DDNEU;
+  }
+
+function Bahnen(DD) {
+  var B=[];
+  var SD=DD.length;
+  for (var i=0;i<SD;i++) {
+    var ind=DD.indexOf(DD[i]);
+    if (ind<i) B[ind].push(i); else B[ind]=[i];
+    }
+  var RET=[];
+  for (var i=0;i<B.length;i++) if (B[i]) RET.push(B[i]);
   return RET;
   }
 
-function MARKZAHL(DD) { return MARKZAHL0(DD)+"\n"+MARKZAHL2(DD) }
+
+function MARKZAHL(DD) { 
+  var DDNEU=MARKZAHL3(DD);
+  var DDNEUNEU=MARKZAHL3(DDNEU);
+  return MARKZAHL0(DD)+"\n"+MARKZAHL2(DD)+"\n"+DDNEU+"\n[ 2, 5, 189, 253 ]\n"+DDNEUNEU+"\n["+Bahnen(DDNEUNEU).join("],[")+"]";
+  }
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
