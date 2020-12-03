@@ -301,11 +301,15 @@ function MARKZAHL4(DD) {
   for (var i=0;i<MARKL.length;i++) {
     MARKL[i]=MARKL[i].slice(0,MARKL[i].indexOf("#"));
     }  
+  MARKLNUM.sort();
+  var MARKLORIG=[];
+  for (var i=0;i<MARKLNUM.length;i++) {
+    MARKLORIG[i]=[MARKLNUM[i][0].slice(),MARKLNUM[i][1]];
+    }
   for (var i=0;i<MARKLNUM.length;i++) {
     MARKLNUM[i][0]=MARKLNUM[i][0].slice(0,MARKLNUM[i][0].indexOf("#"));
     }  
-  MARKLNUM.sort();
-  return [MARKLNUM.join("\n")+"\n",DDNEU];
+  return [MARKLNUM.join("\n")+"\n",DDNEU,MARKLORIG.join("\n")+"\n"];
   }
 
 function Bahnen(DD) {
@@ -332,8 +336,33 @@ function MARKZAHLPUR(DD) {
   var DDNEU=MARKZAHL4(DD);
   var DDNEUNEU=MARKZAHL4(DDNEU[1]);
   var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
-  return DDNEU[0]+"\n"+DDNEUNEU[0]+"\n";
+  return [DDNEU[0]+"\n"+DDNEUNEU[0]+"\n",DDNEU[2]+"\n"+DDNEUNEU[2]+"\n"];
   }
+
+function Test2() {
+  Logtext="Test2\n";
+  var dd=document.getElementById("Test2value").value*1;
+  var GESAMTMERK=[];
+  var GESAMTMERKORIG=[];
+  for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
+    var DD0=DIAG(ERGS2[dd-1][nr][0]);
+    var DD1=DIAG(ERGS2[dd-1][nr][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    var M12=MARKZAHLPUR(DD12);//alert(M12);
+    var ind=GESAMTMERK.indexOf(M12[0]);
+    if (GESAMTMERK.indexOf(M12[0])>-1) {
+      alert(ind+" "+nr);
+      Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+(ind+1)+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
+      }
+    GESAMTMERK.push(M12[0]);
+    GESAMTMERKORIG.push(M12[1]);
+    Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[0]+"\n";
+    }
+  Logfile(Logtext);
+  }
+
+
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
@@ -593,22 +622,6 @@ Logfile(Logtext);return;
   Logfile(Logtext);
   }
 
-function Test2() {
-  Logtext="Test2\n";
-  var dd=document.getElementById("Test2value").value*1;
-  var GESAMTMERK=[];
-  for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
-    var DD0=DIAG(ERGS2[dd-1][nr][0]);
-    var DD1=DIAG(ERGS2[dd-1][nr][1]);
-    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-    var M12=MARKZAHLPUR(DD12);//alert(M12);
-    Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12+"\n";
-    if (GESAMTMERK.indexOf(M12)>-1) alert(nr);
-    GESAMTMERK.push(M12);
-    }
-  Logfile(Logtext);
-  }
-
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
@@ -800,7 +813,8 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
 
   <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
-    <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button><input id="Test2value" value="4"/></div>
+    <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
+    <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button><input id="Test2value" value="3"/></div>
     </div>
   
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
