@@ -4,6 +4,8 @@
 <head>
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
+  <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
+  <!--script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script-->
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -16,8 +18,6 @@ uu {position:fixed;
   }
 td {min-width:80px; height:40px}
     </style>
-  <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
-  <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
   <script type="application/ecmascript">
 function MyIndexOf(arr,elem) {
   ind=-1;
@@ -223,18 +223,19 @@ function MARKZAHL3(DD) {
   var SD=DD.length;
   for (var i=0;i<SD;i++) {
     MARK[i]=[];
-    for (var j=0;j<SD;j++) MARK[i].push([DD[i],DD[j],DD[i^j]]);
-    MARK[i].sort();
-    var j=1;
-    while (j<SD) { 
-      if (MARK[i][j-1].toString()==MARK[i][j].toString()) MARK[i][j-1]=j-1; 
-      j=j+1
-      }
-    var RET="";
+    NUM=[];
     for (var j=0;j<SD;j++) {
-      if (MARK[i][j].toString()!=j.toString()) RET=RET+j+": ["+MARK[i][j]+"]  ";
+      var DDij=[DD[i],DD[j],DD[i^j]].toString();
+      var ind=MARK[i].indexOf(DDij);
+      if (ind==-1) {
+        MARK[i].push(DDij);
+        ind=MARK[i].length-1;
+        NUM[ind]=[0,DDij];
+        }
+      NUM[ind][0]=NUM[ind][0]+1;
       }
-    MARK[i]=RET;
+    MARK[i]=NUM.sort();
+    RET=MARK[i];
     MARKS=RET.toString();
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
@@ -243,18 +244,11 @@ function MARKZAHL3(DD) {
        }
     DDNEU[i]=ind; 
     }
-  MARK.sort();
-  var i=1;
-  while (i<SD) { 
-    if (MARK[i-1].toString()==MARK[i].toString()) MARK[i-1]=i-1; 
-    i=i+1;
-    }
   var RET="";
-  //alert(MARK.join("\n"));
-  for (var i=0;i<SD;i++) { //alert(i+"\n"+MARK[i]);
-    if (MARK[i].toString()!=i.toString()) RET=RET+i+" "+MARK[i]+"\n";
+  for (var i=0;i<SD;i++) {
+    if (DDNEU[i]==i) RET=RET+i+" "+MARK[i]+"\n";
     }  
-  return DDNEU;
+  return [MARKL.join("\n")+"\n",DDNEU];
   }
 
 function Bahnen(DD) {
@@ -272,8 +266,8 @@ function Bahnen(DD) {
 
 function MARKZAHL(DD) { 
   var DDNEU=MARKZAHL3(DD);
-  var DDNEUNEU=MARKZAHL3(DDNEU);
-  return MARKZAHL0(DD)+"\n"+MARKZAHL2(DD)+"\n"+DDNEU+"\n[ 2, 5, 189, 253 ]\n"+DDNEUNEU+"\n["+Bahnen(DDNEUNEU).join("],[")+"]";
+  var DDNEUNEU=MARKZAHL3(DDNEU[1]);
+  return MARKZAHL0(DD)+"\n"+DDNEU[0]+DDNEU[1]+"\n"+DDNEUNEU[0]+DDNEUNEU[1]+"\n[ 2, 5, 189, 253 ]\n["+Bahnen(DDNEUNEU[1]).join("],[")+"]";
   }
 
 function DREHMARK(DD) {
