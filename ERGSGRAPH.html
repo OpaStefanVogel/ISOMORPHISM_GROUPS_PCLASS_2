@@ -219,36 +219,51 @@ function MARKZAHL3(DD) {
   var DDNEU=[];
   var MARKS="";
   var MARKL=[];
+  var MARKLNUM=[];
   var MARK=[];
   var SD=DD.length;
   for (var i=0;i<SD;i++) {
     MARK[i]=[];
-    NUM=[];
+    var NUM1=[];
+    var NUM2=[];
     for (var j=0;j<SD;j++) {
-      var DDij=[DD[i],DD[j],DD[i^j]].toString();
+      var DDij=[DD[i],DD[j],DD[i^j]];
+      var DD00=DDij.slice();
+      //for (var k=0;k<3;k++) if (DD00[k]!=0) DD00[k]=1;
+      DDij=DDij.toString();
       var ind=MARK[i].indexOf(DDij);
       if (ind==-1) {
         MARK[i].push(DDij);
         ind=MARK[i].length-1;
-        NUM[ind]=[0,DDij];
+        NUM1[ind]=0;
+        NUM2[ind]=DD00;
         }
-      NUM[ind][0]=NUM[ind][0]+1;
+      NUM1[ind]=NUM1[ind]+1;
       }
-    MARK[i]=NUM.sort();
+    MARK[i]=NUM1.sort()+"#"+NUM2.sort();
     RET=MARK[i];
     MARKS=RET.toString();
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
        ind=MARKL.length-1;
+       MARKLNUM[ind]=[MARKS,0];
        }
-    DDNEU[i]=ind; 
+    MARKLNUM[ind][1]=MARKLNUM[ind][1]+1;
+    DDNEU[i]=MARKS; 
     }
-  var RET="";
+  MARKL.sort();
   for (var i=0;i<SD;i++) {
-    if (DDNEU[i]==i) RET=RET+i+" "+MARK[i]+"\n";
+    DDNEU[i]=MARKL.indexOf(DDNEU[i]);
     }  
-  return [MARKL.join("\n")+"\n",DDNEU];
+  for (var i=0;i<MARKL.length;i++) {
+    MARKL[i]=MARKL[i].slice(0,MARKL[i].indexOf("#"));
+    }  
+  for (var i=0;i<MARKLNUM.length;i++) {
+    MARKLNUM[i][0]=MARKLNUM[i][0].slice(0,MARKLNUM[i][0].indexOf("#"));
+    }  
+  MARKLNUM.sort();
+  return [MARKLNUM.join("\n")+"\n",DDNEU];
   }
 
 function Bahnen(DD) {
@@ -267,6 +282,7 @@ function Bahnen(DD) {
 function MARKZAHL(DD) { 
   var DDNEU=MARKZAHL3(DD);
   var DDNEUNEU=MARKZAHL3(DDNEU[1]);
+  var DDNEUNEUNEU=MARKZAHL3(DDNEUNEU[1]);
   return MARKZAHL0(DD)+"\n"+DDNEU[0]+DDNEU[1]+"\n"+DDNEUNEU[0]+DDNEUNEU[1]+"\n[ 2, 5, 189, 253 ]\n["+Bahnen(DDNEUNEU[1]).join("],[")+"]";
   }
 
