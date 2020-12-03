@@ -114,7 +114,7 @@ function init() {
       h.appendChild(e);
       }
     }
-  Testlauf();
+  //Testlauf();
   }
 //alert(ERGS2[4].length+" "+ERGS2[5].length+" "+ERGS2[6].length+" "+ERGS2[7].length);
 
@@ -219,6 +219,48 @@ function MARKZAHL3(DD) {
   var DDNEU=[];
   var MARKS="";
   var MARKL=[];
+  var MARK=[];
+  var SD=DD.length;
+  for (var i=0;i<SD;i++) {
+    MARK[i]=[];
+    for (var j=0;j<SD;j++) MARK[i].push([DD[i],DD[j],DD[i^j]]);
+    MARK[i].sort();
+    var j=1;
+    while (j<SD) { 
+      if (MARK[i][j-1].toString()==MARK[i][j].toString()) MARK[i][j-1]=j-1; 
+      j=j+1
+      }
+    var RET="";
+    for (var j=0;j<SD;j++) {
+      if (MARK[i][j].toString()!=j.toString()) RET=RET+j+": ["+MARK[i][j]+"]  ";
+      }
+    MARK[i]=RET;
+    MARKS=RET.toString();
+    var ind=MARKL.indexOf(MARKS);
+    if (ind==-1) {
+       MARKL.push(MARKS);
+       ind=MARKL.length-1;
+       }
+    DDNEU[i]=ind; 
+    }
+  MARK.sort();
+  var i=1;
+  while (i<SD) { 
+    if (MARK[i-1].toString()==MARK[i].toString()) MARK[i-1]=i-1; 
+    i=i+1;
+    }
+  var RET="";
+  //alert(MARK.join("\n"));
+  for (var i=0;i<SD;i++) { //alert(i+"\n"+MARK[i]);
+    if (MARK[i].toString()!=i.toString()) RET=RET+i+" "+MARK[i]+"\n";
+    }  
+  return DDNEU;
+  }
+
+function MARKZAHL4(DD) {
+  var DDNEU=[];
+  var MARKS="";
+  var MARKL=[];
   var MARKLNUM=[];
   var MARK=[];
   var SD=DD.length;
@@ -280,10 +322,17 @@ function Bahnen(DD) {
 
 
 function MARKZAHL(DD) { 
-  var DDNEU=MARKZAHL3(DD);
-  var DDNEUNEU=MARKZAHL3(DDNEU[1]);
-  var DDNEUNEUNEU=MARKZAHL3(DDNEUNEU[1]);
+  var DDNEU=MARKZAHL4(DD);
+  var DDNEUNEU=MARKZAHL4(DDNEU[1]);
+  var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
   return MARKZAHL0(DD)+"\n"+DDNEU[0]+DDNEU[1]+"\n"+DDNEUNEU[0]+DDNEUNEU[1]+"\n[ 2, 5, 189, 253 ]\n["+Bahnen(DDNEUNEU[1]).join("],[")+"]";
+  }
+
+function MARKZAHLPUR(DD) { 
+  var DDNEU=MARKZAHL4(DD);
+  var DDNEUNEU=MARKZAHL4(DDNEU[1]);
+  var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
+  return DDNEU[0]+"\n"+DDNEUNEU[0]+"\n";
   }
 
 function DREHMARK(DD) {
@@ -544,6 +593,22 @@ Logfile(Logtext);return;
   Logfile(Logtext);
   }
 
+function Test2() {
+  Logtext="Test2\n";
+  var dd=document.getElementById("Test2value").value*1;
+  var GESAMTMERK=[];
+  for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
+    var DD0=DIAG(ERGS2[dd-1][nr][0]);
+    var DD1=DIAG(ERGS2[dd-1][nr][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    var M12=MARKZAHLPUR(DD12);//alert(M12);
+    Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12+"\n";
+    if (GESAMTMERK.indexOf(M12)>-1) alert(nr);
+    GESAMTMERK.push(M12);
+    }
+  Logfile(Logtext);
+  }
+
   </script>
   </head>
 <body onload="init();//allesergaenzen()">
@@ -733,7 +798,11 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   </tr>
   </table>
 
-  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; max-height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
+  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
+  <div>
+    <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button><input id="Test2value" value="4"/></div>
+    </div>
+  
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
   </body>
   </html>
