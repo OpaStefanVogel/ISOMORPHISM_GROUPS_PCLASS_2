@@ -5,7 +5,7 @@
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
   <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
-  <!--script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script-->
+  <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -268,10 +268,12 @@ function MARKZAHL4(DD) {
     MARK[i]=[];
     var NUM1=[];
     var NUM2=[];
+    var NUM3=[];
     for (var j=0;j<SD;j++) {
       var DDij=[DD[i],DD[j],DD[i^j]];
       var DD00=DDij.slice();
-      //for (var k=0;k<3;k++) if (DD00[k]!=0) DD00[k]=1;
+      var DD01=DDij.slice();
+      for (var k=0;k<3;k++) if (DD01[k]!=0) DD01[k]=1;
       DDij=DDij.toString();
       var ind=MARK[i].indexOf(DDij);
       if (ind==-1) {
@@ -279,10 +281,11 @@ function MARKZAHL4(DD) {
         ind=MARK[i].length-1;
         NUM1[ind]=0;
         NUM2[ind]=DD00;
+        NUM3[ind]=DD01;
         }
       NUM1[ind]=NUM1[ind]+1;
       }
-    MARK[i]=NUM1.sort()+"#"+NUM2.sort();
+    MARK[i]=NUM1.sort()+" ["+NUM3.sort().join("],[")+"] # ["+NUM2.sort().join("],[")+"]";
     RET=MARK[i];
     MARKS=RET.toString();
     var ind=MARKL.indexOf(MARKS);
