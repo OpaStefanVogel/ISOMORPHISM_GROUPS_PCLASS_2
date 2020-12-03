@@ -395,6 +395,32 @@ function Test3(nr) {
   if (nr<ERGS2[dd-1].length-1) setTimeout(Test3,100,nr+1);
   }
 
+function Test4() {
+  Logtext="Test4 [655,569 ],[713,705]\n";
+  var dd=8;
+  var GESAMTMERK=[];
+  var GESAMTMERKORIG=[];
+  var LISTE=[655,569,713,705]
+  for (var ii in LISTE) {nr=LISTE[ii]-1;alert(nr);
+    var DD0=DIAG(ERGS2[dd-1][nr][0]);
+    var DD1=DIAG(ERGS2[dd-1][nr][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    var M12=MARKZAHLPUR(DD12);//alert(M12);
+    var ind=GESAMTMERK.indexOf(M12[0]);
+    if (GESAMTMERK.indexOf(M12[0])>-1) {
+      alert(ind+" "+nr);
+      Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+(ind+1)+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
+      }
+    GESAMTMERK.push(M12[0]);
+    GESAMTMERKORIG.push(M12[1]);
+    Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
+    Logtext=Logtext+M12[0]+"\n";
+    }
+  Logfile(Logtext);
+  }
+
+
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
@@ -850,6 +876,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
       <input id="Test2value" value="5"/></div>
     <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
       <input id="Test3value" value="7"/></div>
+    <div><button onclick="Test4()">Test4: dd=8, nr=655,569,713,705</button></div>
     </div>
   
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
