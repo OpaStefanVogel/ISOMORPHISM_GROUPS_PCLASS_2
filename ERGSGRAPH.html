@@ -278,10 +278,11 @@ function MARKZAHL4(DD) {
       if (ind==-1) {
         MARK[i].push(DDij);
         ind=MARK[i].length-1;
-        NUM1[ind]=[0,DD01];
+//        NUM1[ind]=[0,DD01];
+        NUM1[ind]=4*DD01[0]+2*DD01[1]+DD01[2];
         NUM2[ind]=DD00;
         }
-      NUM1[ind][0]=NUM1[ind][0]+1;
+      NUM1[ind]=NUM1[ind]+8;
       }
     MARK[i]=NUM1.sort().join(" ")+" # ["+NUM2.sort().join("],[")+"]";
     RET=MARK[i];
@@ -391,7 +392,7 @@ function Test3(nr) {
   Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
   Logtext=Logtext+M12[0]+"\n";
   Logfile(Logtext);
-  if (nr<ERGS2[dd-1].length-1) setTimeout(Test3,1000,nr+1);
+  if (nr<ERGS2[dd-1].length-1) setTimeout(Test3,100,nr+1);
   }
 
 
@@ -848,7 +849,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
     <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
       <input id="Test2value" value="5"/></div>
     <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
-      <input id="Test3value" value="6"/></div>
+      <input id="Test3value" value="7"/></div>
     </div>
   
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
