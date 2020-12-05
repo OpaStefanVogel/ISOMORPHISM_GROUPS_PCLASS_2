@@ -1087,3 +1087,64 @@ for n in [2..8] do
     od;
   od;
 
+MARKZAHL4:=function(G)
+  local x,y,MERK,MGES,n,a,e, MARKS,DDNEU,MARKL,MARKLNUM,MARK,NUM1,NUM2,DDij,DD00,DD01,k,ind, SD,RET,i,MARKLFERT;
+  MGES:=[];
+  e:=Identity(G);
+  n:=Size(G);
+  DDNEU:=[];
+  MARKS:="";
+  MARKL:=[];
+  MARKLNUM:=[];
+  MARK:=[];
+  SD:=n;
+  i:=1;
+  for x in G do
+    MARK[i]:=[];
+    NUM1:=[];
+    NUM2:=[];
+    for y in G do 
+      DDij:=[x^2,y^2,(x*y)^2];
+      DD00:=List(DDij);
+      DD01:=List(DDij);
+      for k in [1..3] do if DD01[k]<>e then DD01[k]:=1; else DD01[k]:=0; fi; od;
+      ind:=Position(MARK[i],DDij);
+      if ind=fail then
+        Add(MARK[i],DDij);
+        ind:=Size(MARK[i]);
+        NUM1[ind]:=4*DD01[1]+2*DD01[2]+DD01[3];
+        NUM2[ind]:=DD00;
+        fi;
+      NUM1[ind]:=NUM1[ind]+8;
+      od;
+    RET:=[SortedList(NUM1),SortedList(NUM2)];
+    MARK[i]:=RET;
+    ind:=Position(MARKL,RET);
+    if ind=fail then
+      Add(MARKL,RET);
+      ind:=Size(MARKL);
+      MARKLNUM[ind]:=[0,RET];
+      fi;
+    MARKLNUM[ind][1]:=MARKLNUM[ind][1]+1;
+    DDNEU[i]:=RET;
+    i:=i+1;
+    od;
+  MARKLNUM:=SortedList(MARKLNUM);
+  MARKL:=List(MARKLNUM,i->i[2]);
+  for i in [1..SD] do DDNEU[i]:=Position(MARKL,DDNEU[i]); od;
+  MARKLFERT:=List(MARKLNUM,i->[i[1],i[2][1]]);
+  return [MARK,MARKL,MARKLNUM,DDNEU,MARKLFERT];
+  end;
+G:=SmallGroup(8,3);
+MARKZAHL4(G);
+G:=SmallGroup(16,13);
+MARKZAHL4(G);
+
+for n in [2..8] do
+  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+    G:=SmallGroup(2^n,index);
+    Print(IdSmallGroup(G),", ",Reversed(MARKZAHL4(G)[5]),",\n");
+    od;
+  od;
+
+
