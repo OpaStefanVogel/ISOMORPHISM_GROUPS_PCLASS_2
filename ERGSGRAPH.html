@@ -330,7 +330,7 @@ function Bahnen(DD) {
 function MARKZAHL(DD) { 
   var DDNEU=MARKZAHL4(DD);
   var DDNEUNEU=MARKZAHL4(DDNEU[1]);
-  var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
+  //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
   return MARKZAHL0(DD)+"\n"+DDNEU[0]+DDNEU[1]+"\n"+DDNEUNEU[0]+DDNEUNEU[1]+"\n[ 2, 5, 189, 253 ]\n["+Bahnen(DDNEUNEU[1]).join("],[")+"]";
   }
 
