@@ -1057,7 +1057,8 @@ MARKZAHL4:=function(G)
         fi;
       NUM1[ind]:=NUM1[ind]+8;
       od;
-    RET:=[SortedList(NUM1),SortedList(NUM2)];
+    SortParallel(NUM1,NUM2);
+    RET:=[NUM1,NUM2];
     MARK[i]:=RET;
     ind:=Position(MARKL,RET);
     if ind=fail then
@@ -1067,13 +1068,12 @@ MARKZAHL4:=function(G)
       fi;
     MARKLNUM[ind][1]:=MARKLNUM[ind][1]+1;
     DDNEU[i]:=RET;
-    i:=i+1;
     od;
   MARKLNUM:=SortedList(MARKLNUM);
   MARKL:=List(MARKLNUM,i->i[2]);
-  for i in [1..SD] do DDNEU[i]:=Position(MARKL,DDNEU[i]); od;
+#  for i in [1..SD] do DDNEU[i]:=Position(MARKL,DDNEU[i]); od;
   MARKLFERT:=List(MARKLNUM,i->[i[1],i[2][1]]);
-  return [MARK,MARKL,MARKLNUM,DDNEU,MARKLFERT];
+  return [MARK,MARKL,MARKLNUM,DDNEU,Collected(MARKLFERT)];
   end;
 G:=SmallGroup(8,3);
 MARKZAHL4(G);
@@ -1081,11 +1081,224 @@ G:=SmallGroup(16,13);
 MARKZAHL4(G);
 
 for n in [2..8] do
-  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+GESAMTDILIST4:=[];
+#  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
+  for index in [[1],[1],[1..4],[1..13],[1..50],[1..266],[1..2327],[1..56091],[1..10494212]][n] do
     G:=SmallGroup(2^n,index);
-    Print(IdSmallGroup(G),", ",Reversed(MARKZAHL4(G)[5]),",\n");
+    ERG:=MARKZAHL4(G)[5];
+    Print(IdSmallGroup(G),", ",ERG,",\n");
+    ind:=Position(GESAMTDILIST4,ERG);
+    if ind<>fail then Error(index," ",ind); fi;
+    Add(GESAMTDILIST4,ERG);
     od;
   od;
+
+#geht bis auf [16,5]=[16,2], [32,4]=[32,3], [32,13]=[32,12], [32,16]=[32,3], [32,21]=[32,2], [32,36]=[32,2], ...
+gap> MARKZAHL4(SmallGroup(16,5));
+[ [ [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3*f4, f4 ] ] ] ], 
+  [ [ [ 32, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f3, f3 ], 
+              [ <identity> of ..., f3*f4, f3*f4 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f4, <identity> of ... ], [ f3, f4, f3*f4 ], [ f3, f3, f4 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f3, f3*f4 ], [ f4, f3*f4, f3 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3*f4, f4 ] ] ] ], 
+  [ 
+      [ 4, [ [ 32, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f3, f3 ],
+                  [ <identity> of ..., f3*f4, f3*f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f4, <identity> of ... ], [ f3, f4, f3*f4 ], [ f3, f3, f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f3, f3*f4 ], [ f4, f3*f4, f3 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3*f4, f4 ] ] ] ] ],
+  [ [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3*f4, f4 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39 ] ], 3 ] ] ]
+gap> MARKZAHL4(SmallGroup(16,2));
+[ [ [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3, f4 ] ] ] ], 
+  [ [ [ 32, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f3, f3 ], 
+              [ <identity> of ..., f3*f4, f3*f4 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3, <identity> of ... ], [ f3, f4, f3*f4 ], [ f3, f3*f4, f4 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f3, f3*f4 ], [ f4, f3*f4, f3 ] ] ], 
+      [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3, f4 ] ] ] ], 
+  [ 
+      [ 4, [ [ 32, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f3, f3 ],
+                  [ <identity> of ..., f3*f4, f3*f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3, <identity> of ... ], [ f3, f4, f3*f4 ], [ f3, f3*f4, f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f3, f3*f4 ], [ f4, f3*f4, f3 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3, f4 ] ] ] ] ],
+  [ [ [ 37, 38, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4, <identity> of ... ], [ f3*f4, f4, f3 ], [ f3*f4, f3, f4 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39 ] ], 3 ] ] ]
+gap> MARKZAHL4(SmallGroup(32,4));
+[ [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+              [ f3*f4, f4, f3*f5 ], [ f3*f4, f4*f5, f3 ], [ f3*f4, f3, f4 ], [ f3*f4, f3*f5, f4*f5 ], [ f3*f4, f3*f4, f5 ] ] ] ], 
+  [ [ [ 32, 35, 35, 35, 35, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+              [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ], [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], 
+              [ <identity> of ..., f3*f4*f5, f3*f4*f5 ], [ <identity> of ..., f3*f4, f3*f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f4, f3*f4*f5 ], 
+              [ f3, f4*f5, f3*f4 ], [ f3, f3, f5 ], [ f3, f3*f4*f5, f4*f5 ], [ f3, f3*f4, f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f4*f5, f5 ], 
+              [ f4, f3, f3*f4*f5 ], [ f4, f3*f5, f3*f4 ], [ f4, f3*f4*f5, f3 ], [ f4, f3*f4, f3*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ], 
+              [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], [ f5, f3*f4*f5, f3*f4 ], [ f5, f3*f4, f3*f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+              [ f3*f4, f4, f3*f5 ], [ f3*f4, f4*f5, f3 ], [ f3*f4, f3, f4 ], [ f3*f4, f3*f5, f4*f5 ], [ f3*f4, f3*f4, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], 
+              [ f3*f5, f4, f3*f4 ], [ f3*f5, f4*f5, f3*f4*f5 ], [ f3*f5, f3*f5, f5 ], [ f3*f5, f3*f4*f5, f4 ], [ f3*f5, f3*f4, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f4, f5 ], [ f4*f5, f3, f3*f4 ], [ f4*f5, f3*f5, f3*f4*f5 ], [ f4*f5, f3*f4*f5, f3*f5 ], [ f4*f5, f3*f4, f3 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], [ f3*f4*f5, f5, f3*f4 ], 
+              [ f3*f4*f5, f4, f3 ], [ f3*f4*f5, f4*f5, f3*f5 ], [ f3*f4*f5, f3, f4*f5 ], [ f3*f4*f5, f3*f5, f4 ], [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ], 
+  [ 
+      [ 4, [ [ 32, 35, 35, 35, 35, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+                  [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ], [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], 
+                  [ <identity> of ..., f3*f4*f5, f3*f4*f5 ], [ <identity> of ..., f3*f4, f3*f4 ] ] ] ], 
+      [ 4, 
+          [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], 
+                  [ f3, f4, f3*f4*f5 ], [ f3, f4*f5, f3*f4 ], [ f3, f3, f5 ], [ f3, f3*f4*f5, f4*f5 ], [ f3, f3*f4, f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f4*f5, f5 ], 
+                  [ f4, f3, f3*f4*f5 ], [ f4, f3*f5, f3*f4 ], [ f4, f3*f4*f5, f3 ], [ f4, f3*f4, f3*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ], 
+                  [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], [ f5, f3*f4*f5, f3*f4 ], [ f5, f3*f4, f3*f4*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+                  [ f3*f4, f4, f3*f5 ], [ f3*f4, f4*f5, f3 ], [ f3*f4, f3, f4 ], [ f3*f4, f3*f5, f4*f5 ], [ f3*f4, f3*f4, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], 
+                  [ f3*f5, f4, f3*f4 ], [ f3*f5, f4*f5, f3*f4*f5 ], [ f3*f5, f3*f5, f5 ], [ f3*f5, f3*f4*f5, f4 ], [ f3*f5, f3*f4, f4*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4 ], 
+                  [ f4*f5, f4, f5 ], [ f4*f5, f3, f3*f4 ], [ f4*f5, f3*f5, f3*f4*f5 ], [ f4*f5, f3*f4*f5, f3*f5 ], [ f4*f5, f3*f4, f3 ] ] ] ], 
+      [ 4, 
+          [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], 
+                  [ f3*f4*f5, f5, f3*f4 ], [ f3*f4*f5, f4, f3 ], [ f3*f4*f5, f4*f5, f3*f5 ], [ f3*f4*f5, f3, f4*f5 ], [ f3*f4*f5, f3*f5, f4 ], 
+                  [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ] ], 
+  [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+              [ f3*f4, f4, f3*f5 ], [ f3*f4, f4*f5, f3 ], [ f3*f4, f3, f4 ], [ f3*f4, f3*f5, f4*f5 ], [ f3*f4, f3*f4, f5 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35, 35, 35, 35, 35 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39, 39, 39, 39, 39 ] ], 7 ] ] ]
+gap> MARKZAHL4(SmallGroup(32,3));
+[ [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], [ f3*f4*f5, f5, f3*f4 ], 
+              [ f3*f4*f5, f4, f3*f5 ], [ f3*f4*f5, f4*f5, f3 ], [ f3*f4*f5, f3, f4 ], [ f3*f4*f5, f3*f5, f4*f5 ], [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ], 
+  [ [ [ 32, 35, 35, 35, 35, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+              [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ], [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], 
+              [ <identity> of ..., f3*f4, f3*f4 ], [ <identity> of ..., f3*f4*f5, f3*f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f4, f3*f4 ], 
+              [ f3, f4*f5, f3*f4*f5 ], [ f3, f3, f5 ], [ f3, f3*f4, f4*f5 ], [ f3, f3*f4*f5, f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f4*f5, f5 ], 
+              [ f4, f3, f3*f4 ], [ f4, f3*f5, f3*f4*f5 ], [ f4, f3*f4, f3 ], [ f4, f3*f4*f5, f3*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ], 
+              [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], [ f5, f3*f4, f3*f4*f5 ], [ f5, f3*f4*f5, f3*f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+              [ f3*f4, f4, f3 ], [ f3*f4, f4*f5, f3*f5 ], [ f3*f4, f3, f4*f5 ], [ f3*f4, f3*f5, f4 ], [ f3*f4, f3*f4, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], 
+              [ f3*f5, f4, f3*f4*f5 ], [ f3*f5, f4*f5, f3*f4 ], [ f3*f5, f3*f5, f5 ], [ f3*f5, f3*f4, f4 ], [ f3*f5, f3*f4*f5, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f4, f5 ], [ f4*f5, f3, f3*f4*f5 ], [ f4*f5, f3*f5, f3*f4 ], [ f4*f5, f3*f4, f3*f5 ], [ f4*f5, f3*f4*f5, f3 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], [ f3*f4*f5, f5, f3*f4 ], 
+              [ f3*f4*f5, f4, f3*f5 ], [ f3*f4*f5, f4*f5, f3 ], [ f3*f4*f5, f3, f4 ], [ f3*f4*f5, f3*f5, f4*f5 ], [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ], 
+  [ 
+      [ 4, [ [ 32, 35, 35, 35, 35, 35, 35, 35 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+                  [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ], [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], 
+                  [ <identity> of ..., f3*f4, f3*f4 ], [ <identity> of ..., f3*f4*f5, f3*f4*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f4, f3*f4 ], 
+                  [ f3, f4*f5, f3*f4*f5 ], [ f3, f3, f5 ], [ f3, f3*f4, f4*f5 ], [ f3, f3*f4*f5, f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f4*f5, f5 ], 
+                  [ f4, f3, f3*f4 ], [ f4, f3*f5, f3*f4*f5 ], [ f4, f3*f4, f3 ], [ f4, f3*f4*f5, f3*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ], 
+                  [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], [ f5, f3*f4, f3*f4*f5 ], [ f5, f3*f4*f5, f3*f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4, <identity> of ..., f3*f4 ], [ f3*f4, f3*f4*f5, <identity> of ... ], [ f3*f4, f5, f3*f4*f5 ], 
+                  [ f3*f4, f4, f3 ], [ f3*f4, f4*f5, f3*f5 ], [ f3*f4, f3, f4*f5 ], [ f3*f4, f3*f5, f4 ], [ f3*f4, f3*f4, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], 
+                  [ f3*f5, f4, f3*f4*f5 ], [ f3*f5, f4*f5, f3*f4 ], [ f3*f5, f3*f5, f5 ], [ f3*f5, f3*f4, f4 ], [ f3*f5, f3*f4*f5, f4*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4 ], 
+                  [ f4*f5, f4, f5 ], [ f4*f5, f3, f3*f4*f5 ], [ f4*f5, f3*f5, f3*f4 ], [ f4*f5, f3*f4, f3*f5 ], [ f4*f5, f3*f4*f5, f3 ] ] ] ], 
+      [ 4, 
+          [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], 
+                  [ f3*f4*f5, f5, f3*f4 ], [ f3*f4*f5, f4, f3*f5 ], [ f3*f4*f5, f4*f5, f3 ], [ f3*f4*f5, f3, f4 ], [ f3*f4*f5, f3*f5, f4*f5 ], 
+                  [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ] ], 
+  [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f3*f4*f5, <identity> of ..., f3*f4*f5 ], [ f3*f4*f5, f3*f4, <identity> of ... ], [ f3*f4*f5, f5, f3*f4 ], 
+              [ f3*f4*f5, f4, f3*f5 ], [ f3*f4*f5, f4*f5, f3 ], [ f3*f4*f5, f3, f4 ], [ f3*f4*f5, f3*f5, f4*f5 ], [ f3*f4*f5, f3*f4*f5, f5 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35, 35, 35, 35, 35 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39, 39, 39, 39, 39 ] ], 7 ] ] ]
+gap> 
+gap> MARKZAHL4(SmallGroup(32,13));
+[ [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+              [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+  [ 
+      [ [ 32, 35, 35, 35, 67, 67 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+              [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4 ], [ f4, f3, f4*f5 ], 
+              [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4*f5, f3 ], [ f4, f4*f5, f3*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4 ], [ f4, f3, f4*f5 ], 
+              [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4*f5, f3*f5 ], [ f4, f4*f5, f3 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+              [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+              [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f3, f5 ], 
+              [ f3, f4, f4*f5 ], [ f3, f4*f5, f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], [ f5, f4, f4 ], 
+              [ f5, f4*f5, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], [ f3*f5, f3*f5, f5 ], 
+              [ f3*f5, f4, f4*f5 ], [ f3*f5, f4*f5, f4 ] ] ] ], 
+  [ 
+      [ 4, 
+          [ [ 32, 35, 35, 35, 67, 67 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+                  [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ] 
+                 ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4 ], [ f4, f3, f4*f5 ], 
+                  [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4*f5, f3 ], [ f4, f4*f5, f3*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4, <identity> of ... ], [ f4, f5, f4 ], [ f4, f3, f4*f5 ], 
+                  [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4*f5, f3*f5 ], [ f4, f4*f5, f3 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+                  [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+                  [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3*f5, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f3, f5 ], 
+                  [ f3, f4, f4*f5 ], [ f3, f4*f5, f4 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 71, 71 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], 
+                  [ f5, f4, f4 ], [ f5, f4*f5, f4*f5 ] ] ] ], 
+      [ 4, 
+          [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3, <identity> of ... ], [ f3*f5, f5, f3 ], [ f3*f5, f3*f5, f5 ], 
+                  [ f3*f5, f4, f4*f5 ], [ f3*f5, f4*f5, f4 ] ] ] ] ], 
+  [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4*f5, <identity> of ... ], [ f4*f5, f5, f4*f5 ], 
+              [ f4*f5, f3, f4 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35, 67, 67 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39, 39, 39, 39, 39 ] ], 4 ], [ [ 4, [ 37, 38, 39, 39, 71, 71 ] ], 3 ] ] ]
+gap> MARKZAHL4(SmallGroup(32,12));
+[ [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+  [ 
+      [ [ 32, 35, 35, 35, 67, 67 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+              [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4*f5, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f3, f4 ], 
+              [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4, f3*f5 ], [ f4, f4*f5, f3 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4*f5, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f3, f4 ], 
+              [ f4, f3*f5, f4*f5 ], [ f4, f4, f3*f5 ], [ f4, f4*f5, f3 ], [ f4, f4, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4*f5, f5 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f3*f5, f5 ], [ f3, f4, f4 ], 
+              [ f3, f4*f5, f4*f5 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], 
+              [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ] ] ], 
+      [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3*f5, <identity> of ... ], [ f3*f5, f5, f3 ], [ f3*f5, f3, f5 ], 
+              [ f3*f5, f4, f4*f5 ], [ f3*f5, f4*f5, f4 ] ] ] ], 
+  [ 
+      [ 4, 
+          [ [ 32, 35, 35, 35, 67, 67 ], [ [ <identity> of ..., <identity> of ..., <identity> of ... ], [ <identity> of ..., f5, f5 ], 
+                  [ <identity> of ..., f3, f3 ], [ <identity> of ..., f3*f5, f3*f5 ], [ <identity> of ..., f4, f4 ], [ <identity> of ..., f4*f5, f4*f5 ] 
+                 ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4*f5, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f3, f4 ], 
+                  [ f4, f3*f5, f4*f5 ], [ f4, f4, f5 ], [ f4, f4, f3*f5 ], [ f4, f4*f5, f3 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4, <identity> of ..., f4 ], [ f4, f4*f5, <identity> of ... ], [ f4, f5, f4*f5 ], [ f4, f3, f4 ], 
+                  [ f4, f3*f5, f4*f5 ], [ f4, f4, f3*f5 ], [ f4, f4*f5, f3 ], [ f4, f4, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+                  [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+                  [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4*f5, f5 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3, <identity> of ..., f3 ], [ f3, f3, <identity> of ... ], [ f3, f5, f3*f5 ], [ f3, f3*f5, f5 ], 
+                  [ f3, f4, f4 ], [ f3, f4*f5, f4*f5 ] ] ] ], 
+      [ 4, [ [ 37, 38, 39, 39, 71, 71 ], [ [ f5, <identity> of ..., f5 ], [ f5, f5, <identity> of ... ], [ f5, f3, f3*f5 ], [ f5, f3*f5, f3 ], 
+                  [ f5, f4, f4*f5 ], [ f5, f4*f5, f4 ] ] ] ], 
+      [ 4, 
+          [ [ 37, 38, 39, 39, 71, 71 ], [ [ f3*f5, <identity> of ..., f3*f5 ], [ f3*f5, f3*f5, <identity> of ... ], [ f3*f5, f5, f3 ], [ f3*f5, f3, f5 ], 
+                  [ f3*f5, f4, f4*f5 ], [ f3*f5, f4*f5, f4 ] ] ] ] ], 
+  [ [ [ 37, 38, 39, 39, 39, 39, 39, 39 ], [ [ f4*f5, <identity> of ..., f4*f5 ], [ f4*f5, f4, <identity> of ... ], [ f4*f5, f5, f4 ], 
+              [ f4*f5, f3, f4*f5 ], [ f4*f5, f3*f5, f4 ], [ f4*f5, f4, f3 ], [ f4*f5, f4*f5, f3*f5 ], [ f4*f5, f4*f5, f5 ] ] ] ], 
+  [ [ [ 4, [ 32, 35, 35, 35, 67, 67 ] ], 1 ], [ [ 4, [ 37, 38, 39, 39, 39, 39, 39, 39 ] ], 4 ], [ [ 4, [ 37, 38, 39, 39, 71, 71 ] ], 3 ] ] ]
+
 
 MARKZAHL5:=function(D)
   local x,y,MERK,a, MARKS,DDNEU,MARKL,MARKLNUM,MARK,NUM1,NUM2,DDij,DD00,DD01,k,ind, SD,RET,i,MARKLFERT;
@@ -1158,5 +1371,6 @@ ERG655:=MARKZAHL5ERGS2(8,655);;
 ERG569:=MARKZAHL5ERGS2(8,569);;
 ERG655[5];ERG655[5]=ERG569[5];
 #ERG655[2];ERG655[2]=ERG569[2];
+
 
 
