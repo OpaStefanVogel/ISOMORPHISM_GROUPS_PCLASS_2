@@ -1129,7 +1129,7 @@ MARKZAHL5:=function(D)
   MARKL:=List(MARKLNUM,i->i[2]);
   for i in [1..SD] do DDNEU[i]:=Position(MARKL,DDNEU[i]); od;
   MARKLFERT:=List(MARKLNUM,i->[i[1],i[2][1]]);
-  return [MARK,MARKL,MARKLNUM,DDNEU,MARKLFERT];
+  return [MARK,MARKL,MARKLNUM,DDNEU,Collected(MARKLFERT)];
   end;
 MARKZAHL5(DIAG([[1],[1,1]]))[5];
 MARKZAHL5(DIAG([[1],[1,0]]))[5];
@@ -1147,7 +1147,7 @@ GESAMTDILIST:=[];
 for dd in [8..8] do
   for nr in [1..Size(ERGS2[dd])] do
     ERG:=MARKZAHL5ERGS2(dd,nr)[5];
-    Print(dd," ",nr," ",Reversed(ERG),",\n");
+    Print(dd," ",nr," ",Reversed(ERG),",\n               ",dd," ",nr,"\n");
     if Position(GESAMTDILIST,ERG)<>fail then Error(); fi;
     Add(GESAMTDILIST,ERG);
     od;
