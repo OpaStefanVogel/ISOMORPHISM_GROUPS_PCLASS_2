@@ -1087,27 +1087,23 @@ for n in [2..8] do
     od;
   od;
 
-MARKZAHL4:=function(G)
-  local x,y,MERK,MGES,n,a,e, MARKS,DDNEU,MARKL,MARKLNUM,MARK,NUM1,NUM2,DDij,DD00,DD01,k,ind, SD,RET,i,MARKLFERT;
-  MGES:=[];
-  e:=Identity(G);
-  n:=Size(G);
+MARKZAHL5:=function(D)
+  local x,y,MERK,a, MARKS,DDNEU,MARKL,MARKLNUM,MARK,NUM1,NUM2,DDij,DD00,DD01,k,ind, SD,RET,i,MARKLFERT;
+  SD:=Size(D);
   DDNEU:=[];
   MARKS:="";
   MARKL:=[];
   MARKLNUM:=[];
   MARK:=[];
-  SD:=n;
-  i:=1;
-  for x in G do
+  for i in [1..SD] do
     MARK[i]:=[];
     NUM1:=[];
     NUM2:=[];
-    for y in G do 
-      DDij:=[x^2,y^2,(x*y)^2];
+    for j in [1..SD] do 
+      DDij:=[D[i],D[j],D[XORMAT[i][j]]];
       DD00:=List(DDij);
       DD01:=List(DDij);
-      for k in [1..3] do if DD01[k]<>e then DD01[k]:=1; else DD01[k]:=0; fi; od;
+      for k in [1..3] do if DD01[k]<>0 then DD01[k]:=1; else DD01[k]:=0; fi; od;
       ind:=Position(MARK[i],DDij);
       if ind=fail then
         Add(MARK[i],DDij);
@@ -1127,7 +1123,6 @@ MARKZAHL4:=function(G)
       fi;
     MARKLNUM[ind][1]:=MARKLNUM[ind][1]+1;
     DDNEU[i]:=RET;
-    i:=i+1;
     od;
   MARKLNUM:=SortedList(MARKLNUM);
   MARKL:=List(MARKLNUM,i->i[2]);
@@ -1135,16 +1130,28 @@ MARKZAHL4:=function(G)
   MARKLFERT:=List(MARKLNUM,i->[i[1],i[2][1]]);
   return [MARK,MARKL,MARKLNUM,DDNEU,MARKLFERT];
   end;
-G:=SmallGroup(8,3);
-MARKZAHL4(G);
-G:=SmallGroup(16,13);
-MARKZAHL4(G);
+MARKZAHL5(DIAG([[1],[1,1]]))[5];
+MARKZAHL5(DIAG([[1],[1,0]]))[5];
+MARKZAHL5(DIAG([[1],[0,0]]))[5];
 
-for n in [2..8] do
-  for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
-    G:=SmallGroup(2^n,index);
-    Print(IdSmallGroup(G),", ",Reversed(MARKZAHL4(G)[5]),",\n");
+MARKZAHL5ERGS2:=function (dd,nr)
+  local D,D1,D2;
+  D1:=DIAG(ERGS2[dd][nr][1]);
+  D2:=DIAG(ERGS2[dd][nr][2]);
+  D:=2*D1+D2;
+  return MARKZAHL5(D);
+  end;
+
+GESAMTDILIST:=[];
+for dd in [2..8] do
+  for nr in [1..Size(ERGS2[dd])] do
+    ERG:=MARKZAHL5ERGS2(dd,nr)[5];
+    Print(dd," ",nr," ",Reversed(ERG),",\n");
+    if Position(GESAMTDILIST,ERG)<>fail then Error(); fi;
+    Add(GESAMTDILIST,ERG);
     od;
   od;
+
+#Halt bei [655,569 ], [713,705], [1067,1055],[1276,1134]
 
 
