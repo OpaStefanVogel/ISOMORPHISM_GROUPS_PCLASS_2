@@ -1295,12 +1295,13 @@ MARKZAHL5:=function(D)
         Add(MARK[i],DDij);
         ind:=Size(MARK[i]);
         NUM1[ind]:=4*DD01[1]+2*DD01[2]+DD01[3];
-        NUM2[ind]:=DD00;
+        NUM2[ind]:=[4*DD01[1]+2*DD01[2]+DD01[3],DD00];
         fi;
       NUM1[ind]:=NUM1[ind]+8;
+      NUM2[ind][1]:=NUM2[ind][1]+8;
       od;
-    SortParallel(NUM1,NUM2);
-    RET:=[NUM1,NUM2];
+    NUM2:=SortedList(NUM2);
+    RET:=[List(NUM2,r->r[1]),List(NUM2,r->r[2])];
     MARK[i]:=RET;
     ind:=Position(MARKL,RET);
     if ind=fail then
