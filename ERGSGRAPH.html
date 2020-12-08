@@ -290,13 +290,17 @@ function MARKZAHL4(DD) {
         ind=MARK[i].length-1;
 //        NUM1[ind]=[0,DD01];
         NUM1[ind]=50*DD01[0]+10*DD01[1]+DD01[2];
-        NUM2[ind]=DD00;
+        NUM2[ind]=[50*DD01[0]+10*DD01[1]+DD01[2],DD00];
         }
       NUM1[ind]=NUM1[ind]+100;
+      NUM2[ind][0]=NUM2[ind][0]+100;
       }
-    MARK[i]=NUM1.sort().join(" ")+" # ["+NUM2.sort().join("],[")+"]";
-    RET=MARK[i];
-    MARKS=RET.toString();
+    NUM2=NUM2.sort();
+    RET=[[],[]];
+    for (var r=0;r<NUM2.length;r++) RET[0].push(NUM2[r][0]);
+    for (var r=0;r<NUM2.length;r++) RET[1].push(NUM2[r][1]);
+    MARK[i]=RET;
+    MARKS=RET.join(" # ");
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
