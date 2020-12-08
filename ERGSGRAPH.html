@@ -352,12 +352,12 @@ function MARKZAHL(DD) {
 
 function MARKZAHLPUR(DD) {
   var DDNEU=MARKZAHL4(DD);
-  //var DDNEUNEU=MARKZAHL4(DDNEU[1]);
+  var DDNEUNEU=MARKZAHL4(DDNEU[1]);
   //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
   return [DDNEU[0]+"\n"
-    //+DDNEUNEU[0]+"\n"
+    +DDNEUNEU[0]+"\n"
     ,DDNEU[2]+"\n"
-    //+DDNEUNEU[2]+"\n"
+    +DDNEUNEU[2]+"\n"
     ];
   }
 
@@ -438,6 +438,41 @@ function Test4() {
     Logtext=Logtext+M12[0]+"\n";
     }
   Logfile(Logtext);
+  }
+
+function Test5(f) {
+  //var dd=document.getElementById("Test3value").value*1;
+  var dd=8;
+  var nr=1;
+  var n=2**(dd+1);
+  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"]\n";
+  if (f==0) {
+    GESAMTMERK=[];
+    GESAMTMERKORIG=[];
+    }
+  var R0=ERGS2[dd-1][nr-1][0];
+  var R1=ERGS2[dd-1][nr-1][1];
+  R0[dd]=[];
+  R1[dd]=[];
+  for (var i=0;i<dd+1;i++) {
+    R0[dd].push(1);
+    if ((n-f-1)&(2**i)) R1[dd].push(1); else R1[dd].push(0);
+    }
+  //alert(R1[dd]);
+  var DD0=DIAG(R0);
+  var DD1=DIAG(R1);
+  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHLPUR(DD12);//alert(M12);
+  var ind=GESAMTMERK.indexOf(M12[0]);
+  if (GESAMTMERK.indexOf(M12[0])==-1) {
+    Logtext=Logtext+"neu: "+R1[dd]+"\n";
+    //return;
+    GESAMTMERK.push(M12[0]);
+    GESAMTMERKORIG.push(R1[dd]);
+    }
+  Logtext=Logtext+GESAMTMERKORIG.join("\n");
+  Logfile(Logtext);
+  if (f<2**(dd+1)-1) setTimeout(Test5,100,f+1);
   }
 
 
@@ -897,6 +932,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
     <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
       <input id="Test3value" value="7"/></div>
     <div><button onclick="Test4()">Test4: dd=8, nr=655,569,713,705</button></div>
+    <div><button onclick="Test5(0)">Test5: dd=8, nr=1, f=0...511</button></div>
     </div>
   
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
