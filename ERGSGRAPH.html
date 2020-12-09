@@ -299,31 +299,28 @@ function MARKZAHL4(DD) {
     RET=[[],[]];
     for (var r=0;r<NUM2.length;r++) RET[0].push(NUM2[r][0]);
     for (var r=0;r<NUM2.length;r++) RET[1].push(NUM2[r][1]);
+    RET[1]="["+RET[1].join("],[")+"]";
     MARK[i]=RET;
     MARKS=RET.join(" # ");
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
        ind=MARKL.length-1;
-       MARKLNUM[ind]=[MARKS,0];
+       MARKLNUM[ind]=[0,MARKS];
        }
-    MARKLNUM[ind][1]=MARKLNUM[ind][1]+1;
+    MARKLNUM[ind][0]=MARKLNUM[ind][0]+1;
     DDNEU[i]=MARKS; 
     }
-  MARKL.sort();
   for (var i=0;i<SD;i++) {
     DDNEU[i]=MARKL.indexOf(DDNEU[i]);
     }  
-  for (var i=0;i<MARKL.length;i++) {
-    MARKL[i]=MARKL[i].slice(0,MARKL[i].indexOf("#"));
-    }  
-  MARKLNUM.sort();
+  MARKLNUM=MARKLNUM.sort();
   var MARKLORIG=[];
   for (var i=0;i<MARKLNUM.length;i++) {
-    MARKLORIG[i]=[MARKLNUM[i][0].slice(),MARKLNUM[i][1]];
+    MARKLORIG[i]=[MARKLNUM[i][0],MARKLNUM[i][1].slice()];
     }
   for (var i=0;i<MARKLNUM.length;i++) {
-    MARKLNUM[i][0]=MARKLNUM[i][0].slice(0,MARKLNUM[i][0].indexOf("#"));
+    MARKLNUM[i][1]=MARKLNUM[i][1].slice(0,MARKLNUM[i][1].indexOf("#"));
     }  
   return [MARKLNUM.join("\n")+"\n",DDNEU,MARKLORIG.join("\n")+"\n"];
   }
@@ -354,18 +351,23 @@ function MARKZAHLPUR(DD) {
   var DDNEU=MARKZAHL4(DD);
   var DDNEUNEU=MARKZAHL4(DDNEU[1]);
   //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
-  return [DDNEU[0]+"\n"
-    +DDNEUNEU[0]+"\n"
-    ,DDNEU[2]+"\n"
-    +DDNEUNEU[2]+"\n"
+  return [
+    DDNEU[0]+"\n"
+      +DDNEUNEU[0]+"\n"
+    ,
+    DDNEU[2]+"\n"
+      +DDNEUNEU[2]+"\n"
     ];
   }
 
-function Test2() {
+var GESAMTMERK=[];
+var GESAMTMERKORIG=[];
+
+function Test2(dd) {
   Logtext="Test2\n";
-  var dd=document.getElementById("Test2value").value*1;
-  var GESAMTMERK=[];
-  var GESAMTMERKORIG=[];
+  if (dd) ; else var dd=document.getElementById("Test2value").value*1;
+  GESAMTMERK=[];
+  GESAMTMERKORIG=[];
   for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
@@ -384,9 +386,6 @@ function Test2() {
     }
   Logfile(Logtext);
   }
-
-var GESAMTMERK=[];
-var GESAMTMERKORIG=[];
 
 function Test3(nr) {
   var dd=document.getElementById("Test3value").value*1;
@@ -418,8 +417,8 @@ function Test3(nr) {
 function Test4() {
   Logtext="Test4 [655,569 ],[713,705]\n";
   var dd=8;
-  var GESAMTMERK=[];
-  var GESAMTMERKORIG=[];
+  GESAMTMERK=[];
+  GESAMTMERKORIG=[];
   var LISTE=[655,569,713,705]
   for (var ii in LISTE) {nr=LISTE[ii]-1;alert(nr);
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
@@ -470,9 +469,25 @@ function Test5(dd,nr,f) {
     }
   Logtext=Logtext+GESAMTMERKORIG.join("\n");
   Logfile(Logtext);
-  if (f<2**(dd+1)-1) setTimeout(Test5,100,dd,nr,f+1); else setTimeout(Test5,100,dd,nr+1,0);
+  if (f<2**(dd+1)-1) setTimeout(Test5,100,dd,nr,f+1); else 
+    if (nr<ERGS2[dd-1].length-1) setTimeout(Test5,100,dd,nr+1,0);
   }
 
+function Test6() {
+  Test2(4);
+  Logtext="Test6 R0=[[1],[1,0],[0,1,1],[1,0,0,0]]\n";
+  var R0=[[1],[1,0],[0,1,1],[1,0,0,0]];
+  var R1=[[1],[1,1],[1,1,1],[1,1,1,1]];
+  var DD0=DIAG(R0);
+  var DD1=DIAG(R1);
+  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHLPUR(DD12);//alert(M12);
+  var ind=GESAMTMERK.indexOf(M12[0]);alert(ind);
+  Logtext=Logtext+M12.join("\n---\n")
+    +"\n===\n"+GESAMTMERK.join("\n+++\n")
+    +"\näää\n"+GESAMTMERKORIG.join("\nööö\n");
+  Logfile(Logtext);
+  }
 
 
 function DREHMARK(DD) {
@@ -930,7 +945,8 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
     <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
       <input id="Test3value" value="7"/></div>
     <div><button onclick="Test4()">Test4: dd=8, nr=655,569,713,705</button></div>
-    <div><button onclick="Test5(8,1,0)">Test5(dd=8,nr=1,f=0...511)</button></div>
+    <div><button onclick="Test5(3,1,0)">Test5(dd=8,nr=1,f=0...511)</button></div>
+    <div><button onclick="Test6()">Test6()</button></div>
     </div>
   
   <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
