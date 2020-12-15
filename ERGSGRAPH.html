@@ -347,16 +347,16 @@ function MARKZAHL(DD) {
     ;
   }
 
-function MARKZAHLPUR(DD) {
+function MARKZAHLPUR(DD,anz) {
   var DDNEU=MARKZAHL4(DD);
   var DDNEUNEU=MARKZAHL4(DDNEU[1]);
   //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
   return [
     DDNEU[0]+"\n"
-      +DDNEUNEU[0]+"\n"
+//      +DDNEUNEU[0]+"\n"
     ,
     DDNEU[2]+"\n"
-      +DDNEUNEU[2]+"\n"
+//      +DDNEUNEU[2]+"\n"
     ];
   }
 
@@ -435,7 +435,7 @@ function Test4() {
     GESAMTMERK.push(M12[0]);
     GESAMTMERKORIG.push(M12[1]);
     Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
-    Logtext=Logtext+M12[0]+"\n";
+    Logtext=Logtext+M12[1]+"\n";
     }
   Logfile(Logtext);
   }
@@ -761,20 +761,23 @@ Logfile(Logtext);return;
 <br/><a href="#DD1T">[64,266]</a></span></div>
 
 Tabelle TABLE 1 aus ...:
+<style>.blue {color:blue}
+.italic {font-style:italic}
+</style>
 <table style="text-align:center" border="1">
-  <tr><th>2</th><td>4</td><td>8</td><td>16</td><td>32</td><td>64</td><td>128</td><td>256</td><td>512</td><td>1024</td></tr>
-  <tr><td>1</td><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-  <tr><td></td><td>1</td><td>3</td><td>3</td><td>1</td><td></td><td></td><td></td><td></td><td></td></tr>
-  <tr><td></td><td></td><td>1</td><td>4</td><td>15</td><td>28</td><td>15</td><td>4</td><td>1</td><td></td></tr>
-  <tr><td></td><td></td><td></td><td>1</td><td>6</td><td>54</td><td>604</td><td>3566</td><td>6709</td><td>3566</td></tr>
-  <tr><td></td><td></td><td></td><td></td><td>1</td><td>7</td><td>151</td><td>26065</td><td>5829109</td><td>378628831</td></tr>
-  <tr><td></td><td></td><td></td><td></td><td></td><td>1</td><td>9</td><td>433</td><td>2948829</td><td>47698016406</td></tr>
-  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>10</td><td>1112</td><td>726843973</td></tr>
-  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>12</td><td>2933</td></tr>
-  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>1</td><td>13</td></tr>
-  </table>
-zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
-<table id="Tabelle2" align="center" border="1">
+  <tr><td>4</td><td>8</td><td>16</td><td>32</td><td>64</td><td>128</td><td>256</td><td>512</td><td>1024</td></tr>
+  <tr><td class="blue">1</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td> </td><td class="blue">3</td><td>3</td><td>1</td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td></td><td> </td><td class="blue">4</td><td>15</td><td>28</td><td>15</td><td>4</td><td>1</td><td></td></tr>
+  <tr><td></td><td></td><td> </td><td class="blue">6</td><td>54</td><td>604</td><td>3566</td><td>6709</td><td>3566</td></tr>
+  <tr><td></td><td></td><td></td><td> </td><td class="blue">7</td><td>151</td><td>26065</td><td>5829109</td><td>378628831</td></tr>
+  <tr><td></td><td></td><td></td><td></td><td> </td><td class="blue">9</td><td>433</td><td>2948829</td><td>47698016406</td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td> </td><td class="blue">10</td><td>1112</td><td>726843973</td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td> </td><td class="blue">12</td><td>2933</td></tr>
+  <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td> </td><td class="blue">13</td></tr>
+  <!--/table-->
+<tr><td colspan="9">nun zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:</td></tr>
+<!--table id="Tabelle2" align="center" border="1"-->
 <!--tr>
   <td>2<sup>2</sup></td>
   <td>2<sup>3</sup></td>
@@ -786,7 +789,7 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td>2<sup>9</sup></td>
   <td>2<sup>10</sup></td>
   </tr-->
-<tr style="text-align:center; color:blue">
+<tr class="blue">
   <td>1</td>
   <td>3</td>
   <td>4</td>
@@ -798,92 +801,81 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td>13</td>
   </tr>
 <tr>
-  <td>[4,1]<br/> 2·(1+1)</td>
-  <td>[8,2]<br/> 4·(1+1)</td>
-  <td>[16,10]<br/> 8·(1+1)</td>
-  <td>[32,45]<br/> 16·(1+1)</td>
-  <td>[64,260]<br/> 32·(1+1)</td>
-  <td>[128,2319]<br/> 64·(1+1)</td>
-  <td>[256,56082]<br/> 128·(1+1)</td>
-  <td>[512,10494201]<br/> 256·(1+1)</td>
-  <td><br/>512·(1+1)</td>
+  <td>[4,1]<div class="italic">2·(1+1)</div></td>
+  <td>[8,2]<div class="italic"> 4·(1+1)</td>
+  <td>[16,10]<div class="italic"> 8·(1+1)</td>
+  <td>[32,45]<div class="italic"> 16·(1+1)</td>
+  <td>[64,260]<div class="italic"> 32·(1+1)</td>
+  <td>[128,2319]<div class="italic"> 64·(1+1)</td>
+  <td>[256,56082]<div class="italic"> 128·(1+1)</td>
+  <td>[512,10494201]<div class="italic"> 256·(1+1)</td>
+  <td>&nbsp;<div class="italic">512·(1+1)</td>
   </tr>
 <tr>
   <td/>
-  <td>[8,3]<br/> 2·(2+1+1)</td>
-  <td>[16,11]<br/> 4·(2+1+1)</td>
-  <td>[32,46]<br/> 8·(2+1+1)</td>
-  <td>[64,261]<br/> 16·(2+1+1)</td>
-  <td>[128,2320]<br/> 32·(2+1+1)</td>
-  <td>[256,56083]<br/> 64·(2+1+1)</td>
-  <td>[512,10494202]<br/> 128·(2+1+1)</td>
-  <td><br/>256·(2+1+1)</td>
+  <td>[8,3]<div class="italic"> 2·(2+1+1)</div></td>
+  <td>[16,11]<div class="italic"> 4·(2+1+1)</div></td>
+  <td>[32,46]<div class="italic"> 8·(2+1+1)</div></td>
+  <td>[64,261]<div class="italic"> 16·(2+1+1)</div></td>
+  <td>[128,2320]<div class="italic"> 32·(2+1+1)</div></td>
+  <td>[256,56083]<div class="italic"> 64·(2+1+1)</div></td>
+  <td>[512,10494202]<div class="italic"> 128·(2+1+1)</div></td>
+  <td>&nbsp;<div class="italic">256·(2+1+1)</div></td>
   </tr>
 <tr>
   <td/>
-  <td>[8,4]<br/> 2·(3+1)</td>
-  <td>[16,12]<br/> 4·(3+1)</td>
-  <td>[32,47]<br/> 8·(3+1)</td>
-  <td>[64,262]<br/> 16·(3+1)</td>
-  <td>[128,2321]<br/> 32·(3+1)</td>
-  <td>[256,56084]<br/> 64·(3+1)</td>
-  <td>[512,10494203]<br/> 128·(3+1)</td>
-  <td><br/>256·(3+1)</td>
-  </tr>
-<tr>
-  <td/>
-  <td></td>
-  <td>[16,13]<br/> 2·(3+3+1+1)</td>
-  <td>[32,48]<br/> 4·(3+3+1+1)</td>
-  <td>[64,263]<br/> 8·(3+3+1+1)</td>
-  <td>[128,2322]<br/> 16·(3+3+1+1)</td>
-  <td>[256,56085]<br/> 32·(3+3+1+1)</td>
-  <td>[512,10494204]<br/> 64·(3+3+1+1)</td>
-  <td><br/>128·(3+3+1+1)</td>
+  <td>[8,4]<div class="italic"> 2·(3+1)</div></td>
+  <td>[16,12]<div class="italic"> 4·(3+1)</div></td>
+  <td>[32,47]<div class="italic"> 8·(3+1)</div></td>
+  <td>[64,262]<div class="italic"> 16·(3+1)</div></td>
+  <td>[128,2321]<div class="italic"> 32·(3+1)</div></td>
+  <td>[256,56084]<div class="italic"> 64·(3+1)</div></td>
+  <td>[512,10494203]<div class="italic"> 128·(3+1)</div></td>
+  <td>&nbsp;<div class="italic">256·(3+1)</div></td>
   </tr>
 <tr>
   <td/>
   <td/>
-  <td/>
-  <td>[32,49]<br/> 2·(9+6+1)</td>
-  <td>[64,264]<br/> 4·(9+6+1)</td>
-  <td>[128,2323]<br/> 8·(9+6+1)</td>
-  <td>[256,56086]<br/> 16·(9+6+1)</td>
-  <td>[512,10494205]<br/> 32·(9+6+1)</td>
-  <td><br/>64·(9+6+1)</td>
+  <td>[16,13]<div class="italic"> 2·(3+3+1+1)</div></td>
+  <td>[32,48]<div class="italic"> 4·(3+3+1+1)</div></td>
+  <td>[64,263]<div class="italic"> 8·(3+3+1+1)</div></td>
+  <td>[128,2322]<div class="italic"> 16·(3+3+1+1)</div></td>
+  <td>[256,56085]<div class="italic"> 32·(3+3+1+1)</div></td>
+  <td>[512,10494204]<div class="italic"> 64·(3+3+1+1)</div></td>
+  <td>&nbsp;<div class="italic">128·(3+3+1+1)</div></td>
   </tr>
 <tr>
   <td/>
   <td/>
   <td/>
-  <td>[32,50]<br/> 2·(10+5+1)</td>
-  <td>[64,265]<br/> 4·(10+5+1)</td>
-  <td>[128,2324]<br/> 8·(10+5+1)</td>
-  <td>[256,56087]<br/> 16·(10+5+1)</td>
-  <td>[512,10494206]<br/> 32·(10+5+1)</td>
-  <td><br/>64·(10+5+1)</td>
+  <td>[32,49]<div class="italic"> 2·(9+6+1)</div></td>
+  <td>[64,264]<div class="italic"> 4·(9+6+1)</div></td>
+  <td>[128,2323]<div class="italic"> 8·(9+6+1)</div></td>
+  <td>[256,56086]<div class="italic"> 16·(9+6+1)</div></td>
+  <td>[512,10494205]<div class="italic"> 32·(9+6+1)</div></td>
+  <td>&nbsp;<div class="italic">64·(9+6+1)</div></td>
   </tr>
 <tr>
   <td/>
   <td/>
   <td/>
-  <td/>
-  <td>[64,266]<br/> 2·(15+15+1+1)</td>
-  <td>[128,2325]<br/> 4·(15+15+1+1)</td>
-  <td>[256,56088]<br/> 8·(15+15+1+1)</td>
-  <td>[512,10494207]<br/> 16·(15+15+1+1)</td>
-  <td><br/>32·(15+15+1+1)</td>
+  <td>[32,50]<div class="italic"> 2·(10+5+1)</div></td>
+  <td>[64,265]<div class="italic"> 4·(10+5+1)</div></td>
+  <td>[128,2324]<div class="italic"> 8·(10+5+1)</div></td>
+  <td>[256,56087]<div class="italic"> 16·(10+5+1)</div></td>
+  <td>[512,10494206]<div class="italic"> 32·(10+5+1)</div></td>
+  <td>&nbsp;<div class="italic">64·(10+5+1)</div></td>
   </tr>
 <tr>
   <td/>
   <td/>
   <td/>
   <td/>
-  <td/>
-  <td>[128,2326]<br/> 2·(35+28+1)</td>
-  <td>[256,56089]<br/> 4·(35+28+1)</td>
-  <td>[512,10494208]<br/> 8·(35+28+1)</td>
-  <td><br/>16·(35+28+1)</td>
+  <td>[64,266]<div class="italic"> 2·(15+15+1+1)</div></td>
+  <td>[128,2325]<div class="italic"> 4·(15+15+1+1)</div></td>
+  <td>[256,56088]<div class="italic"> 8·(15+15+1+1)</div></td>
+  <td>[512,10494207]<div class="italic"> 16·(15+15+1+1)</div></td>
+  <td>&nbsp;<div class="italic">32·(15+15+1+1)</div></td>
   </tr>
 <tr>
   <td/>
@@ -891,10 +883,10 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td/>
   <td/>
   <td/>
-  <td>[128,2327]<br/> 2·(36+27+1)</td>
-  <td>[256,56090]<br/> 4·(36+27+1)</td>
-  <td>[512,10494209]<br/> 8·(36+27+1)</td>
-  <td><br/>16·(36+27+1)</td>
+  <td>[128,2326]<div class="italic"> 2·(35+28+1)</div></td>
+  <td>[256,56089]<div class="italic"> 4·(35+28+1)</div></td>
+  <td>[512,10494208]<div class="italic"> 8·(35+28+1)</div></td>
+  <td>&nbsp;<div class="italic">16·(35+28+1)</div></td>
   </tr>
 <tr>
   <td/>
@@ -902,10 +894,10 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td/>
   <td/>
   <td/>
-  <td/>
-  <td>[256,56091]<br/> 2·(63+63+1+1)</td>
-  <td>[512,10494210]<br/> 4·(63+63+1+1)</td>
-  <td><br/>8·(63+63+1+1)</td>
+  <td>[128,2327]<div class="italic"> 2·(36+27+1)</div></td>
+  <td>[256,56090]<div class="italic"> 4·(36+27+1)</div></td>
+  <td>[512,10494209]<div class="italic"> 8·(36+27+1)</div></td>
+  <td>&nbsp;<div class="italic">16·(36+27+1)</div></td>
   </tr>
 <tr>
   <td/>
@@ -914,9 +906,9 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td/>
   <td/>
   <td/>
-  <td/>
-  <td>[512,10494211]<br/> 2·(135+120+1)</td>
-  <td><br/>4·(135+120+1)</td>
+  <td>[256,56091]<div class="italic"> 2·(63+63+1+1)</div></td>
+  <td>[512,10494210]<div class="italic"> 4·(63+63+1+1)</div></td>
+  <td>&nbsp;<div class="italic">8·(63+63+1+1)</div></td>
   </tr>
 <tr>
   <td/>
@@ -926,8 +918,19 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td/>
   <td/>
   <td/>
-  <td>[512,10494212]<br/> 2·(136+119+1)</td>
-  <td><br/>4·(136+119+1)</td>
+  <td>[512,10494211]<div class="italic"> 2·(135+120+1)</div></td>
+  <td>&nbsp;<div class="italic">4·(135+120+1)</div></td>
+  </tr>
+<tr>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td/>
+  <td>[512,10494212]<div class="italic"> 2·(136+119+1)</div></td>
+  <td>&nbsp;<div class="italic">4·(136+119+1)</div></td>
   </tr>
 <tr>
   <td/>
@@ -938,11 +941,11 @@ zur Folge 1,3,4,6,7,9,10,12,13 die einzelnen Gruppen:
   <td/>
   <td/>
   <td/>
-  <td><br/>2·(255+255+1+1)</td>
+  <td>&nbsp;<div class="italic">2·(255+255+1+1)</div></td>
   </tr>
   </table>
-
-  <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
+  
+<div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
     <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
