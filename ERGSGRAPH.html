@@ -342,16 +342,21 @@ function MARKZAHL(DD) {
   }
 
 function MARKZAHLPUR(DD,anz) {
-  var DDNEU=MARKZAHL4(DD);
-  var DDNEUNEU=MARKZAHL4(DDNEU[1]);
-  //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
-  return [
-    DDNEU[0]+"\n"
-      +DDNEUNEU[0]+"\n"
-    ,
-    DDNEU[2]+"\n"
-      +DDNEUNEU[2]+"\n"
-    ];
+  if (anz&&anz==1) {
+    var DDNEU=MARKZAHL4(DD);
+    return [DDNEU[0]+"\n",DDNEU[2]+"\n"];
+    } else {
+      var DDNEU=MARKZAHL4(DD);
+      var DDNEUNEU=MARKZAHL4(DDNEU[1]);
+      //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
+      return [
+        DDNEU[0]+"\n"
+          +DDNEUNEU[0]+"\n"
+        ,
+        DDNEU[2]+"\n"
+          +DDNEUNEU[2]+"\n"
+        ];
+      }
   }
 
 var GESAMTMERK=[];
@@ -437,7 +442,7 @@ function Test4() {
 function Test5(dd,nr,f) {
   //var dd=document.getElementById("Test3value").value*1;
   var n=2**(dd+1);
-  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"]\n";
+  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"] mit MARKZAHL(DD,1) \n";
   if (nr==1&&f==0) {
     GESAMTMERK=[];
     GESAMTMERKORIG=[];
@@ -454,7 +459,7 @@ function Test5(dd,nr,f) {
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12);//alert(M12);
+  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
   var ind=GESAMTMERK.indexOf(M12[0]);
   if (GESAMTMERK.indexOf(M12[0])==-1) {
     Logtext=Logtext+"";
