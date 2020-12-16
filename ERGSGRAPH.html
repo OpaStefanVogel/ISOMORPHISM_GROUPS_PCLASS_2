@@ -277,7 +277,7 @@ function MARKZAHL4(DD) {
         if (DD01[2]==DD01[0]) DD01[2]=1; else
           if (DD01[2]==DD01[1]) DD01[2]=2; else
             if (DD01[2]==DD01[0]^DD01[1]) DD01[2]=3; else
-              DD01[2]=4;
+              DD01[2]=3;//nicht 4
       if (DD01[1]==0) DD01[1]=0; else
         if (DD01[1]==DD01[0]) DD01[1]=1; else
           DD01[1]=2;
@@ -288,11 +288,8 @@ function MARKZAHL4(DD) {
       if (ind==-1) {
         MARK[i].push(DDij);
         ind=MARK[i].length-1;
-//        NUM1[ind]=[0,DD01];
-        NUM1[ind]=50*DD01[0]+10*DD01[1]+DD01[2];
         NUM2[ind]=[50*DD01[0]+10*DD01[1]+DD01[2],DD00];
         }
-      NUM1[ind]=NUM1[ind]+100;
       NUM2[ind][0]=NUM2[ind][0]+100;
       }
     NUM2=NUM2.sort();
@@ -301,7 +298,7 @@ function MARKZAHL4(DD) {
     for (var r=0;r<NUM2.length;r++) RET[1].push(NUM2[r][1]);
     RET[1]="["+RET[1].join("],[")+"]";
     MARK[i]=RET;
-    MARKS=RET.join(" # ");
+    MARKS=RET.join("#");
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
@@ -313,16 +310,13 @@ function MARKZAHL4(DD) {
     }
   for (var i=0;i<SD;i++) {
     DDNEU[i]=MARKL.indexOf(DDNEU[i]);
-    }  
-  MARKLNUM=MARKLNUM.sort();
-  var MARKLORIG=[];
-  for (var i=0;i<MARKLNUM.length;i++) {
-    MARKLORIG[i]=[MARKLNUM[i][0],MARKLNUM[i][1].slice()];
     }
+  MARKLNUM=MARKLNUM.sort();
+  var MARKLRET=[];
   for (var i=0;i<MARKLNUM.length;i++) {
-    MARKLNUM[i][1]=MARKLNUM[i][1].slice(0,MARKLNUM[i][1].indexOf("#"));
+    MARKLRET[i]=MARKLNUM[i][0]+"*"+MARKLNUM[i][1].slice(0,MARKLNUM[i][1].indexOf("#"));
     }  
-  return [MARKLNUM.join("\n")+"\n",DDNEU,MARKLORIG.join("\n")+"\n"];
+  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL];
   }
 
 function Bahnen(DD) {
@@ -353,10 +347,10 @@ function MARKZAHLPUR(DD,anz) {
   //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
   return [
     DDNEU[0]+"\n"
-//      +DDNEUNEU[0]+"\n"
+      +DDNEUNEU[0]+"\n"
     ,
     DDNEU[2]+"\n"
-//      +DDNEUNEU[2]+"\n"
+      +DDNEUNEU[2]+"\n"
     ];
   }
 
