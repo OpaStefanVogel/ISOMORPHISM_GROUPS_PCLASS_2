@@ -1,10 +1,13 @@
 #gap -L GAP_WORKSPACE #mit ERGS2_2945_20180813, AB_JETZT_NEU.txt bis RVOND4 mit dmax:=10 und PcgsOfR.txt.
 ##weiterer Versuch: Markierung verfeinern mit Aut(Aut(G)) oder wenigstens mit ConjugacyClasses
 #Read("PcgsOfR.txt");
+#Read("MatrixOf.txt");
 #Read("AB_JETZT_NEU.txt"); bis Ausgabe "....." reicht
 #die schweren waren  [ 655, 569 ], [ 713, 705 ] in AAAHAX Zeile 500
 ####13#### ist MARKZAHL4 aus ERGSGRAPH.html
 #0zuerst RVOND wenn nur 0,1 in D:
+####################1502 R0VONR(R)
+
 RVOND1:=function(dd,D)
   local d,j,R,RI;
   R:=[[0]];
@@ -1497,5 +1500,57 @@ ERG1055[5];ERG1067[5]=ERG1055[5];
 ERG1276:=MARKZAHL5ERGS2M2(8,1276);;
 ERG1134:=MARKZAHL5ERGS2M2(8,1134);;
 ERG1134[5];ERG1276[5]=ERG1134[5];#false
+
+####################1502 R0VONR(R)
+dd:=8;
+nr:=655;
+nr:=569;
+R1:=ERGS2[dd][nr][1];
+R2:=ERGS2[dd][nr][2];
+R:=2*R1+R2;
+
+R0VONR:=function(R)
+  local i,RNEU;
+  RNEU:=StructuralCopy(R);
+  for i in [1..Size(R)] do
+    Add(RNEU[i],RNEU[i][1],1);
+    od;
+  Add(RNEU,[0],1);
+  return RNEU;
+  end;
+R0VONR(R);
+R0VONR(R0VONR(R));
+[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 3, 2 ], [ 3, 3, 2, 2, 3, 2 ], [ 3, 2, 3, 2, 2, 3, 2 ], [ 3, 2, 2, 2, 3, 3, 3, 2 ] ]
+[ [ 3 ], [ 3, 3 ], [ 3, 3, 3 ], [ 3, 3, 3, 3 ], [ 3, 3, 3, 3, 2 ], [ 3, 3, 3, 2, 3, 2 ], [ 3, 3, 2, 3, 3, 2, 2 ], [ 3, 2, 3, 3, 3, 2, 2, 2 ] ]
+
+R:=[ [0],[0,0],[3,3,3],[ 3,3,3, 3 ], [3,3, 3, 3, 3 ], [3,3, 3, 3, 3, 3 ], [ 3,3,3, 3, 3, 3, 2 ],[ 3,3,3, 3, 2, 2, 3, 2 ], [ 3,3,3, 2, 3, 2, 2, 3, 2 ], [ 3,3,3, 2, 2, 2, 3, 3, 3, 2 ] ];
+R:=[ [0],[0,0],[3,3,3],[ 3,3,3, 3 ], [3,3, 3, 3, 3 ], [3,3, 3, 3, 3, 3 ], [ 3,3,3, 3, 3, 3, 2 ],[ 3,3,3, 3, 3, 2, 3, 2 ], [ 3,3,3, 3, 2, 3, 3, 2, 2 ], [ 3,3,3, 2, 3, 3, 3, 2, 2, 2 ] ];
+
+
+P:=PcgsOfR(R0VONR(R0VONR(R)));
+C655:=CharacterTable(P);
+Display(C655);
+S655:=CharacterTableWithSortedClasses(C655);
+Display(S655);
+T655:=CharacterTableWithSortedCharacters(S655);
+Display(T655);
+C569:=CharacterTable(P);
+Display(C569);
+S569:=CharacterTableWithSortedClasses(C569);
+Display(S569);
+T569:=CharacterTableWithSortedCharacters(S569);
+Display(T569);
+C655=C569;
+TransformingPermutationsCharacterTables(C655,C569);
+RandomIsomorphismTest([
+rec(code:=124069155432773930595080878893596861463549201395097535790683112461388528951409204081378062876926654742378743280127790874367,order:=1024),
+rec(code:=124069155432773930595080878893596893292236331650362414125358594321054902983652752054315409873561246400647087536618445012735,order:=1024)
+],1);
+
+D:=Diagonale(P,true);Add(D,0,1);
+M655:=MARKZAHL5(D);
+M569:=MARKZAHL5(D);
+M655[5]=M569[5];
+
 
 
