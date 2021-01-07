@@ -1552,5 +1552,43 @@ M655:=MARKZAHL5(D);
 M569:=MARKZAHL5(D);
 M655[5]=M569[5];
 
+######### TEST5
+#function Test5(dd,nr,f) {
+#  //var dd=document.getElementById("Test3value").value*1;
+#  var n=2**(dd+1);
+#  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"] mit MARKZAHL(DD,1) \n";
+#  if (nr==1&&f==0) {
+#    GESAMTMERK=[];
+#    GESAMTMERKORIG=[];
+#    }
+#  var R0=ERGS2[dd-1][nr-1][0];
+#  var R1=ERGS2[dd-1][nr-1][1];
+#  R0[dd]=[];
+#  R1[dd]=[];
+#  for (var i=0;i<dd+1;i++) {
+#    R0[dd].push(1);
+#    if ((n-f-1)&(2**i)) R1[dd].unshift(1); else R1[dd].unshift(0);
+#    }
+#  //alert(R1[dd]);
+#  var DD0=DIAG(R0);
+#  var DD1=DIAG(R1);
+#  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+#  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+#  var ind=GESAMTMERK.indexOf(M12[0]);
+#  if (GESAMTMERK.indexOf(M12[0])==-1) {
+#    Logtext=Logtext+"";
+#    //return;
+#    GESAMTMERK.push(M12[0]);
+#    var RT="";
+#    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
+#    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
+#    }
+#  Logtext=Logtext+GESAMTMERKORIG.join("\n");
+#  Logfile(Logtext);
+#  if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
+#    if (nr<ERGS2[dd-1].length-1&&R0.slice(0,dd).join("")==ERGS2[dd-1][nr][0].join("")) tc=setTimeout(Test5,100,dd,nr+1,0);
+#    
+#    }
+#  }
 
 
