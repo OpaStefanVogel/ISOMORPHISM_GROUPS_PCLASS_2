@@ -1553,36 +1553,65 @@ M569:=MARKZAHL5(D);
 M655[5]=M569[5];
 
 ######### TEST5
+GESAMTMERK:=[];
+GESAMTMERKORIG:=[];
 #function Test5(dd,nr,f) {
+TEST5:=function(dd,nr,f)
+  local n,R0,R1,DD0,DD1,DD12,M12,ind,EOT;
 #  //var dd=document.getElementById("Test3value").value*1;
 #  var n=2**(dd+1);
+  n:=2^(dd+1);
 #  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"] mit MARKZAHL(DD,1) \n";
+  Print("Test5 Fortsetzung ",f," zu [dd,nr]=[",dd,",",nr,"] mit MARKZAHL5(DD,1)");
 #  if (nr==1&&f==0) {
 #    GESAMTMERK=[];
 #    GESAMTMERKORIG=[];
 #    }
+  if (nr=1 and f=0) then
+    GESAMTMERK:=[];
+    GESAMTMERKORIG:=[];
+    fi;
 #  var R0=ERGS2[dd-1][nr-1][0];
 #  var R1=ERGS2[dd-1][nr-1][1];
 #  R0[dd]=[];
 #  R1[dd]=[];
+   R0:=ERGS2[dd][nr][1];
+   R1:=ERGS2[dd][nr][2];
 #  for (var i=0;i<dd+1;i++) {
 #    R0[dd].push(1);
 #    if ((n-f-1)&(2**i)) R1[dd].unshift(1); else R1[dd].unshift(0);
 #    }
+   EOT:=EnumeratorOfTuples([0,1],dd+1);
+   R0[dd+1]:=EOT[n];
+   R1[dd+1]:=EOT[n-f];
 #  //alert(R1[dd]);
+   Print(R0);
+   Print(R1);
 #  var DD0=DIAG(R0);
 #  var DD1=DIAG(R1);
 #  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
 #  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+   DD0:=DIAG(R0);
+   DD1:=DIAG(R1);
+   DD12:=[]; for i in [1..n] do DD12[i]:=2*DD0[i]+DD1[i]; od;
+   M12:=MARKZAHL5(DD12);
+#  //alert(M12);
+   Print(M12[5]);
 #  var ind=GESAMTMERK.indexOf(M12[0]);
+   ind:=Position(GESAMTMERK,M12[5]);
 #  if (GESAMTMERK.indexOf(M12[0])==-1) {
+   if ind=fail then
 #    Logtext=Logtext+"";
 #    //return;
 #    GESAMTMERK.push(M12[0]);
+     Add(GESAMTMERK,M12[5]);
+     Print(Size(GESAMTMERK));
 #    var RT="";
 #    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
 #    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
+     Add(GESAMTMERKORIG,StructuralCopy(R1),1);
 #    }
+     fi;
 #  Logtext=Logtext+GESAMTMERKORIG.join("\n");
 #  Logfile(Logtext);
 #  if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
@@ -1590,5 +1619,14 @@ M655[5]=M569[5];
 #    
 #    }
 #  }
-
-
+  end;
+TEST5(4,1,0);
+TEST5(4,1,1);
+TEST5(4,1,2);
+TEST5(4,1,3);
+TEST5(4,1,4);
+TEST5(4,1,5);
+GESAMTMERKORIG;
+for f in [0..31] do TEST5(4,1,f); od; GESAMTMERKORIG;
+for f in [0..63] do TEST5(5,1,f); od; GESAMTMERKORIG;
+for f in [0..127] do TEST5(6,1,f); od; GESAMTMERKORIG;
