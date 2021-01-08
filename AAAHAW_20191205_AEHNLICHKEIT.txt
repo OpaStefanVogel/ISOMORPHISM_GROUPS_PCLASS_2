@@ -7,6 +7,7 @@
 ####13#### ist MARKZAHL4 aus ERGSGRAPH.html
 #0zuerst RVOND wenn nur 0,1 in D:
 ####################1502 R0VONR(R)
+####################1641 SemidirectProduct
 
 RVOND1:=function(dd,D)
   local d,j,R,RI;
@@ -1562,7 +1563,7 @@ TEST5:=function(dd,nr,f)
 #  var n=2**(dd+1);
   n:=2^(dd+1);
 #  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"] mit MARKZAHL(DD,1) \n";
-  Print("Test5 Fortsetzung ",f," zu [dd,nr]=[",dd,",",nr,"] mit MARKZAHL5(DD,1)");
+  Print("\n\nTest5 Fortsetzung ",f," zu [dd,nr]=[",dd,",",nr,"] mit MARKZAHL5(DD,1)");
 #  if (nr==1&&f==0) {
 #    GESAMTMERK=[];
 #    GESAMTMERKORIG=[];
@@ -1575,8 +1576,8 @@ TEST5:=function(dd,nr,f)
 #  var R1=ERGS2[dd-1][nr-1][1];
 #  R0[dd]=[];
 #  R1[dd]=[];
-   R0:=ERGS2[dd][nr][1];
-   R1:=ERGS2[dd][nr][2];
+   R0:=StructuralCopy(ERGS2[dd][nr][1]);
+   R1:=StructuralCopy(ERGS2[dd][nr][2]);
 #  for (var i=0;i<dd+1;i++) {
 #    R0[dd].push(1);
 #    if ((n-f-1)&(2**i)) R1[dd].unshift(1); else R1[dd].unshift(0);
@@ -1630,3 +1631,22 @@ GESAMTMERKORIG;
 for f in [0..31] do TEST5(4,1,f); od; GESAMTMERKORIG;
 for f in [0..63] do TEST5(5,1,f); od; GESAMTMERKORIG;
 for f in [0..127] do TEST5(6,1,f); od; GESAMTMERKORIG;
+dd:=5; for nr in [1..Size(ERGS2[dd])] do 
+  if ERGS2[dd][nr][1]=ERGS2[dd][1][1] then 
+    for f in [0..2^(dd+1)-1] do TEST5(dd,nr,f); od;
+    fi;
+  Print(nr); 
+  od; GESAMTMERKORIG; Size(GESAMTMERKORIG);
+
+
+######## SemidirectProduct
+G:=SmallGroup(64,266);#[ 128, 2325 ]=direktes Produkt, brauchbar wäre aber [ 128, 2326 ] oder ...27
+A:=AutomorphismGroup(G);
+F:=Filtered(A,a->Order(a)=2);
+for f in [1..Size(F)] do
+  S:=SemidirectProduct(Subgroup(A,[F[1]]),G);
+  I:=IdSmallGroup(S);
+  Print(I,", \c");
+  od;
+
+
