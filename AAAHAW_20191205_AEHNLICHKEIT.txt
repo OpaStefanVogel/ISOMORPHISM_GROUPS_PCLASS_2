@@ -1381,37 +1381,35 @@ MARKZAHL5:=function(D)
       DD00:=List(DDij);
       DD01:=List(DDij);
       #for k in [1..3] do if DD01[k]<>0 then DD01[k]:=1; else DD01[k]:=0; fi; od;
-      if DD01[3]=0 then DD01[3]:=0; else
+      if DD01[3]>0 then
         if DD01[3]=DD01[1] then DD01[3]:=1; else
           if DD01[3]=DD01[2] then DD01[3]:=2; else
-            if DD01[3]=DD01[1]*DD01[2] then DD01[3]:=3; else
-              DD01[3]:=3; #auch 3 und nicht 4
-              fi;
+            DD01[3]:=3;
             fi;
           fi;
         fi;
-      if DD01[2]=0 then DD01[2]:=0; else
+      if DD01[2]>0 then
         if DD01[2]=DD01[1] then DD01[2]:=1; else
           DD01[2]:=2;
           fi;
         fi;
-      if DD01[1]=0 then DD01[1]:=0; else
+      if DD01[1]>0 then
         DD01[1]:=1;
         fi;
-      ind:=Position(MARK[i],DDij);
-      if ind=fail then
-        Add(MARK[i],DDij);
-        ind:=Size(MARK[i]);
-        #NUM1[ind]:=4*DD01[1]+2*DD01[2]+DD01[3];
-        NUM2[ind]:=[50*DD01[1]+10*DD01[2]+DD01[3],DD00];
-        fi;
+      #ind:=Position(MARK[i],DDij);
+      #if ind=fail then
+      #  Add(MARK[i],DDij);
+      #  ind:=Size(MARK[i]);
+      #  #NUM1[ind]:=4*DD01[1]+2*DD01[2]+DD01[3];
+      #  NUM2[ind]:=[50*DD01[1]+10*DD01[2]+DD01[3],DD00];
+      #  fi;
       #NUM1[ind]:=NUM1[ind]+8;
-      NUM2[ind][1]:=NUM2[ind][1]+100;
+      #NUM2[ind][1]:=NUM2[ind][1]+100;
       ind:=6*DD01[3]+2*DD01[2]+DD01[1]+1;
       AMAT[ind]:=AMAT[ind]+1;
       od;
-    NUM2:=SortedList(NUM2);
-    RET:=[List(NUM2,r->r[1]),List(NUM2,r->r[2])];
+    #NUM2:=SortedList(NUM2);
+    #RET:=[List(NUM2,r->r[1]),List(NUM2,r->r[2])];
     RET:=[AMAT,AMAT];
     MARK[i]:=RET;
     ind:=Position(MARKL,RET);
@@ -1637,7 +1635,7 @@ GESAMTMERKORIG;
 for f in [0..31] do TEST5(4,1,f); od; GESAMTMERKORIG;
 for f in [0..63] do TEST5(5,1,f); od; GESAMTMERKORIG;
 for f in [0..127] do TEST5(6,1,f); od; GESAMTMERKORIG;
-dd:=6; for nr in [1..Size(ERGS2[dd])] do 
+dd:=8; for nr in [1..Size(ERGS2[dd])] do 
   if ERGS2[dd][nr][1]=ERGS2[dd][1][1] then 
     for f in [0..2^(dd+1)-1] do TEST5(dd,nr,f); od;
     fi;
