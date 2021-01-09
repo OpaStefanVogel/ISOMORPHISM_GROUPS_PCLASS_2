@@ -1563,7 +1563,8 @@ TEST5:=function(dd,nr,f)
 #  var n=2**(dd+1);
   n:=2^(dd+1);
 #  Logtext="Test5 Fortsetzung "+f+" zu [dd,nr]=["+dd+","+nr+"] mit MARKZAHL(DD,1) \n";
-  Print("\n\nTest5 Fortsetzung ",f," zu [dd,nr]=[",dd,",",nr,"] mit MARKZAHL5(DD,1)");
+##  Print("\n\nTest5 Fortsetzung ",f," zu [dd,nr]=[",dd,",",nr,"] mit MARKZAHL5(DD,1)");
+  Print("[",dd,",",nr,"] ");
 #  if (nr==1&&f==0) {
 #    GESAMTMERK=[];
 #    GESAMTMERKORIG=[];
@@ -1586,8 +1587,9 @@ TEST5:=function(dd,nr,f)
    R0[dd+1]:=EOT[n];
    R1[dd+1]:=EOT[n-f];
 #  //alert(R1[dd]);
-   Print(R0);
+##  Print(R0);
    Print(R1);
+  Print(Size(GESAMTMERK)+1," ",f," ");
 #  var DD0=DIAG(R0);
 #  var DD1=DIAG(R1);
 #  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
@@ -1597,7 +1599,7 @@ TEST5:=function(dd,nr,f)
    DD12:=[]; for i in [1..n] do DD12[i]:=2*DD0[i]+DD1[i]; od;
    M12:=MARKZAHL5(DD12);
 #  //alert(M12);
-   Print(M12[5]);
+##   Print(M12[5]);
 #  var ind=GESAMTMERK.indexOf(M12[0]);
    ind:=Position(GESAMTMERK,M12[5]);
 #  if (GESAMTMERK.indexOf(M12[0])==-1) {
@@ -1606,13 +1608,13 @@ TEST5:=function(dd,nr,f)
 #    //return;
 #    GESAMTMERK.push(M12[0]);
      Add(GESAMTMERK,M12[5]);
-     Print(Size(GESAMTMERK));
+     Print("\n");
 #    var RT="";
 #    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
 #    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
      Add(GESAMTMERKORIG,StructuralCopy(R1),1);
 #    }
-     fi;
+     else Print("\r"); fi;
 #  Logtext=Logtext+GESAMTMERKORIG.join("\n");
 #  Logfile(Logtext);
 #  if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
@@ -1631,7 +1633,7 @@ GESAMTMERKORIG;
 for f in [0..31] do TEST5(4,1,f); od; GESAMTMERKORIG;
 for f in [0..63] do TEST5(5,1,f); od; GESAMTMERKORIG;
 for f in [0..127] do TEST5(6,1,f); od; GESAMTMERKORIG;
-dd:=5; for nr in [1..Size(ERGS2[dd])] do 
+dd:=6; for nr in [1..Size(ERGS2[dd])] do 
   if ERGS2[dd][nr][1]=ERGS2[dd][1][1] then 
     for f in [0..2^(dd+1)-1] do TEST5(dd,nr,f); od;
     fi;
