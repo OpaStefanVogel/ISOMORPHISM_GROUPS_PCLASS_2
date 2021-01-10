@@ -1370,17 +1370,15 @@ MARKZAHL5:=function(D)
   MARKS:="";
   MARKL:=[];
   MARKLNUM:=[];
+  MARKLFERT:=[];
   MARK:=[];
   for i in [1..SD] do
     MARK[i]:=[];
-    NUM1:=[];
-    NUM2:=[];
+    #NUM1:=[];
+    #NUM2:=[];
     AMAT:=ListWithIdenticalEntries(24,0);
     for j in [1..SD] do 
-      DDij:=[D[i],D[j],D[XORMAT[i][j]]];
-      DD00:=List(DDij);
-      DD01:=List(DDij);
-      #for k in [1..3] do if DD01[k]<>0 then DD01[k]:=1; else DD01[k]:=0; fi; od;
+      DD01:=[D[i],D[j],D[XORMAT[i][j]]];
       if DD01[3]>0 then
         if DD01[3]=DD01[1] then DD01[3]:=1; else
           if DD01[3]=DD01[2] then DD01[3]:=2; else
@@ -1396,36 +1394,27 @@ MARKZAHL5:=function(D)
       if DD01[1]>0 then
         DD01[1]:=1;
         fi;
-      #ind:=Position(MARK[i],DDij);
-      #if ind=fail then
-      #  Add(MARK[i],DDij);
-      #  ind:=Size(MARK[i]);
-      #  #NUM1[ind]:=4*DD01[1]+2*DD01[2]+DD01[3];
-      #  NUM2[ind]:=[50*DD01[1]+10*DD01[2]+DD01[3],DD00];
-      #  fi;
-      #NUM1[ind]:=NUM1[ind]+8;
-      #NUM2[ind][1]:=NUM2[ind][1]+100;
       ind:=6*DD01[3]+2*DD01[2]+DD01[1]+1;
       AMAT[ind]:=AMAT[ind]+1;
       od;
-    #NUM2:=SortedList(NUM2);
-    #RET:=[List(NUM2,r->r[1]),List(NUM2,r->r[2])];
-    RET:=[AMAT,AMAT];
+    RET:=AMAT;
     MARK[i]:=RET;
-    ind:=Position(MARKL,RET);
-    if ind=fail then
-      Add(MARKL,RET);
-      ind:=Size(MARKL);
-      MARKLNUM[ind]:=[0,RET];
-      fi;
-    MARKLNUM[ind][1]:=MARKLNUM[ind][1]+1;
-    DDNEU[i]:=RET;
+    #ind:=Position(MARKL,RET);
+    #if ind=fail then
+    #  Add(MARKL,RET);
+    #  ind:=Size(MARKL);
+    #  MARKLNUM[ind]:=[0,RET];
+    #  fi;
+    #MARKLNUM[ind][1]:=MARKLNUM[ind][1]+1;
+    #DDNEU[i]:=RET;
     od;
-  MARKLNUM:=SortedList(MARKLNUM);
-  MARKL:=List(MARKLNUM,i->i[2]);
-  for i in [1..SD] do DDNEU[i]:=Position(MARKL,DDNEU[i])-1; od;
-  MARKLFERT:=List(MARKLNUM,i->[i[1],i[2][1]]);
-  return [MARK,MARKL,MARKLNUM,DDNEU,Collected(MARKLFERT)];
+  #MARKLNUM:=SortedList(MARKLNUM);
+  #MARKL:=List(MARKLNUM,i->i[2]);
+  #MARKLFERT:=List(MARKLNUM,i->i);
+  MARKLFERT:=Reversed(Collected(MARK));
+  MARKL:=List(MARKLFERT,i->i[1]);
+  for i in [1..SD] do DDNEU[i]:=Position(MARKL,MARK[i])-1; od;
+  return [MARK,MARKL,MARKLNUM,DDNEU,MARKLFERT];
   end;
 MARKZAHL5(DIAG([[1],[1,1]]))[5];
 MARKZAHL5(DIAG([[1],[1,0]]))[5];
@@ -1440,7 +1429,8 @@ MARKZAHL5ERGS2:=function (dd,nr)
   end;
 
 GESAMTDILIST:=[];
-for dd in [2..8] do
+for dd in [2..8] do #aktuell Stopp bei dd:=7; nr:=772;764
+  GESAMTDILIST:=[];
   for nr in [1..Size(ERGS2[dd])] do
     ERG:=MARKZAHL5ERGS2(dd,nr)[5];
     Print(dd," ",nr," ",Reversed(ERG),",\n               ",dd," ",nr,"\n");
@@ -1473,15 +1463,18 @@ MARKZAHL5ERGS2M2:=function (dd,nr)
   D1:=DIAG(ERGS2[dd][nr][1]);
   D2:=DIAG(ERGS2[dd][nr][2]);
   D:=2*D1+D2;
-  return MARKZAHL5(MARKZAHL5(D)[4]);
+  RET1:=MARKZAHL5(D);
+  RET2:=MARKZAHL5(RET1[4]);
+  return [RET1[5],RET2[5]];
   end;
 
 GESAMTDILIST:=[];
-for dd in [8..8] do
+for dd in [2..8] do
+  GESAMTDILIST:=[];
   for nr in [1..Size(ERGS2[dd])] do
-    ERG:=MARKZAHL5ERGS2M2(dd,nr)[5];
+    ERG:=MARKZAHL5ERGS2M2(dd,nr);
     Print(dd," ",nr," ",Reversed(ERG),",\n               ",dd," ",nr,"\n");
-    if Position(GESAMTDILIST,ERG)<>fail then Error(); fi;
+    if Position(GESAMTDILIST,ERG)<>fail then Error("ERG doppelt für nr=",nr," ",Position(GESAMTDILIST,ERG)); fi;
     Add(GESAMTDILIST,ERG);
     od;
   od;
@@ -1591,7 +1584,7 @@ TEST5:=function(dd,nr,f)
 #  //alert(R1[dd]);
 ##  Print(R0);
    Print(R1);
-  Print(Size(GESAMTMERK)+1," ",f," ");
+  Print("[",dd,",",nr,"] ",Size(GESAMTMERK)+1," ",f,"    \c");
 #  var DD0=DIAG(R0);
 #  var DD1=DIAG(R1);
 #  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
@@ -1599,17 +1592,20 @@ TEST5:=function(dd,nr,f)
    DD0:=DIAG(R0);
    DD1:=DIAG(R1);
    DD12:=[]; for i in [1..n] do DD12[i]:=2*DD0[i]+DD1[i]; od;
-   M12:=MARKZAHL5(DD12);
+  #M12:=MARKZAHL5(DD12);
+  RET1:=MARKZAHL5(DD12);
+  RET2:=MARKZAHL5(RET1[4]);
+  M12:=StructuralCopy([RET1[5],RET2[5]]);
 #  //alert(M12);
 ##   Print(M12[5]);
-#  var ind=GESAMTMERK.indexOf(M12[0]);
-   ind:=Position(GESAMTMERK,M12[5]);
+#  var ind=GESAMTMERK.indexOf(M12[0);
+   ind:=Position(GESAMTMERK,M12);
 #  if (GESAMTMERK.indexOf(M12[0])==-1) {
    if ind=fail then
 #    Logtext=Logtext+"";
 #    //return;
 #    GESAMTMERK.push(M12[0]);
-     Add(GESAMTMERK,M12[5]);
+     Add(GESAMTMERK,M12);
      Print("\n");
 #    var RT="";
 #    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
@@ -1632,10 +1628,10 @@ TEST5(4,1,3);
 TEST5(4,1,4);
 TEST5(4,1,5);
 GESAMTMERKORIG;
-for f in [0..31] do TEST5(4,1,f); od; GESAMTMERKORIG;
+for f in [0..31] do TES  T5(4,1,f); od; GESAMTMERKORIG;
 for f in [0..63] do TEST5(5,1,f); od; GESAMTMERKORIG;
 for f in [0..127] do TEST5(6,1,f); od; GESAMTMERKORIG;
-dd:=8; for nr in [1..Size(ERGS2[dd])] do 
+dd:=7; for nr in [1..Size(ERGS2[dd])] do 
   if ERGS2[dd][nr][1]=ERGS2[dd][1][1] then 
     for f in [0..2^(dd+1)-1] do TEST5(dd,nr,f); od;
     fi;
