@@ -493,6 +493,57 @@ function Test6() {
   Logfile(Logtext);
   }
 
+function Test7() {
+  //var dd=document.getElementById("Test3value").value*1;
+  Logtext="Bestimmung aller Markierungen\n";
+  for (var dd=1;dd<9;dd++) for (var nr=1;nr<ERGS2[dd-1].length+1;nr++) {
+    //alert([dd,nr]);
+    var R0=ERGS2[dd-1][nr-1][0];
+    var R1=ERGS2[dd-1][nr-1][1];
+    var DD0=DIAG(R0);
+    var DD1=DIAG(R1);
+    var M0=MARKZAHL0(DD0);
+    var M1=MARKZAHL0(DD1);
+    var DD2=[];
+    for (var i=0;i<DD0.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
+    var M2=MARKZAHL0(DD2);
+    var MGES=[M0,M1,M2];
+    MGES=MGES.sort().reverse();
+    if (M0==M1+""&&M1==M2+"")
+      Logtext=Logtext+"[dd,nr]=["+dd+","+nr+"]  "+MGES.join(" ")+"\n";
+    }
+  Logfile(Logtext);
+  return;
+  var R0=ERGS2[dd-1][nr-1][0];
+  var R1=ERGS2[dd-1][nr-1][1];
+  R0[dd]=[];
+  R1[dd]=[];
+  for (var i=0;i<dd+1;i++) {
+    R0[dd].push(1);
+    if ((n-f-1)&(2**i)) R1[dd].unshift(1); else R1[dd].unshift(0);
+    }
+  //alert(R1[dd]);
+  var DD0=DIAG(R0);
+  var DD1=DIAG(R1);
+  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+  var ind=GESAMTMERK.indexOf(M12[0]);
+  if (GESAMTMERK.indexOf(M12[0])==-1) {
+    Logtext=Logtext+"";
+    //return;
+    GESAMTMERK.push(M12[0]);
+    var RT="";
+    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
+    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
+    }
+  Logtext=Logtext+GESAMTMERKORIG.join("\n");
+  Logfile(Logtext);
+  if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
+    if (nr<ERGS2[dd-1].length-1&&R0.slice(0,dd).join("")==ERGS2[dd-1][nr][0].join("")) tc=setTimeout(Test5,100,dd,nr+1,0);
+    
+    }
+  }
+
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
@@ -946,6 +997,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
     <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
       <input id="Test2value" value="5"/></div>
