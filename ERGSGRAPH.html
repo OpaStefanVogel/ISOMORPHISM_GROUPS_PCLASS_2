@@ -168,6 +168,16 @@ function MARKZAHL0(DD) {
   return MARK.sort(function (x,y) {return y-x}).slice(0,4);
   }
 
+function MARKZAHL0GGT(DD) {
+  var M=MARKZAHL0(DD).slice();
+  while (((M[0]&1)==0)&&((M[1]&1)==0)) {
+    M[0]=M[0]/2;
+    M[1]=M[1]/2;
+    M[2]=M[2]/2;
+    }
+  return M;
+  }
+
 function MARKZAHL1(DD) {
   var MARK=[];
   var SD=DD.length;
@@ -502,11 +512,11 @@ function Test7() {
     var R1=ERGS2[dd-1][nr-1][1];
     var DD0=DIAG(R0);
     var DD1=DIAG(R1);
-    var M0=MARKZAHL0(DD0);
-    var M1=MARKZAHL0(DD1);
+    var M0=MARKZAHL0GGT(DD0);
+    var M1=MARKZAHL0GGT(DD1);
     var DD2=[];
     for (var i=0;i<DD0.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
-    var M2=MARKZAHL0(DD2);
+    var M2=MARKZAHL0GGT(DD2);
     var MGES=[M0,M1,M2];
     MGES=MGES.sort().reverse();
     if (M0==M1+""&&M1==M2+"")
