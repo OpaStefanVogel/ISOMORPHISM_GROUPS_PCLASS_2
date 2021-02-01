@@ -174,6 +174,7 @@ function MARKZAHL0GGT(DD) {
     M[0]=M[0]/2;
     M[1]=M[1]/2;
     M[2]=M[2]/2;
+    M[3]=M[3]/2;
     }
   return M;
   }
@@ -518,9 +519,19 @@ function Test7() {
     for (var i=0;i<DD0.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
     var M2=MARKZAHL0GGT(DD2);
     var MGES=[M0,M1,M2];
-    MGES=MGES.sort().reverse();
-    if (M0==M1+""&&M1==M2+"")
-      Logtext=Logtext+"[dd,nr]=["+dd+","+nr+"]  "+MGES.join(" ")+"\n";
+    var MGES2=MGES.slice().sort(function(x,y) {
+      if (x[0]<y[0]) return -1;
+      if (x[0]>y[0]) return 1;
+      if (x[1]<y[1]) return -1;
+      if (x[1]>y[1]) return 1;
+      if (x[2]<y[2]) return -1;
+      if (x[2]>y[2]) return 1;
+      if (x[3]<y[3]) return -1;
+      if (x[3]>y[3]) return 1;
+      return 0;
+      }).reverse();
+//    if (M0==M1+""&&M1==M2+"")
+      Logtext=Logtext+"[dd,nr]=["+dd+","+nr+"]  "+MGES2.join(" ")+"  "+MGES.join(" ")+"\n";
     }
   Logfile(Logtext);
   return;
