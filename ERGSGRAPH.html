@@ -182,6 +182,27 @@ function ANZAHL_IJK_NULLSETZEN() {
     }
   }
 
+function ANZAHL_IJK_HTML() {
+  var RET='<table border="0">';
+  for (var i=0;i<ANZAHL_IJK.length;i++) {
+    for (var j=0;j<=i;j++) {
+      for (var k=0;k<=j;k++) {
+        if (ANZAHL_IJK[i][j][k].length>0) {
+          RET=RET+"<tr>";
+          RET=RET+"<td>["+[i,j,k]+"]</td>"
+          for (var l=2;l<ANZAHL_IJK[i][j][k].length;l++) {
+            RET=RET+"<td>";
+            if (ANZAHL_IJK[i][j][k][l]) RET=RET+ANZAHL_IJK[i][j][k][l];
+            RET=RET+"</td>";
+            }
+          RET=RET+"</tr>\n";
+          }
+        }
+      }
+    }
+  return RET;
+  }
+
 function MARKZAHL0(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -564,14 +585,14 @@ function Test7() {
       return x-y;
       }).reverse();
 //    if (M0==M1+""&&M1==M2+"")
-      Logtext=Logtext+"[dd,nr]=["+dd+","+nr+"]  "+MGES2.join(" ")+"  "+MGES.join(" ")+"\n";
+//      Logtext=Logtext+"[dd,nr]=["+dd+","+nr+"]  "+MGES2.join(" ")+"  "+MGES.join(" ")+"\n";
     if (MGES2[2]>0)
       if (ANZAHL_IJK[MGES2[0]][MGES2[1]][MGES2[2]][dd]!=undefined)
         ANZAHL_IJK[MGES2[0]][MGES2[1]][MGES2[2]][dd]=
           ANZAHL_IJK[MGES2[0]][MGES2[1]][MGES2[2]][dd]+1;
         else ANZAHL_IJK[MGES2[0]][MGES2[1]][MGES2[2]][dd]=1;
     }
-  Logtext=Logtext+ANZAHL_IJK.join("\n")+"\n";
+  Logtext=Logtext+ANZAHL_IJK_HTML()+"\n";
   Logfile(Logtext);
   return;
   var R0=ERGS2[dd-1][nr-1][0];
