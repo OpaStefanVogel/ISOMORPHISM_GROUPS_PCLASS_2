@@ -295,6 +295,28 @@ MARKZAHL:=function(G)
 G:=SmallGroup(256,56082);
 MARKZAHL(G);
   
+MARKZAHL:=function(G)
+  local x,y,MERK,n,a,e;
+  MERK:=[0,0,0,0];
+  e:=Identity(G);
+  n:=Size(G);
+  for x in G do
+    a:=true;
+    if x^2=e then
+      for y in G do if a then if not y^2=(y*x)^2 then a:=false; fi; fi; od;
+      if a then MERK[3]:=MERK[3]+1; else MERK[1]:=MERK[1]+1; fi;
+      else
+        for y in G do if a then if y^2=(y*x)^2 then a:=false; fi; fi; od;
+        if a then MERK[4]:=MERK[4]+1; else MERK[2]:=MERK[2]+1; fi;
+        fi;
+    od;
+  MARK:=Reversed(SortedList(MERK/Gcd(MERK)));
+  for i in [1..4] do if MARK[i]=0 then Unbind(MARK[i]); fi; od;
+  return MARK;
+  end;
+G:=SmallGroup(256,56082);
+MARKZAHL(G);
+
 for n in [2..9] do
   for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
     G:=SmallGroup(2^n,index);
