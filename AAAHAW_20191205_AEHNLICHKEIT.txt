@@ -1672,3 +1672,45 @@ for f in [1..Size(F)] do
   od;
 
 
+F:=FreeGroup(4):
+z:=F.1; a:=F.2; b:=F.3; c:=F.4;
+G:=F/[z^2,a^2/z,b^2,(a*b)^2,c^2/z,(a*c)^2/z,(b*c)^2/z];
+H:=(IsomorphismPcGroup(G));
+
+F:=FreeGroup(6):
+z:=F.1; a:=F.2; b:=F.3; c:=F.4; d:=F.5; f:=F.6;
+G:=F/[z^2,a^2/z
+  ,b^2,(a*b)^2
+  ,c^2/z,(a*c)^2/z,(b*c)^2/z
+  ,d^2,(a*d)^2,(b*d)^2,(c*d)^2
+  ,f^2/z,(a*f)^2/z,(b*f)^2/z,(c*f)^2/z,(d*f)^2/z
+  ,b^2,Comm(a,b)
+  ,c^2/z,Comm(a,c)/z,Comm(b,c)/z
+  ,d^2,(a*d)^2,(b*d)^2,(c*d)^2
+  ,f^2/z,(a*f)^2/z,(b*f)^2/z,(c*f)^2/z,(d*f)^2/z
+  ];
+
+F:=FreeGroup(3):
+b:=F.1; a:=F.2; z:=F.3;
+G:=F/[b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(b,a)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);
+G:=F/[b^2/z,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(b,a)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);
+
+F:=FreeGroup(4):
+c:=F.1; b:=F.2; a:=F.3; z:=F.4;
+G:=F/[c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(b,a)/z,Comm(c,a)/z,Comm(c,b)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);
+
+F:=FreeGroup(5):
+d:=F.1; c:=F.2; b:=F.3; a:=F.4; z:=F.5;
+G:=F/[d^2,c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(c,b)/z,Comm(d,b)/z,Comm(d,c)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);
+G:=F/[d^2/z,c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(c,b)/z,Comm(d,b)/z,Comm(d,c)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);
+
