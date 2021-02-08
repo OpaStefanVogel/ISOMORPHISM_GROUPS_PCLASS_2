@@ -1690,27 +1690,70 @@ G:=F/[z^2,a^2/z
   ,f^2/z,(a*f)^2/z,(b*f)^2/z,(c*f)^2/z,(d*f)^2/z
   ];
 
-F:=FreeGroup(3):
+F:=FreeGroup(3);
 b:=F.1; a:=F.2; z:=F.3;
 G:=F/[b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(b,a)/z];
 G:=PcGroupFpGroup(G);
-IdSmallGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
 G:=F/[b^2/z,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(b,a)/z];
 G:=PcGroupFpGroup(G);
-IdSmallGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
 
-F:=FreeGroup(4):
+F:=FreeGroup(4);
 c:=F.1; b:=F.2; a:=F.3; z:=F.4;
 G:=F/[c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(b,a)/z,Comm(c,a)/z,Comm(c,b)/z];
 G:=PcGroupFpGroup(G);
-IdSmallGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
 
-F:=FreeGroup(5):
+F:=FreeGroup(5);
 d:=F.1; c:=F.2; b:=F.3; a:=F.4; z:=F.5;
 G:=F/[d^2,c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(c,b)/z,Comm(d,b)/z,Comm(d,c)/z];
 G:=PcGroupFpGroup(G);
-IdSmallGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
 G:=F/[d^2/z,c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(c,b)/z,Comm(d,b)/z,Comm(d,c)/z];
 G:=PcGroupFpGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
+
+F:=FreeGroup(6);
+f:=F.1; d:=F.2; c:=F.3; b:=F.4; a:=F.5; z:=F.6;
+G:=F/[f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(f,z),Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(f,a)/z,Comm(c,b)/z,Comm(d,b)/z,Comm(f,b)/z,Comm(d,c)/z,Comm(f,c)/z,Comm(f,d)/z];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
+
+F:=FreeGroup(7);
+g:=F.1; f:=F.2; d:=F.3; c:=F.4; b:=F.5; a:=F.6; z:=F.7;
+G:=F/[g^2,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
+  Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(f,z),Comm(g,z),
+  Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(f,a)/z,Comm(g,a)/z,
+  Comm(c,b)/z,Comm(d,b)/z,Comm(f,b)/z,Comm(g,b)/z,
+  Comm(d,c)/z,Comm(f,c)/z,Comm(g,c)/z,
+  Comm(f,d)/z,Comm(g,d)/z,
+  Comm(g,f)/z
+  ];
+G:=PcGroupFpGroup(G);MARKZAHL(G);
+IdSmallGroup(G);
+G:=F/[g^2/z,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
+  Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(f,z),Comm(g,z),
+  Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(f,a)/z,Comm(g,a)/z,
+  Comm(c,b)/z,Comm(d,b)/z,Comm(f,b)/z,Comm(g,b)/z,
+  Comm(d,c)/z,Comm(f,c)/z,Comm(g,c)/z,
+  Comm(f,d)/z,Comm(g,d)/z,
+  Comm(g,f)/z
+  ];
+G:=PcGroupFpGroup(G);
+IdSmallGroup(G);MARKZAHL(G);
+
+F:=FreeGroup(8);
+h:=F.1; g:=F.2; f:=F.3; d:=F.4; c:=F.5; b:=F.6; a:=F.7; z:=F.8;
+G:=F/[h^2,g^2,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
+  Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(f,z),Comm(g,z),Comm(h,z),
+  Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(f,a)/z,Comm(g,a)/z,Comm(h,a)/z,
+  Comm(c,b)/z,Comm(d,b)/z,Comm(f,b)/z,Comm(g,b)/z,Comm(h,b)/z,
+  Comm(d,c)/z,Comm(f,c)/z,Comm(g,c)/z,Comm(h,c)/z,
+  Comm(f,d)/z,Comm(g,d)/z,Comm(h,d)/z,
+  Comm(g,f)/z,Comm(h,f)/z,
+  Comm(h,g)/z
+  ];
+G:=PcGroupFpGroup(G);MARKZAHL(G);
 IdSmallGroup(G);
 
