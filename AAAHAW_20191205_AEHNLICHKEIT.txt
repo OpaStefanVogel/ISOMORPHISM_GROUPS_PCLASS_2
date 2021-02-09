@@ -8,6 +8,7 @@
 #0zuerst RVOND wenn nur 0,1 in D:
 ####################1502 R0VONR(R)
 ####################1641 SemidirectProduct
+####################1760 GENERATE_G:=function(dd) #dd mit negativem Vorzeichen für (10+5+1), (36+27+1),...
 
 RVOND1:=function(dd,D)
   local d,j,R,RI;
@@ -296,7 +297,7 @@ G:=SmallGroup(256,56082);
 MARKZAHL(G);
   
 MARKZAHL:=function(G)
-  local x,y,MERK,n,a,e;
+  local i,x,y,MERK,n,a,e;
   MERK:=[0,0,0,0];
   e:=Identity(G);
   n:=Size(G);
@@ -1745,7 +1746,7 @@ IdSmallGroup(G);MARKZAHL(G);
 
 F:=FreeGroup(8);
 h:=F.1; g:=F.2; f:=F.3; d:=F.4; c:=F.5; b:=F.6; a:=F.7; z:=F.8;
-G:=F/[h^2,g^2,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
+G:=F/[h^2/z,g^2,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
   Comm(a,z),Comm(b,z),Comm(c,z),Comm(d,z),Comm(f,z),Comm(g,z),Comm(h,z),
   Comm(b,a)/z,Comm(c,a)/z,Comm(d,a)/z,Comm(f,a)/z,Comm(g,a)/z,Comm(h,a)/z,
   Comm(c,b)/z,Comm(d,b)/z,Comm(f,b)/z,Comm(g,b)/z,Comm(h,b)/z,
@@ -1757,3 +1758,21 @@ G:=F/[h^2,g^2,f^2/z,d^2,c^2/z,b^2,a^2/z,z^2,
 G:=PcGroupFpGroup(G);MARKZAHL(G);
 IdSmallGroup(G);
 
+GENERATE_G:=function(dd) #dd mit negativem Vorzeichen für (10+5+1), (36+27+1),... 
+  local d,F,i,j,gens,rels;
+  d:=AbsInt(dd);
+  F:=FreeGroup(d+1);
+  gens:=Reversed(GeneratorsOfGroup(F));
+  rels:=[];
+  for i in [1..d+1] do 
+    if IsOddInt(i) and (-i<>dd+1) then Add(rels,gens[i]^2);
+      else Add(rels,gens[i]^2/gens[1]); fi; od;
+  for i in [2..d+1] do Add(rels,Comm(gens[i],gens[1])); od;
+  for i in [2..d] do for j in [i+1..d+1] do Add(rels,Comm(gens[j],gens[i])/gens[1]); od; od;
+  #return [gens,rels];
+  return PcGroupFpGroup(F/rels);
+  end;
+G:=GENERATE_G(4);MARKZAHL(G);IdSmallGroup(G);
+for i in [3..7] do G:=GENERATE_G(i); Print("\n",i," ",IdSmallGroup(G)," ",MARKZAHL(G)); od;
+i:=2; repeat i:=i+1; Print("\n",i,"\c"); G:=GENERATE_G(i); until i=100;
+i:=2; repeat i:=i+2; Print("\n",i,"\c"); G:=GENERATE_G(-i); Print(MARKZAHL(G)); until i=10;
