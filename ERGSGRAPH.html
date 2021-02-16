@@ -658,6 +658,34 @@ function Test7() {
 Test7
 */
 
+function COMPDIAGSTABERZ(DD) {
+  var MARK=[0,0,0,0];
+  var SD=DD.length;
+  var RET=[];
+  for (i=0;i<SD;i++) {
+    var a=true;
+    if (DD[i]==0) {
+      for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
+      if (a) {MARK[2]=MARK[2]+1; RET[i]=2;} else {MARK[0]=MARK[0]+1;
+      RET[i]=0;} } else {
+        for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
+        if (a) {MARK[3]=MARK[3]+1; RET[i]=3;} else {MARK[1]=MARK[1]+1;
+        RET[i]=1;}}
+    //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
+    }
+  //return MARK.sort(function (x,y) {return y-x}).slice(0,4);
+  return RET;
+  }
+
+function Test8() {
+  alert("Test8");
+  R=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];
+  D=DIAG(R);
+  alert(D);
+  C=COMPDIAGSTABERZ(D);
+  alert(C);
+  }
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -1110,6 +1138,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test8()" style="font-size:200%">Test8()</button> COMPDIAGSTABERZ</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
     <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
