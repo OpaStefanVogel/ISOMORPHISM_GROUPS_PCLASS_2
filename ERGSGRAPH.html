@@ -695,6 +695,19 @@ RLISTE=[
   [[1],[1,1],[1,1,1],[0,0,0,0]],
   [[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1]],
   [[1],[1,1],[1,1,1],[1,1,1,1],[0,0,0,0,0]],
+  [[1]],
+  [[1],[0,1]],
+  [[1],[0,1],[0,1,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0]],
+  [[1],[0,0],[1,1,1],[0,1,0,1]],
+  [[1],[0,0],[1,1,1],[0,0,0,0]],
+  [[1],[0,0],[1,1,1],[1,1,1,1]],
+  [[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0]],
+  [[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0],[0,0,0,0,0,1]],
+  [[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0],[0,0,0,0,0,1],[0,0,0,0,0,1,0]],
+  [[1],[0,0],[1,1,1],[0,1,0,1],[0,0,0,1,0]],
+  [[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,1,0,1,0,1],[0,1,0,1,0,1,0]],
   ];
 
 function Test8(R) {
@@ -702,8 +715,9 @@ function Test8(R) {
   //alert("Test8 für "+dd);
   for (var r=0;r<RLISTE.length;r++) {
     var R=RLISTE[r];
-    Logtext=Logtext+"R=[["+R.join("],[")+"]] "+MARKZAHL0GGT(DIAG(R))+" "+2**R.length+"\n";
     var dd=R.length+1;
+    var n=2**dd;
+    Logtext=Logtext+"============R=[["+R.join("],[")+"]] "+MARKZAHL0GGT(DIAG(R))+" "+n+"\n";
     for (var nr=0;nr<2**dd;nr++) {
       var RF=[];
       for (var j=0;j<dd;j++) if ((nr&(2**j))==0) RF.unshift(0); else RF.unshift(1);
@@ -713,7 +727,19 @@ function Test8(R) {
       //alert(D);
       C=COMPDIAGSTABERZ(D);
       //alert(C);return;
-      Logtext=Logtext+C+" ["+MARKZAHL0GGT(D)+"]\n";
+      var mark=[];
+      var mark23=0;
+      for (var i=0;i<dd;i++) {
+        if (C[2**i]>1) mark23=mark23+1;
+        mark.push([C[2**i]]);
+        for (var j=0;j<i;j++) {
+          if (C[2**i+2**j]>1) mark23=mark23+1;
+          mark[mark.length-1].push(C[2**i+2**j]);
+          }
+        }
+      var flag="*";
+      for (var i=n/2;i<n/2+n/4;i++) if (D[i]!=D[i+n/4]) flag="";
+      Logtext=Logtext+C+" ["+MARKZAHL0GGT(D)+"]"+mark23+", [["+mark.join("],[")+"]]"+flag+"\n";
       }
     }
   Logfile(Logtext);
