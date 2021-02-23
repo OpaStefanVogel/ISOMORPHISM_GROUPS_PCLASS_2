@@ -5,7 +5,7 @@
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
   <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
-  <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
+  <!--script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script-->
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -206,7 +206,7 @@ function ANZAHL_IJK_HTML() {
 function MARKZAHL0(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
-  for (i=0;i<SD;i++) {
+  for (var i=0;i<SD;i++) {
     var a=true;
     if (DD[i]==0) {
       for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
@@ -665,7 +665,7 @@ for (var i=0;i<20;i++) {
     TVEC.push(2**i+2**j);
     }
   }
-alert(TVEC);
+//alert(TVEC);
 
 function COMPDIAGSTABERZ(DD) {
   var MARK=[0,0,0,0];
@@ -750,22 +750,11 @@ function Test8(R) {
       //alert(R.join("\n"));
       D=DIAG(R);
       //alert(D);
-      C=COMPDIAGSTABERZ(D);
-      //alert(C);return;
-      var mark=[];
-      var mark23=0;
-      for (var i=0;i<dd;i++) {
-        if (C[2**i]>1) mark23=mark23+1;
-        mark.push([C[2**i]]);
-        for (var j=0;j<i;j++) {
-          if (C[2**i+2**j]>1) mark23=mark23+1;
-          mark[mark.length-1].push(C[2**i+2**j]);
-          }
-        }
+      var mark23=MARK23_bestimmen(D,dd);
       var flag="*";
       for (var i=n/2;i<n/2+n/4;i++) if (D[i]!=D[i+n/4]) flag="";
       //Logtext=Logtext+C+" ["+MARKZAHL0GGT(D)+"]"+mark23+", [["+mark.join("],[")+"]]"+flag+"\n";
-      Logarray.push("["+MARKZAHL0GGT(D)+"]"+mark23+", [["+mark.join("],[")+"]]"+flag);
+      Logarray.push("["+MARKZAHL0GGT(D)+"]"+mark23[1]+", [["+mark23[0].join("],[")+"]]"+flag);
       }
     Logarray.sort();
     Logtext=Logtext+Logarray.join("\n")+"\n";
@@ -784,6 +773,87 @@ PHI  3311:              15+15+1+1:
 21    22 23 24 29 (8)       9 10   11 12   15 16
 28    29 30 31 37     12   13 14   16 17   21 22
 */
+
+var a_n=[1,3,4,6,7,9,10,12,13,15,16,18,19,21,22,24,25,27,28,30,31,33,34,36,37,39,40];
+var RMUSTER=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  ];
+var ERGS1NEU=[];
+for (var dd=0;dd<15;dd++) {
+  var Liste=[];
+  for (var nr=0;nr<a_n[dd];nr++) {
+    var Element=[[1]];
+    for (var i=0;i<dd;i++) {
+      if (a_n[i]<=nr) {
+        var ti=RMUSTER[i+1].slice();
+        if (a_n[i]==nr-1&&a_n[i]%3!=0) ti.fill(1);
+        Element.push(ti);
+        } else {
+          var ti=[0];//alert(Element[0][0]);
+          for (var j=0;j<=i;j++) ti.push(Element[j][0]);
+          Element.push(ti);
+          }
+      //alert(dd+" "+nr+" "+i+" Element="+Element.join("\n"));
+      }
+    for (var i=a_n[nr];i<a_n[dd];i++);// Element.push([i+22]);
+    Liste.push(Element);
+    }
+  ERGS1NEU.push(Liste);
+  }
+
+//alert(ERGS1NEU[0].join("\n"));
+//alert(ERGS1NEU[1].join("\n"));
+//alert(ERGS1NEU[2].join("\n"));
+//alert(ERGS1NEU[3].join("\n"));
+//dd=10;
+//alert(dd+" "+ERGS1NEU[dd].join("\n"));
+//for (var i=0;i<ERGS1NEU[dd].length;i++) alert(MARKZAHL0GGT(DIAG(ERGS1NEU[dd][i]).slice()));
+
+function Anzahl_der_Einsen(DD) {
+  RET=0;
+  for (var i=0;i<DD.length;i++) if (DD[i]==1) RET=RET+1;
+  return RET;
+  }
+
+function MARK23_bestimmen(D,dd) {
+      var C=COMPDIAGSTABERZ(D);
+      //alert(C);return;
+      var mark=[];
+      var mark23=0;
+      for (var i=0;i<dd;i++) {
+        if (C[2**i]>1) mark23=mark23+1;
+        mark.push([C[2**i]]);
+        for (var j=0;j<i;j++) {
+          if (C[2**i+2**j]>1) mark23=mark23+1;
+          mark[mark.length-1].push(C[2**i+2**j]);
+          }
+        }
+  return [mark,mark23];
+  }
+
+function Test9() {
+  //alert("Test9");
+  var RET=[];
+  var ddmax=10;
+  for (var dd=0;dd<ddmax;dd++) {//alert(dd);
+    for (var nr=0;nr<ERGS1NEU[ddmax-1].length;nr++) {
+       if (dd==0) RET[nr]="<tr>";
+       RET[nr]=RET[nr]+"<td>";
+       if (nr<ERGS1NEU[dd].length) {
+         var D=DIAG(ERGS1NEU[dd][nr]);
+         RET[nr]=RET[nr]+Anzahl_der_Einsen(D);
+         if (nr%3==0) RET[nr]=RET[nr]+" ("+MARK23_bestimmen(D,dd)[1]+")";
+         }
+       RET[nr]=RET[nr]+"</td>";
+       if (dd==ddmax-1) RET[nr]=RET[nr]+"</tr>";
+       }
+    }
+  Logfile('<table border="0"\n>'+RET.join("\n")+'</table>\n');
+  }
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
@@ -1237,6 +1307,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test9()" style="font-size:200%">Test9()</button> ???</div>
     <div><button onclick="Test8()" style="font-size:200%">Test8()</button> COMPDIAGSTABERZ</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
