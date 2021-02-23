@@ -658,18 +658,32 @@ function Test7() {
 Test7
 */
 
+TVEC=[0];
+for (var i=0;i<20;i++) {
+  TVEC.push(2**i);
+  for (var j=0;j<i;j++) {
+    TVEC.push(2**i+2**j);
+    }
+  }
+alert(TVEC);
+
 function COMPDIAGSTABERZ(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
   var RET=[];
   for (i=0;i<SD;i++) {
     var a=true;
+    var at=true;
     if (DD[i]==0) {
+      for (var j=0;TVEC[j]<SD;j++) if (at) if (DD[i^TVEC[j]]!=DD[TVEC[j]]) at=false;
       for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
-      if (a) {MARK[2]=MARK[2]+1; RET[i]=2;} else {MARK[0]=MARK[0]+1;
+      if (a!=at) {alert("false");return}
+      if (at) {MARK[2]=MARK[2]+1; RET[i]=2;} else {MARK[0]=MARK[0]+1;
       RET[i]=0;} } else {
+        for (var j=0;TVEC[j]<SD;j++) if (at) if (DD[i^TVEC[j]]==DD[TVEC[j]]) at=false;
         for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
-        if (a) {MARK[3]=MARK[3]+1; RET[i]=3;} else {MARK[1]=MARK[1]+1;
+        if (a!=at) {alert("false");return}
+        if (at) {MARK[3]=MARK[3]+1; RET[i]=3;} else {MARK[1]=MARK[1]+1;
         RET[i]=1;}}
     //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
     }
@@ -722,7 +736,7 @@ RLISTE=[
 
 function Test8(R) {
   var Logtext="";
-  //alert("Test8 für "+dd);
+  //alert("Test8 mark23 für "+dd);
   for (var r=0;r<RLISTE.length;r++) {
     var Logarray=[];
     var R=RLISTE[r];
