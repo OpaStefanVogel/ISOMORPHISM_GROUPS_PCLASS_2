@@ -231,6 +231,36 @@ function MARKZAHL0GGT(DD) {
   return M;
   }
 
+function MARKZAHL0_TVEC(DD) {
+  var MARK=[0,0,0,0];
+  var SD=DD.length;
+  for (var i=0;i<SD;i++) {
+    var a=true;
+    if (DD[i]==0) {
+      //for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
+      for (var j=0;TVEC[j]<SD;j++) if (a) if (DD[i^TVEC[j]]!=DD[TVEC[j]]) a=false;
+      if (a) MARK[2]=MARK[2]+1; else MARK[0]=MARK[0]+1;
+      } else {
+        //for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
+        for (var j=0;TVEC[j]<SD;j++) if (a) if (DD[i^TVEC[j]]==DD[TVEC[j]]) a=false;
+        if (a) MARK[3]=MARK[3]+1; else MARK[1]=MARK[1]+1;
+        }
+    //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
+    }
+  return MARK.sort(function (x,y) {return y-x}).slice(0,4);
+  }
+
+function MARKZAHL0GGT_TVEC(DD) {
+  var M=MARKZAHL0_TVEC(DD).slice();
+  while (((M[0]&1)==0)&&((M[1]&1)==0)) {
+    M[0]=M[0]/2;
+    M[1]=M[1]/2;
+    M[2]=M[2]/2;
+    M[3]=M[3]/2;
+    }
+  return M;
+  }
+
 function MARKZAHL1(DD) {
   var MARK=[];
   var SD=DD.length;
@@ -676,13 +706,13 @@ function COMPDIAGSTABERZ(DD) {
     var at=true;
     if (DD[i]==0) {
       for (var j=0;TVEC[j]<SD;j++) if (at) if (DD[i^TVEC[j]]!=DD[TVEC[j]]) at=false;
-      for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
-      if (a!=at) {alert("false");return}
+      //for (var j=0;j<SD;j++) if (a) if (DD[i^j]!=DD[j]) a=false;
+      //if (a!=at) {alert("false");return}
       if (at) {MARK[2]=MARK[2]+1; RET[i]=2;} else {MARK[0]=MARK[0]+1;
       RET[i]=0;} } else {
         for (var j=0;TVEC[j]<SD;j++) if (at) if (DD[i^TVEC[j]]==DD[TVEC[j]]) at=false;
-        for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
-        if (a!=at) {alert("false");return}
+        //for (var j=0;j<SD;j++) if (a) if (DD[i^j]==DD[j]) a=false;
+        //if (a!=at) {alert("false");return}
         if (at) {MARK[3]=MARK[3]+1; RET[i]=3;} else {MARK[1]=MARK[1]+1;
         RET[i]=1;}}
     //if (typeof MARK[a]=="undefined") MARK[a]=1; else MARK[a]=MARK[a]+1;
@@ -805,6 +835,8 @@ for (var dd=0;dd<15;dd++) {
   ERGS1NEU.push(Liste);
   }
 
+var FIBOCAN=[-100,0,1,3,6,10,15,21,28,36,45,55,66,78];
+
 //alert(ERGS1NEU[0].join("\n"));
 //alert(ERGS1NEU[1].join("\n"));
 //alert(ERGS1NEU[2].join("\n"));
@@ -819,12 +851,12 @@ function Anzahl_der_Einsen(DD) {
   return RET;
   }
 
-function MARK23_bestimmen(D,dd) {
+function MARK23_bestimmen(D) {
       var C=COMPDIAGSTABERZ(D);
       //alert(C);return;
       var mark=[];
       var mark23=0;
-      for (var i=0;i<dd;i++) {
+      for (var i=0;2**i<D.length;i++) {
         if (C[2**i]>1) mark23=mark23+1;
         mark.push([C[2**i]]);
         for (var j=0;j<i;j++) {
@@ -846,13 +878,40 @@ function Test9() {
        if (nr<ERGS1NEU[dd].length) {
          var D=DIAG(ERGS1NEU[dd][nr]);
          RET[nr]=RET[nr]+Anzahl_der_Einsen(D);
-         if (nr%3==0) RET[nr]=RET[nr]+" ("+MARK23_bestimmen(D,dd)[1]+")";
+         if (nr%3==0) RET[nr]=RET[nr]+" "+MARK23_bestimmen(D,dd+1)[1]+"("+(FIBOCAN[Math.max(0,dd-0-Math.floor(nr/3)*2)]+2)+".."+(FIBOCAN[dd+2-Math.floor(nr/3)*2]+1)+")";
          }
        RET[nr]=RET[nr]+"</td>";
        if (dd==ddmax-1) RET[nr]=RET[nr]+"</tr>";
        }
     }
   Logfile('<table border="0"\n>'+RET.join("\n")+'</table>\n');
+  }
+
+function Test10(zmax) {
+  var RET=[];
+  for (z=0;z<zmax;z++) {
+    //var R=[[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0]];
+    //var R=[[1],[0,0],[1,1,1],[0,1,0,1],[0,1,0,1,0],[0,1,0,1,0,0]];
+    var R=[[1]];
+    for (i=R.length+1;i<10;i++) {
+      var RTEIL=[];
+      var tim=Math.round(Math.random()*2048);
+      for (var j=0;j<i;j++) {
+        var k=tim&(2**j);
+        if (k>0) k=1;
+        RTEIL.push(k);
+        }
+      R.push(RTEIL);
+      }
+    //alert(R.join("\n"));
+    var D=DIAG(R);
+    var M=MARKZAHL0GGT_TVEC(D);
+    if (M=="63,63,1,1") RET.push(MARK23_bestimmen(D,10)[1]);
+    //RET.push([M,R.join(" ")]);
+    }
+  RET.sort(function(x,y){if (x<y) return -1; if (x==y) return 0; return 1});
+  if (RET.length>2) RET=[RET[0],RET[RET.length-1]]; else RET.push("zuwenig");
+  Logfile(RET.join("\n"));
   }
 
 function DREHMARK(DD) {
@@ -1307,7 +1366,8 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
-    <div><button onclick="Test9()" style="font-size:200%">Test9()</button> ???</div>
+    <div><button onclick="Test10(20000)" style="font-size:200%">Test10(10)</button> Zufallstest 256, später nur mit TVEC</div>
+    <div><button onclick="Test9()" style="font-size:200%">Test9()</button> Anzahl der Einsen und mark23-Bereich</div>
     <div><button onclick="Test8()" style="font-size:200%">Test8()</button> COMPDIAGSTABERZ</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
