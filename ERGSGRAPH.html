@@ -5,7 +5,7 @@
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
   <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
-  <!--script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script-->
+  <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -922,6 +922,28 @@ function Test10(zmax) {
   Logfile(RET.join("\n"));
   }
 
+function Test11(zmax) {
+  //alert("Test11");
+  Logtext="alle (3+3+1+1) heraussuchen\n"
+  for (var dd=3;dd<9;dd++) {
+     Logtext=Logtext+"dd="+dd+":\n";
+     //alert(ERGS2[dd-1].length);
+     for (var nr=1;nr<=ERGS2[dd-1].length;nr++) {
+       var RR=ERGS2[dd-1][nr-1];
+       var D1=DIAG(RR[0]);
+       var D2=DIAG(RR[1]);
+       var D3=[];
+       for (var j=0;j<D1.length;j++) D3[j]=D1[j]^D2[j];
+       var M1=MARKZAHL0GGT_TVEC(D1);
+       var M2=MARKZAHL0GGT_TVEC(D2);
+       var M3=MARKZAHL0GGT_TVEC(D3);
+       if (M1=="3,3,1,1"&&(M2=="3,3,1,1"&&M3=="1,1,0,0"||M3=="3,3,1,1"&&M2=="1,1,0,0"))
+         Logtext=Logtext+ERGS2[dd-1][nr-1].join("  ")+"  "+M1+" "+M2+" "+M3+"\n";
+       }
+     }
+  Logfile(Logtext);
+  }
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -1374,7 +1396,8 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
-    <div><button onclick="Test10(20000)" style="font-size:200%">Test10(20000)</button> Zufallstest 2024, nur mit TVEC</div>
+    <div><button onclick="Test11()" style="font-size:250%">Test11()</button>3*(3+3+1+1) raussuchen aus ERGS2</div>
+    <div><button onclick="Test10(20000)" style="font-size:200%">Test10(20000)</button> Zufallstest 2024, nur TVEC</div>
     <div><button onclick="Test9()" style="font-size:200%">Test9()</button> Anzahl der Einsen und mark23-Bereich</div>
     <div><button onclick="Test8()" style="font-size:200%">Test8()</button> COMPDIAGSTABERZ</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
