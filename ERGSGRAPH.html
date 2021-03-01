@@ -263,6 +263,26 @@ function MARKZAHL0GGT_TVEC(DD) {
   return M;
   }
 
+function MARKZAHL0GGT_TVEC_N(DD) {
+  var RET=DD.length;
+  var n=2;
+  while (n<=DD.length) {
+    var DDW=DD.slice(0,n);
+    var M=MARKZAHL0GGT_TVEC(DDW).slice();
+    RET=RET+"/"+M;
+    n=n*2;
+    }
+  return RET;
+  var M=MARKZAHL0_TVEC(DD).slice();
+  while (((M[0]&1)==0)&&((M[1]&1)==0)) {
+    M[0]=M[0]/2;
+    M[1]=M[1]/2;
+    M[2]=M[2]/2;
+    M[3]=M[3]/2;
+    }
+  return M;
+  }
+
 function MARKZAHL1(DD) {
   var MARK=[];
   var SD=DD.length;
@@ -520,7 +540,7 @@ function Test4() {
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
     var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
-    alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC(DD1)+"\n"+MARKZAHL0GGT_TVEC(DD2)+"\n");
+    alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
     var M12=MARKZAHLPUR(DD12);//alert(M12);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
