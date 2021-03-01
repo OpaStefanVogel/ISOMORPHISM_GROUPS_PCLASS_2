@@ -519,6 +519,8 @@ function Test4() {
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
+    alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC(DD1)+"\n"+MARKZAHL0GGT_TVEC(DD2)+"\n");
     var M12=MARKZAHLPUR(DD12);//alert(M12);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
@@ -726,6 +728,25 @@ function COMPDIAGSTABERZ(DD) {
 //alert(111111111111111122222444444442222111111122222444n**2n);
 RLISTE=[
   [[1]],
+  [[1],[0,1]],
+  [[1],[0,1],[0,1,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0],[0,1,0,0,0,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0],[0,1,0,0,0,1],[0,1,0,0,1,0,0]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0],[0,1,0,0,0,1],[0,1,0,0,1,0,0],[0,1,0,1,0,1,0,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0],[0,1,0,0,0,1],[0,1,0,0,1,0,0],[0,1,0,1,0,1,0,1],[0,1,1,1,1,1,1,1,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,1],[0,1,1,1,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,1],[0,1,0,1,0,1]],
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,1],[0,1,0,1,0,1],[0,1,1,1,1,1,1]],
+
+
+  [[1],[0,1],[0,1,0],[0,1,0,0],[0,0,0,0,1]],
+
+
+  [[1]],
   [[1],[0,0]],
   [[1],[0,0],[1,1,1]],
   [[1],[0,0],[0,0,0]],
@@ -745,12 +766,6 @@ RLISTE=[
   [[1],[1,1],[1,1,1],[0,0,0,0]],
   [[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1]],
   [[1],[1,1],[1,1,1],[1,1,1,1],[0,0,0,0,0]],
-  [[1]],
-  [[1],[0,1]],
-  [[1],[0,1],[0,1,0]],
-  [[1],[0,1],[0,1,0],[0,1,0,0]],
-  [[1],[0,1],[0,1,0],[0,1,0,0],[0,1,0,0,0]],
-  [[1],[0,1],[0,1,0],[0,1,0,0],[0,0,0,0,1]],
   [[1],[0,0],[1,1,1],[0,1,0,1]],
   [[1],[0,0],[1,1,1],[0,0,0,0]],
   [[1],[0,0],[1,1,1],[1,1,1,1]],
@@ -769,6 +784,13 @@ RLISTE=[
   [[1],[1,0],[1,0,1],[1,0,1,0]],
   [[1],[1,0],[1,0,1],[1,0,1,0],[1,0,1,0,1]],
   [[1],[1,0],[1,0,1],[1,0,1,0],[1,0,1,0,1],[1,0,1,0,1,0]],
+  [[1],[0,1]],
+  [[1],[0,1],[1,0,0]],
+  [[1],[0,1],[1,0,0],[0,1,0,1]],
+  [[1],[0,1],[1,0,0],[0,1,0,1],[1,0,0,0,0]],
+  [[1],[0,1],[1,0,0],[0,1,0,1],[1,0,0,0,0],[0,1,0,1,0,1]],
+  [[1],[0,1],[1,0,0],[0,1,0,1],[0,1,0,1,0]],
+  [[1],[0,1],[1,0,0],[0,1,0,1],[0,1,0,1,0],[0,1,0,1,0,0]],
   ];
 
 function Test8(R) {
@@ -941,6 +963,19 @@ function Test11(zmax) {
          Logtext=Logtext+ERGS2[dd-1][nr-1].join("  ")+"  "+M1+" "+M2+" "+M3+"\n";
        }
      }
+  Logfile(Logtext);
+  }
+
+function Test12() {
+  var xn=1;
+  var xm=1;
+  var q=3;
+  var Logtext="";
+  for (var i=1;i<10;i++) {
+    xn=1/(2*xn)*(xn*xn+q);
+    xm=(xm+q/xm)/2;
+    Logtext=Logtext+(xn)+" "+(xm)+"\n";
+    }
   Logfile(Logtext);
   }
 
@@ -1396,10 +1431,11 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test12()" style="font-size:250%">Test12()</button></div>
     <div><button onclick="Test11()" style="font-size:250%">Test11()</button>3*(3+3+1+1) raussuchen aus ERGS2</div>
     <div><button onclick="Test10(20000)" style="font-size:200%">Test10(20000)</button> Zufallstest 2024, nur TVEC</div>
     <div><button onclick="Test9()" style="font-size:200%">Test9()</button> Anzahl der Einsen und mark23-Bereich</div>
-    <div><button onclick="Test8()" style="font-size:200%">Test8()</button> COMPDIAGSTABERZ</div>
+    <div><button onclick="Test8()" style="font-size:200%">Test8()</button> alle Fortsetzungen zu gegebenen R</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
     <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
