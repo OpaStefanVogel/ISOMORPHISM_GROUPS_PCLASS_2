@@ -1201,7 +1201,12 @@ function Test14() {
     }
   //alert("durch");
   //Logtext=Logtext+BAHNLAENGEN.join("\n");
-  for (var di=2;di<dd;di=di+2) Logtext=Logtext+di+" "+(BAHNLAENGEN[di][BAHNLAENGEN[di].length-1]/BAHNLAENGEN[di-2][BAHNLAENGEN[di-2].length-1]/2n**BigInt(di)/(2n**BigInt(di+1)-1n))+"\n";
+  for (var di=2;di<dd;di=di+2) {
+    Logtext=Logtext+di+" "+(BAHNLAENGEN[di][BAHNLAENGEN[di].length-1]/BAHNLAENGEN[di-2][BAHNLAENGEN[di-2].length-1]/2n**BigInt(di)/(2n**BigInt(di+1)-1n))+" : ";
+    var l=BAHNLAENGEN[di-1].length;
+    for (var k=0;k<l;k++) Logtext=Logtext+(BAHNLAENGEN[di-1][l-k-1]*(2n**BigInt(di+1)-1n)/BAHNLAENGEN[di][l-k-1])+" ";
+    Logtext=Logtext+"\n";
+    }
   Logfile(Logtext);
   }
 
