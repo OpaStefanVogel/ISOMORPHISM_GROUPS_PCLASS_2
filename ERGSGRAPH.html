@@ -280,7 +280,7 @@ function MARKZAHL0GGT_TVEC_unsort(DD) {
 
 function MARKZAHL0_TVEC_unsort_GGT(DD) {
   var M=MARKZAHL0_TVEC_unsort(DD).slice();
-  M[0]=M[0]+M[1]+M[2]+M[3];
+  M[0]=M[0]+M[2];
   M[1]=M[1]+M[3];
   M[2]=M[3];
   M.pop();
@@ -861,6 +861,20 @@ RLISTE=[
   [[1],[0,1],[1,0,0],[0,1,0,1],[0,1,0,1,0]],
   [[1],[0,1],[1,0,0],[0,1,0,1],[0,1,0,1,0],[0,1,0,1,0,0]],
 
+  [[1],[1,1]],
+  [[1],[1,1],[0,1,1]],
+  [[1],[1,1],[0,1,1],[0,1,1,0]],
+  [[1],[1,1],[0,1,1],[0,1,1,0],[0,1,1,0,0]],
+
+  [[1],[0,0],[1,1,1],[0,0,0,0]],
+  [[1],[0,0],[1,1,1],[0,0,0,0],[0,1,0,1,0,0]],
+  [[1],[0,0],[1,1,1],[0,0,0,0],[0,1,0,1,0,0],[0,1,0,1,0,0,0]],
+
+  [[1],[0,0],[1,1,1],[1,1,1,1]],
+  [[1],[0,0],[1,1,1],[1,1,1,1],[0,1,0,1,1,0]],
+  [[1],[0,0],[1,1,1],[1,1,1,1],[0,1,0,1,1,0],[0,1,0,1,1,0,0]],
+
+
   ];
 
 function Test8(R) {
@@ -1123,7 +1137,7 @@ function BINDEZ(n,dd) {
 
 function Test13() {
   var dd=document.getElementById("Test13value").value*1;
-  var Logtext="Test13 alle R durchlaufen lassen für dd=\n";
+  var Logtext="Test13 alle R durchlaufen lassen für dd="+dd+"\n";
   var RL={};
   for (var i=0;i<2**FIBOCAN[dd+1];i++) {
     var RN=BINDEZ(i,FIBOCAN[dd+1]);
@@ -1134,7 +1148,59 @@ function Test13() {
     if (i<10) Logtext=Logtext+i+" "+RN+" ["+R.join("],[")+"]"+M+"\n";
     if (RL[M.toString()]) RL[M.toString()]=RL[M.toString()]+1; else RL[M.toString()]=1;
     }
-  for (var i in RL) Logtext=Logtext+i+" "+RL[i]+"\n";
+  var sum=0;
+  for (var i in RL) {Logtext=Logtext+i+" "+RL[i]+"\n"; sum=sum+RL[i]}
+  Logtext=Logtext+sum+"\n"+2**FIBOCAN[dd+1]+"\n";
+  Logtext=Logtext+(BigInt(2)**BigInt(10000))+"\n";
+  Logfile(Logtext);
+  }
+
+var BAHNLAENGEN=[];
+function Test14() {
+  var dd=document.getElementById("Test14value").value*1;
+  var Logtext="Test14 alle Bahnlängen bis dd="+dd+"\n";
+  BAHNLAENGEN=[[1n],[3n,3n,1n]];
+  for (var di=2;di<dd;di++) {//alert(di);
+    var r=2n**BigInt(di+1);
+    BAHNLAENGEN[di]=[2n*BAHNLAENGEN[di-1][0]+1n];
+    BAHNLAENGEN[di][1]=4n*BAHNLAENGEN[di-1][1]+1n*BAHNLAENGEN[di-1][0]+1n*(r-2n);
+    BAHNLAENGEN[di][2]=4n*BAHNLAENGEN[di-1][2]+1n*BAHNLAENGEN[di-1][0];
+    var dii=0;
+    if ((di&1)==0) dii=di/2; else dii=(di-1)/2;
+    for (var m=1;m<dii;m++) {
+      var dj=3*m;
+      var dk=2n**BigInt(m*2+1);
+        BAHNLAENGEN[di][dj]=dk*BAHNLAENGEN[di-1][dj]
+          +dk/2n*BAHNLAENGEN[di-1][dj-1]
+          +dk/2n*BAHNLAENGEN[di-1][dj-2]
+          +(r-dk/2n)*BAHNLAENGEN[di-1][dj-3];
+        BAHNLAENGEN[di][dj+1]=dk*2n*BAHNLAENGEN[di-1][dj+1]
+          +dk/2n*BAHNLAENGEN[di-1][dj]
+          +(r-dk)*BAHNLAENGEN[di-1][dj-2];
+        BAHNLAENGEN[di][dj+2]=dk*2n*BAHNLAENGEN[di-1][dj+2]
+          +dk/2n*BAHNLAENGEN[di-1][dj]
+          +(r-dk)*BAHNLAENGEN[di-1][dj-1];
+      }
+    var dk=2n**BigInt(di);
+    if ((di&1)==0) {
+      var dj=3*(di/2);
+      BAHNLAENGEN[di][dj]=dk*BAHNLAENGEN[di-1][dj-1]+dk*BAHNLAENGEN[di-1][dj-2]+r/2n*BAHNLAENGEN[di-1][dj-3];
+      } else {
+        var dj=3*((di-1)/2);//alert((di&1)+" "+dj);
+        BAHNLAENGEN[di][dj]=dk*BAHNLAENGEN[di-1][dj]
+          +dk/2n*BAHNLAENGEN[di-1][dj-1]
+          +dk/2n*BAHNLAENGEN[di-1][dj-2]
+          +r/4n*3n*BAHNLAENGEN[di-1][dj-3];
+        BAHNLAENGEN[di][dj+1]=0n
+          +dk/2n*BAHNLAENGEN[di-1][dj]
+          +r/2n*BAHNLAENGEN[di-1][dj-2];
+        BAHNLAENGEN[di][dj+2]=0n
+          +dk/2n*BAHNLAENGEN[di-1][dj]
+          +r/2n*BAHNLAENGEN[di-1][dj-1];
+        }
+    }
+  //alert("durch");
+  Logtext=Logtext+BAHNLAENGEN.join("\n");
   Logfile(Logtext);
   }
 
@@ -1590,8 +1656,11 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
+      <input id="Test14value" value="6"/>
+      </div>
     <div><button onclick="Test13()" style="font-size:270%">Test13()</button> alle R durchlaufen lassen für dd=
-      <input id="Test13value" value="4"/>
+      <input id="Test13value" value="4"/> &0x1D11E;
       </div>
     <div><button onclick="Test12()" style="font-size:250%">Test12()</button> Isomorphismus bestimmen </div>
     <div><button onclick="Test11()" style="font-size:250%">Test11()</button>3*(3+3+1+1) raussuchen aus ERGS2</div>
