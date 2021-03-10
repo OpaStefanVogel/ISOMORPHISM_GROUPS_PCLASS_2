@@ -407,7 +407,7 @@ function MARKZAHL4(DD,stufe) {
   var MARKS="";
   var MARKL=[];
   var MARKLNUM=[];
-  var MARK=[];
+  var MARK=[0];
   var SD=DD.length;
   for (var i=0;i<SD;i++) {
     MARK[i]=[];
@@ -444,6 +444,7 @@ function MARKZAHL4(DD,stufe) {
     for (var r=0;r<NUM2.length;r++) RET[0].push(NUM2[r][0]);
     for (var r=0;r<NUM2.length;r++) RET[1].push(NUM2[r][1]);
     RET[1]="["+RET[1].join("],[")+"]";
+    if (i==0) RET=[[0],"0"];
     MARK[i]=RET;
     if (stufe) MARKS=RET.join("#"); else MARKS=RET[0].join(",");
     var ind=MARKL.indexOf(MARKS);
@@ -1130,7 +1131,7 @@ function Test12() {
   //alert(SI.join("\n"));
   PHI=SI[1];
   INVPHI=SI[2];
-  Logtext=Logtext+"    "+"e a b   c       d"+"\n";
+  Logtext=Logtext+"    "+"e a b   c       d               f              df"+"\n";
   Logtext=Logtext+"DU= "+DU+"\n";
   Logtext=Logtext+"MU= "+MU+"\n";
   Logtext=Logtext+"DV= "+DV+"\n";
@@ -1142,7 +1143,7 @@ function Test12() {
   for (var i=0;i<MU.length;i++) if (MU[i]!=MV[PHI[i]]||MV[i]!=MU[INVPHI[i]]) Probe=false;
   Logtext=Logtext+"Probe: "+Probe+"\n";
 
-  Logtext=Logtext+"e a b   c       d"+"\n";
+  Logtext=Logtext+"e a b   c       d               f              df"+"\n";
   var SD=DU.length;
   var DD0=[];
   var DD1=[];
