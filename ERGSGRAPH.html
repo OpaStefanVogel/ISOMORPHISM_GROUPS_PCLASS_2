@@ -949,7 +949,8 @@ for (var dd=0;dd<15;dd++) {
   ERGS1NEU.push(Liste);
   }
 
-var FIBOCAN=[-100,0,1,3,6,10,15,21,28,36,45,55,66,78];
+var FIBOCAN=[-100,0,1];
+for (var i=3;i<200;i++) FIBOCAN[i]=FIBOCAN[i-1]+i-1;
 
 //alert(ERGS1NEU[0].join("\n"));
 //alert(ERGS1NEU[1].join("\n"));
@@ -1150,8 +1151,8 @@ function Test13() {
     }
   var sum=0;
   for (var i in RL) {Logtext=Logtext+i+" "+RL[i]+"\n"; sum=sum+RL[i]}
-  Logtext=Logtext+sum+"\n"+2**FIBOCAN[dd+1]+"\n";
-  Logtext=Logtext+(BigInt(2)**BigInt(10000))+"\n";
+  Logtext=Logtext+sum+"\n"+(2**((dd+1)*((dd+1)-1)/2))+"\n";
+  Logtext=Logtext+(2n**10000n)+"\n";
   Logfile(Logtext);
   }
 
@@ -1202,7 +1203,10 @@ function Test14() {
   //alert("durch");
   //Logtext=Logtext+BAHNLAENGEN.join("\n");
   for (var di=2;di<dd;di=di+2) {
-    Logtext=Logtext+di+" "+(BAHNLAENGEN[di][BAHNLAENGEN[di].length-1]/BAHNLAENGEN[di-2][BAHNLAENGEN[di-2].length-1]/2n**BigInt(di)/(2n**BigInt(di+1)-1n))+" : ";
+    var sum=0n;
+    for (var i=0;i<BAHNLAENGEN[di].length;i++) {sum=sum+BAHNLAENGEN[di][i]}
+    sum=sum+1n-2n**(BigInt(di+2)*(BigInt(di+2)-1n)/2n);
+    Logtext=Logtext+di+" sum-2**(d*(d+1)/2)="+sum+" "+(BAHNLAENGEN[di][BAHNLAENGEN[di].length-1]/BAHNLAENGEN[di-2][BAHNLAENGEN[di-2].length-1]/2n**BigInt(di)/(2n**BigInt(di+1)-1n))+" : ";
     var l=BAHNLAENGEN[di-1].length;
     for (var k=0;k<l;k++) Logtext=Logtext+(BAHNLAENGEN[di-1][l-k-1]*(2n**BigInt(di+1)-1n)/BAHNLAENGEN[di][l-k-1])+" ";
     Logtext=Logtext+"\n";
