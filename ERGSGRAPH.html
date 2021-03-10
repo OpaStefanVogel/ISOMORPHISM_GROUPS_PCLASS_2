@@ -402,7 +402,7 @@ function MARKZAHL3(DD) {
   return DDNEU;
   }
 
-function MARKZAHL4(DD) {
+function MARKZAHL4(DD,stufe) {
   var DDNEU=[];
   var MARKS="";
   var MARKL=[];
@@ -445,7 +445,7 @@ function MARKZAHL4(DD) {
     for (var r=0;r<NUM2.length;r++) RET[1].push(NUM2[r][1]);
     RET[1]="["+RET[1].join("],[")+"]";
     MARK[i]=RET;
-    MARKS=RET.join("#");
+    if (stufe) MARKS=RET.join("#"); else MARKS=RET[0].join(",");
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
@@ -464,7 +464,7 @@ function MARKZAHL4(DD) {
   for (var i=0;i<MARKLNUM.length;i++) {
     MARKLRET[i]=MARKLNUM[i][0]+"*"+MARKLNUM[i][1].slice(0,MARKLNUM[i][1].indexOf("#"));
     }  
-  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL];
+  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK];
   }
 
 function Bahnen(DD) {
@@ -492,10 +492,10 @@ function MARKZAHL(DD) {
 function MARKZAHLPUR(DD,anz) {
   if (anz&&anz==1) {
     var DDNEU=MARKZAHL4(DD);
-    return [DDNEU[0]+"\n",DDNEU[2]+"\n",DDNEU[1]];
+    return [DDNEU[0]+"\n",DDNEU[2]+"\n",,DDNEU[1],DDNEU[4]];
     } else {
       var DDNEU=MARKZAHL4(DD);
-      var DDNEUNEU=MARKZAHL4(DDNEU[1]);
+      var DDNEUNEU=MARKZAHL4(DDNEU[1],1);
       //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
       return [
         DDNEU[0]+"\n"
@@ -506,12 +506,13 @@ function MARKZAHLPUR(DD,anz) {
         ,
         DDNEU[1]+"\n"
           +DDNEUNEU[1]+"\n"
-        ,DDNEU[1]];
+        ,DDNEUNEU[1],DDNEU[4]];
       }
   }
 
 var GESAMTMERK=[];
 var GESAMTMERKORIG=[];
+var GESAMTMERKMU=[];
 var GESAMTMERKDD=[];
 var tc=0;
 
@@ -600,6 +601,7 @@ function Test5(dd,nr,f) {
   if (nr==1&&f==0) {
     GESAMTMERK=[];
     GESAMTMERKORIG=[];
+    GESAMTMERKMU=[];
     GESAMTMERKDD=[];
     }
   var R0=ERGS2[dd-1][nr-1][0];
@@ -614,19 +616,20 @@ function Test5(dd,nr,f) {
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+  var M12=MARKZAHLPUR(DD12);//alert(M12);
   var ind=GESAMTMERK.indexOf(M12[0]);
   if (ind==-1) {
     Logtext=Logtext+"";
     //return;
     GESAMTMERK.push(M12[0]);
-    GESAMTMERKDD.push(M12[2]);
+    GESAMTMERKMU.push(M12[3]);
+    GESAMTMERKDD.push(M12[4]);
     //alert(GESAMTMERKDD.join("\n"));
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-//    } else GESAMTMERKORIG.unshift(ind+" "+M12[2]+" "+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind])[0]);
-    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
+    } else GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+//    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");//+GESAMTMERKDD.join("\n");
   Logfile(Logtext);
   if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
@@ -690,34 +693,6 @@ function Test7() {
   Logtext=Logtext+ANZAHL_IJK_HTML()+"\n";
   Logfile(Logtext);
   return;
-  var R0=ERGS2[dd-1][nr-1][0];
-  var R1=ERGS2[dd-1][nr-1][1];
-  R0[dd]=[];
-  R1[dd]=[];
-  for (var i=0;i<dd+1;i++) {
-    R0[dd].push(1);
-    if ((n-f-1)&(2**i)) R1[dd].unshift(1); else R1[dd].unshift(0);
-    }
-  //alert(R1[dd]);
-  var DD0=DIAG(R0);
-  var DD1=DIAG(R1);
-  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
-  var ind=GESAMTMERK.indexOf(M12[0]);
-  if (GESAMTMERK.indexOf(M12[0])==-1) {
-    Logtext=Logtext+"";
-    //return;
-    GESAMTMERK.push(M12[0]);
-    var RT="";
-    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("");
-    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-    }
-  Logtext=Logtext+GESAMTMERKORIG.join("\n");
-  Logfile(Logtext);
-  if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
-    if (nr<ERGS2[dd-1].length-1&&R0.slice(0,dd).join("")==ERGS2[dd-1][nr][0].join("")) tc=setTimeout(Test5,100,dd,nr+1,0);
-    
-    }
   }
 
 /*
@@ -1073,8 +1048,24 @@ var DV2=DIAG([[1],[1,1],[1,1,0],[0,1,0,1]]);
 DU=[];
 DV=[];
 for (var i=0;i<DU1.length;i++) {DU[i]=2*DU1[i]+DU2[i];DV[i]=2*DU1[i]+1*DV2[i]}
+
+//aus Test5:
+DU=[0,3,3,2,2,3,2,1,3,2,2,1,3,0,1,0];
+DV=[0,3,3,3,3,2,2,0,2,2,2,1,3,1,1,0];
+
+//nächstes aus Test5:
+DU=[0,3,3,2,2,3,2,1,2,3,3,0,2,1,0,1];
+DV=[0,3,3,3,3,2,2,0,2,2,2,1,3,1,1,0];
+
+//noch ein nächstes aus Test5:
+DU=[0,3,3,2,2,3,2,1,2,2,2,0,3,1,0,0];
+DV=[0,3,3,3,3,2,2,0,2,3,2,0,3,0,1,1];
+
 MU=MARKZAHL4(DU)[1];
+MU=MARKZAHL4(MU,1)[1];
+alert(MU);
 MV=MARKZAHL4(DV)[1];
+MV=MARKZAHL4(MV,1)[1];
 //alert(MARKZAHL0GGT_TVEC(DU1));
 //alert(MARKZAHL0GGT_TVEC(DU2));
 //alert(MARKZAHL0GGT_TVEC(DV2));
@@ -1138,6 +1129,38 @@ function Test12() {
   for (var i=0;i<MU.length;i++) if (MU[i]!=MV[PHI[i]]||MV[i]!=MU[INVPHI[i]]) Probe=false;
   Logtext=Logtext+"Probe: "+Probe+"\n";
 
+  Logtext=Logtext+"e a b   c       d"+"\n";
+  var SD=DU.length;
+  var DD0=[];
+  var DD1=[];
+  var DD2=[];
+  for (var i=0;i<SD;i++) {
+    if (DU[i]==0) {DD0[i]=0;DD1[i]=0;DD2[i]=0}
+    if (DU[i]==1) {DD0[i]=0;DD1[i]=1;DD2[i]=1}
+    if (DU[i]==2) {DD0[i]=1;DD1[i]=0;DD2[i]=1}
+    if (DU[i]==3) {DD0[i]=1;DD1[i]=1;DD2[i]=0}
+    }
+  Logtext=Logtext
+    +COMPDIAGSTABERZ(DD0)+" "+MARKZAHL0GGT_TVEC(DD0)+"\n"
+    +COMPDIAGSTABERZ(DD1)+" "+MARKZAHL0GGT_TVEC(DD1)+"\n"
+    +COMPDIAGSTABERZ(DD2)+" "+MARKZAHL0GGT_TVEC(DD2)+"\n\n";
+  for (var i=0;i<SD;i++) {
+    if (DV[i]==0) {DD0[i]=0;DD1[i]=0;DD2[i]=0}
+    if (DV[i]==1) {DD0[i]=0;DD1[i]=1;DD2[i]=1}
+    if (DV[i]==2) {DD0[i]=1;DD1[i]=0;DD2[i]=1}
+    if (DV[i]==3) {DD0[i]=1;DD1[i]=1;DD2[i]=0}
+    }
+  Logtext=Logtext
+    +COMPDIAGSTABERZ(DD0)+" "+MARKZAHL0GGT_TVEC(DD0)+"\n"
+    +COMPDIAGSTABERZ(DD1)+" "+MARKZAHL0GGT_TVEC(DD1)+"\n"
+    +COMPDIAGSTABERZ(DD2)+" "+MARKZAHL0GGT_TVEC(DD2)+"\n\n";
+  
+  var M1=MARKZAHL4(DU);
+  M1=MARKZAHL4(M1[1],1);
+  var M2=MARKZAHL4(DV);
+  M2=MARKZAHL4(M2[1],1);
+  Logtext=Logtext+"M1="+M1.join("\n")+"\n\n"+"M2="+M2.join("\n")+"\n\n";
+  
   Logfile(Logtext);
   }
 
