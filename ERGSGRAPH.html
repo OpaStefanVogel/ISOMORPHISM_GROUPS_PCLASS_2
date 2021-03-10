@@ -628,7 +628,7 @@ function Test5(dd,nr,f) {
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-    } else GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } else if (Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]==false) GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
 //    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");//+GESAMTMERKDD.join("\n");
   Logfile(Logtext);
@@ -1061,11 +1061,24 @@ DV=[0,3,3,3,3,2,2,0,2,2,2,1,3,1,1,0];
 DU=[0,3,3,2,2,3,2,1,2,2,2,0,3,1,0,0];
 DV=[0,3,3,3,3,2,2,0,2,3,2,0,3,0,1,1];
 
+//noch drei aus Test5 dd=4, Markierung 10 statt 1 hilft auch nichts:
+DU=[0,3,3,3,3,3,2,1,2,2,2,1,2,10,0,0,2,2,3,0,2,1,1,1,2,1,0,0,1,1,1,20];
+DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,10,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,30];
+
+
+DU=[0,3,3,3,3,3,2,1,2,2,3,0,2,1,1,1,2,2,2,1,2,10,0,0,2,1,0,0,1,1,1,20];DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,10,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,30];
+
+
+//DU=[0,3,3,3,3,3,2,1,2,2,30,0,3,0,0,0,2,2,2,1,3,0,1,1,3,0,1,1,0,0,0,30];
+//DV=[0,3,3,3,3,3,2,1,2,2,3,0,30,0,0,0,2,2,3,0,2,1,1,1,3,0,0,0,1,1,0,30];
+//♥♦
 MU=MARKZAHL4(DU)[1];
 MU=MARKZAHL4(MU,1)[1];
-alert(MU);
+//MU=MARKZAHL4(MU,1)[1];
+//alert(MU);
 MV=MARKZAHL4(DV)[1];
 MV=MARKZAHL4(MV,1)[1];
+//MV=MARKZAHL4(MV,1)[1];
 //alert(MARKZAHL0GGT_TVEC(DU1));
 //alert(MARKZAHL0GGT_TVEC(DU2));
 //alert(MARKZAHL0GGT_TVEC(DV2));
