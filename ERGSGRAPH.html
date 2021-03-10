@@ -5,7 +5,7 @@
   <title>ERGSGRAPH</title>
   <meta charset="utf-8"/>
   <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
-  <!--script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script-->
+  <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -621,7 +621,7 @@ function Test5(dd,nr,f) {
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-    } else GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f+" "+ind);
+    } //else GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f+" "+ind);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");
   Logfile(Logtext);
   if (f<2**(dd+1)-1) tc=setTimeout(Test5,100,dd,nr,f+1); else {
@@ -1061,6 +1061,8 @@ var DV=[0,1,0,1,0,1,1,0];
 var MV=[2,3,0,1,0,1,1,0];
 var DU1=DIAG(ERGS2[3][7][0]);
 var DU2=DIAG(ERGS2[3][7][1]);
+var PHI=[];
+var INVPHI=[];
 //var DV2=[[1],[1,1],[1,1,0],[1,0,1,0]];
 var DV2=DIAG([[1],[1,1],[1,1,0],[0,1,0,1]]);
 DU=[];
@@ -1076,29 +1078,24 @@ MV=MARKZAHL4(DV)[1];
 //alert(MARKZAHL4(DU)[3].join("\n\n"));
 //alert(MARKZAHL4(DV)[3].join("\n\n"));
 
-function Test12() {
-  var Logtext="Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
-  Logtext=Logtext+"DU= "+DU+"\n";
-  Logtext=Logtext+"DV= "+DV+"\n";
-  Logtext=Logtext+"MU= "+MU+"\n";
-  Logtext=Logtext+"MV= "+MV+"\n";
-//Logfile(Logtext);return;
-  var SD=DU.length;
+function Suche_Isomorphismus(MU,MV) {
+  var SD=MU.length;
   var PHI=[0];
   var INVPHI=[0];
   for (var i=0;2**i<SD;i++) {
-    Logtext=Logtext+"i="+i+" "+2**i+"\n";
+    //Logtext=Logtext+"i="+i+" "+2**i+"\n";
     var gefunden=false;
     for (var j=1;j<SD;j++) if (gefunden==false&&INVPHI[j]==undefined) {
-      Logtext=Logtext+" j="+j+"\n";
+      //Logtext=Logtext+" j="+j+"\n";
       var passt=false;
-      if (DU[2**i]==DV[j]&&MU[2**i]==MV[j]) passt=true;
-      Logtext=Logtext+" j="+j+" "+passt+"\n";
+      //if (DU[2**i]==DV[j]&&MU[2**i]==MV[j]) passt=true;
+      if (MU[2**i]==MV[j]) passt=true;
+      //Logtext=Logtext+" j="+j+" "+passt+"\n";
       for (var k=0;k<i;k++) if (passt==true) {
-        Logtext=Logtext+"  k="+k+" "+(2**i+2**k)+"\n";
+        //Logtext=Logtext+"  k="+k+" "+(2**i+2**k)+"\n";
         var x=2**i+2**k;
         var y=j^PHI[2**k];
-        if (DU[x]!=DV[y]) passt=false;
+        if (MU[x]!=MV[y]) passt=false;
         }
       if (passt) {
         PHI[2**i]=j;
@@ -1115,6 +1112,15 @@ function Test12() {
         }
       }
     }
+  return [gefunden,PHI,INVPHI];
+  }
+
+function Test12() {
+  var Logtext="Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
+  var SI=Suche_Isomorphismus(MU,MV);
+  //alert(SI.join("\n"));
+  PHI=SI[1];
+  INVPHI=SI[2];
   Logtext=Logtext+"    "+"e a b   c       d"+"\n";
   Logtext=Logtext+"DU= "+DU+"\n";
   Logtext=Logtext+"MU= "+MU+"\n";
@@ -1124,7 +1130,7 @@ function Test12() {
   Logtext=Logtext+"INV="+INVPHI+"\n";
 
   var Probe=true;
-  for (var i=0;i<SD;i++) if (MU[i]!=MV[PHI[i]]||MV[i]!=MU[INVPHI[i]]) Probe=false;
+  for (var i=0;i<MU.length;i++) if (MU[i]!=MV[PHI[i]]||MV[i]!=MU[INVPHI[i]]) Probe=false;
   Logtext=Logtext+"Probe: "+Probe+"\n";
 
   Logfile(Logtext);
