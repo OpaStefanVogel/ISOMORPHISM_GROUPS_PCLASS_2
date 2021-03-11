@@ -446,7 +446,7 @@ function MARKZAHL4(DD,stufe) {
     RET[1]="["+RET[1].join("],[")+"]";
     if (i==0) RET=[[0],"0"];
     MARK[i]=RET;
-    if (stufe||false) MARKS=RET.join("#"); else MARKS=RET[0].join(",");
+    if (stufe||true) MARKS=RET.join("#"); else MARKS=RET[0].join(",");
     var ind=MARKL.indexOf(MARKS);
     if (ind==-1) {
        MARKL.push(MARKS);
@@ -456,11 +456,14 @@ function MARKZAHL4(DD,stufe) {
     MARKLNUM[ind][0]=MARKLNUM[ind][0]+1;
     DDNEU[i]=MARKS; 
     }
-  var MARKLDD=MARKL.sort();
+  MARKLNUM=MARKLNUM.sort();
+  var MARKLDD=[];
+  for (var i=0;i<MARKLNUM.length;i++) {
+    MARKLDD[i]=MARKLNUM[i][1];
+    }
   for (var i=0;i<SD;i++) {
     DDNEU[i]=MARKLDD.indexOf(DDNEU[i]);
     }
-  MARKLNUM=MARKLNUM.sort();
   var MARKLRET=[];
   for (var i=0;i<MARKLNUM.length;i++) {
     MARKLRET[i]=MARKLNUM[i][0]+"*"+MARKLNUM[i][1].slice(0,(MARKLNUM[i][1]+"#").indexOf("#"));
@@ -617,7 +620,7 @@ function Test5(dd,nr,f) {
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12);//alert(M12);
+  var M12=MARKZAHLPUR(DD12,2);//alert(M12);
   var ind=GESAMTMERK.indexOf(M12[0]);
   if (ind==-1) {
     Logtext=Logtext+"";
@@ -1067,22 +1070,19 @@ DU=[0,3,3,3,3,3,2,1,2,2,2,1,2,10,0,0,2,2,3,0,2,1,1,1,2,1,0,0,1,1,1,20];
 DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,10,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,30];
 
 
-DU=[0,3,3,3,3,3,2,1,2,2,3,0,2,1,1,1,2,2,2,1,2,10,0,0,2,1,0,0,1,1,1,20];DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,10,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,30];
+DU=[0,3,3,3,3,3,2,1,2,2,3,0,2,1,1,1,2,2,2,1,2,1,0,0,2,1,0,0,1,1,1,2];DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,1,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,3];
 
 
 //DU=[0,3,3,3,3,3,2,1,2,2,30,0,3,0,0,0,2,2,2,1,3,0,1,1,3,0,1,1,0,0,0,30];
 //DV=[0,3,3,3,3,3,2,1,2,2,3,0,30,0,0,0,2,2,3,0,2,1,1,1,3,0,0,0,1,1,0,30];
 //♥♦
 
-DU=[0,3,3,2,2,3,2,1,3,2,2,1,3,0,1,0];
-DV=[0,3,3,3,3,2,2,0,2,2,2,1,3,1,1,0];
-
 MU=MARKZAHL4(DU)[1];
-MU=MARKZAHL4(MU,1)[1];
+//MU=MARKZAHL4(MU,1)[1];
 //MU=MARKZAHL4(MU,1)[1];
 //alert(MU);
 MV=MARKZAHL4(DV)[1];
-MV=MARKZAHL4(MV,1)[1];
+//MV=MARKZAHL4(MV,1)[1];
 //MV=MARKZAHL4(MV,1)[1];
 //alert(MARKZAHL0GGT_TVEC(DU1));
 //alert(MARKZAHL0GGT_TVEC(DU2));
@@ -1177,7 +1177,7 @@ function Test12() {
   var M1a=MARKZAHL4(M1[1],1);
   var M2=MARKZAHL4(DV);
   var M2a=MARKZAHL4(M2[1],1);
-  Logtext=Logtext+"M1="+M1.join("\n")+"\n\n"+"M1a="+M1a.join("\n")+"\n\n"+"M2="+M2.join("\n")+"M2a="+M2a.join("\n")+"\n\n"+"\n\n";
+  Logtext=Logtext+"M1="+M1.join("\n")+"\n\n"+"M1a="+M1a.join("\n")+"\n\n"+"M2="+M2.join("\n")+"\n\n"+"M2a="+M2a.join("\n")+"\n\n"+"\n\n";
   
   Logfile(Logtext);
   }
