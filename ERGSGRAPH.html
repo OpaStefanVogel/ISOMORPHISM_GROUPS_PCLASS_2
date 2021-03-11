@@ -407,7 +407,7 @@ function MARKZAHL4(DD,stufe) {
   var MARKS="";
   var MARKL=[];
   var MARKLNUM=[];
-  var MARK=[0];
+  var MARK=[];
   var SD=DD.length;
   for (var i=0;i<SD;i++) {
     MARK[i]=[];
@@ -467,8 +467,15 @@ function MARKZAHL4(DD,stufe) {
   var MARKLRET=[];
   for (var i=0;i<MARKLNUM.length;i++) {
     MARKLRET[i]=MARKLNUM[i][0]+"*"+MARKLNUM[i][1].slice(0,(MARKLNUM[i][1]+"#").indexOf("#"));
-    }  
-  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,MARKLDD];
+    }
+
+  //Markierung 1,2,3
+  var N1=[]; for (var i=0;i<DD.length;i++) if (DD[i]==1) N1.push(MARK[i][0]); N1=N1.sort().join(" ");
+  var N2=[]; for (var i=0;i<DD.length;i++) if (DD[i]==2) N2.push(MARK[i][0]); N2=N2.sort().join(" ");
+  var N3=[]; for (var i=0;i<DD.length;i++) if (DD[i]==3) N3.push(MARK[i][0]); N3=N3.sort().join(" ");
+  var N=[N1,N2,N3]; N.sort();
+  var NRET=[0,N.indexOf(N1)+1,N.indexOf(N2)+1,N.indexOf(N3)+1];
+  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,NRET];
   }
 
 function Bahnen(DD) {
@@ -1142,10 +1149,18 @@ function Suche_Isomorphismus(MU,MV) {
 
 function Test12() {
   var Logtext="Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
+  var MU=MARKZAHL4(DU);
+  var MV=MARKZAHL4(DV);
+  var PSI=[0];
+  for (var i=1;i<4;i=i+1) PSI[MU[6][i]]=MV[6][i];
+  for (var i=0;i<DV.length;i++) DV[i]=PSI[DV[i]];
+  var MV=MARKZAHL4(DV);
+  MU=MU[1];MV=MV[1];
   var SI=Suche_Isomorphismus(MU,MV);
   //alert(SI.join("\n"));
   PHI=SI[1];
   INVPHI=SI[2];
+  Logtext=Logtext+"PSI=["+PSI+"]; DV[i]=PSI[DV[i]];\n";
   Logtext=Logtext+"    "+"e a b   c       d               f              df"+"\n";
   Logtext=Logtext+"DU= "+DU+"\n";
   Logtext=Logtext+"MU= "+MU+"\n";
@@ -1213,6 +1228,9 @@ function Test12() {
   Logtext=Logtext+N22.sort().join("★")+"\n";
   Logtext=Logtext+N23.sort().join("★")+"\n\n";
   
+  Logtext=Logtext+M1[6].join(",")+"\n";
+  Logtext=Logtext+M2[6].join(",")+"\n\n";
+//  Logtext=Logtext+M1[5].join("\n");
 
   Logfile(Logtext);
   }
