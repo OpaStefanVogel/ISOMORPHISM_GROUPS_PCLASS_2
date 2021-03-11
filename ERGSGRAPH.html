@@ -468,7 +468,7 @@ function MARKZAHL4(DD,stufe) {
   for (var i=0;i<MARKLNUM.length;i++) {
     MARKLRET[i]=MARKLNUM[i][0]+"*"+MARKLNUM[i][1].slice(0,(MARKLNUM[i][1]+"#").indexOf("#"));
     }  
-  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK];
+  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,MARKLDD];
   }
 
 function Bahnen(DD) {
@@ -620,7 +620,7 @@ function Test5(dd,nr,f) {
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12,2);//alert(M12);
+  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
   var ind=GESAMTMERK.indexOf(M12[0]);
   if (ind==-1) {
     Logtext=Logtext+"";
@@ -1066,15 +1066,28 @@ DU=[0,3,3,2,2,3,2,1,2,2,2,0,3,1,0,0];
 DV=[0,3,3,3,3,2,2,0,2,3,2,0,3,0,1,1];
 
 //noch drei aus Test5 dd=4, Markierung 10 statt 1 hilft auch nichts:
-DU=[0,3,3,3,3,3,2,1,2,2,2,1,2,10,0,0,2,2,3,0,2,1,1,1,2,1,0,0,1,1,1,20];
-DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,10,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,30];
+DU=[0,3,3,3,3,3,2,1,2,2,2,1,2,1,0,0,2,2,3,0,2,1,1,1,2,1,0,0,1,1,1,2];
+DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,1,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,3];
 
 
 DU=[0,3,3,3,3,3,2,1,2,2,3,0,2,1,1,1,2,2,2,1,2,1,0,0,2,1,0,0,1,1,1,2];DV=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,1,1,3,2,3,1,2,0,0,1,2,0,0,1,1,0,1,3];
 
 
-//DU=[0,3,3,3,3,3,2,1,2,2,30,0,3,0,0,0,2,2,2,1,3,0,1,1,3,0,1,1,0,0,0,30];
-//DV=[0,3,3,3,3,3,2,1,2,2,3,0,30,0,0,0,2,2,3,0,2,1,1,1,3,0,0,0,1,1,0,30];
+DU=[0,3,3,3,3,3,2,1,2,2,3,0,3,0,0,0,2,2,2,1,3,0,1,1,3,0,1,1,0,0,0,3];
+DV=[0,3,3,3,3,3,2,1,2,2,3,0,3,0,0,0,2,2,3,0,2,1,1,1,3,0,0,0,1,1,0,3];
+
+//nach MERKLDD anhand MERKLNUM sortieren geht dd=3, aber dd=4 viele nicht:
+DU=[0,3,3,3,3,3,3,0,3,3,2,1,2,1,0,0,2,2,3,0,2,1,0,0,2,1,1,1,0,0,0,3];
+DV=[0,3,3,3,3,3,3,0,3,3,2,1,2,1,0,0,2,2,3,0,2,1,0,0,3,0,0,0,1,1,1,2];
+
+//  var LISTE=[655,569,713,705]
+//  for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr);
+    var DD0=DIAG(ERGS2[8-1][655-1][0]);
+    var DD1=DIAG(ERGS2[8-1][655-1][1]);
+//DU=[]; for (var i=0;i<DD1.length;i++) DU[i]=2*DD0[i]+DD1[i];
+    var DD0=DIAG(ERGS2[8-1][569-1][0]);
+    var DD1=DIAG(ERGS2[8-1][569-1][1]);
+//DV=[]; for (var i=0;i<DD1.length;i++) DV[i]=2*DD0[i]+DD1[i];
 //♥♦
 
 MU=MARKZAHL4(DU)[1];
@@ -1082,8 +1095,6 @@ MU=MARKZAHL4(DU)[1];
 //MU=MARKZAHL4(MU,1)[1];
 //alert(MU);
 MV=MARKZAHL4(DV)[1];
-//MV=MARKZAHL4(MV,1)[1];
-//MV=MARKZAHL4(MV,1)[1];
 //alert(MARKZAHL0GGT_TVEC(DU1));
 //alert(MARKZAHL0GGT_TVEC(DU2));
 //alert(MARKZAHL0GGT_TVEC(DV2));
@@ -1174,11 +1185,35 @@ function Test12() {
     +COMPDIAGSTABERZ(DD2)+" "+MARKZAHL0GGT_TVEC(DD2)+"\n\n";
   
   var M1=MARKZAHL4(DU);
-  var M1a=MARKZAHL4(M1[1],1);
+//  var M1a=MARKZAHL4(M1[1],1);
   var M2=MARKZAHL4(DV);
-  var M2a=MARKZAHL4(M2[1],1);
-  Logtext=Logtext+"M1="+M1.join("\n")+"\n\n"+"M1a="+M1a.join("\n")+"\n\n"+"M2="+M2.join("\n")+"\n\n"+"M2a="+M2a.join("\n")+"\n\n"+"\n\n";
+//  var M2a=MARKZAHL4(M2[1],1);
+  Logtext=Logtext+"M1="+M1.join("\n")+"\n\n";
+//  Logtext=Logtext+"M1a="+M1a.join("\n")+"\n\n";
+  Logtext=Logtext+"M2="+M2.join("\n")+"\n\n";
+//  Logtext=Logtext+"M2a="+M2a.join("\n")+"\n\n";
+
+//neu 1,2,3 markieren
+
+  Logtext=Logtext+"Markierung 1,2,3=\n";
+  Logtext=Logtext+M1[4]+"\n";
+  Logtext=Logtext+M2[4]+"\n";
+  var D1=M1[4];
+  var D2=M2[4];
+  var N11=[]; for (var i=0;i<D1.length;i++) if (D1[i]==1) N11.push(M1[5][i][0]);
+  var N12=[]; for (var i=0;i<D1.length;i++) if (D1[i]==2) N12.push(M1[5][i][0]);
+  var N13=[]; for (var i=0;i<D1.length;i++) if (D1[i]==3) N13.push(M1[5][i][0]);
+  Logtext=Logtext+N11.sort().join("★")+"\n";
+  Logtext=Logtext+N12.sort().join("★")+"\n";
+  Logtext=Logtext+N13.sort().join("★")+"\n\n";
+  var N21=[]; for (var i=0;i<D2.length;i++) if (D2[i]==1) N21.push(M2[5][i][0]);
+  var N22=[]; for (var i=0;i<D2.length;i++) if (D2[i]==2) N22.push(M2[5][i][0]);
+  var N23=[]; for (var i=0;i<D2.length;i++) if (D2[i]==3) N23.push(M2[5][i][0]);
+  Logtext=Logtext+N21.sort().join("★")+"\n";
+  Logtext=Logtext+N22.sort().join("★")+"\n";
+  Logtext=Logtext+N23.sort().join("★")+"\n\n";
   
+
   Logfile(Logtext);
   }
 
