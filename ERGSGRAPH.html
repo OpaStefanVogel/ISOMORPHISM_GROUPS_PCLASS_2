@@ -639,7 +639,7 @@ function Test5(dd,nr,f) {
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-    } else if (Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]==false) GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } else if (Suche_Isomorphismus_DD(M12[3],GESAMTMERKMU[ind])[0]==false) GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
 //    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");//+GESAMTMERKDD.join("\n");
   Logfile(Logtext);
@@ -1110,6 +1110,19 @@ MV=MARKZAHL4(DV)[1];
 //alert(MARKZAHL4(DU)[3].join("\n\n"));
 //alert(MARKZAHL4(DV)[3].join("\n\n"));
 
+function Suche_Isomorphismus_DD(DU,DV) {
+  var MU=MARKZAHL4(DU);
+  var MV=MARKZAHL4(DV);
+  var PSI=[0];
+  var DVNEU=[];
+  for (var i=1;i<4;i=i+1) PSI[MU[6][i]]=MV[6][i];
+  for (var i=0;i<DV.length;i++) DVNEU[i]=PSI[DV[i]];
+  var MV=MARKZAHL4(DVNEU);
+  MU=MU[1];MV=MV[1];
+  var SI=Suche_Isomorphismus(MU,MV);
+  return [SI[0],SI[1],SI[2],PSI,MU,MV,DVNEU];
+  }
+
 function Suche_Isomorphismus(MU,MV) {
   var SD=MU.length;
   var PHI=[0];
@@ -1149,22 +1162,19 @@ function Suche_Isomorphismus(MU,MV) {
 
 function Test12() {
   var Logtext="Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
-  var MU=MARKZAHL4(DU);
-  var MV=MARKZAHL4(DV);
-  var PSI=[0];
-  for (var i=1;i<4;i=i+1) PSI[MU[6][i]]=MV[6][i];
-  for (var i=0;i<DV.length;i++) DV[i]=PSI[DV[i]];
-  var MV=MARKZAHL4(DV);
-  MU=MU[1];MV=MV[1];
-  var SI=Suche_Isomorphismus(MU,MV);
+  var SI=Suche_Isomorphismus_DD(DU,DV);
   //alert(SI.join("\n"));
-  PHI=SI[1];
-  INVPHI=SI[2];
-  Logtext=Logtext+"PSI=["+PSI+"]; DV[i]=PSI[DV[i]];\n";
+  var PHI=SI[1];
+  var INVPHI=SI[2];
+  var PSI=SI[3];
+  var MU=SI[4];
+  var MV=SI[5];
+  var DVNEU=SI[6];
+  Logtext=Logtext+"DV[i]=PSI[DV[i]] mit PSI=["+PSI+"];\n";
   Logtext=Logtext+"    "+"e a b   c       d               f              df"+"\n";
   Logtext=Logtext+"DU= "+DU+"\n";
   Logtext=Logtext+"MU= "+MU+"\n";
-  Logtext=Logtext+"DV= "+DV+"\n";
+  Logtext=Logtext+"DV= "+DVNEU+"\n";
   Logtext=Logtext+"MV= "+MV+"\n";
   Logtext=Logtext+"PHI="+PHI+"\n";
   Logtext=Logtext+"INV="+INVPHI+"\n";
