@@ -317,17 +317,18 @@ MARKZAHL:=function(G)
   end;
 
 MARKZAHL:=function(G)
-  local i,x,y,MERK,n,a,e;
+  local i,x,y,MERK,n,a,e,u,v;
   MERK:=[0,0,0,0];
   e:=Identity(G);
   n:=Size(G);
+  SG:=SmallGeneratingSet(G);
   for x in G do
     a:=true;
     if x^2=e then
-      for y in G do if a then if not y^2=(y*x)^2 then a:=false; fi; fi; od;
+      for u in SG do for v in SG do if a then y:=u*v; if not y^2=(y*x)^2 then a:=false; fi; fi; od; od;
       if a then MERK[3]:=MERK[3]+1; else MERK[1]:=MERK[1]+1; fi;
       else
-        for y in G do if a then if y^2=(y*x)^2 then a:=false; fi; fi; od;
+        for u in SG do for v in SG do if a then y:=u*v; if y^2=(y*x)^2 then a:=false; fi; fi; od; od;
         if a then MERK[4]:=MERK[4]+1; else MERK[2]:=MERK[2]+1; fi;
         fi;
     od;
@@ -338,12 +339,12 @@ MARKZAHL:=function(G)
 G:=SmallGroup(256,56082);
 MARKZAHL(G);
 
-for n in [2..9] do
+for n in [2..8] do
   for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
     G:=SmallGroup(2^n,index);
     Print(IdSmallGroup(G),", ",MARKZAHL(G),",\n");
     od;
-  od;
+  od;time;#15121#440
 
 TABELLE:=[
 [ 4, 1 ], [ 2, [ 1, 1, 0, 0 ], [ 0, 0, 1, 1 ] ],
