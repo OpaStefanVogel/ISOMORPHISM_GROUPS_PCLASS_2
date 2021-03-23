@@ -478,6 +478,30 @@ function MARKZAHL4(DD,stufe) {
   return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,NRET];
   }
 
+function MARKZAHL5(DD) {
+  var DDNEU=[];
+  var MARKS="";
+  var MARKL=[];
+  var MARKLNUM=[];
+  var MARK=[];
+  var SD=DD.length;
+  for (var i=0;i<SD;i++) {
+    MARK[i]=[];
+    var NUM1=[];
+    var NUM2=[];
+    for (var j=0;j<SD;j++) MARK[i].push([DD[i],DD[j],DD[i^j]].join("'"));
+    MARK[i].sort();
+    MARK[i]=MARK[i].join("!");
+    var ind=MARKL.indexOf(MARK[i]);
+    if (ind==-1) MARKL.push(MARK[i]);
+    }
+  MARKL=MARKL.sort();
+  for (var i=0;i<SD;i++) DDNEU[i]=MARKL.indexOf(MARK[i]);
+  MARK.sort();
+  MARKS=MARK.join("x");
+  return [MARKS,DDNEU,MARKL,,DD.slice()];
+  }
+
 function Bahnen(DD) {
   var B=[];
   var SD=DD.length;
@@ -1354,8 +1378,9 @@ function Show_R(R) {
   }
 
 var ERGS2NEU=[[[[[1]],[[1]]]]];
-function Test15() {
+function Test15(ddd) {
   var dd=document.getElementById("Test15value").value*1;
+  if (ddd) dd=ddd;
 
     GESAMTMERK=[];
     GESAMTMERKORIG=[];
@@ -1378,27 +1403,37 @@ function Test15() {
 
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
+  var DD2=[]; for (var i=0;i<DD1.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+  //var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+  var M12=MARKZAHL5(DD12);//alert(M12.join("\n"));
   var ind=GESAMTMERK.indexOf(M12[0]);//alert(ind);
   if (ind==-1) {
-    Logtext=Logtext+"*";
+    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦";
     //return;
     GESAMTMERK.push(M12[0]);
-    GESAMTMERKMU.push(M12[3]);
+    GESAMTMERKMU.push(M12[1]);
     GESAMTMERKDD.push(M12[4]);
     //alert(GESAMTMERKDD.join("\n"));
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";//alert(RT);
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr);
     ERGS2NEU[dd-1].push([R0.slice(),R1.slice()]);
-    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } //else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+      else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]==false) {
+        alert(M12.join("\n"));
+        Logtext=Logtext+ind+"\n"+M12[0]+"\n"+GESAMTMERK[ind]+"\n"+M12[1]+"\n"+GESAMTMERKMU[ind]+"\n";
+        Logtext=Logtext+MARKZAHL5(M12[1])+"\n"+MARKZAHL5(GESAMTMERKMU[ind])+"\n"+Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]+"\n"+(MARKZAHLPUR(M12[4])[0]==MARKZAHLPUR(GESAMTMERKDD[ind])[0])+"\n";
+        Logfile(Logtext);
+        return;
+        }
 
         Logtext=Logtext+"\n";
         }
       }
     }
   
+  Logtext=ERGS2NEU[dd-1].length+" "+Logtext+"\n";
   Logtext=Logtext+"\n";
   for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
   Logfile(Logtext);
@@ -1861,6 +1896,10 @@ Tabelle TABLE 1 aus ...:
   <div>
     <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
       <input id="Test15value" value="2"/>
+      <button onclick="Test15(2)" style="font-size:290%">Test15(2)</button>
+      <button onclick="Test15(3)" style="font-size:290%">(3)</button>
+      <button onclick="Test15(4)" style="font-size:290%">(4)</button>
+      <button onclick="Test15(5)" style="font-size:290%">(5)</button>
       </div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
       <input id="Test14value" value="40"/>
