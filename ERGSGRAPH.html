@@ -639,7 +639,7 @@ function Test5(dd,nr,f) {
     var RT="";
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f);
-    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift(ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
 //    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");//+GESAMTMERKDD.join("\n");
   Logfile(Logtext);
@@ -1099,6 +1099,10 @@ DU=[0,3,3,3,3,3,2,1,3,3,2,1,2,1,1,1,3,2,2,0,2,0,1,0,2,0,1,0,1,0,0,2];DV=[0,3,3,3
 DU=[0,3,3,3,3,3,2,1,3,2,3,1,2,0,0,1,2,2,2,1,2,1,0,0,2,0,1,0,0,1,1,3];
 DV=[0,3,3,3,3,3,2,1,3,2,3,1,2,0,0,1,3,2,2,0,2,0,1,0,2,1,0,0,1,1,1,2];
 DV=[0,1,1,1,1,1,2,3,1,2,1,3,2,0,0,3,1,2,2,0,2,0,3,0,2,3,0,0,3,3,3,2];
+DV=[0,3,3,3,3,3,1,2,3,1,3,2,1,0,0,2,3,1,1,0,1,0,2,0,1,2,0,0,2,2,2,1];
+
+
+
 //  var LISTE=[655,569,713,705]
 //  for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr);
     var DD0=DIAG(ERGS2[8-1][655-1][0]);
@@ -1173,7 +1177,8 @@ function Suche_Isomorphismus(MU,MV) {
   }
 
 function Test12() {
-  var Logtext="Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
+  //alert("\xF0\x9D\x84\x9E");
+  var Logtext="\u263A haaa naaa \u263A \u11EE daaa \u{01D11E} Test12 Isomorphismus bestimmen\n<b style='background-color:lightgreen'>!!! noch berücksichtigen, daß bei gleicher Markierung auch 3 auf 2 abgebildet werden kann !!!</b>\n";
   var SI=Suche_Isomorphismus_DD(DU,DV);
   //alert(SI.join("\n"));
   var PHI=SI[1];
@@ -1190,10 +1195,11 @@ function Test12() {
   Logtext=Logtext+"MV= "+MV+"\n";
   Logtext=Logtext+"PHI="+PHI+"\n";
   Logtext=Logtext+"INV="+INVPHI+"\n";
+  //alert(Suche_Isomorphismus(MU,MV));
 
   var Probe=true;
   for (var i=0;i<MU.length;i++) if (MU[i]!=MV[PHI[i]]||MV[i]!=MU[INVPHI[i]]) Probe=false;
-  Logtext=Logtext+"Probe: <b style='color:blue'>"+Probe+"</b>\n";
+  Logtext=Logtext+"<b style='color:blue'>Probe: "+Probe+"</b>\n";
 
   Logtext=Logtext+"e a b   c       d               f              df"+"\n";
   var SD=DU.length;
@@ -1229,9 +1235,9 @@ function Test12() {
   Logtext=Logtext+"M1a="+M1a.join("\n")+"\n\n";
   Logtext=Logtext+"M2="+M2.join("\n")+"\n\n";
   Logtext=Logtext+"M2a="+M2a.join("\n")+"\n\n";
-  alert(Suche_Isomorphismus(M1a,M2a));
-0,13,13,4,19,16,18,14,19,18,16,14,3, 9, 9,2,6,15,15,5,12,11, 8,10,12, 8,11,10,1,17,17,7
-0,11,11,3,17,14,16,12,17,16,14,12,2,19,19,1,6,13,13,5,10, 9,18, 8,10,18, 9, 8,4,15,15,7
+  //alert(Suche_Isomorphismus(M1[1],M2[1]));
+  //alert(Suche_Isomorphismus(M1a[1],M2a[1]));
+
 //neu 1,2,3 markieren
 
   Logtext=Logtext+"Markierung 1,2,3=\n";
@@ -1239,15 +1245,15 @@ function Test12() {
   Logtext=Logtext+M2[4]+"\n";
   var D1=M1[4];
   var D2=M2[4];
-  var N11=[]; for (var i=0;i<D1.length;i++) if (D1[i]==1) N11.push(M1[5][i][0]);
-  var N12=[]; for (var i=0;i<D1.length;i++) if (D1[i]==2) N12.push(M1[5][i][0]);
-  var N13=[]; for (var i=0;i<D1.length;i++) if (D1[i]==3) N13.push(M1[5][i][0]);
+  var N11=[]; for (var i=0;i<D1.length;i++) if (D1[i]==1) N11.push(M1[5][i]);
+  var N12=[]; for (var i=0;i<D1.length;i++) if (D1[i]==2) N12.push(M1[5][i]);
+  var N13=[]; for (var i=0;i<D1.length;i++) if (D1[i]==3) N13.push(M1[5][i]);
   Logtext=Logtext+N11.sort().join("★")+"\n";
   Logtext=Logtext+N12.sort().join("★")+"\n";
   Logtext=Logtext+N13.sort().join("★")+"\n\n";
-  var N21=[]; for (var i=0;i<D2.length;i++) if (D2[i]==1) N21.push(M2[5][i][0]);
-  var N22=[]; for (var i=0;i<D2.length;i++) if (D2[i]==2) N22.push(M2[5][i][0]);
-  var N23=[]; for (var i=0;i<D2.length;i++) if (D2[i]==3) N23.push(M2[5][i][0]);
+  var N21=[]; for (var i=0;i<D2.length;i++) if (D2[i]==1) N21.push(M2[5][i]);
+  var N22=[]; for (var i=0;i<D2.length;i++) if (D2[i]==2) N22.push(M2[5][i]);
+  var N23=[]; for (var i=0;i<D2.length;i++) if (D2[i]==3) N23.push(M2[5][i]);
   Logtext=Logtext+N21.sort().join("★")+"\n";
   Logtext=Logtext+N22.sort().join("★")+"\n";
   Logtext=Logtext+N23.sort().join("★")+"\n\n";
@@ -1342,6 +1348,64 @@ function Test14() {
     }
   Logfile(Logtext);
   }
+
+function Show_R(R) {
+  return "[["+R.join("],[")+"]]";  
+  }
+
+var ERGS2NEU=[[[[[1]],[[1]]]]];
+function Test15() {
+  var dd=document.getElementById("Test15value").value*1;
+
+    GESAMTMERK=[];
+    GESAMTMERKORIG=[];
+    GESAMTMERKMU=[];
+    GESAMTMERKDD=[];
+
+  var Logtext="Test15 ERGS2NEU für dd="+dd+"\n";
+  ERGS2NEU[dd-1]=[];
+  for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
+    var R0=ERGS1NEU[dd-1][nr];
+    Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
+    for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) 
+ //    if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
+      {
+      var R1=ERGS2NEU[dd-2][nr2][1];
+      Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
+      for (var ii=0;ii<2**dd;ii++) {
+        R1[dd-1]=BINDEZ(ii,dd);
+        Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
+
+  var DD0=DIAG(R0);
+  var DD1=DIAG(R1);
+  var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+  var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+  var ind=GESAMTMERK.indexOf(M12[0]);//alert(ind);
+  if (ind==-1) {
+    Logtext=Logtext+"*";
+    //return;
+    GESAMTMERK.push(M12[0]);
+    GESAMTMERKMU.push(M12[3]);
+    GESAMTMERKDD.push(M12[4]);
+    //alert(GESAMTMERKDD.join("\n"));
+    var RT="";
+    for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";//alert(RT);
+    GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr);
+    ERGS2NEU[dd-1].push([R0.slice(),R1.slice()]);
+    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+
+        Logtext=Logtext+"\n";
+        }
+      }
+    }
+  
+  Logtext=Logtext+"\n";
+  for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
+  Logfile(Logtext);
+  }
+
+
+
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
@@ -1795,11 +1859,14 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
+      <input id="Test15value" value="2"/>
+      </div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
       <input id="Test14value" value="40"/>
       </div>
     <div><button onclick="Test13()" style="font-size:270%">Test13()</button> alle R durchlaufen lassen für dd=
-      <input id="Test13value" value="4"/> &0x1D11E;
+      <input id="Test13value" value="4"/> &#x1D11E; <a href="%F0%9D%84%9E">\xF0\x9D\x84\x9E</a> &#x263A;
       </div>
     <div><button onclick="Test12()" style="font-size:250%">Test12()</button> Isomorphismus bestimmen </div>
     <div><button onclick="Test11()" style="font-size:250%">Test11()</button>3*(3+3+1+1) raussuchen aus ERGS2</div>
