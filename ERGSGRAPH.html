@@ -495,17 +495,20 @@ function MARKZAHL5(DD) {
     MARK[i]=[];
     var NUM1=[];
     var NUM2=[];
-    for (var j=0;j<SD;j++) MARK[i].push([DD[i],DD[j],DD[i^j]].join("'"));
+    for (var j=0;j<SD;j++) MARK[i].push(100*(DD[i]+1)+10*(DD[j]+1)+DD[i^j]+1);
     MARK[i].sort();
     MARK[i]=MARK[i].join("!");
     var ind=MARKL.indexOf(MARK[i]);
-    if (ind==-1) MARKL.push(MARK[i]);
+    if (ind==-1) {ind=MARKL.length;MARKL[ind]=MARK[i];MARKLNUM[ind]=0}
+    MARKLNUM[ind]=MARKLNUM[ind]+1;
     }
-  MARKL=MARKL.sort();
+  for (var i=0;i<MARKL.length;i++) MARKLNUM[i]=MARKL[i]+"*"+MARKLNUM[i];
+  MARKL.sort();
+  MARKLNUM.sort();
   for (var i=0;i<SD;i++) DDNEU[i]=MARKL.indexOf(MARK[i]);
   MARK.sort();
-  MARKS=MARK.join("x");
-  return [MARKS,DDNEU,MARKL,,DD.slice()];
+  MARKS=MARKLNUM.join("x");
+  return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice()];
   }
 
 function Bahnen(DD) {
@@ -1409,7 +1412,7 @@ function Test15(ddd) {
       Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
       for (var ii=0;ii<2**dd;ii++) {
         R1[dd-1]=BINDEZ(ii,dd);
-        Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
+//        Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
 
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
@@ -1424,7 +1427,8 @@ function Test15(ddd) {
     if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]) nicht_neu=false;
     }
   if (ind==-1) {
-    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦";
+    Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
+    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦\n";
     //return;
     GESAMTMERK.push(M12[0]);
     GESAMTMERKMU.push(M12[1]);
@@ -1443,7 +1447,7 @@ function Test15(ddd) {
         return;
         }
 
-        Logtext=Logtext+"\n";
+//        Logtext=Logtext+"\n";
         }
       }
     }
