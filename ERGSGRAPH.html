@@ -1371,6 +1371,10 @@ function Test14() {
     Logtext=Logtext+"\n";
     }
   Logfile(Logtext);
+  ERGS2=ERGS2NEU;
+  var col=document.getElementById("hier");
+  while (col.hasChildNodes()) col.removeChild(col.lastChild);
+  init();
   }
 
 function Show_R(R) {
@@ -1395,7 +1399,7 @@ function Test15(ddd) {
     for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) 
  //    if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
       {
-      var R1=ERGS2NEU[dd-2][nr2][1];
+      var R1=ERGS2NEU[dd-2][nr2][1].slice();
       Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
       for (var ii=0;ii<2**dd;ii++) {
         R1[dd-1]=BINDEZ(ii,dd);
@@ -1437,6 +1441,10 @@ function Test15(ddd) {
   Logtext=Logtext+"\n";
   for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
   Logfile(Logtext);
+  ERGS2=ERGS2NEU;
+  var col=document.getElementById("hier");
+  while (col.hasChildNodes()) col.removeChild(col.lastChild);
+  init();
   }
 
 
