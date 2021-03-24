@@ -12,6 +12,7 @@ v { display: flex; flex-direction: column-reverse; align-items: flex-end;  backg
 e { display: flex; white-space: pre; }
 e:active { background-color: green; }
 .selected { background-color: aquamarine; }
+d {color:brown}
 uu {position:fixed;
   top: 0em;
   left:50em;
@@ -110,7 +111,12 @@ function init() {
         }
       counter=counter+1;
       var e=document.createElement("e");
-      e.appendChild(document.createTextNode(counter+" "+ERGS2[dd][i][1].toString().replace(/,/g,"")));
+      var er=ERGS2[dd][i][1].toString().replace(/,/g,"");
+      var t=document.createElement("span");
+      //t.innerHTML="HALLA";
+      //e.appendChild(document.createTextNode(counter+" "+er.slice(0,-dd-1)+"<d>"+er.slice(-dd-1)+"</d>"));
+      e.appendChild(t);
+      e.lastChild.innerHTML=counter+" "+er.slice(0,-dd-1)+"<d>"+er.slice(-dd-1)+"</d>";
       h.appendChild(e);
       }
     }
