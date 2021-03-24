@@ -1397,7 +1397,7 @@ function Test15(ddd) {
     var R0=ERGS1NEU[dd-1][nr];
     Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
     for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) 
- //    if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
+     if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
       {
       var R1=ERGS2NEU[dd-2][nr2][1].slice();
       Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
@@ -1411,7 +1411,12 @@ function Test15(ddd) {
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
   //var M12=MARKZAHLPUR(DD12,1);//alert(M12);
   var M12=MARKZAHL5(DD12);//alert(M12.join("\n"));
-  var ind=GESAMTMERK.indexOf(M12[0]);//alert(ind);
+  var ind=-1;
+  var nicht_neu=true;
+  while (nicht_neu) {
+    ind=GESAMTMERK.indexOf(M12[0],ind+1);//alert(ind);
+    if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]) nicht_neu=false;
+    }
   if (ind==-1) {
     Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦";
     //return;
