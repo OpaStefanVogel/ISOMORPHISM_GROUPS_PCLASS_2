@@ -85,9 +85,9 @@ function vergleicheZweiArrays(arr1,arr2) {
 //alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,5]]));
 
 var col;
-function init() {
+function init(hier) {
   //alert(ERGS2);
-  col=document.getElementById("hier");
+  col=document.getElementById(hier);
   A=[1,,3,[4,5,6,
   [7,8,9,[10,11,12]]]];
 //  alert(A);
@@ -554,6 +554,29 @@ function MARKZAHLPUR(DD,anz) {
       }
   }
 
+function MARKZAHL5PUR(DD,anz) {
+  if (anz&&anz==1) {
+    var DDNEU=MARKZAHL4(DD);
+    return [DDNEU[0]+"\n",DDNEU[1],DDNEU[2]+"\n",,DDNEU[4]];
+    } else {
+      var DDNEU=MARKZAHL4(DD);
+      var DDNEUNEU=MARKZAHL4(DDNEU[1],1);
+      //var DDNEUNEUNEU=MARKZAHL4(DDNEUNEU[1]);
+      return [
+        DDNEU[0]+"\n"
+          +DDNEUNEU[0]+"\n"
+        ,
+        DDNEUNEU[1]
+        ,
+        DDNEU[2]+"\n"
+          +DDNEUNEU[2]+"\n"
+        ,
+        DDNEU[1]+"\n"
+          +DDNEUNEU[1]+"\n"
+        ,DDNEU[4]];
+      }
+  }
+
 var GESAMTMERK=[];
 var GESAMTMERKORIG=[];
 var GESAMTMERKMU=[];
@@ -569,7 +592,7 @@ function Test2(dd) {
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-    var M12=MARKZAHLPUR(DD12);//alert(M12);
+    var M12=MARKZAHLPUR(DD12,1);//alert(M12);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
       alert(ind+" "+nr);
@@ -616,14 +639,30 @@ function Test4() {
   var dd=8;
   GESAMTMERK=[];
   GESAMTMERKORIG=[];
-  var LISTE=[655,569,713,705]
+  var LISTE=[
+    655,569,
+    713,705,
+    1054,1067,
+    1133,1276,
+    1672,1784,
+    1630,1785,
+    1996,2006,
+    1908,2090,
+    2094,2102,2104,
+    2089,2108,
+    2067,2115,
+    2099,2185,
+    2125,2188,
+    1880,2192,
+    2548,2550
+    ]
   for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr);
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
     var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
     //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
-    var M12=MARKZAHLPUR(DD12);//alert(M12);
+    var M12=MARKZAHLPUR(DD12,1);//alert(M12);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
       alert(LISTE[ind]+" "+nr);
@@ -970,8 +1009,12 @@ for (var dd=0;dd<15;dd++) {
     for (var i=a_n[nr];i<a_n[dd];i++);// Element.push([i+22]);
     Liste.push(Element);
     }
-  ERGS1NEU.push(Liste);
+  ERGS1NEU.push(Liste.reverse());
+  //alert(ERGS1NEU[dd].join("\n"));
   }
+
+//ERGS1NEU=[];
+    
 
 var FIBOCAN=[-100,0,1];
 for (var i=3;i<200;i++) FIBOCAN[i]=FIBOCAN[i-1]+i-1;
@@ -1391,7 +1434,7 @@ function Show_R(R) {
   }
 
 var ERGS2NEU=[[[[[1]],[[1]]]]];
-function Test15(ddd) {
+async function Test15(ddd) {
   var dd=document.getElementById("Test15value").value*1;
   if (ddd) dd=ddd;
 
@@ -1411,20 +1454,24 @@ function Test15(ddd) {
       var R1=ERGS2NEU[dd-2][nr2][1].slice();
       Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
       for (var ii=0;ii<2**dd;ii++) {
-        R1[dd-1]=BINDEZ(ii,dd);
+        R1[dd-1]=BINDEZ(2**dd-ii-1,dd);
 //        Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
 
   var DD0=DIAG(R0);
   var DD1=DIAG(R1);
   var DD2=[]; for (var i=0;i<DD1.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  //var M12=MARKZAHLPUR(DD12,1);//alert(M12);
-  var M12=MARKZAHL5(DD12);//alert(M12.join("\n"));
+  //M12 erwartet [0]:Markierung, [1]:DDNEU; [4]:DD z.B.:return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice()];
+  var M12=MARKZAHL5PUR(DD12);//alert(M12);
+  //var M12=MARKZAHL5(DD12);//alert(M12.join("\n"));
+  
   var ind=-1;
   var nicht_neu=true;
   while (nicht_neu) {
     ind=GESAMTMERK.indexOf(M12[0],ind+1);//alert(ind);
-    if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]) nicht_neu=false;
+    nicht_neu=false;
+    //if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]) nicht_neu=false;
+    //if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]) nicht_neu=false;
     }
   if (ind==-1) {
     Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
@@ -1439,14 +1486,14 @@ function Test15(ddd) {
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr);
     ERGS2NEU[dd-1].push([R0.slice(),R1.slice()]);
     } //else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
-      else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]==false) {
+/*      else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]==false) {
         alert(M12.join("\n"));
         Logtext=Logtext+ind+"\n"+M12[0]+"\n"+GESAMTMERK[ind]+"\n"+M12[1]+"\n"+GESAMTMERKMU[ind]+"\n";
         Logtext=Logtext+MARKZAHL5(M12[1])+"\n"+MARKZAHL5(GESAMTMERKMU[ind])+"\n"+Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]+"\n"+(MARKZAHLPUR(M12[4])[0]==MARKZAHLPUR(GESAMTMERKDD[ind])[0])+"\n";
         Logfile(Logtext);
         return;
         }
-
+*/
 //        Logtext=Logtext+"\n";
         }
       }
@@ -1457,9 +1504,9 @@ function Test15(ddd) {
   for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
   Logfile(Logtext);
   ERGS2=ERGS2NEU;
-  var col=document.getElementById("hier");
+  var col=document.getElementById("hier2");
   while (col.hasChildNodes()) col.removeChild(col.lastChild);
-  init();
+  init("hier2");
   }
 
 
@@ -1725,7 +1772,7 @@ Logfile(Logtext);return;
 
   </script>
   </head>
-<body onload="init();//allesergaenzen()">
+<body onload="init('hier1');//allesergaenzen()">
 <div style="position:fixed; top:0px; left:600px;"><span style=" background-color:yellow; border:none;" ><a href="#Tabelle2">Tabelle 2</a>
 <br/><a href="#DD1U">DD1U</a>
 <br/><a href="#DD1T">[64,266]</a></span></div>
@@ -1948,6 +1995,7 @@ Tabelle TABLE 1 aus ...:
     <div><button onclick="Test6()">Test6()</button></div>
     </div>
   
-  <div><h id="hier" ontouchstart="#event.preventDefault()"></h></div>
+  <div><h id="hier2" ontouchstart="#event.preventDefault()"></h></div>
+  <div><h id="hier1" ontouchstart="#event.preventDefault()"></h></div>
   </body>
   </html>
