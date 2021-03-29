@@ -408,6 +408,15 @@ function MARKZAHL3(DD) {
   return DDNEU;
   }
 
+//var testo={"tr":7,"td":"hallo"}
+//var t="tr";
+//var d="td";
+//alert(testo[d]);
+
+function Suche_PHI_und_DPHI(D) {
+  return {"PHI":0,"D":"hier kommt Ergebnis von Suche_PHI_und_DPHI rein für D=["+D.slice().sort()+"]"};
+  }
+
 function MARKZAHL4(DD,stufe) {
   var DDNEU=[];
   var MARKS="";
@@ -481,7 +490,11 @@ function MARKZAHL4(DD,stufe) {
   var N3=[]; for (var i=0;i<DD.length;i++) if (DD[i]==3) N3.push(MARK[i][0]); N3=N3.sort().join(" ")+"3";
   var N=[N1,N2,N3]; N.sort();
   var NRET=[0,N.indexOf(N1)+1,N.indexOf(N2)+1,N.indexOf(N3)+1];
-  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,NRET];
+  
+  //PHI
+  var SUPH=Suche_PHI_und_DPHI(DDNEU);
+  
+  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.D];
   }
 
 function MARKZAHL5(DD) {
@@ -536,7 +549,7 @@ function MARKZAHL(DD) {
 function MARKZAHLPUR(DD,anz) {
   if (anz&&anz==1) {
     var DDNEU=MARKZAHL4(DD);
-    return [DDNEU[0]+"\n",DDNEU[2]+"\n",,DDNEU[1],DDNEU[4]];
+    return [DDNEU[0]+"\n",DDNEU[2]+"\n",DDNEU[1],DDNEU[1],DDNEU[4],,,DDNEU[7]];
     } else {
       var DDNEU=MARKZAHL4(DD);
       var DDNEUNEU=MARKZAHL4(DDNEU[1],1);
@@ -550,7 +563,7 @@ function MARKZAHLPUR(DD,anz) {
         ,
         DDNEU[1]+"\n"
           +DDNEUNEU[1]+"\n"
-        ,DDNEUNEU[1],DDNEU[4]];
+        ,DDNEUNEU[1],DDNEU[4],,,DDNEUNEU[7]];
       }
   }
 
@@ -635,14 +648,14 @@ function Test3(nr) {
   }
 
 function Test4() {
-  Logtext="Test4 [655,569 ],[713,705]\n";
+  Logtext="Test4 [655,569 ],[713,705]...\n";
   var dd=8;
   GESAMTMERK=[];
   GESAMTMERKORIG=[];
   var LISTE=[
     655,569,
     713,705,
-    1054,1067,
+/*    1054,1067,
     1133,1276,
     1672,1784,
     1630,1785,
@@ -654,7 +667,7 @@ function Test4() {
     2099,2185,
     2125,2188,
     1880,2192,
-    2548,2550
+*/    2548,2550
     ]
   for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr);
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
@@ -665,12 +678,20 @@ function Test4() {
     var M12=MARKZAHLPUR(DD12,1);//alert(M12);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
-      alert(LISTE[ind]+" "+nr);
-      Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+LISTE[ind]+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind]+"\n";
+      alert(LISTE[ind]+" "+(nr+1));
+      Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+LISTE[ind]+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind][0]+"\n";
       Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
+      Logtext=Logtext+"############# ERGS2["+dd+"]["+LISTE[ind]+"] DD12NEU="+GESAMTMERKORIG[ind][3]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12NEU="+M12[2]+"\n";
+      Logtext=Logtext+"############# ERGS2["+dd+"]["+LISTE[ind]+"] SUPH.D="+GESAMTMERKORIG[ind][7]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] SUPH.D="+M12[7]+"\n";
+      Logtext=Logtext+"############# ERGS2["+dd+"]["+LISTE[ind]+"] DD12="+GESAMTMERKORIG[ind][2]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
+      Logtext=Logtext+"############# ERGS2["+dd+"]["+LISTE[ind]+"] R1="+ERGS2[dd-1][GESAMTMERKORIG[ind][1]][1]+"\n";
+      Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] R1="+ERGS2[dd-1][nr][1]+"\n";
       }
     GESAMTMERK.push(M12[0]);
-    GESAMTMERKORIG.push(M12[1]);
+    GESAMTMERKORIG.push([M12[1],nr,DD12.slice(),M12[2],,,,M12[7]]);//M12[7] ist SUPH. 
     Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
     Logtext=Logtext+M12[1]+"\n"+M12[2]+"\n";
     }
@@ -1964,6 +1985,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test4()" style="font-size:200%">Test4: dd=8, nr=655,569,713,705...mit SUPH</button></div>
     <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
       <input id="Test15value" value="2"/>
       <button onclick="Test15(2)" style="font-size:290%">Test15(2)</button>
@@ -1988,7 +2010,6 @@ Tabelle TABLE 1 aus ...:
       <input id="Test2value" value="5"/></div>
     <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
       <input id="Test3value" value="7"/></div>
-    <div><button onclick="Test4()">Test4: dd=8, nr=655,569,713,705</button></div>
     <div><button onclick="Test5(document.getElementById('Test5value').value*1,1,0)">Test5(dd,nr=1...ERGS2[dd].length,f=0...2^(dd+1)-1)</button>
       dd=<input id="Test5value" value="3"/>
       <button onclick="clearTimeout(tc)">Anhalten</button></div>
