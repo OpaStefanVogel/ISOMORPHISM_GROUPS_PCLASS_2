@@ -413,8 +413,27 @@ function MARKZAHL3(DD) {
 //var d="td";
 //alert(testo[d]);
 
+function MINPOS(D,INVPHI) {
+  var min=1000000;
+  var minind=0;
+  for (var i=0;i<D.length;i++) if (INVPHI[i]==undefined&&D[i]<min) {minind=i;min=D[i]}
+  return minind;
+  }
+
 function Suche_PHI_und_DPHI(D) {
-  return {"PHI":0,"D":"hier kommt Ergebnis von Suche_PHI_und_DPHI rein für D=["+D.slice().sort()+"]"};
+  var PHI=[0];
+  var INVPHI=[0];
+  var DNEUPHI=[0];
+  var SD=D.length;
+  for (var i=0;2**i<SD;i++) {
+    var ii=2**i
+    var minind=MINPOS(D,INVPHI);
+    PHI[ii]=minind;
+    INVPHI[minind]=ii;
+    DNEUPHI[ii]=D[minind];
+    }
+  //return {"PHI":0,"D":"hier kommt Ergebnis von Suche_PHI_und_DPHI rein für D=["+D.slice().sort()+"]"};
+  return {"PHI":PHI,"D":DNEUPHI+"\n"+D.slice().sort()};
   }
 
 function MARKZAHL4(DD,stufe) {
