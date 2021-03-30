@@ -426,14 +426,21 @@ function Suche_PHI_und_DPHI(D) {
   var DNEUPHI=[0];
   var SD=D.length;
   for (var i=0;2**i<SD;i++) {
-    var ii=2**i
+    var ii=2**i;
     var minind=MINPOS(D,INVPHI);
     PHI[ii]=minind;
     INVPHI[minind]=ii;
     DNEUPHI[ii]=D[minind];
+    for (var j=1;j<ii;j++) {
+      var k=PHI[ii]^PHI[j];
+      var iij=ii+j;
+      PHI[iij]=k;
+      INVPHI[k]=iij;
+      DNEUPHI[iij]=D[k];
+      }
     }
   //return {"PHI":0,"D":"hier kommt Ergebnis von Suche_PHI_und_DPHI rein für D=["+D.slice().sort()+"]"};
-  return {"PHI":PHI,"D":DNEUPHI+"\n"+D.slice().sort()};
+  return {"PHI":PHI,"D":DNEUPHI};
   }
 
 function MARKZAHL4(DD,stufe) {
@@ -511,9 +518,10 @@ function MARKZAHL4(DD,stufe) {
   var NRET=[0,N.indexOf(N1)+1,N.indexOf(N2)+1,N.indexOf(N3)+1];
   
   //PHI
+
   var SUPH=Suche_PHI_und_DPHI(DDNEU);
-  
-  return [MARKLRET.join("\n")+"\n",DDNEU,MARKLNUM.join("\n")+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.D];
+
+  return [MARKLRET.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",DDNEU,MARKLNUM.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.D];
   }
 
 function MARKZAHL5(DD) {
@@ -567,8 +575,8 @@ function MARKZAHL(DD) {
 
 function MARKZAHLPUR(DD,anz) {
   if (anz&&anz==1) {
-    var DDNEU=MARKZAHL4(DD);
-    return [DDNEU[0]+"\n",DDNEU[2]+"\n",DDNEU[1],DDNEU[1],DDNEU[4],,,DDNEU[7]];
+    var DDNEU=MARKZAHL4(DD);//alert(DDNEU[1]);
+    return [DDNEU[0],DDNEU[2],DDNEU[1],DDNEU[1],DDNEU[4],,,DDNEU[7]];
     } else {
       var DDNEU=MARKZAHL4(DD);
       var DDNEUNEU=MARKZAHL4(DDNEU[1],1);
@@ -624,17 +632,19 @@ function Test2(dd) {
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-    var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+    var M12=MARKZAHLPUR(DD12,1);//alert(M12[2]);
     var ind=GESAMTMERK.indexOf(M12[0]);
+    //var ind=GESAMTMERK.indexOf(M12[7]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
       alert(ind+" "+nr);
       Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+(ind+1)+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind]+"\n";
       Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
       }
     GESAMTMERK.push(M12[0]);
+    //GESAMTMERK.push(M12[7]);
     GESAMTMERKORIG.push(M12[1]);
     Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
-    Logtext=Logtext+M12[0]+"\n";
+    Logtext=Logtext+M12[0]+"\nDD12=    ["+DD12+"]\nDDNEU=   ["+M12[2]+"]\nDDNEUPHI=["+M12[7]+"]\n\n";
     }
   Logfile(Logtext);
   }
@@ -2004,6 +2014,8 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test2()" style="font-size:200%">Test2: alle MARKZAHL4 für dd=</button>
+      <input id="Test2value" value="3"/></div>
     <div><button onclick="Test4()" style="font-size:200%">Test4: dd=8, nr=655,569,713,705...mit SUPH</button></div>
     <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
       <input id="Test15value" value="2"/>
