@@ -440,7 +440,7 @@ function Suche_PHI_und_DPHI(D) {
       }
     }
   //return {"PHI":0,"D":"hier kommt Ergebnis von Suche_PHI_und_DPHI rein für D=["+D.slice().sort()+"]"};
-  return {"PHI":PHI,"D":DNEUPHI};
+  return {"PHI":PHI,"DNEUPHI":DNEUPHI};
   }
 
 function MARKZAHL4(DD,stufe) {
@@ -521,7 +521,7 @@ function MARKZAHL4(DD,stufe) {
 
   var SUPH=Suche_PHI_und_DPHI(DDNEU);
 
-  return [MARKLRET.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",DDNEU,MARKLNUM.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.D];
+  return [MARKLRET.join("\n")+"\nDNEUPHI="+SUPH.DNEUPHI+"\n",DDNEU,MARKLNUM.join("\n")+"\nDNEUPHI="+SUPH.DNEUPHI+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.DNEUPHI];
   }
 
 function MARKZAHL5(DD) {
@@ -549,7 +549,7 @@ function MARKZAHL5(DD) {
   MARK.sort();
   MARKS=MARKLNUM.join("x");
   var SUPH=Suche_PHI_und_DPHI(DDNEU);
-  return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice(),,,SUPH.D];
+  return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice(),,,SUPH.DNEUPHI];
   }
 
 function Bahnen(DD) {
@@ -596,8 +596,8 @@ function MARKZAHLPUR(DD,anz) {
   }
 
 function MARKZAHL5PUR_TEST2(DD,anz) {
-  //MARKZAHL4: return [MARKLRET.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",DDNEU,MARKLNUM.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.D];
-  //MARKZAHL5: return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice(),,,SUPH.D];
+  //MARKZAHL4: return [MARKLRET.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",DDNEU,MARKLNUM.join("\n")+"\nDNEUPHI="+SUPH.D+"\n",MARKL,DD.slice(),MARK,NRET,SUPH.DNEUPHI];
+  //MARKZAHL5: return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice(),,,SUPH.DNEUPHI];
   //var DDNEU=MARKZAHL4(DD);//alert(DDNEU[1]);
   var DDNEU=MARKZAHL5(DD);//alert(DDNEU[1]);
   return [DDNEU[0],DDNEU[2],DDNEU[1],DDNEU[1],DDNEU[4],,,DDNEU[7]];
@@ -633,9 +633,10 @@ var GESAMTMERKMU=[];
 var GESAMTMERKDD=[];
 var tc=0;
 
-function Test2(dd) {
+function Test2(ddd) {
   Logtext="Test2\n";
-  if (dd) ; else var dd=document.getElementById("Test2value").value*1;
+  var dd=document.getElementById("Test2value").value*1;
+  if (ddd) dd=ddd;
   GESAMTMERK=[];
   GESAMTMERKORIG=[];
   for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
@@ -660,8 +661,9 @@ function Test2(dd) {
   Logfile(Logtext);
   }
 
-function Test3(nr) {
+function Test3(nr,ddd) {
   var dd=document.getElementById("Test3value").value*1;
+  if (ddd) dd=ddd;
   Logtext="Test3 für nr="+(nr+1)+" aus [1.."+ERGS2[dd-1].length+"]\n";
   if (nr==0) {
     GESAMTMERK=[];
@@ -671,20 +673,21 @@ function Test3(nr) {
   var DD0=DIAG(ERGS2[dd-1][nr][0]);
   var DD1=DIAG(ERGS2[dd-1][nr][1]);
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
-  var M12=MARKZAHLPUR(DD12);//alert(M12);
-  var ind=GESAMTMERK.indexOf(M12[0]);
-  if (GESAMTMERK.indexOf(M12[0])>-1) {
+  //var M12=MARKZAHLPUR(DD12);//alert(M12);
+  var M12=MARKZAHL5PUR_TEST2(DD12);//alert(M12[2]);
+  var ind=GESAMTMERK.indexOf(M12[7]);//vorher [0]
+  if (ind>-1) {
     alert(ind+" "+nr);
     Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+(ind+1)+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind]+"\n";
     Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
     return;
     }
-  GESAMTMERK.push(M12[0]);
+  GESAMTMERK.push(M12[7]);//vorher [0]
   GESAMTMERKORIG.push(M12[1]);
   Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n";
-  Logtext=Logtext+M12[0]+"\n";
+  Logtext=Logtext+"DNEUPHI=["+M12[7]+"]\n";
   Logfile(Logtext);
-  if (nr<ERGS2[dd-1].length-1) setTimeout(Test3,100,nr+1);
+  if (nr<ERGS2[dd-1].length-1) tc=setTimeout(Test3,100,nr+1,dd);
   }
 
 function Test4() {
@@ -715,10 +718,10 @@ function Test4() {
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
     var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
     //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
-    var M12=MARKZAHLPUR(DD12,1);//alert(M12);
+    var M12=MARKZAHLPUR(DD12,1);//alert(M12[7]);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (GESAMTMERK.indexOf(M12[0])>-1) {
-      alert(LISTE[ind]+" "+(nr+1));
+      //alert(LISTE[ind]+" "+(nr+1));
       Logtext=Logtext+"############# nochmal ERGS2["+dd+"]["+LISTE[ind]+"] DD12="+DD12+"\n"+GESAMTMERKORIG[ind][0]+"\n";
       Logtext=Logtext+"------------- ERGS2["+dd+"]["+(nr+1)+"] DD12="+DD12+"\n"+M12[1]+"\n";
       Logtext=Logtext+"############# ERGS2["+dd+"]["+LISTE[ind]+"] DD12NEU="+GESAMTMERKORIG[ind][3]+"\n";
@@ -2025,8 +2028,27 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
-    <div><button onclick="Test2()" style="font-size:200%">Test2: alle MARKZAHL4 für dd=</button>
-      <input id="Test2value" value="3"/></div>
+    <div><button onclick="Test2()" style="font-size:200%">Test2</button>:
+      alle MARKZAHL4(ERGS2[dd]...) für dd=<input id="Test2value" value="3"/>
+      <button onclick="Test2(2)" style="font-size:200%">Test2(2)</button>
+      <button onclick="Test2(3)" style="font-size:200%">(3)</button>
+      <button onclick="Test2(4)" style="font-size:200%">(4)</button>
+      <button onclick="Test2(5)" style="font-size:200%">(5)</button>
+      <button onclick="Test2(6)" style="font-size:200%">(6)</button>
+      <button onclick="Test2(7)" style="font-size:200%">(7)</button>
+      <button onclick="Test2(8)" style="font-size:200%">(8)</button>
+      </div>
+    <div><button onclick="Test3(0)" style="font-size:200%">Test3</button>: wie Test2 aber mit Pause, für dd=
+      <input id="Test3value" value="3"/>
+      <button onclick="clearTimeout(tc)">Anhalten</button>
+      <button onclick="Test3(0,2)" style="font-size:200%">Test3(2)</button>
+      <button onclick="Test3(0,3)" style="font-size:200%">(3)</button>
+      <button onclick="Test3(0,4)" style="font-size:200%">(4)</button>
+      <button onclick="Test3(0,5)" style="font-size:200%">(5)</button>
+      <button onclick="Test3(0,6)" style="font-size:200%">(6)</button>
+      <button onclick="Test3(0,7)" style="font-size:200%">(7)</button>
+      <button onclick="Test3(0,8)" style="font-size:200%">(8)</button>
+      </div>
     <div><button onclick="Test4()" style="font-size:200%">Test4: dd=8, nr=655,569,713,705...mit SUPH</button></div>
     <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
       <input id="Test15value" value="2"/>
@@ -2048,12 +2070,8 @@ Tabelle TABLE 1 aus ...:
     <div><button onclick="Test8()" style="font-size:200%">Test8()</button> alle Fortsetzungen zu gegebenen R</div>
     <div><button onclick="Test7()" style="font-size:200%">Test7()</button> alle Markierungen</div>
     <div><button onclick="Testlauf()">Test1: Programmtest</button>dauert etwas</div>
-    <div><button onclick="Test2()">Test2: alle MARKZAHL4 für dd=</button>
-      <input id="Test2value" value="5"/></div>
-    <div><button onclick="Test3(0)">Test3: mit Pause für dd=</button>
-      <input id="Test3value" value="7"/></div>
     <div><button onclick="Test5(document.getElementById('Test5value').value*1,1,0)">Test5(dd,nr=1...ERGS2[dd].length,f=0...2^(dd+1)-1)</button>
-      dd=<input id="Test5value" value="3"/>
+      <input id="Test5value" value="3"/>
       <button onclick="clearTimeout(tc)">Anhalten</button></div>
     <div><button onclick="Test6()">Test6()</button></div>
     </div>
