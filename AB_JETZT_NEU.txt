@@ -458,6 +458,7 @@ for i in [1..dmax] do
     ERGS1CMP[i][j]:=Collected(COMPDIAGSTABERZ(DIAG(ERGS1[i][j])));
     od;
   od; # nicht wundern wenn es hier etwas dauert
+List(ERGS1CMP,i->Size(i));
 
 BITVERGLEICHER:=function(D)
   local i,j,ERG1,D1,D2,D3,R1R2,R1,R2,R3,P1,P2,P3,RET,C1,C2,C3,dd;
