@@ -721,7 +721,7 @@ function Test4() {
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
     var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
     //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
-    var M12=MARKZAHLPUR(DD12,1);//alert(M12[7]);
+    var M12=MARKZAHLPUR(DD12);//alert(M12[7]);
     var ind=GESAMTMERK.indexOf(M12[0]);
     if (ind>-1) {
       alert(LISTE[ind]+" "+(nr+1));
@@ -1052,16 +1052,19 @@ PHI  3311:              15+15+1+1:
 28    29 30 31 37     12   13 14   16 17   21 22
 */
 
-var a_n=[1,3,4,6,7,9,10,12,13,15,16,18,19,21,22,24,25,27,28,30,31,33,34,36,37,39,40];
-var RMUSTER=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1],
-  [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1],
-  [0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1],
-  [0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  ];
+var ERGS1=[];
+
+var a_n=[1,3];
+var RMUSTER=[[1],[0,0]];
+for (var i=2;i<64;i++) {
+  RMUSTER[i]=RMUSTER[i-2].slice();
+  RMUSTER[i].push(RMUSTER[i][0]);
+  RMUSTER[i].push(RMUSTER[i][0]);
+  a_n[i]=a_n[i-2]+3;
+  }
+
 var ERGS1NEU=[];
-for (var dd=0;dd<15;dd++) {
+for (var dd=0;dd<64;dd++) {
   var Liste=[];
   for (var nr=0;nr<a_n[dd];nr++) {
     var Element=[[1]];
@@ -1084,6 +1087,7 @@ for (var dd=0;dd<15;dd++) {
   //alert(ERGS1NEU[dd].join("\n"));
   }
 
+//alert(ERGS1NEU.length);
 //ERGS1NEU=[];
     
 
@@ -1615,7 +1619,7 @@ function Test16() {
     M=MARKZAHL5PUR_TEST2(D);
     Logtext=Logtext+M[0]+"\n5 D=    ["+D+"]\nDDNEU=   ["+M[2]+"]\nDDNEUPHI=["+M[7]+"]\n\n";
     var DAUT=[];
-    Logtext=Logtext+'<span style="background-color:aqua">';
+    Logtext=Logtext+'<span style="background-color:lavender">';
     for (var a=0;a<6;a++) {
       for (var i=0;i<D.length;i++) DAUT[i]=AUT2[a][D[i]];
       //M=MARKZAHL5PUR_TEST2(DAUT);
@@ -1628,7 +1632,23 @@ function Test16() {
   Logfile(Logtext);
   }
 
+function Test17() {
+  Logtext="Vergleich COMPDIAGSTABERZ alle y oder nur ein- und zweistellige Produkte\n";
+  //alert(ERGS1NEU.length);
+  var dd=15;
+  var D=DIAG((ERGS1NEU[dd][0]));
+  for (var i=0;i<30;i++) COMPDIAGSTABERZ(D);
+  Logtext=Logtext+dd+" fertig\n";
+/*
+  for (var i=0;i<ERGS1NEU.length;i++) for (var j=0;j<ERGS1NEU[i].length;j++) {
+    Logtext=Logtext+i+" "+j+" ";//+
+    COMPDIAGSTABERZ(DIAG(ERGS1NEU[i][j]));
 
+    Logtext=Logtext+"\n";
+    }
+*/
+  Logfile(Logtext);
+  }
 
 
 function DREHMARK(DD) {
@@ -2083,6 +2103,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test17()" style="font-size:180%">Test17()</button>Vergleich COMPDIAGSTABERZ für alle y oder nur für einzelne</div>
     <div><button onclick="Test16()" style="font-size:200%">Test16()</button>Vergleich wegen SUPH</div>
     <div><button onclick="Test2()" style="font-size:200%">Test2</button>:
       alle MARKZAHL4(ERGS2[dd]...) für dd=<input id="Test2value" value="3"/>
