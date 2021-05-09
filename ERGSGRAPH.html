@@ -883,7 +883,7 @@ Test7
 */
 
 TVEC=[0];
-for (var i=0;i<20;i++) {
+for (var i=0;i<24;i++) {
   TVEC.push(2**i);
   for (var j=0;j<i;j++) {
     TVEC.push(2**i+2**j);
@@ -891,10 +891,11 @@ for (var i=0;i<20;i++) {
   }
 //alert(TVEC);
 
+
 function COMPDIAGSTABERZ(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
-  var RET=[];
+  var RET=DD.slice();
   for (i=0;i<SD;i++) {
     var a=true;
     var at=true;
@@ -1635,10 +1636,12 @@ function Test16() {
 function Test17() {
   Logtext="Vergleich COMPDIAGSTABERZ alle y oder nur ein- und zweistellige Produkte\n";
   //alert(ERGS1NEU.length);
-  var dd=15;
+  var dd=19;
   var D=DIAG((ERGS1NEU[dd][0]));
+  var t0=Date.now();
   for (var i=0;i<30;i++) COMPDIAGSTABERZ(D);
-  Logtext=Logtext+dd+" fertig\n";
+  var t=Date.now()-t0;
+  Logtext=Logtext+dd+" fertig in "+t+" ms.\n";
 /*
   for (var i=0;i<ERGS1NEU.length;i++) for (var j=0;j<ERGS1NEU[i].length;j++) {
     Logtext=Logtext+i+" "+j+" ";//+
