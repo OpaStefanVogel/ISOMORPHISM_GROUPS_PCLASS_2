@@ -353,9 +353,8 @@ MARKZAHL:=function(G)
         if a then MERK[4]:=MERK[4]+1; else MERK[2]:=MERK[2]+1; fi;
         fi;
     od;
-  MARK:=Reversed(SortedList(MERK/Gcd(MERK)));
-  for i in [1..4] do if MARK[i]=0 then Unbind(MARK[i]); fi; od;
-  return MARK;
+  MERK:=MERK/Gcd(MERK);
+  return MERK;
   end;
 G:=SmallGroup(256,56082);
 MARKZAHL(G);
