@@ -422,8 +422,8 @@ for n in [2..8] do
 236 #mit cocalc
 
 MARKZAHL_CHECK:=function(G)
-  if not IsPGroup(G) then Error("no PGroup");
-  if PClassPGroup(G)!=2 then Error("PClass!=2");
+  if Size(G)<>2^LogInt(Size(G),2) then Error("Size(G)<>2^n"); fi;
+  if PClassPGroup(G)<>2 then Error("PClass<>2"); fi;
   return MARKZAHL(G);
   end;
 
