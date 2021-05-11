@@ -320,6 +320,22 @@ function MARKZAHL0GGT_TVEC_N(DD) {
   return M;
   }
 
+function MARKZAHL0_TVEC_unsort_zuerst1(DD) {
+  var MARK=[0,0,0,0];
+  var SD=DD.length;
+  for (var i=0;i<SD;i++) {
+    var a=true;
+    if (DD[i]==0) {
+      var j=0; while (a&&TVEC[j]<SD) if (DD[i^TVEC[j]]!=DD[TVEC[j]]) a=false; else j=j+1;
+      if (a) MARK[3]=MARK[3]+1; else MARK[1]=MARK[1]+1;
+      } else {
+        var j=0; while (a&&TVEC[j]<SD) if (DD[i^TVEC[j]]==DD[TVEC[j]]) a=false; else j=j+1;
+        if (a) MARK[2]=MARK[2]+1; else MARK[0]=MARK[0]+1;
+        }
+    }
+  return MARK;
+  }
+
 function MARKZAHL1(DD) {
   var MARK=[];
   var SD=DD.length;
@@ -1654,6 +1670,28 @@ function Test17() {
   }
 
 
+function Test18() {
+  Logtext="Vergleich COMPDIAGSTABERZ alle y oder nur ein- und zweistellige Produkte\n";
+  //alert(ERGS1NEU.length);
+  var t0=Date.now();
+  for (var dd=0;dd<15;dd++) {
+    for (var nr=ERGS1NEU[dd].length-1;nr>=0;nr--) {
+      var D=DIAG((ERGS1NEU[dd][nr]));
+      var MARK=MARKZAHL0_TVEC_unsort_zuerst1(D);
+      MARK[0]=MARK[0]/MARK[3];
+      MARK[1]=MARK[1]/MARK[3];
+      MARK[2]=MARK[2]/MARK[3];
+      MARK[3]=MARK[3]/MARK[3];
+      Logtext=Logtext+(dd+1)+" "+nr+" ["+MARK+"];\n";
+      }
+     Logtext=Logtext+"\n";
+    }
+  var t=Date.now()-t0;
+  Logtext=Logtext+dd+" fertig in "+t+" ms.\n";
+  Logfile(Logtext);
+  }
+
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -2106,6 +2144,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test18()" style="font-size:180%">Test18()</button>MARKZAHL für alle ERGS1NEU</div>
     <div><button onclick="Test17()" style="font-size:180%">Test17()</button>Vergleich COMPDIAGSTABERZ für alle y oder nur für einzelne</div>
     <div><button onclick="Test16()" style="font-size:200%">Test16()</button>Vergleich wegen SUPH</div>
     <div><button onclick="Test2()" style="font-size:200%">Test2</button>:
