@@ -337,25 +337,32 @@ MARKZAHL:=function(G)
   return MARK;
   end;
 
-MARKZAHL:=function(G)
-  local i,x,y,MERK,n,a,e,u,v;
-  MERK:=[0,0,0,0];
-  e:=Identity(G);
-  n:=Size(G);
-  SG:=SmallGeneratingSet(G);
+relative_Anzahl_der_Markierungen_n1_n0_m1_m0:=function(G)
+  local RET,e,erster_Faktor,zweiter_Faktor;
+  local noch_nicht_markiert,x,y,u,v;
+  RET:=[0,0,0,0];                           #Rückgabearray für [n1,n0,m1,m0]
+  e:=Identity(G);                           #neutrales Element von Gruppe G
+  erster_Faktor:=SmallGeneratingSet(G);     #irgendein beliebiges kleines Erzeugendensystem von G
+  zweiter_Faktor:=List(erster_Faktor);      #Kopie von erster_Faktor
+  Add(zweiter_Faktor,e,1);                  #zusätzlich neutrales Element einfügen
   for x in G do
-    a:=true;
-    if x^2=e then
-      for u in SG do for v in SG do if a then y:=u*v; if not y^2=(y*x)^2 then a:=false; fi; fi; od; od;
-      if a then MERK[3]:=MERK[3]+1; else MERK[1]:=MERK[1]+1; fi;
-      else
-        for u in SG do for v in SG do if a then y:=u*v; if y^2=(y*x)^2 then a:=false; fi; fi; od; od;
-        if a then MERK[4]:=MERK[4]+1; else MERK[2]:=MERK[2]+1; fi;
+    wird_markiert:=true;
+    if x^2<>e then #x^2=1
+      for u in erster_Faktor do for v in zweiter_Faktor do 
+        if wird_markiert=true then y:=u*v; if y^2=(y*x)^2 then wird_markiert:=false; fi; fi; 
+        od; od;
+      if wird_markiert=true then RET[3]:=RET[3]+1; else RET[1]:=RET[1]+1; fi;    #aktualisiert m1 und n1
+      else #x^2=0
+        for u in erster_Faktor do for v in zweiter_Faktor do 
+          if wird_markiert=true then y:=u*v; if y^2<>(y*x)^2 then wird_markiert:=false; fi; fi; 
+          od; od;
+        if wird_markiert=true then RET[4]:=RET[4]+1; else RET[2]:=RET[2]+1; fi;  #aktualisiert m0 und n0
         fi;
     od;
-  MERK:=MERK/Gcd(MERK);
-  return MERK;
+  RET:=RET/RET[4];   #[n1/m0,n0/m0,m1/m0,m0/m0]
+  return RET;
   end;
+
 G:=SmallGroup(256,56082);
 MARKZAHL(G);
 
