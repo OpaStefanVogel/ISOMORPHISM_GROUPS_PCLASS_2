@@ -338,8 +338,9 @@ MARKZAHL:=function(G)
   end;
 
 relative_Anzahl_der_Markierungen_n1_n0_m1_m0:=function(G)
-  local RET,e,erster_Faktor,zweiter_Faktor;
-  local noch_nicht_markiert,x,y,u,v;
+  local RET,e,erster_Faktor,zweiter_Faktor,wird_markiert,x,y,u,v;
+  if Size(G)<>2^LogInt(Size(G),2) then Error("Size(G)<>2^n"); fi;
+  if PClassPGroup(G)<>2 then Error("PClass<>2"); fi;
   RET:=[0,0,0,0];                           #Rückgabearray für [n1,n0,m1,m0]
   e:=Identity(G);                           #neutrales Element von Gruppe G
   erster_Faktor:=SmallGeneratingSet(G);     #irgendein beliebiges kleines Erzeugendensystem von G
@@ -367,10 +368,10 @@ G:=SmallGroup(256,56082);
 MARKZAHL(G);
 
 SmallGroupsInformation(256);
-for n in [2..8] do
+for n in [2..9] do
   for index in [[1],[1],[2..4],[10..13],[45..50],[260..266],[2319..2327],[56082..56091],[10494201..10494212]][n] do
-    G:=SmallGroup(2^n,index);
-    Print(IdSmallGroup(G),", ",MARKZAHL(G),",\n");
+    G:=SmallGroup(2^n,index); #index aus SmallGroupsInformations(2^n);
+    Print(IdSmallGroup(G),", ",relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G),",\n");
     od;
   od;time;#15121#440
 
@@ -1881,11 +1882,10 @@ GENERATE_G:=function(dd) #dd mit negativem Vorzeichen für (10+5+1), (36+27+1),.
   #return [gens,rels];
   return PcGroupFpGroup(F/rels);
   end;
-G:=GENERATE_G(4);MARKZAHL(G);IdSmallGroup(G);
-for i in [3..7] do G:=GENERATE_G(i); Print("\n",i," ",IdSmallGroup(G)," ",MARKZAHL(G)); od;
+G:=GENERATE_G(4);relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G);IdSmallGroup(G);
+for i in [3..7] do G:=GENERATE_G(i); Print("\n",i," ",IdSmallGroup(G)," ",relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G)); od;
 i:=2; repeat i:=i+1; Print("\n",i,"\c"); G:=GENERATE_G(i); until i=100;
-i:=2; repeat i:=i+2; Print("\n",i,"\c"); G:=GENERATE_G(-i); Print(MARKZAHL(G)); until i=10;
-
+i:=2; repeat i:=i+2; Print("\n",i,"\c"); G:=GENERATE_G(-i); Print(relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G)); until i=10;
 
 #######Anzahl aller 1
 for dd in [1..10] do 
