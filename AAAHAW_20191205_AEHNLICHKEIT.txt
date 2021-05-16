@@ -1887,6 +1887,32 @@ for i in [3..7] do G:=GENERATE_G(i); Print("\n",i," ",IdSmallGroup(G)," ",relati
 i:=2; repeat i:=i+1; Print("\n",i,"\c"); G:=GENERATE_G(i); until i=100;
 i:=2; repeat i:=i+2; Print("\n",i,"\c"); G:=GENERATE_G(-i); Print(relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G)); until i=10;
 
+GausR:=function(R)
+  local d,F,i,j,gens,rels;
+  d:=Size(R);
+  F:=FreeGroup(d+1);
+  gens:=Reversed(GeneratorsOfGroup(F));
+  rels:=[gens[1]^2];
+  for i in [1..d] do 
+    if R[d+1-i][1]=1 then Add(rels,gens[i+1]^2/gens[1]); else Add(rels,gens[i+1]^2); fi;
+    od;
+  for i in [1..d] do Add(rels,Comm(gens[i+1],gens[1])); od;
+  for i in [2..d] do for j in [i+1..d+1] do 
+    if IsOddInt(R[d+1-(i-1)][1]+R[d+1-(j-1)][1]+R[d+1-(i-1)][d+1-(j-1)+1]) then 
+      Add(rels,Comm(gens[j],gens[i])/gens[1]);
+      else Add(rels,Comm(gens[j],gens[i])); fi;
+    od; od;
+  return PcGroupFpGroup(F/rels);
+  end;
+R:=[[1],[0,0],[1,1,1],[1,1,1,1]];IdSmallGroup(GausR(R));[32,50];
+R:=[[1],[0,0],[1,1,1],[0,0,0,0]];IdSmallGroup(GausR(R));[32,49];
+R:=[[1],[0,0],[1,1,1],[0,1,0,1]];IdSmallGroup(GausR(R));[32,48];
+R:=[[1],[1,1],[0,1,1],[0,1,1,0]];IdSmallGroup(GausR(R));[32,47];
+R:=[[1],[0,0],[0,1,0],[0,1,0,0]];IdSmallGroup(GausR(R));[32,46];
+R:=[[1],[0,1],[0,1,0],[0,1,0,0]];IdSmallGroup(GausR(R));[32,45];
+R:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];IdSmallGroup(GausR(R));[64,266];
+
+
 #######Anzahl aller 1
 for dd in [1..10] do 
   for nr in [1..Size(ERGS1[dd])] do
