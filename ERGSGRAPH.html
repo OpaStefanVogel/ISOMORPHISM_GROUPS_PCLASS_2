@@ -1795,10 +1795,13 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
   var SD=MU.length;
   var PHI=[0];
   var INVPHI=[0];
+  var Anzahl_Isomorphismen=BigInt(1);
   for (var i=0;2**i<SD;i++) {
-    Logtext=Logtext+"i="+i+" "+2**i+"\n";
+    //Logtext=Logtext+"i="+i+" "+2**i+"\n";
     var gefunden=false;
-    for (var j=1;j<SD;j++) if (gefunden==false&&INVPHI[j]==undefined) {
+    var pcount=0;
+    var jmerk=0;
+    for (var j=1;j<SD;j++) if (gefunden==gefunden&&INVPHI[j]==undefined) {
       //Logtext=Logtext+" j="+j+"\n";
       var passt=false;
       //if (DU[2**i]==DV[j]&&MU[2**i]==MV[j]) passt=true;
@@ -1811,7 +1814,14 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
         if (MU[x]!=MV[y]) passt=false;
         }
       if (passt) {
-        Logtext=Logtext+" j="+j+"\n";
+        pcount=pcount+1;
+        //Logtext=Logtext+"  pcount="+pcount+" j="+j+"\n";
+        if (gefunden==false) jmerk=j;
+        gefunden=true;
+        }
+      }
+      Logtext=Logtext+"i="+i+" x="+(2**i)+"  pcount="+pcount+"\n";
+      j=jmerk;Anzahl_Isomorphismen=Anzahl_Isomorphismen*BigInt(pcount);
         PHI[2**i]=j;
         INVPHI[j]=2**i;
         var x=0;
@@ -1822,11 +1832,9 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
           PHI[x]=y;
           INVPHI[y]=x;
           }
-        gefunden=true;
-        }
-      }
     }
-  return [gefunden,PHI,INVPHI];
+  Logtext=Logtext+"Anzahl_Isomorphismen="+Anzahl_Isomorphismen+"\n";
+  return [gefunden,PHI,INVPHI,Anzahl_Isomorphismen];
   }
 
 function Test19() {
