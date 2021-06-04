@@ -1820,7 +1820,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
         gefunden=true;
         }
       }
-      Logtext=Logtext+"i="+i+" x="+(2**i)+"  pcount="+pcount+"\n";
+      //Logtext=Logtext+"i="+i+" x="+(2**i)+"  pcount="+pcount+"\n";
       j=jmerk;Anzahl_Isomorphismen=Anzahl_Isomorphismen*BigInt(pcount);
         PHI[2**i]=j;
         INVPHI[j]=2**i;
@@ -1833,7 +1833,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
           INVPHI[y]=x;
           }
     }
-  Logtext=Logtext+"Anzahl_Isomorphismen="+Anzahl_Isomorphismen+"\n";
+  //Logtext=Logtext+"Anzahl_Isomorphismen="+Anzahl_Isomorphismen+"\n";
   return [gefunden,PHI,INVPHI,Anzahl_Isomorphismen];
   }
 
@@ -1874,6 +1874,14 @@ function Test19() {
     Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD1)+"], DD1=["+DD1+"]\n";
     Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD2)+"], DD2=["+DD2+"]\n";
     Logtext=Logtext+M12[0]+"\n"+M12[1]+"\n"+M12[2]+"\n";
+    }
+  for (var dd=0; dd<8; dd++) {
+    for (var nr=0; nr<ERGS1NEU[dd].length; nr++) {
+      var DD=DIAG(ERGS1NEU[dd][nr]);
+      var MM=Suche_Anzahl_Isomorphismen(DD,DD);
+      Logtext=Logtext+"dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"\n";
+      }
+    Logtext=Logtext+"\n";
     }
   Logfile(Logtext);
   }
