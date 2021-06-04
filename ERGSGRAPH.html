@@ -1790,8 +1790,8 @@ function Test18() {
 function Suche_Anzahl_Isomorphismen(DU,DV) {
   var MU=COMPDIAGSTABERZ(DU);
   var MV=COMPDIAGSTABERZ(DV);
-  Logtext=Logtext+MU+"\n";
-  Logtext=Logtext+MV+"\n";
+  //Logtext=Logtext+MU+"\n";
+  //Logtext=Logtext+MV+"\n";
   var SD=MU.length;
   var PHI=[0];
   var INVPHI=[0];
@@ -1837,6 +1837,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
   return [gefunden,PHI,INVPHI,Anzahl_Isomorphismen];
   }
 
+var ANZTAB=[];
 function Test19() {
   //Suche Automorphismen
   Logtext="Test19 [655,569 ],[713,705]...\n";
@@ -1875,11 +1876,16 @@ function Test19() {
     Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD2)+"], DD2=["+DD2+"]\n";
     Logtext=Logtext+M12[0]+"\n"+M12[1]+"\n"+M12[2]+"\n";
     }
-  for (var dd=0; dd<8; dd++) {
+  ANZTAB=[];
+  for (var dd=0; dd<10; dd++) {
+    ANZTAB[dd]=[];
     for (var nr=0; nr<ERGS1NEU[dd].length; nr++) {
-      var DD=DIAG(ERGS1NEU[dd][nr]);
+      var DD=DIAG(ERGS1NEU[dd][ERGS1NEU[dd].length-1-nr]);
       var MM=Suche_Anzahl_Isomorphismen(DD,DD);
-      Logtext=Logtext+"dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"\n";
+      ANZTAB[dd][nr]=MM[3];
+      var adiv=1n;
+      if (dd>0&&nr<ERGS1NEU[dd-1].length) adiv=ANZTAB[dd-1][nr];
+      Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD)+"] dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"  "+(MM[3]/adiv)+"\n";
       }
     Logtext=Logtext+"\n";
     }
