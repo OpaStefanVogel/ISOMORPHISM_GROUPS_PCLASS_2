@@ -1788,8 +1788,8 @@ function Test18() {
   }
 
 function Suche_Anzahl_Isomorphismen(DU,DV) {
-  var MU=COMPDIAGSTABERZ(DU);
-  var MV=COMPDIAGSTABERZ(DV);
+  var MU=DU;//COMPDIAGSTABERZ(DU);
+  var MV=DV;//COMPDIAGSTABERZ(DV);
   //Logtext=Logtext+MU+"\n";
   //Logtext=Logtext+MV+"\n";
   var SD=MU.length;
@@ -1881,17 +1881,28 @@ function Test19() {
     ANZTAB[dd]=[];
     for (var nr=0; nr<ERGS1NEU[dd].length; nr++) {
       var DD=DIAG(ERGS1NEU[dd][ERGS1NEU[dd].length-1-nr]);
+      DD=COMPDIAGSTABERZ(DD);
       var MM=Suche_Anzahl_Isomorphismen(DD,DD);
       ANZTAB[dd][nr]=MM[3];
       var adiv=1n;
       if (dd>0&&nr<ERGS1NEU[dd-1].length) adiv=ANZTAB[dd-1][nr];
-      Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD)+"] dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"  "+(MM[3]/adiv)+"\n";
+      //Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD)+"] dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"  "+(MM[3]/adiv)+"\n";
+      //Logtext=Logtext+" "+(MM[3]/adiv);
+      //Logtext=Logtext+" "+MM[3];
       }
-    Logtext=Logtext+"\n";
+    var GLSTART=((dd+1)*(dd+2)/2);
+    var GLSIZE=1n;
+    for (var d=0;d<(dd+1);d++) GLSIZE=GLSIZE*BigInt(2**(dd+1)-2**d);
+    Logtext=Logtext+" -- dd="+dd+" -- "+GLSTART+" ++ "+GLSIZE;
+    var ORBNUM=1n;
+    for (var nr=0; nr<ANZTAB[dd].length; nr++) {
+      ORBNUM=ORBNUM+GLSIZE/ANZTAB[dd][nr];
+      //Logtext=Logtext+" "+nr+" "+ORBNUM;
+      }
+    Logtext=Logtext+" "+Math.log2(Number(ORBNUM))+" "+GLSTART+" "+(Math.log2(Number(ORBNUM))==GLSTART)+"\n";
     }
   Logfile(Logtext);
   }
-
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
