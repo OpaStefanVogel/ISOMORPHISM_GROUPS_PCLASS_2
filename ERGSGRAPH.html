@@ -1914,6 +1914,29 @@ function Test19() {
   Logfile(Logtext);
   }
 
+function Test20() {
+  //ERGS1NEU aus ERGS2 zurückholen
+  Logtext="";
+  for (var dd0=0;dd0<8;dd0++) {
+    Logtext=Logtext+"dd="+(dd0+1)+"\n";
+    for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
+      Logtext=Logtext+"  nr="+(nr0+1)+" R=[["+ERGS1NEU[dd0][nr0].join("],[")+"]]\n";      
+      }
+    var nrv=0;
+    ERGS1NEU[dd0][0]=ERGS2[dd0][0][0];
+    for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
+      var R=ERGS2[dd0][nr0][0];
+      Logtext=Logtext+"    nr="+(nr0+1)+" R=[["+R.join("],[")+"]]\n";
+//alert(R+"\n"+ERGS1NEU[dd0][nrv]+"\n"+((R+" ")!=(ERGS1NEU[dd0][nrv]+" "))+"\n"+nrv);
+      if ((R+" ")!=(ERGS1NEU[dd0][nrv]+" ")) {nrv=nrv+1;ERGS1NEU[dd0][nrv]=R}
+      }
+    for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
+      Logtext=Logtext+"  nr="+(nr0+1)+" R=[["+ERGS1NEU[dd0][nr0].join("],[")+"]]\n";      
+      }
+    }
+  Logfile(Logtext);
+  }
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -2371,6 +2394,7 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
+    <div><button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)</div>
     <div><button onclick="Test19()" style="font-size:180%">Test19()</button>Automorphismen zählen</div>
     <div><button onclick="Test18()" style="font-size:180%">Test18()</button>MARKZAHL für alle ERGS1NEU</div>
     <div><button onclick="Test17()" style="font-size:180%">Test17()</button>Vergleich COMPDIAGSTABERZ für alle y oder nur für einzelne</div>
