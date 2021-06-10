@@ -1403,6 +1403,7 @@ function Suche_Isomorphismus_DD(DU,DV) {
   }
 
 function Suche_Isomorphismus(MU,MV) {
+//alert(MU);alert(MV);
   var SD=MU.length;
   var PHI=[0];
   var INVPHI=[0];
@@ -1415,10 +1416,10 @@ function Suche_Isomorphismus(MU,MV) {
       //if (DU[2**i]==DV[j]&&MU[2**i]==MV[j]) passt=true;
       if (MU[2**i]==MV[j]) passt=true;
       //Logtext=Logtext+" j="+j+" "+passt+"\n";
-      for (var k=0;k<i;k++) if (passt==true) {
-        //Logtext=Logtext+"  k="+k+" "+(2**i+2**k)+"\n";
-        var x=2**i+2**k;
-        var y=j^PHI[2**k];
+      for (var k=1;k<2**i;k++) if (passt==true) {
+        //Logtext=Logtext+"  k="+k+" "+(2**i+k)+"\n";
+        var x=2**i+k;
+        var y=j^PHI[k];
         if (MU[x]!=MV[y]) passt=false;
         }
       if (passt) {
@@ -1427,11 +1428,13 @@ function Suche_Isomorphismus(MU,MV) {
         INVPHI[j]=2**i;
         var x=0;
         var y=0;
-        for (var k=0;k<2**i;k++) {
+        for (var k=1;k<2**i;k++) {
+          //Logtext=Logtext+"    k="+k+" "+(2**i+k)+"\n";
           x=2**i+k;
-          y=PHI[2**i]^PHI[k];
+          y=j^PHI[k];
           PHI[x]=y;
           INVPHI[y]=x;
+          //Logtext=Logtext+"    kxy="+k+" "+x+" "+y+"\n";
           }
         gefunden=true;
         }
@@ -1807,10 +1810,10 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
       //if (DU[2**i]==DV[j]&&MU[2**i]==MV[j]) passt=true;
       if (MU[2**i]==MV[j]) passt=true;
       //Logtext=Logtext+" j="+j+" "+passt+"\n";
-      for (var k=0;k<i;k++) if (passt==true) {
-        //Logtext=Logtext+"  k="+k+" "+(2**i+2**k)+"\n";
-        var x=2**i+2**k;
-        var y=j^PHI[2**k];
+      for (var k=1;k<2**i;k++) if (passt==true) {
+        //Logtext=Logtext+"  k="+k+" "+(2**i+k)+"\n";
+        var x=2**i+k;
+        var y=j^PHI[k];
         if (MU[x]!=MV[y]) passt=false;
         }
       if (passt) {
@@ -1828,7 +1831,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
         var y=0;
         for (var k=0;k<2**i;k++) {
           x=2**i+k;
-          y=PHI[2**i]^PHI[k];
+          y=j^PHI[k];
           PHI[x]=y;
           INVPHI[y]=x;
           }
@@ -1847,33 +1850,40 @@ function Test19() {
   var LISTE=[
     655,569,
     713,705,
-/*    1054,1067,
+    1054,1067,
     1133,1276,
     1672,1784,
     1630,1785,
     1996,2006,
     1908,2090,
-    2094,2102,2104,
+    2094,2102,
+    2094,2104,
     2089,2108,
     2067,2115,
     2099,2185,
     2125,2188,
     1880,2192,
     2548,2550
-*/    ]
+    ]
   for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr+1);
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    if (ii%2==0) var DD_655=DD12.slice();
+    if (ii%2==1) {var DD_569=DD12.slice(); Logtext=Logtext+"==="+Suche_Isomorphismus(DD_655,DD_569)+"\n"}
     var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
     //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
     //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC(DD1)+"\n"+MARKZAHL0GGT_TVEC(DD2)+"\n");
-    var M12=Suche_Anzahl_Isomorphismen(DD1,DD2);//MARKZAHL_JU(DD0,DD1);//MARKZAHLPUR(DD12);//alert(M12[7]);
+    //var M12=Suche_Anzahl_Isomorphismen(COMPDIAGSTABERZ(DD1),COMPDIAGSTABERZ(DD2));//MARKZAHL_JU(DD0,DD1);//MARKZAHLPUR(DD12);//alert(M12[7]);
+    var M12=Suche_Isomorphismus(COMPDIAGSTABERZ(DD1),COMPDIAGSTABERZ(DD2));//MARKZAHL_JU(DD0,DD1);//MARKZAHLPUR(DD12);//alert(M12[7]);
     
     Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"]\n";// "DD12="+DD12+"\n";
-    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD0)+"], DD0=["+DD0+"]\n";
-    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD1)+"], DD1=["+DD1+"]\n";
-    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD2)+"], DD2=["+DD2+"]\n";
+    Logtext=Logtext+"DD0=["+COMPDIAGSTABERZ(DD0)+"]\n";
+    Logtext=Logtext+"DD1=["+COMPDIAGSTABERZ(DD1)+"]\n";
+    Logtext=Logtext+"DD2=["+COMPDIAGSTABERZ(DD2)+"]\n";
+    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC_N(DD0)+"]\n";
+    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC_N(DD1)+"]\n";
+    Logtext=Logtext+"["+MARKZAHL0GGT_TVEC_N(DD2)+"]\n";
     Logtext=Logtext+M12[0]+"\n"+M12[1]+"\n"+M12[2]+"\n";
     }
   ANZTAB=[];
@@ -1893,7 +1903,7 @@ function Test19() {
     var GLSTART=((dd+1)*(dd+2)/2);
     var GLSIZE=1n;
     for (var d=0;d<(dd+1);d++) GLSIZE=GLSIZE*BigInt(2**(dd+1)-2**d);
-    Logtext=Logtext+" -- dd="+dd+" -- "+GLSTART+" ++ "+GLSIZE;
+    Logtext=Logtext+" -- dd="+(dd+1)+" -- "+GLSTART+" ++ "+GLSIZE;
     var ORBNUM=1n;
     for (var nr=0; nr<ANZTAB[dd].length; nr++) {
       ORBNUM=ORBNUM+GLSIZE/ANZTAB[dd][nr];
@@ -2415,7 +2425,7 @@ Tabelle TABLE 1 aus ...:
     <div><button onclick="TestL()">Logtext</button></div>
     </div>
   
-  <div><h id="hier2" ontouchstart="#event.preventDefault()"></h></div>
-  <div><h id="hier1" ontouchstart="#event.preventDefault()"></h></div>
+  <div><h id="hier2" ontouchstart="//event.preventDefault()"></h></div>
+  <div><h id="hier1" ontouchstart="//event.preventDefault()"></h></div>
   </body>
   </html>
