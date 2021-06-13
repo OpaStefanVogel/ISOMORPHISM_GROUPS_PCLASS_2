@@ -85,7 +85,7 @@ function vergleicheZweiArrays(arr1,arr2) {
 //alert(vergleicheZweiArrays([[1,2],[2,3],[3,4]],[[1,2],[2,3],[3,5]]));
 
 var col;
-function init(hier) {
+function init(hier,ERGS2) {
   //alert(ERGS2);
   col=document.getElementById(hier);
   A=[1,,3,[4,5,6,
@@ -1614,10 +1614,6 @@ function Test14() {
     Logtext=Logtext+"\n";
     }
   Logfile(Logtext);
-  ERGS2=ERGS2NEU;
-  var col=document.getElementById("hier");
-  while (col.hasChildNodes()) col.removeChild(col.lastChild);
-  init();
   }
 
 function Show_R(R) {
@@ -1636,10 +1632,11 @@ async function Test15(ddd) {
 
   var Logtext="Test15 ERGS2NEU für dd="+dd+"\n";
   ERGS2NEU[dd-1]=[];
-  for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
+  //for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
+  for (var nr=0;nr<1;nr++) {
     var R0=ERGS1NEU[dd-1][nr];
     Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
-    for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) 
+    for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) if (GESAMTMERK.length<1)
      if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
       {
       var R1=ERGS2NEU[dd-2][nr2][1].slice();
@@ -1694,10 +1691,10 @@ async function Test15(ddd) {
   Logtext=Logtext+"\n";
   for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
   Logfile(Logtext);
-  ERGS2=ERGS2NEU;
+  ERGS2NEU;
   var col=document.getElementById("hier2");
   while (col.hasChildNodes()) col.removeChild(col.lastChild);
-  init("hier2");
+  init("hier2",ERGS2NEU);
   }
 
 var AUT2=[
@@ -1731,7 +1728,7 @@ function Test16() {
     var M=MARKZAHLPUR(D,1);
     //var M=MARKZAHLPUR(D);
     //var M=MARKZAHL5PUR_TEST2(D,1);
-    Logtext=Logtext+"R=[["+R.join("],[")+"]]\nD=["+D+"]\n"+M[1]+"\nDDNEU  ="+M[2]+"\nDD     ="+M[4]+"\n\n";
+    Logtext=Logtext+"R="+Show_R(R)+"\nD=["+D+"]\n"+M[1]+"\nDDNEU  ="+M[2]+"\nDD     ="+M[4]+"\n\n";
     M=MARKZAHL5PUR_TEST2(D);
     Logtext=Logtext+M[0]+"\n5 D=    ["+D+"]\nDDNEU=   ["+M[2]+"]\nDDNEUPHI=["+M[7]+"]\n\n";
     var DAUT=[];
@@ -1920,18 +1917,18 @@ function Test20() {
   for (var dd0=0;dd0<8;dd0++) {
     Logtext=Logtext+"dd="+(dd0+1)+"\n";
     for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
-      Logtext=Logtext+"  nr="+(nr0+1)+" R=[["+ERGS1NEU[dd0][nr0].join("],[")+"]]\n";      
+      Logtext=Logtext+"  nr="+(nr0+1)+" R="+Show_R(ERGS1NEU[dd0][nr0])+"\n";      
       }
     var nrv=0;
     ERGS1NEU[dd0][0]=ERGS2[dd0][0][0];
     for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
       var R=ERGS2[dd0][nr0][0];
-      Logtext=Logtext+"    nr="+(nr0+1)+" R=[["+R.join("],[")+"]]\n";
+      Logtext=Logtext+"    nr="+(nr0+1)+" R="+Show_R(R)+"\n";
 //alert(R+"\n"+ERGS1NEU[dd0][nrv]+"\n"+((R+" ")!=(ERGS1NEU[dd0][nrv]+" "))+"\n"+nrv);
       if ((R+" ")!=(ERGS1NEU[dd0][nrv]+" ")) {nrv=nrv+1;ERGS1NEU[dd0][nrv]=R}
       }
     for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
-      Logtext=Logtext+"  nr="+(nr0+1)+" R=[["+ERGS1NEU[dd0][nr0].join("],[")+"]]\n";      
+      Logtext=Logtext+"  nr="+(nr0+1)+" R="+Show_R(ERGS1NEU[dd0][nr0])+"\n";      
       }
     }
   Logfile(Logtext);
@@ -2202,7 +2199,7 @@ function TestL() {
   }
   </script>
   </head>
-<body onload="init('hier1');//allesergaenzen()">
+<body onload="init('hier1',ERGS2);//allesergaenzen()">
 <div style="position:fixed; top:0px; left:600px;"><span style=" background-color:yellow; border:none;" ><a href="#Tabelle2">Tabelle 2</a>
 <br/><a href="#DD1U">DD1U</a>
 <br/><a href="#DD1T">[64,266]</a></span></div>
