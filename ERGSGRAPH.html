@@ -1620,7 +1620,13 @@ function Show_R(R) {
   return "[["+R.join("],[")+"]]";  
   }
 
+var GESAMTMERKMERK=[];
 var ERGS2NEU=[[[[[1]],[[1]]]]];
+
+function Test15MERK() {
+  GESAMTMERKMERK=GESAMTMERK.slice();
+  }
+
 async function Test15(ddd) {
   var dd=document.getElementById("Test15value").value*1;
   if (ddd) dd=ddd;
@@ -1690,6 +1696,8 @@ async function Test15(ddd) {
   Logtext=ERGS2NEU[dd-1].length+" "+Logtext+"\n";
   Logtext=Logtext+"\n";
   for (var nr=0;nr<ERGS2NEU[dd-1].length;nr++) Logtext=Logtext+nr+"\n"+Show_R(ERGS2NEU[dd-1][nr][0])+"\n"+Show_R(ERGS2NEU[dd-1][nr][1])+"\n\n";
+  for (var nr=0;nr<GESAMTMERKMERK.length;nr++) Logtext=Logtext+nr+" "+GESAMTMERK.indexOf(GESAMTMERKMERK[nr])+"\n";
+  
   Logfile(Logtext);
   ERGS2NEU;
   var col=document.getElementById("hier2");
@@ -2439,6 +2447,7 @@ Tabelle TABLE 1 aus ...:
       <button onclick="Test15(3)" style="font-size:290%">(3)</button>
       <button onclick="Test15(4)" style="font-size:290%">(4)</button>
       <button onclick="Test15(5)" style="font-size:290%">(5)</button>
+      <button onclick="Test15MERK()" style="font-size:290%">MERK</button>
       </div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
       <input id="Test14value" value="40"/>
