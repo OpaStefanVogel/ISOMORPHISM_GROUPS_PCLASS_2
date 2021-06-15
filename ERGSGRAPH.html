@@ -1780,13 +1780,14 @@ function Test18() {
   var t0=Date.now();
   for (var dd=0;dd<15;dd++) {
     for (var nr=ERGS1NEU[dd].length-1;nr>=0;nr--) {
+      var R=ERGS1NEU[dd][nr];
       var D=DIAG((ERGS1NEU[dd][nr]));
       var MARK=MARKZAHL0_TVEC_unsort_zuerst1(D);
       MARK[0]=MARK[0]/MARK[3];
       MARK[1]=MARK[1]/MARK[3];
       MARK[2]=MARK[2]/MARK[3];
       MARK[3]=MARK[3]/MARK[3];
-      Logtext=Logtext+(dd+1)+" "+nr+" ["+MARK+"];\n";
+      Logtext=Logtext+(dd+1)+" "+nr+" "+R+" ["+MARK+"];\n";
       }
      Logtext=Logtext+"\n";
     }
@@ -1919,6 +1920,12 @@ function Test19() {
   Logfile(Logtext);
   }
 
+function Test20a() {
+  //ERGS1NEU umsortieren
+  for (var dd0=0;dd0<ERGS1NEU.length;dd0++) {
+    ERGS1NEU[dd0].sort();
+    }
+  }
 function Test20() {
   //ERGS1NEU aus ERGS2 zurückholen
   Logtext="";
@@ -2413,7 +2420,10 @@ Tabelle TABLE 1 aus ...:
   
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   <div>
-    <div><button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)</div>
+    <div>
+      <button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
+      <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
+      </div>
     <div><button onclick="Test19()" style="font-size:180%">Test19()</button>Automorphismen zählen</div>
     <div><button onclick="Test18()" style="font-size:180%">Test18()</button>MARKZAHL für alle ERGS1NEU</div>
     <div><button onclick="Test17()" style="font-size:180%">Test17()</button>Vergleich COMPDIAGSTABERZ für alle y oder nur für einzelne</div>
