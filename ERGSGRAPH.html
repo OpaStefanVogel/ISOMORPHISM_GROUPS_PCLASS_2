@@ -128,6 +128,7 @@ var Logtext;
 function Logfile(Logtext) {
   //document.getElementById("Logfile").firstChild.nodeValue=Logtext;
   document.getElementById("Logfile").innerHTML=Logtext;
+  document.getElementById("Linkliste").innerHTML=Linkliste;
   }
 
 function DIAG(R) {
@@ -283,6 +284,11 @@ function MARKZAHL0GGT_TVEC_unsort(DD) {
     M[3]=M[3]/2;
     }
   return M;
+  }
+
+function MARKZAHL_offiziell(DD) {
+  var M=MARKZAHL0GGT_TVEC_unsort(DD).slice();
+  return [M[1],M[0],M[3],M[2]];
   }
 
 function MARKZAHL0_TVEC_unsort_GGT(DD) {
@@ -659,11 +665,13 @@ function Test2(ddd) {
   GESAMTMERK=[];
   GESAMTMERKORIG=[];
   for (var nr=0;nr<ERGS2[dd-1].length;nr++) {
+//  for (var nr of [568,654]) {
     var DD0=DIAG(ERGS2[dd-1][nr][0]);
     var DD1=DIAG(ERGS2[dd-1][nr][1]);
     var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
     var M12=MARKZAHLPUR(DD12,1);//alert(M12[2]);
     //var M12=MARKZAHL5PUR_TEST2(DD12);//alert(M12[2]);
+    //var M12=MARKZAHL5(DD12);//alert(M12[2]);
     var ind=GESAMTMERK.indexOf(M12[0]);
     //var ind=GESAMTMERK.indexOf(M12[7]);
     if (ind>-1) {
@@ -1829,7 +1837,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
         gefunden=true;
         }
       }
-      //Logtext=Logtext+"i="+i+" x="+(2**i)+"  pcount="+pcount+"\n";
+      Logtext=Logtext+"i="+i+" x="+(2**i)+"  pcount="+pcount+"\n";
       j=jmerk;Anzahl_Isomorphismen=Anzahl_Isomorphismen*BigInt(pcount);
         PHI[2**i]=j;
         INVPHI[j]=2**i;
@@ -1847,9 +1855,11 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
   }
 
 var ANZTAB=[];
+var Linkliste="";
 function Test19() {
   //Suche Automorphismen
   Logtext="Test19 [655,569 ],[713,705]...\n";
+  Linkliste="";
   var dd=8;
   GESAMTMERK=[];
   GESAMTMERKORIG=[];
@@ -1894,28 +1904,31 @@ function Test19() {
     }
   ANZTAB=[];
   for (var dd=0; dd<10; dd++) {
+    Logtext=Logtext+'<span id="dd='+(dd+1)+'" style="background-color:GreenYellow">dd='+(dd+1)+"\n</span>";
+    Linkliste=Linkliste+'<a href="#dd='+(dd+1)+'">dd='+(dd+1)+"</a>"
     ANZTAB[dd]=[];
     for (var nr=0; nr<ERGS1NEU[dd].length; nr++) {
-      var DD=DIAG(ERGS1NEU[dd][ERGS1NEU[dd].length-1-nr]);
-      DD=COMPDIAGSTABERZ(DD);
+      var R=ERGS1NEU[dd][ERGS1NEU[dd].length-1-nr];
+      var DDD=DIAG(R);
+      var DD=COMPDIAGSTABERZ(DDD);
       var MM=Suche_Anzahl_Isomorphismen(DD,DD);
       ANZTAB[dd][nr]=MM[3];
       var adiv=1n;
       if (dd>0&&nr<ERGS1NEU[dd-1].length) adiv=ANZTAB[dd-1][nr];
-      //Logtext=Logtext+"["+MARKZAHL0GGT_TVEC(DD)+"] dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"  "+(MM[3]/adiv)+"\n";
+      Logtext=Logtext+Show_R(R)+" ["+MARKZAHL_offiziell(DDD)+"] dd="+(dd+1)+" nr="+(nr+1)+" Anz="+MM[3]+"  "+(MM[3]/adiv)+" D=["+DD+"]\n";
       //Logtext=Logtext+" "+(MM[3]/adiv);
       //Logtext=Logtext+" "+MM[3];
       }
     var GLSTART=((dd+1)*(dd+2)/2);
     var GLSIZE=1n;
     for (var d=0;d<(dd+1);d++) GLSIZE=GLSIZE*BigInt(2**(dd+1)-2**d);
-    Logtext=Logtext+" -- dd="+(dd+1)+" -- "+GLSTART+" ++ "+GLSIZE;
+    Logtext=Logtext+'Ergebnis zu dd='+(dd+1)+" -- "+GLSTART+" ++ "+GLSIZE;
     var ORBNUM=1n;
     for (var nr=0; nr<ANZTAB[dd].length; nr++) {
       ORBNUM=ORBNUM+GLSIZE/ANZTAB[dd][nr];
       //Logtext=Logtext+" "+nr+" "+ORBNUM;
       }
-    Logtext=Logtext+" "+Math.log2(Number(ORBNUM))+" "+GLSTART+" "+(Math.log2(Number(ORBNUM))==GLSTART)+"\n";
+    Logtext=Logtext+" "+Math.log2(Number(ORBNUM))+" "+GLSTART+" "+(Math.log2(Number(ORBNUM))==GLSTART)+"\n\n";
     }
   Logfile(Logtext);
   }
@@ -1925,6 +1938,7 @@ function Test20a() {
   for (var dd0=0;dd0<ERGS1NEU.length;dd0++) {
     ERGS1NEU[dd0].sort();
     }
+  Logfile("ERGS1NEU umsortiert");
   }
 function Test20() {
   //ERGS1NEU aus ERGS2 zurückholen
@@ -2105,7 +2119,7 @@ function Testlauf() {
   var M2Q=MARKZAHL0(DD2Q);
   Logtext=Logtext+"DD2Q"+DD2Q+"\n"+M2Q+"\n\n";
 alert("ERGS2[8]{[655,569]} sind gleich: "+(M01==M02));
-Logfile(Logtext);return;
+//Logfile(Logtext);return;
 
   var DD0=DIAG([[1],[1,1],[1,1,1],[1,1,1,1],[1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1]]);
   //var DD0=DIAG(ERGS2[7][654][0]);
@@ -2418,7 +2432,10 @@ Tabelle TABLE 1 aus ...:
   </tr>
   </table>
   
+<div style="display:flex; flex-direction:row; overflow:auto">
+<div id="Linkliste" style="display:flex; flex-direction:column; overflow:auto"> </div>
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
+  </div>
   <div>
     <div>
       <button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
