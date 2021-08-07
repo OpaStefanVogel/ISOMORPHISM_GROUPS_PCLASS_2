@@ -874,4 +874,21 @@ BL:=
       [ [ 12, 12, 7 ], 18 ], [ [ 12, 12, 8 ], 21 ], [ [ 12, 12, 9 ], 13 ], 
       [ [ 12, 12, 10 ], 32 ], [ [ 12, 12, 11 ], 23 ], [ [ 12, 12, 12 ], 13 ] 
      ] ];
- 
+     
+DOPPELDIAG:=function(D1,D2)
+  local RET,i,j;
+  RET:=[];
+  for i in [1..Size(D1)] do
+    for j in [1..Size(D2)] do
+      if D1[i]=0 then Add(RET,D2[j]); else Add(RET,1-D2[j]); fi;
+      od;
+    od;
+  return RET;
+  end;
+
+D:=DOPPELDIAG([0,0],[0,1,1,1,1,1,1,0]);
+R1:=[[1],[1,1],[0,1,0],[1,1,0,1]];
+R2:=[[0],[1,0],[0,1,1]];
+D:=DOPPELDIAG(DIAG(R1),DIAG(R2));
+C:=List(D);Remove(C,1);D;DN:=DIAG(RKVOND(Size(R1)+Size(R2),C));D=DN;
+
