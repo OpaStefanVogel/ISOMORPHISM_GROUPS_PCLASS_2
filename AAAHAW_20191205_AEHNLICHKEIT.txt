@@ -2932,3 +2932,31 @@ R:=RU[8]; R_FORTSETZUNGEN(R);#
 21 [ 1, 0, 1, 0, 0 ] [ 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0 ][ [ 0, 18 ], [ 1, 12 ], [ 2, 2 ] ]
 28 [ 1, 1, 0, 1, 1 ] [ 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0 ][ [ 0, 18 ], [ 1, 12 ], [ 2, 2 ] ]
 29 [ 1, 1, 1, 0, 0 ] [ 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1 ][ [ 0, 18 ], [ 1, 12 ], [ 2, 2 ] ]
+
+
+DOPPELDIAG:=function(D1,D2)
+  local RET,i,j;
+  RET:=[];
+  for i in [1..Size(D1)] do
+    for j in [1..Size(D2)] do
+      if D1[i]=0 then Add(RET,D2[j]); else Add(RET,1-D2[j]); fi;
+      od;
+    od;
+  return RET;
+  end;
+
+D:=DOPPELDIAG([0,0],[0,1,1,1,1,1,1,0]);
+R1:=[[1],[1,1],[0,1,0],[1,1,0,1]];
+R1:=[[1],[0,0]];
+R2:=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]];
+R2:=[[1],[0,0],[1,1,1]];
+R2:=[[1],[0,0],[1,1,1],[0,0,0,0]];
+R2:=[[1],[0,0],[1,1,1],[1,1,1,1]];
+R2:=[[1],[0,0]];
+R2:=[[1],[1,1]];
+D:=DOPPELDIAG(DIAG(R1),DIAG(R2));
+C:=List(D);Remove(C,1);D;DN:=DIAG(RKVOND(Size(R1)+Size(R2),C));D=DN;
+Collected(COMPDIAGSTABERZ(DIAG(R1)));
+Collected(COMPDIAGSTABERZ(DIAG(R2)));
+Collected(COMPDIAGSTABERZ(D));
+Collected(COMPDIAGSTABERZ(DN));
