@@ -1781,7 +1781,6 @@ function Test17() {
   Logfile(Logtext);
   }
 
-
 function Test18() {
   Logtext="Vergleich COMPDIAGSTABERZ alle y oder nur ein- und zweistellige Produkte\n";
   //alert(ERGS1NEU.length);
@@ -1929,6 +1928,12 @@ function Test19() {
       //Logtext=Logtext+" "+nr+" "+ORBNUM;
       }
     Logtext=Logtext+" "+Math.log2(Number(ORBNUM))+" "+GLSTART+" "+(Math.log2(Number(ORBNUM))==GLSTART)+"\n\n";
+/*    var R=[[0],[1,1],[0,0,0],[1,1,1,1]];
+    var R=[[0],[1,1],[0,0,0]];
+    var DDD=DIAG(R);
+    var DD=COMPDIAGSTABERZ(DDD);
+    var MM=Suche_Anzahl_Isomorphismen(DD,DD);
+*/
     }
   Logfile(Logtext);
   }
@@ -1939,6 +1944,31 @@ function Test20a() {
     ERGS1NEU[dd0].sort();
     }
   Logfile("ERGS1NEU umsortiert");
+  }
+
+      var R=[[0],[1,1],[0,0,0],[1,1,1,1],[0,0,0,0,0],[1,1,1,1,1,1]];
+      var R=[[0],[1,1]];//[0,0,1,1]
+      var R=[[0],[1,1],[0,0,0],[1,1,1,1]];//
+      var R=[[1],[1,1],[1,0,0],[0,0,1,1]];
+//      var R=[[1],[0,0],[1,1,1],[0,0,1,1]];
+      var D=DIAG(R);
+      var MARK=MARKZAHL_offiziell(D);
+//alert(MARK);
+
+function Test20b() {
+  //ERGS1NEU umsortieren
+  for (var dd0=2;dd0<ERGS1NEU.length;dd0++) {
+    for (var nr0=0;nr0<2-((ERGS1NEU[dd0].length) % 3);nr0++) {
+      ERGS1NEU[dd0][nr0][0]=[0];
+      ERGS1NEU[dd0][nr0][1]=[0,1];
+      ERGS1NEU[dd0][nr0][0]=[1];
+      ERGS1NEU[dd0][nr0][1]=[1,1];
+      ERGS1NEU[dd0][nr0][2]=[1,0,0];
+//      var R=[[1],[1,1],[1,0,0],[0,0,0,0]];
+      }
+    }
+  Logfile("ERGS1NEU=[[0],[1,0]...]");
+
   }
 function Test20() {
   //ERGS1NEU aus ERGS2 zurückholen
@@ -1959,6 +1989,34 @@ function Test20() {
     for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
       Logtext=Logtext+"  nr="+(nr0+1)+" R="+Show_R(ERGS1NEU[dd0][nr0])+"\n";      
       }
+    }
+  Logfile(Logtext);
+  }
+
+function DOPPELDIAG(D1,D2) {
+  var RET=[];
+  for (var i=0;i<D1.length;i++) {
+    for (var j=0;j<D2.length;j++) {
+      if (D1[i]==0) RET.push(D2[j]); else RET.push(1-D2[j]);
+      }
+    }
+  return RET;
+  }
+
+function Test21() {
+  Logtext="";
+  for (var vx=0;vx<3;vx++) {
+    var R1=ERGS1NEU[1][vx];
+    var D1=DIAG(R1);
+    for (var dd0=1;dd0<10;dd0++) {
+      for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
+        var D2=DIAG(ERGS1NEU[dd0][nr0]);
+        Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+" R1="+MARKZAHL_offiziell(D1)+" R2="+MARKZAHL_offiziell(D2);      
+        Logtext=Logtext+"  R1*R2="+MARKZAHL_offiziell(DOPPELDIAG(D1,D2))+"\n";
+        }
+      Logtext=Logtext+"\n";
+      }
+    Logtext=Logtext+"\n-----\n";
     }
   Logfile(Logtext);
   }
@@ -2438,8 +2496,10 @@ Tabelle TABLE 1 aus ...:
   </div>
   <div>
     <div>
+      <button onclick="Test21()" style="font-size:180%">Test21()</button>Rx*R1
       <button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
       <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
+      <button onclick="Test20b()" style="font-size:180%">Test20b()</button>ERGS1NEU[dd0][2...]=[[0],[1,0]...]
       </div>
     <div><button onclick="Test19()" style="font-size:180%">Test19()</button>Automorphismen zählen</div>
     <div><button onclick="Test18()" style="font-size:180%">Test18()</button>MARKZAHL für alle ERGS1NEU</div>
