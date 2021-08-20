@@ -1997,7 +1997,7 @@ function DOPPELDIAG(D1,D2) {
   var RET=[];
   for (var i=0;i<D1.length;i++) {
     for (var j=0;j<D2.length;j++) {
-      if (D1[i]==0) RET.push(D2[j]); else RET.push(1-D2[j]);
+      RET.push(D1[i]^D2[j]);
       }
     }
   return RET;
@@ -2005,15 +2005,47 @@ function DOPPELDIAG(D1,D2) {
 
 function Test21() {
   Logtext="";
+  Linkliste="";
   for (var vx=0;vx<3;vx++) {
     var R1=ERGS1NEU[1][vx];
     var D1=DIAG(R1);
     for (var dd0=1;dd0<10;dd0++) {
+      Logtext=Logtext+'<span id="R1='+MARKZAHL_offiziell(D1)+(dd0+1)+'" style="background-color:GreenYellow">R1=['+MARKZAHL_offiziell(D1)+"] dd="+(dd0+1)+"\n</span>";
+      Linkliste=Linkliste+'<a href="#R1='+MARKZAHL_offiziell(D1)+(dd0+1)+'">R1=['+MARKZAHL_offiziell(D1)+"] dd="+(dd0+1)+"</a>"
       for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
         var D2=DIAG(ERGS1NEU[dd0][nr0]);
         Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+" R1="+MARKZAHL_offiziell(D1)+" R2="+MARKZAHL_offiziell(D2);      
         Logtext=Logtext+"  R1*R2="+MARKZAHL_offiziell(DOPPELDIAG(D1,D2))+"\n";
         }
+      Logtext=Logtext+"\n";
+      }
+    Logtext=Logtext+"\n-----\n";
+    }
+  Logfile(Logtext);
+  }
+
+
+function Test22() {//alert(22);
+  Logtext="";
+  Linkliste="";
+  for (var vx=0;vx<3;vx++) { //orig 3
+    var R1=ERGS1NEU[1][vx];
+    var D1=DIAG(R1);
+    for (var dd0=1;dd0<6;dd0++) {var dd=dd0;//alert(dd);
+
+  for (var i=0;i<2**FIBOCAN[dd+1];i++) {
+    var RN=BINDEZ(i,FIBOCAN[dd+1]);
+    var R=[];
+    for (var k=0;k<dd;k++) R.push(RN.slice(FIBOCAN[k+1],FIBOCAN[k+2]));
+    //var R=[RN.slice(0,1),RN.slice(1,3),RN.slice(3,6),RN.slice(6,10)];
+    var D2=DIAG(R);
+    var M2=MARKZAHL_offiziell(D2);
+    var M12=MARKZAHL_offiziell(DOPPELDIAG(D1,D2));
+    var M21=MARKZAHL_offiziell(DOPPELDIAG(D2,D1));
+    var Ltex=M2+" "+M12+" "+M21+"\n";
+    if (Logtext.indexOf(Ltex)==-1) Logtext=Logtext+Ltex;
+    }
+    
       Logtext=Logtext+"\n";
       }
     Logtext=Logtext+"\n-----\n";
@@ -2350,7 +2382,7 @@ Tabelle TABLE 1 aus ...:
   <td>[8,3]</td>
   <td>[16,11]</td>
   <td>[32,46]</td>
-  <td>[64,261</td>
+  <td>[64,261]</td>
   <td>[128,2320]</td>
   <td>[256,56083]</td>
   <td>[512,10494202]</td>
@@ -2495,8 +2527,9 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
+    <div><button onclick="Test22()" style="font-size:180%">Test22()</button>R1*alleD (dauert 14 s)</div>
+    <div><button onclick="Test21()" style="font-size:180%">Test21()</button>R1*Rx</div>
     <div>
-      <button onclick="Test21()" style="font-size:180%">Test21()</button>Rx*R1
       <button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
       <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
       <button onclick="Test20b()" style="font-size:180%">Test20b()</button>ERGS1NEU[dd0][2...]=[[0],[1,0]...]
