@@ -2003,6 +2003,17 @@ function DOPPELDIAG(D1,D2) {
   return RET;
   }
 
+/*function DOPPELDIAG(D1,D2) {
+  var RET=[];
+  for (var i=0;i<D1.length;i++) {
+    for (var j=0;j<D2.length;j++) {
+      if (D1[i]==0) RET.push(D2[j]); else RET.push(D1[i]^D2[D2.length-j-1]);
+      }
+    }
+  return RET;
+  }
+*/
+
 function Test21() {
   Logtext="";
   Linkliste="";
@@ -2049,6 +2060,77 @@ function Test22() {//alert(22);
       Logtext=Logtext+"\n";
       }
     Logtext=Logtext+"\n-----\n";
+    }
+  Logfile(Logtext);
+  }
+
+
+function PIMP(D,alpha) {
+  var TF=[[0,3,5,6],[0,3,6,5],[0,5,3,6],[0,5,6,3],[0,6,3,5],[0,6,5,3]];
+  var RET=[];
+  for (var i=0;i<D.length;i++) RET[i]=TF[alpha][D[i]];
+  return RET;
+  }
+
+function Test23() {
+  Logtext="";
+  Linkliste="";
+  var T=PIMP(DIAG([[1],[0,0]]),3);
+  Logtext=Logtext+"T="+T+"\n";
+  var dd0=1;
+  var DD11LISTE=[];
+  for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
+    Logtext=Logtext+"ERGS2["+dd0+"]["+nr0+"]=[["+ERGS2[dd0][nr0].join("],[")+"]]; ";
+    var DD0=DIAG(ERGS2[dd0][nr0][0]);
+    var DD1=DIAG(ERGS2[dd0][nr0][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    Logtext=Logtext+"DD12="+DD12+"\n";
+    DD11LISTE.push(DD12);
+    }
+  var dd0=1;
+  var DD12LISTE=[];
+  for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
+    Logtext=Logtext+"ERGS2["+dd0+"]["+nr0+"]=[["+ERGS2[dd0][nr0].join("],[")+"]]; ";
+    var DD0=DIAG(ERGS2[dd0][nr0][0]);
+    var DD1=DIAG(ERGS2[dd0][nr0][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    Logtext=Logtext+"DD12="+DD12+"\n";
+    DD12LISTE.push(DD12);
+    }
+  var DD34LISTE=[];
+  dd0=dd0+1;
+  for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
+    Logtext=Logtext+"ERGS2["+dd0+"]["+nr0+"]=[["+ERGS2[dd0][nr0].join("],[")+"]]; ";
+    var DD0=DIAG(ERGS2[dd0][nr0][0]);
+    var DD1=DIAG(ERGS2[dd0][nr0][1]);
+    var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
+    Logtext=Logtext+"DD12="+DD12+"\n";
+    DD34LISTE.push(DD12);
+    }
+  for (var nr0=0;nr0<DD11LISTE.length;nr0++) {
+    for (var mr0=0;mr0<DD12LISTE.length;mr0++) {
+      for (var alpha=0;alpha<6;alpha++) {
+        var DD12ALPHA=DOPPELDIAG(PIMP(DD11LISTE[nr0],alpha),PIMP(DD12LISTE[mr0],0));
+        Logtext=Logtext+DD12ALPHA;
+        var M12=MARKZAHL5PUR(DD12ALPHA);//alert(M12);
+        ind=GESAMTMERK.indexOf(M12[0]);
+        if (ind==-1) GESAMTMERK.push(M12[0]);
+        Logtext=Logtext+" "+ind+" "+GESAMTMERK.length+"\n";
+        }
+      }
+    }
+  var DD00LISTE=[[0,0],[0,3],[0,5],[0,6]];
+  for (var nr0=0;nr0<DD00LISTE.length;nr0++) {
+    for (var mr0=0;mr0<DD34LISTE.length;mr0++) {
+      for (var alpha=0;alpha<1;alpha++) {
+        var DD12ALPHA=DOPPELDIAG(PIMP(DD00LISTE[nr0],alpha),PIMP(DD34LISTE[mr0],0));
+        Logtext=Logtext+DD12ALPHA;
+        var M12=MARKZAHL5PUR(DD12ALPHA);//alert(M12);
+        ind=GESAMTMERK.indexOf(M12[0]);
+        if (ind==-1) GESAMTMERK.push(M12[0]);
+        Logtext=Logtext+" "+ind+" "+GESAMTMERK.length+"\n";
+        }
+      }
     }
   Logfile(Logtext);
   }
@@ -2316,6 +2398,8 @@ function TestL() {
   //Logtext=Logtext+"\n\n\n"+JSON.stringify(robo0.toJSON());
   Logfile(Logtext);
   }
+
+//alert(COMPDIAGSTABERZ(DIAG([[1],[1,1],[0,0,0],[1,0,0,1],[0,1,1,0,0]])));
   </script>
   </head>
 <body onload="init('hier1',ERGS2);//allesergaenzen()">
@@ -2527,8 +2611,9 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
-    <div><button onclick="Test22()" style="font-size:180%">Test22()</button>R1*alleD (dauert 14 s)</div>
-    <div><button onclick="Test21()" style="font-size:180%">Test21()</button>R1*Rx</div>
+    <div><button onclick="Test23()" style="font-size:180%">Test23()</button>(R1 × Z2) ×<sub><small>/D</small></sub> ERGS2[1] </div>
+    <div><button onclick="Test22()" style="font-size:180%">Test22()</button>R1 <i>×<sub><small>/D</small></sub></i> alleD (dauert 14 s)</div>
+    <div><button onclick="Test21()" style="font-size:180%">Test21()</button>R1 <i>×<sub><small>/D</small></sub></i> Rx</div>
     <div>
       <button onclick="Test20()" style="font-size:180%">Test20()</button>ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
       <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
