@@ -2171,14 +2171,15 @@ function Test24() {
   Linkliste=Linkliste+'<a href="#DD1T">DD1T</a>';
 //  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]]);
 //  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0]]);
-  var T=[0,0,0,1];
+  var T=[0,1,0,0];
   //var DD1V=DOPPELDIAG(T,T);
-  var DD1V=DOPPELDIAG(DOPPELDIAG(T,T),T);
+  //var DD1V=DOPPELDIAG(DOPPELDIAG(T,T),T);
+  var DD1V=DOPPELDIAG(DOPPELDIAG(DOPPELDIAG(T,T),T),T);
   var M1V=MARKZAHL(DD1V);
   Logtext=Logtext+"DD1V"+DD1V+"\n"+M1V+"\n\n";
 
-  Logtext=Logtext+KREISE(DD1V).join("\n")+"\n\n"+/*AZAHL(1,6)+*/"\n";
-alert(KREISE(DD1V));
+  Logtext=Logtext+KREISE_MEHRFACH(DD1V).join("\n")+"\n\n"+/*AZAHL(1,6)+*/"\n";
+//alert(KREISE(DD1V));#
   for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
     Logtext=Logtext+j;  
     for (var i=0;i<AMERK.length;i++) if (AMERK[i]) if (AZAHL(i,j)==4) Logtext=Logtext+"."+AZAHL(i,j); else Logtext=Logtext+":"+AZAHL(i,j);
@@ -2197,8 +2198,81 @@ alert(KREISE(DD1V));
     }
   Logtext=Logtext+"\n";
 
+  var DD=COMPDIAGSTABERZ(DD1V);
+  var MM=Suche_Anzahl_Isomorphismen(DD,DD);
+  //ANZTAB[dd][nr]=MM[3];
+  Logtext=Logtext+MM.join("\n\n")+"\n";
+
 Logfile(Logtext);return;
 
+  }
+
+/*
+Ergebnis:
+3,13,14 19       35 52 56 63
+3,29,30 19 48    39 43 44 
+3,45,46 23 48 28 35       27
+3,49,50  7 11 28       44 63
+3,53,54  7    12    43 56 27
+3,57,58 23 11 12 39 52
+=vollständiger Graph K6	
+7,11,12,19,23,27,28,35,39,43,44,48,52,56,63
+*/
+
+function Test25() {
+  Logtext="Test25 [655,569 ],[713,705]...\n";
+  var dd=8;
+  var LISTE=[
+    655,569,
+    713,705,
+/*    1054,1067,
+    1133,1276,
+    1672,1784,
+    1630,1785,
+    1996,2006,
+    1908,2090,
+    2094,2102,2104,
+    2089,2108,
+    2067,2115,
+    2099,2185,
+    2125,2188,
+    1880,2192,
+    2548,2550
+*/    ]
+  for (var ii in LISTE) {nr=LISTE[ii]-1;//alert(nr+1);
+    var DD0=DIAG(ERGS2[dd-1][nr][0]);
+    var DD1=DIAG(ERGS2[dd-1][nr][1]);
+    var DD3=[]; for (var i=0;i<DD1.length;i++) DD3[i]=2*DD0[i]+DD1[i];
+    var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
+    //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC_N(DD1)+"\n"+MARKZAHL0GGT_TVEC_N(DD2)+"\n");
+    //alert(MARKZAHL0GGT_TVEC(DD0)+"\n"+MARKZAHL0GGT_TVEC(DD1)+"\n"+MARKZAHL0GGT_TVEC(DD2)+"\n");
+    Logtext=Logtext+"ERGS2["+dd+"]["+(nr+1)+"]\nDD3="+DD3+"\n";
+    Logtext=Logtext+"DD0="+DD0+"\n";
+    Logtext=Logtext+"DD1="+DD1+"\n";
+    Logtext=Logtext+"DD2="+DD2+"\n";
+    var anzlist=[];
+    for (var x=1;x<DD0.length;x++) {
+      var anz111=0;
+      var ylist=[];
+      if (DD3[x]==3) for (var y=1;y<DD0.length;y++) if (DD3[y]==3&&DD3[x^y]==3) {
+        anz111=anz111+1;
+        ylist.push(y);
+        }
+      anzlist.push(anz111);//alert(ylist);
+      var yzlist=[0,0,0,0];//1236745 a b ab bc abc c ac
+      for (var i=0;i<ylist.length;i++) for (var j=0;j<ylist.length;j++) {
+        y=ylist[i];
+        z=ylist[j];
+        if (1==1) {//alert(DD3[y^z]+" "+DD3[x^y^z]+" "+x+" "+y+" "+(x^y)+" "+z+" "+(x^z)+" "+(y^z)+" "+(x^y^z));
+          yzlist[DD3[y^z]]+=1;
+          yzlist[DD3[x^y^z]]+=1;
+          }
+        }
+      if (anz111>0) Logtext=Logtext+anz111+" "+yzlist+"\n";
+      }
+    Logtext=Logtext+"anzlist="+anzlist+"\n";
+    }
+  Logfile(Logtext);
   }
 
 function DREHMARK(DD) {
@@ -2238,6 +2312,26 @@ function KREISE(DD) {
   for (i=0;i<SD;i++) {
     if (DD[i]==1) {
       for (var j=i+1;j<SD;j++) if (j<(i^j)&&DD[j]==1&&DD[i^j]==1) {
+        K.push([i,j,i^j]);
+        MERKE(i,j);
+        MERKE(i,i^j);
+        MERKE(j,i);
+        MERKE(j,i^j);
+        MERKE(i^j,i);
+        MERKE(i^j,j);
+        }
+      }
+    }
+  return K;
+  }
+
+function KREISE_MEHRFACH(DD) {
+  var K=[];
+  AMERK=[];
+  var SD=DD.length;
+  for (i=0;i<SD;i++) {
+    if (DD[i]==1) {
+      for (var j=0;j<SD;j++) if (/*j<(i^j)&&*/DD[j]==1&&DD[i^j]==1) {
         K.push([i,j,i^j]);
         MERKE(i,j);
         MERKE(i,i^j);
@@ -2678,6 +2772,7 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
+    <div><button id="Button Test25" onclick="Test25()" style="font-size:180%">Test25()</button>Ausgabe gemeinsame Struktur für 655 und 569</div>
     <div><button id="Button Test24" onclick="Test24()" style="font-size:180%">Test24()</button>Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
     <div>
       <button onclick="Test23(1)" style="font-size:180%">Test23(1)</button>(R1 × Z2) ×<sub><small>/D</small></sub> ERGS2[1] 
