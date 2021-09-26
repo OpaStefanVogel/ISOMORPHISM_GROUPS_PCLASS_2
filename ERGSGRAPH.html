@@ -2219,13 +2219,14 @@ Ergebnis:
 7,11,12,19,23,27,28,35,39,43,44,48,52,56,63
 */
 
-function STRUKTUR11111zz(DD3,tz) {
+function STRUKTUR11111zz(DD3,tz,tw) {
     var anzlist=[];
+    var anzsum=0;
     var yzlist=[];
     for (var x=1;x<DD3.length;x++) {
       var anz111=0;
       var ylist=[];
-      if (DD3[x]==tz) for (var y=1;y<DD3.length;y++) if (DD3[y]==3&&DD3[x^y]==3) {
+      if (DD3[x]==tz) for (var y=1;y<DD3.length;y++) if (DD3[y]==tw&&DD3[x^y]==tw) {
         anz111=anz111+1;
         ylist.push(y);
         }
@@ -2239,9 +2240,10 @@ function STRUKTUR11111zz(DD3,tz) {
           }
         }
       //if (anz111>0) Logtext=Logtext+anz111+" "+yznum+"\n";
-      if (yzlist[yznum]) yzlist[yznum]=yzlist[yznum]+1; else yzlist[yznum]=1; 
+      if (yzlist[yznum]) yzlist[yznum]=yzlist[yznum]+1; else yzlist[yznum]=1;
+      anzsum=anzsum+anz111;
       }
-  return yzlist;
+  return "["+anzsum+"],["+yzlist+"]";
   }
 
 function Test25() {
@@ -2275,21 +2277,23 @@ function Test25() {
     Logtext=Logtext+"DD0="+DD0+"\n";
     Logtext=Logtext+"DD1="+DD1+"\n";
     Logtext=Logtext+"DD2="+DD2+"\n";
-    var yzlist=STRUKTUR11111zz(DD3,3);
+    var yzlist=STRUKTUR11111zz(DD3,3,3);
     Logtext=Logtext+"yzlist3=["+yzlist+"]\n";
-    var yzlist=STRUKTUR11111zz(DD3,2);
+    var yzlist=STRUKTUR11111zz(DD3,2,2);
     Logtext=Logtext+"yzlist2=["+yzlist+"]\n";
-    var yzlist=STRUKTUR11111zz(DD3,1);
+    var yzlist=STRUKTUR11111zz(DD3,1,1);
     Logtext=Logtext+"yzlist1=["+yzlist+"]\n";
     //Logtext=Logtext+"anzlist="+anzlist+"\n";
     }
   Logfile(Logtext);
   }
 
-function Test26() {
+function Test26(dmax) {
   Logtext="";
-  GESAMTMERK=[]
-  for (var dd0=0;dd0<8;dd0++) {
+  Linkliste="";
+  GESAMTMERK=[];
+  var doppelte=0;
+  for (var dd0=0;dd0<dmax;dd0++) {
     Logtext=Logtext+'<span id="dd='+(dd0+1)+'" style="background-color:GreenYellow">dd='+(dd0+1)+"</span>\n";
     Linkliste=Linkliste+'<a href="#dd='+(dd0+1)+'">dd='+(dd0+1)+"</a>"
     for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
@@ -2298,18 +2302,19 @@ function Test26() {
       var DD1=DIAG(RR[1]);
       var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
       var DD3=[]; for (var i=0;i<DD1.length;i++) DD3[i]=2*DD0[i]+DD1[i];
-      Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+" "+MARKZAHL_offiziell(DD0)+"\n";
-      var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTUR11111zz(DD3,3)+"]\n";
-      var Zeile1="["+MARKZAHL_offiziell(DD1)+"],["+STRUKTUR11111zz(DD3,2)+"]\n";
-      var Zeile2="["+MARKZAHL_offiziell(DD0)+"],["+STRUKTUR11111zz(DD3,1)+"]\n";
+      Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+", M=["+MARKZAHL_offiziell(DD0)+"], D=["+DD3+"]\n";
+      var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTUR11111zz(DD3,3,3)+"],["+STRUKTUR11111zz(DD3,3,0)+"]\n";
+      var Zeile1="["+MARKZAHL_offiziell(DD1)+"],["+STRUKTUR11111zz(DD3,2,2)+"],["+STRUKTUR11111zz(DD3,2,0)+"]\n";
+      var Zeile2="["+MARKZAHL_offiziell(DD0)+"],["+STRUKTUR11111zz(DD3,1,1)+"],["+STRUKTUR11111zz(DD3,1,0)+"]\n";
       var Zeilegesamt=[Zeile0,Zeile1,Zeile2].sort().join("");
-      var neu=true;
-      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) neu=false+"♥";
+      var neu="neu";
+      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
       GESAMTMERK.push(Zeilegesamt);
       Logtext=Logtext+Zeilegesamt+neu+"\n\n";
       }
-    Logtext=Logtext+"\n-----\n";
+    Logtext=Logtext+"doppelte bisher="+doppelte+"\n-----\n";
     }
+  Logtext="doppelte insgesamt="+doppelte+Logtext;
   Logfile(Logtext);
   }
 
@@ -2810,7 +2815,11 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
-    <div><button id="Button Test26" onclick="Test26()" style="font-size:180%">Test26()</button>Strukturen ERGS2 komplett</div>
+    <div>
+      <button id="Button Test26" onclick="Test26(4)" style="font-size:180%">Test26(4)</button>Strukturen ERGS2 komplett bis dd=4,
+      <button id="Button Test26" onclick="Test26(6)" style="font-size:180%">Test26(6)</button>,
+      <button id="Button Test26" onclick="Test26(8)" style="font-size:180%">Test26(8)</button>
+      </div>
     <div><button id="Button Test25" onclick="Test25()" style="font-size:180%">Test25()</button>Ausgabe gemeinsame Struktur für 655 und 569</div>
     <div><button id="Button Test24" onclick="Test24()" style="font-size:180%">Test24()</button>Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
     <div>
