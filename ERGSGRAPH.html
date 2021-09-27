@@ -2243,7 +2243,9 @@ function STRUKTUR11111zz(DD3,tz,tw) {
       if (yzlist[yznum]) yzlist[yznum]=yzlist[yznum]+1; else yzlist[yznum]=1;
       anzsum=anzsum+anz111;
       }
-  return "["+anzsum+"],["+yzlist+"]";
+  var yztext=anzsum.toString();
+  for (var i=0;i<yzlist.length;i++) if (yzlist[i]) yztext=yztext+"+"+i+"*"+yzlist[i];
+  return yztext;
   }
 
 function Test25() {
