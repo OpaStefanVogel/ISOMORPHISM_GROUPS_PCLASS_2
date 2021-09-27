@@ -2320,6 +2320,45 @@ function Test26(dmax) {
   Logfile(Logtext);
   }
 
+function STRUKTURxyxyzxzyz(D) {
+  var xyzlist=new Array(4096);xyzlist.fill(0);//alert(xyzlist);
+  for (var x=0;x<D.length;x++) for (var y=0;y<D.length;y++) for (var z=0;z<D.length;z++) {
+    var xyz=D[x]*1024+D[y]*256+D[x^y]*64+D[z]*16+D[x^z]*4+D[y^z];
+    xyzlist[xyz]=xyzlist[xyz]+1;
+    }
+  var ret=[];
+  for (var i=0;i<xyzlist.length;i++) if (xyzlist[i]!=0) ret.push(xyzlist[i]);
+  return ret.sort();  
+  }
+
+function Test27(dmax) {
+  Logtext="";
+  Linkliste="";
+  GESAMTMERK=[];
+  var doppelte=0;
+  for (var dd0=0;dd0<dmax;dd0++) {
+    Logtext=Logtext+'<span id="dd='+(dd0+1)+'" style="background-color:GreenYellow">dd='+(dd0+1)+"</span>\n";
+    Linkliste=Linkliste+'<a href="#dd='+(dd0+1)+'">dd='+(dd0+1)+"</a>"
+    for (var nr0=0;nr0<ERGS2[dd0].length;nr0++) {
+      var RR=ERGS2[dd0][nr0];
+      var DD0=DIAG(RR[0]);
+      var DD1=DIAG(RR[1]);
+      var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
+      var DD3=[]; for (var i=0;i<DD1.length;i++) DD3[i]=2*DD0[i]+DD1[i];
+      Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+", M=["+MARKZAHL_offiziell(DD0)+"], D=["+DD3+"]\n";
+      var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTURxyxyzxzyz(DD3)+"]\n";
+      var Zeilegesamt=[Zeile0].sort().join("");
+      var neu="neu";
+      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
+      GESAMTMERK.push(Zeilegesamt);
+      Logtext=Logtext+Zeilegesamt+neu+"\n\n";
+      }
+    Logtext=Logtext+"doppelte bisher="+doppelte+"\n-----\n";
+    }
+  Logtext="doppelte insgesamt="+doppelte+Logtext;
+  Logfile(Logtext);
+  }
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -2818,9 +2857,15 @@ Tabelle TABLE 1 aus ...:
   </div>
   <div>
     <div>
-      <button id="Button Test26" onclick="Test26(4)" style="font-size:180%">Test26(4)</button>Strukturen ERGS2 komplett bis dd=4,
-      <button id="Button Test26" onclick="Test26(6)" style="font-size:180%">Test26(6)</button>,
-      <button id="Button Test26" onclick="Test26(8)" style="font-size:180%">Test26(8)</button>
+      <button id="Button Test27(4)" onclick="Test27(4)" style="font-size:180%">Test27(4)</button>alle x y xy z xz yz zählen
+      <button id="Button Test27(6)" onclick="Test27(6)" style="font-size:180%">Test27(6)</button>,
+      <button id="Button Test27(7)" onclick="Test27(7)" style="font-size:180%">Test27(7)</button> 4 doppelt,
+      <button id="Button Test27(8)" onclick="Test27(8)" style="font-size:180%">Test27(8)</button>
+      </div>
+    <div>
+      <button id="Button Test26(4)" onclick="Test26(4)" style="font-size:180%">Test26(4)</button>Strukturen ERGS2 komplett bis dd=4,
+      <button id="Button Test26(6)" onclick="Test26(6)" style="font-size:180%">Test26(6)</button>,
+      <button id="Button Test26(8)" onclick="Test26(8)" style="font-size:180%">Test26(8)</button>
       </div>
     <div><button id="Button Test25" onclick="Test25()" style="font-size:180%">Test25()</button>Ausgabe gemeinsame Struktur für 655 und 569</div>
     <div><button id="Button Test24" onclick="Test24()" style="font-size:180%">Test24()</button>Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
