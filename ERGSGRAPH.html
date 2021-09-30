@@ -630,6 +630,7 @@ function MARKZAHL5PUR_TEST2(DD,anz) {
 
 
 function MARKZAHL5PUR(DD,anz) {
+//♦!!! wird vor Test26 ersetzt durch MARKZAHL6 !!!♦
   if (anz&&anz==1) {
     var DDNEU=MARKZAHL4(DD);
     return [DDNEU[0]+"\n",DDNEU[1],DDNEU[2]+"\n",,DDNEU[4],,,DDNEU[7]];
@@ -1644,7 +1645,7 @@ async function Test15(ddd) {
     GESAMTMERKMU=[];
     GESAMTMERKDD=[];
 
-  var Logtext="Test15 ERGS2NEU für dd="+dd+"\n";
+  Logtext="Test15 ERGS2NEU für dd="+dd+"\n";
   ERGS2NEU[dd-1]=[];
   for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
   //for (var nr=0;nr<1;nr++) {
@@ -1664,7 +1665,7 @@ async function Test15(ddd) {
   var DD2=[]; for (var i=0;i<DD1.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
   var DD12=[]; for (var i=0;i<DD1.length;i++) DD12[i]=2*DD0[i]+DD1[i];
   //M12 erwartet [0]:Markierung, [1]:DDNEU; [4]:DD z.B.:return [MARKS,DDNEU,MARKL,MARKLNUM,DD.slice()];
-  var M12=MARKZAHL5PUR(DD12);//alert(M12);
+  var M12=MARKZAHL5PUR(DD12);//alert(DD12);
   //var M12=MARKZAHL5(DD12);//alert(M12.join("\n"));
   
   var ind=-1;
@@ -2291,6 +2292,22 @@ function Test25() {
   Logfile(Logtext);
   }
 
+function MARKZAHL6(DD0,DD1,DD2,DD3) {
+  var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTUR11111zz(DD3,3,3)+"],["+STRUKTUR11111zz(DD3,3,0)+"]\n";
+  var Zeile1="["+MARKZAHL_offiziell(DD1)+"],["+STRUKTUR11111zz(DD3,2,2)+"],["+STRUKTUR11111zz(DD3,2,0)+"]\n";
+  var Zeile2="["+MARKZAHL_offiziell(DD0)+"],["+STRUKTUR11111zz(DD3,1,1)+"],["+STRUKTUR11111zz(DD3,1,0)+"]\n";
+  var Zeilegesamt=[Zeile0,Zeile1,Zeile2].sort().join("");
+  Logtext=Logtext+"\n\n\n"+Zeilegesamt;//alert(DD0+"\n"+DD1+"\n"+DD2+"\n"+DD3+"\n"+Zeilegesamt);
+  return Zeilegesamt;
+  }
+
+function MARKZAHL5PUR(DD3) {
+  var DD0=[]; for (var i=0;i<DD3.length;i++) if ((DD3[i]&2)==2) DD0[i]=1; else DD0[i]=0;
+  var DD1=[]; for (var i=0;i<DD3.length;i++) if ((DD3[i]&1)==1) DD1[i]=1; else DD1[i]=0;
+  var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
+  return [MARKZAHL6(DD0,DD1,DD2,DD3),0,0,0,0,0,0];
+  }
+
 function Test26(dmax) {
   Logtext="";
   Linkliste="";
@@ -2306,10 +2323,7 @@ function Test26(dmax) {
       var DD2=[]; for (var i=0;i<DD1.length;i++) DD2[i]=DD0[i]^DD1[i];
       var DD3=[]; for (var i=0;i<DD1.length;i++) DD3[i]=2*DD0[i]+DD1[i];
       Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+", M=["+MARKZAHL_offiziell(DD0)+"], D=["+DD3+"]\n";
-      var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTUR11111zz(DD3,3,3)+"],["+STRUKTUR11111zz(DD3,3,0)+"]\n";
-      var Zeile1="["+MARKZAHL_offiziell(DD1)+"],["+STRUKTUR11111zz(DD3,2,2)+"],["+STRUKTUR11111zz(DD3,2,0)+"]\n";
-      var Zeile2="["+MARKZAHL_offiziell(DD0)+"],["+STRUKTUR11111zz(DD3,1,1)+"],["+STRUKTUR11111zz(DD3,1,0)+"]\n";
-      var Zeilegesamt=[Zeile0,Zeile1,Zeile2].sort().join("");
+      var Zeilegesamt=MARKZAHL6(DD0,DD1,DD2,DD3);
       var neu="neu";
       if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
       GESAMTMERK.push(Zeilegesamt);
