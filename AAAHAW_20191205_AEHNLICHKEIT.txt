@@ -2830,7 +2830,8 @@ for i in [1..14] do for j in [1..Size(alle_R[i])] do
   G:=Erzeuge_G_aus_xy_hoch_2(R);
   if i<8 then Print(IdSmallGroup(G)); else Print("[ ",2^(i+1),", ?+",j," ]\c"); fi;
   M:=relative_Anzahl_der_Markierungen_n1_n0_m1_m0(G);
-  Print(M,"\n");
+  Print(M," ");
+  Print(Size(Centre(G)),"\n");
   od; od;
 
 #########Anzahl aller 1
