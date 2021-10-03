@@ -2961,3 +2961,57 @@ Collected(COMPDIAGSTABERZ(DIAG(R1)));
 Collected(COMPDIAGSTABERZ(DIAG(R2)));
 Collected(COMPDIAGSTABERZ(D));
 Collected(COMPDIAGSTABERZ(DN));
+
+  There are 267 groups of order 64.
+  They are sorted by their ranks. 
+     1 is cyclic. 
+     2 - 54 have rank 2.
+     55 - 191 have rank 3.
+     192 - 259 have rank 4.
+     260 - 266 have rank 5.
+     267 is elementary abelian. 
+
+  There are 2328 groups of order 128.
+  They are sorted by their ranks. 
+     1 is cyclic. 
+     2 - 163 have rank 2.
+     164 - 996 have rank 3.
+     997 - 2149 have rank 4.
+     2150 - 2318 have rank 5.
+     2319 - 2327 have rank 6.
+     2328 is elementary abelian. 
+
+  There are 56092 groups of order 256.
+  They are sorted by their ranks. 
+     1 is cyclic. 
+     2 - 541 have rank 2.
+     542 - 6731 have rank 3.
+     6732 - 26972 have rank 4.
+     26973 - 55625 have rank 5.
+     55626 - 56081 have rank 6.
+     56082 - 56091 have rank 7.
+     56092 is elementary abelian. 
+
+#Diagonale(G) aus AB_JETZT_NEU.txt
+
+Dateiname:="Diagonalen.txt";
+AppendTo(Dateiname,"N16d3=[\n");
+for i in [10..10+4-1] do AppendTo(Dateiname,Diagonale(SmallGroup(16,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN32D3=[\n");
+for i in [21..21+15-1] do AppendTo(Dateiname,Diagonale(SmallGroup(32,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN64D3=[\n");
+for i in [55..55+28-1] do AppendTo(Dateiname,Diagonale(SmallGroup(64,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN128D3=[\n");
+for i in [164..164+15-1] do AppendTo(Dateiname,Diagonale(SmallGroup(128,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN256D3=[\n");
+for i in [542..542+4-1] do AppendTo(Dateiname,Diagonale(SmallGroup(256,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN256D4=[\n");
+for i in [6732..6732+3566-1] do AppendTo(Dateiname,Diagonale(SmallGroup(256,i),false),",\n"); od;
+#AppendTo(Dateiname,"];\n\nN256D5=[\n");
+#for i in [26973..26973+26065-1] do AppendTo(Dateiname,Diagonale(SmallGroup(256,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN256D6=[\n");
+for i in [55626..55626+433-1] do AppendTo(Dateiname,Diagonale(SmallGroup(256,i),false),",\n"); od;
+AppendTo(Dateiname,"];\n\nN256D7=[\n");
+for i in [56082..56082+10-1] do AppendTo(Dateiname,Diagonale(SmallGroup(256,i),false),",\n"); od;
+
+
