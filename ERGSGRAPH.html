@@ -1636,7 +1636,7 @@ function Test15MERK() {
   GESAMTMERKMERK=GESAMTMERK.slice();
   }
 
-async function Test15(ddd) {
+async function Test15(ddd) {//04 Suche ohne Logtext
   var dd=document.getElementById("Test15value").value*1;
   if (ddd) dd=ddd;
 
@@ -1650,12 +1650,13 @@ async function Test15(ddd) {
   for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
   //for (var nr=0;nr<1;nr++) {
     var R0=ERGS1NEU[dd-1][nr];
-    Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
+//04    Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
     for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) //if (GESAMTMERK.length<1)
+    //for (var nr2=0;nr2<4;nr2++) //if (GESAMTMERK.length<1)
      if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
       {
       var R1=ERGS2NEU[dd-2][nr2][1].slice();
-      Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
+//04      Logtext=Logtext+"  "+nr+" "+nr2+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][0])+"\n    "+Show_R(ERGS2NEU[dd-2][nr2][1])+"\n";
       for (var ii=0;ii<2**dd;ii++) {
         R1[dd-1]=BINDEZ(2**dd-ii-1,dd);
 //        Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
@@ -1677,8 +1678,8 @@ async function Test15(ddd) {
     //if (ind==-1) nicht_neu=false; else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]) nicht_neu=false;
     }
   if (ind==-1) {
-    Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
-    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦\n";
+//04    Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
+//04    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦\n";
     //return;
     GESAMTMERK.push(M12[0]);
     GESAMTMERKMU.push(M12[1]);
@@ -2297,7 +2298,7 @@ function MARKZAHL6(DD0,DD1,DD2,DD3) {
   var Zeile1="["+MARKZAHL_offiziell(DD1)+"],["+STRUKTUR11111zz(DD3,2,2)+"],["+STRUKTUR11111zz(DD3,2,0)+"]\n";
   var Zeile2="["+MARKZAHL_offiziell(DD0)+"],["+STRUKTUR11111zz(DD3,1,1)+"],["+STRUKTUR11111zz(DD3,1,0)+"]\n";
   var Zeilegesamt=[Zeile0,Zeile1,Zeile2].sort().join("");
-  Logtext=Logtext+"\n\n\n"+Zeilegesamt;//alert(DD0+"\n"+DD1+"\n"+DD2+"\n"+DD3+"\n"+Zeilegesamt);
+  //Logtext=Logtext+"\n\n\n"+Zeilegesamt;//alert(DD0+"\n"+DD1+"\n"+DD2+"\n"+DD3+"\n"+Zeilegesamt);
   return Zeilegesamt;
   }
 
