@@ -2378,6 +2378,68 @@ function Test27(dmax) {
   Logfile(Logtext);
   }
 
+function BitExpand(i,c) {
+  var RET=[0];
+  var f=1;
+  for (var j=0;j<c;j++) {
+    var b=0;
+    if ((i&f)!=0) b=1;
+    RET.push(b);
+    for (var k=1;k<2**j;k++) RET.push(b^RET[k]);
+    f=f+f;
+    }
+  return RET;
+  }
+
+var BitExpandVektor=[];
+
+function Bitvergleich(a,b,ab,c,ac,bc,abc) {
+  var RET=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  var va=BitExpandVektor[a];
+  var vb=BitExpandVektor[b];
+  var vab=BitExpandVektor[ab];
+  var vc=BitExpandVektor[c];
+  var vac=BitExpandVektor[ac];
+  var vbc=BitExpandVektor[bc];
+  for (var m=0;m<va.length;m++) {
+    var l=32*va[m]+16*vb[m]+8*vab[m]+4*vc[m]+2*vac[m]+vbc[m];
+    RET[l]=RET[l]+1;
+    }
+  return RET;
+  }
+
+function Test28() {
+  Logtext="N256D3=\n"+N256D3.join("\n")+"\n\n";
+  Linkliste="";
+  GESAMTMERK=[];
+  var doppelte=0;
+  //Test BitExpand(i);
+  Logtext=Logtext+"Test BitExpand(i,5)\n";
+  BitExpandVektor=[];
+  for (var i=0;i<32;i++) BitExpandVektor[i]=BitExpand(i,5).slice();
+  Logtext=Logtext+BitExpandVektor.join("\n")+"\n\n";
+  //Test Bitvergleich
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(16,8,24,4,22,13,31)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(16,24,8,4,22,31,13)+"\n";
+                                                   //c, b,bc,a ,ac,ab,abc
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(4,24,31,16,22,8,13)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(4,31,24,16,22,13,8)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,16,20,8,10,25)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(1,16,21,8,11,25)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,29)+"\n";
+0,16,20,8,10,25,31
+1,16,21,8,11,25,30
+2,16,22,8,8,25,29
+011
+101
+110  
+  
+  Logtext="Test28(), doppelte insgesamt="+doppelte+"\n"+Logtext;
+  Logfile(Logtext);
+  }
+
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
   var SD=DD.length;
@@ -2914,6 +2976,7 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
+    <div><button id="Button Test28" onclick="Test28()" style="font-size:180%">Test28()</button>N256D3 und andere</div>
     <div>
       <button id="Button Test27(4)" onclick="Test27(4)" style="font-size:180%">Test27(4)</button>alle x y xy z xz yz zählen
       <button id="Button Test27(6)" onclick="Test27(6)" style="font-size:180%">Test27(6)</button>,
