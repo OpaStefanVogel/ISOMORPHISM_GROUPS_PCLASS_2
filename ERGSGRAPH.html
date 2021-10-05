@@ -6,6 +6,7 @@
   <meta charset="utf-8"/>
   <script src="ERGS2_2945_20180813_NUR4.js" type="application/ecmascript"></script>
   <script src="ERGS2_2945_20180813.js" type="application/ecmascript"></script>
+  <script src="Diagonalen.js" type="application/ecmascript"></script>
   <style type="text/css">
 h { display: inline-flex; flex-direction: row; align-items: flex-end;  background-color: LightGreen; border: solid; margin: 8px; flex-wrap: no-wrap; }
 v { display: flex; flex-direction: column-reverse; align-items: flex-end;  background-color: Bisque; border:solid; margin: 8px; overflow:auto; max-height:400px;}
@@ -20,6 +21,8 @@ uu {position:fixed;
 td {min-width:80px; height:40px}
     </style>
   <script type="application/ecmascript">
+//alert(1);
+//alert(N256D3.join("\n"));
 function MyIndexOf(arr,elem) {
   ind=-1;
   for (var i=0;i<arr.length;i++) {
@@ -1648,11 +1651,11 @@ async function Test15(ddd) {//04 Suche ohne Logtext
   Logtext="Test15 ERGS2NEU für dd="+dd+"\n";
   ERGS2NEU[dd-1]=[];
   for (var nr=0;nr<ERGS1NEU[dd-1].length;nr++) {
-  //for (var nr=0;nr<1;nr++) {
+  //for (var nr=0;nr<Math.min(1,ERGS1NEU[dd-1].length);nr++) {
     var R0=ERGS1NEU[dd-1][nr];
 //04    Logtext=Logtext+nr+" "+Show_R(R0)+"\n";
     for (var nr2=0;nr2<ERGS2NEU[dd-2].length;nr2++) //if (GESAMTMERK.length<1)
-    //for (var nr2=0;nr2<4;nr2++) //if (GESAMTMERK.length<1)
+    //for (var nr2=0;nr2<Math.min(32,ERGS2NEU[dd-2].length);nr2++) //if (GESAMTMERK.length<1)
      if (R0.slice(0,dd-1).toString()==ERGS2NEU[dd-2][nr2][0].toString()) 
       {
       var R1=ERGS2NEU[dd-2][nr2][1].slice();
@@ -2969,6 +2972,11 @@ Tabelle TABLE 1 aus ...:
       <button onclick="Test15(3)" style="font-size:290%">(3)</button>
       <button onclick="Test15(4)" style="font-size:290%">(4)</button>
       <button onclick="Test15(5)" style="font-size:290%">(5)</button>
+      <button onclick="Test15(6)" style="font-size:290%">(6)</button>
+      <button onclick="Test15(7)" style="font-size:290%">(7)</button>
+      <button onclick="Test15(8)" style="font-size:290%">(8)</button>
+      <button onclick="Test15(9)" style="font-size:290%">(9)</button>
+      <button onclick="Test15(10)" style="font-size:290%">(10)</button>
       <button onclick="Test15MERK()" style="font-size:290%">MERK</button>
       </div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
