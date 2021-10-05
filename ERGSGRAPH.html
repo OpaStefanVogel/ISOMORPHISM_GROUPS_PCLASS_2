@@ -2394,18 +2394,21 @@ function BitExpand(i,c) {
 var BitExpandVektor=[];
 
 function Bitvergleich(a,b,ab,c,ac,bc,abc) {
-  var RET=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+//  var RET=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  var RET=[0,0,0,0,0]; 
   var va=BitExpandVektor[a];
   var vb=BitExpandVektor[b];
   var vab=BitExpandVektor[ab];
   var vc=BitExpandVektor[c];
   var vac=BitExpandVektor[ac];
   var vbc=BitExpandVektor[bc];
+  var vabc=BitExpandVektor[abc];
   for (var m=0;m<va.length;m++) {
-    var l=32*va[m]+16*vb[m]+8*vab[m]+4*vc[m]+2*vac[m]+vbc[m];
-    RET[l]=RET[l]+1;
+    //var l=32*va[m]+16*vb[m]+8*vab[m]+4*vc[m]+2*vac[m]+vbc[m];
+    //RET.push(MARKZAHL_offiziell([0,va[m],vb[m],vab[m],vc[m],vac[m],vbc[m],vabc[m]]).toString());
+    RET[["0,0,0,1","0,0,1,1","1,2,0,1","3,0,0,1","3,3,1,1"].indexOf(MARKZAHL_offiziell([0,va[m],vb[m],vab[m],vc[m],vac[m],vbc[m],vabc[m]]).toString())]+=1;
     }
-  return RET;
+  return "[["+RET.sort().join("],[")+"]]";
   }
 
 function Test28() {
@@ -2420,25 +2423,13 @@ function Test28() {
   Logtext=Logtext+BitExpandVektor.join("\n")+"\n\n";
   //Test Bitvergleich
   for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(16,8,24,4,22,13,31)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(16,24,8,4,22,31,13)+"\n";
-                                                   //c, b,bc,a ,ac,ab,abc
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(4,24,31,16,22,8,13)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(4,31,24,16,22,13,8)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,16,20,8,10,25)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(1,16,21,8,11,25)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,29)+"\n";
-0,16,20,8,10,25,31
-1,16,21,8,11,25,30
-2,16,22,8,8,25,29
-011
-101
-110  
-  
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,16,20,8,10,25,31)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(1,16,21,8,11,25,30)+"\n";
+  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25,29)+"\n";
   Logtext="Test28(), doppelte insgesamt="+doppelte+"\n"+Logtext;
   Logfile(Logtext);
   }
+//15*14*12/(7*6*4)
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
