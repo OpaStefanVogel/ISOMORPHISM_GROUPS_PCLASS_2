@@ -2447,8 +2447,18 @@ var Liste_der_Untergruppen_zu_abcd=[
   [e,ab,ac,bc,ad,bd,cd,abcd]
   ];
 
+function MARKZAHL_offiziell_mit_BitExpand(D) {
+  var RET=[];
+  for (var bit=0;bit<BitExpandVektor.length;bit++) {
+    var DB=[];
+    for (var i=0;i<D.length;i++) DB[i]=BitExpandVektor[D[i]][bit];
+    RET.push(MARKZAHL_offiziell(DB));
+    }
+  return RET;
+  }
+
 function Test28() {
-  Logtext="N256D4=\n"+N256D4.slice(0,10).join("\n")+"\n\n";
+  Logtext="N256D4=\n"+N256D4.slice(184,186).join("\n")+"\n\n";
   Linkliste="";
   GESAMTMERK=[];
   var doppelte=0;
@@ -2460,8 +2470,9 @@ function Test28() {
   //Test Liste der Untergruppen
   Logtext=Logtext+"Liste_der_Untergrupoen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
   //Test Bitvergleich
-  for (var nr=0;nr<N256D4.length;nr++) {
+  for (var nr=0;nr<Math.min(200,N256D4.length);nr++) {
     var D=N256D4[nr];
+    var RETM=MARKZAHL_offiziell_mit_BitExpand(D);
     //Logtext=Logtext+"D="+D+"\n";
     var RETL=[];
     for (var i=0;i<15;i++) {
@@ -2473,11 +2484,12 @@ function Test28() {
       }
     RETL.sort();
     //Logtext=Logtext+RETL+"\n";
-    var Zeilegesamt="["+RETL+"]";
+    var Zeilegesamt="["+RETM.sort().join("],[")+"],["+RETL+"]";
     var neu="neu";
-    if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
+    var ind=GESAMTMERK.indexOf(Zeilegesamt);
+    if (ind>-1) {neu="doppelt"+"♥"+ind; doppelte=doppelte+1}
     GESAMTMERK.push(Zeilegesamt);
-    Logtext=Logtext+neu+Zeilegesamt+"\n";
+    Logtext=Logtext+nr+neu+Zeilegesamt+"\n";
     }
     
 //  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,8,4,12,2,10,6,14)+"\n";
