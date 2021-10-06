@@ -2449,12 +2449,14 @@ var Liste_der_Untergruppen_zu_abcd=[
 
 function MARKZAHL_offiziell_mit_BitExpand(D) {
   var RET=[];
+  var RETC=[];
   for (var bit=0;bit<BitExpandVektor.length;bit++) {
     var DB=[];
     for (var i=0;i<D.length;i++) DB[i]=BitExpandVektor[D[i]][bit];
     RET.push(MARKZAHL_offiziell(DB));
+    RETC.push(COMPDIAGSTABERZ(DB));
     }
-  return RET;
+  return [RET,RETC];
   }
 
 function Test28() {
@@ -2470,7 +2472,7 @@ function Test28() {
   //Test Liste der Untergruppen
   Logtext=Logtext+"Liste_der_Untergrupoen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
   //Test Bitvergleich
-  for (var nr=0;nr<Math.min(200,N256D4.length);nr++) {
+  for (var nr=184;nr<Math.min(186,N256D4.length);nr++) {
     var D=N256D4[nr];
     var RETM=MARKZAHL_offiziell_mit_BitExpand(D);
     //Logtext=Logtext+"D="+D+"\n";
@@ -2484,11 +2486,15 @@ function Test28() {
       }
     RETL.sort();
     //Logtext=Logtext+RETL+"\n";
-    var Zeilegesamt="["+RETM.sort().join("],[")+"],["+RETL+"]";
+    var Zeilegesamt="["+RETM[0].slice().sort().join("],[")+"],["+RETL+"]";
     var neu="neu";
     var ind=GESAMTMERK.indexOf(Zeilegesamt);
     if (ind>-1) {neu="doppelt"+"♥"+ind; doppelte=doppelte+1}
     GESAMTMERK.push(Zeilegesamt);
+    Logtext=Logtext+D+"\n";
+    for (var bit=0;bit<BitExpandVektor.length;bit++) {
+      Logtext=Logtext+RETM[1][bit]+" "+RETM[0][bit]+"\n";
+      }
     Logtext=Logtext+nr+neu+Zeilegesamt+"\n";
     }
     
@@ -2496,6 +2502,16 @@ function Test28() {
   Logtext="Test28(), doppelte insgesamt="+doppelte+"\n"+Logtext;
   Logfile(Logtext);
   }
+
+//2,0, 2,0,1,3, 1,3,0,1, 0,1,0,1, 0,1 3,3,1,1
+//2,0, 2,0,1,3, 1,3,1,0, 1,0,1,0, 1,0 3,3,1,1
+//2,1, 0,3,1,2, 3,0,0,0, 1,1,0,0, 1,1 3,3,1,1
+//2,1, 0,3,1,2, 3,0,1,1, 0,0,1,1, 0,0 3,3,1,1
+//     c d c d           a b b a             
+//2,0, 3,1,0,2, 1,3,0,1, 1,0,1,0, 0,1 3,3,1,1
+//2,0, 3,1,0,2, 1,3,1,0, 0,1,0,1, 1,0 3,3,1,1
+//2,1, 1,2,0,3, 3,0,0,0, 0,0,1,1, 1,1 3,3,1,1
+//2,1, 1,2,0,3, 3,0,1,1, 1,1,0,0, 0,0 3,3,1,1
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
