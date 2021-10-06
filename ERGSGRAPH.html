@@ -2411,25 +2411,58 @@ function Bitvergleich(a,b,ab,c,ac,bc,abc) {
   return "[["+RET.sort().join("],[")+"]]";
   }
 
+//15*14*12/(7*6*4)
+var e=0;
+var a=1;
+var b=2;
+var ab=3;
+var c=4;
+var ac=5
+var bc=6;
+var abc=7;
+var d=8;
+var ad=9;
+var bd=10;
+var abd=11;
+var cd=12;
+var acd=13;
+var bcd=14;
+var abcd=15;
+var Liste_der_Untergruppen_zu_abcd=[
+  [a,b,ab,c,ac,bc,abc],
+  [a,b,ab,d,ad,bd,abd],
+  [a,b,ab,cd,acd,bcd,abcd],
+  [a,c,ac,d,ad,cd,acd],
+  [a,c,ac,bd,abd,bcd,abcd],
+  [a,bc,abc,d,ad,bcd,abcd],
+  [a,bc,abc,bd,abd,cd,acd],
+  [b,c,bc,d,bd,cd,bcd],
+  [b,c,bc,ad,abd,acd,abcd],
+  [b,ac,abc,d,bd,acd,abcd],
+  [b,ac,abc,ad,abd,cd,bcd],
+  [ab,c,abc,d,abd,cd,abcd],
+  [ab,c,abc,ad,bd,acd,bcd],
+  [ab,ac,bc,d,abd,acd,bcd],
+  [ab,ac,bc,ad,bd,cd,abcd]
+  ];
+
 function Test28() {
-  Logtext="N256D3=\n"+N256D3.join("\n")+"\n\n";
+  Logtext="N256D4=\n"+N256D4.slice(0,10).join("\n")+"\n\n";
   Linkliste="";
   GESAMTMERK=[];
   var doppelte=0;
   //Test BitExpand(i);
-  Logtext=Logtext+"Test BitExpand(i,5)\n";
+  Logtext=Logtext+"Test BitExpand(i,4)\n";
   BitExpandVektor=[];
-  for (var i=0;i<32;i++) BitExpandVektor[i]=BitExpand(i,5).slice();
+  for (var i=0;i<16;i++) BitExpandVektor[i]=BitExpand(i,4).slice();
   Logtext=Logtext+BitExpandVektor.join("\n")+"\n\n";
+  //Test Liste der Untergruppen
+  Logtext=Logtext+"Liste_der_Untergrupoen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
   //Test Bitvergleich
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(16,8,24,4,22,13,31)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,16,20,8,10,25,31)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(1,16,21,8,11,25,30)+"\n";
-  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(2,16,22,8,8,25,29)+"\n";
+//  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,8,4,12,2,10,6,14)+"\n";
   Logtext="Test28(), doppelte insgesamt="+doppelte+"\n"+Logtext;
   Logfile(Logtext);
   }
-//15*14*12/(7*6*4)
 
 function DREHMARK(DD) {
   var MARK=[0,0,0,0];
