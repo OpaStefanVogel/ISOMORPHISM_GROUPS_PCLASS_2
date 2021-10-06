@@ -2393,22 +2393,23 @@ function BitExpand(i,c) {
 
 var BitExpandVektor=[];
 
-function Bitvergleich(a,b,ab,c,ac,bc,abc) {
+function Bitvergleich(U) {
 //  var RET=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   var RET=[0,0,0,0,0]; 
-  var va=BitExpandVektor[a];
-  var vb=BitExpandVektor[b];
-  var vab=BitExpandVektor[ab];
-  var vc=BitExpandVektor[c];
-  var vac=BitExpandVektor[ac];
-  var vbc=BitExpandVektor[bc];
-  var vabc=BitExpandVektor[abc];
+  var ve=BitExpandVektor[U[0]];
+  var va=BitExpandVektor[U[1]];
+  var vb=BitExpandVektor[U[2]];
+  var vab=BitExpandVektor[U[3]];
+  var vc=BitExpandVektor[U[4]];
+  var vac=BitExpandVektor[U[5]];
+  var vbc=BitExpandVektor[U[6]];
+  var vabc=BitExpandVektor[U[7]];
   for (var m=0;m<va.length;m++) {
     //var l=32*va[m]+16*vb[m]+8*vab[m]+4*vc[m]+2*vac[m]+vbc[m];
     //RET.push(MARKZAHL_offiziell([0,va[m],vb[m],vab[m],vc[m],vac[m],vbc[m],vabc[m]]).toString());
-    RET[["0,0,0,1","0,0,1,1","1,2,0,1","3,0,0,1","3,3,1,1"].indexOf(MARKZAHL_offiziell([0,va[m],vb[m],vab[m],vc[m],vac[m],vbc[m],vabc[m]]).toString())]+=1;
+    RET[["0,0,0,1","0,0,1,1","1,2,0,1","3,0,0,1","3,3,1,1"].indexOf(MARKZAHL_offiziell([ve[m],va[m],vb[m],vab[m],vc[m],vac[m],vbc[m],vabc[m]]).toString())]+=1;
     }
-  return "[["+RET.sort().join("],[")+"]]";
+  return "["+RET+"]";
   }
 
 //15*14*12/(7*6*4)
@@ -2429,21 +2430,21 @@ var acd=13;
 var bcd=14;
 var abcd=15;
 var Liste_der_Untergruppen_zu_abcd=[
-  [a,b,ab,c,ac,bc,abc],
-  [a,b,ab,d,ad,bd,abd],
-  [a,b,ab,cd,acd,bcd,abcd],
-  [a,c,ac,d,ad,cd,acd],
-  [a,c,ac,bd,abd,bcd,abcd],
-  [a,bc,abc,d,ad,bcd,abcd],
-  [a,bc,abc,bd,abd,cd,acd],
-  [b,c,bc,d,bd,cd,bcd],
-  [b,c,bc,ad,abd,acd,abcd],
-  [b,ac,abc,d,bd,acd,abcd],
-  [b,ac,abc,ad,abd,cd,bcd],
-  [ab,c,abc,d,abd,cd,abcd],
-  [ab,c,abc,ad,bd,acd,bcd],
-  [ab,ac,bc,d,abd,acd,bcd],
-  [ab,ac,bc,ad,bd,cd,abcd]
+  [e,a,b,ab,c,ac,bc,abc],
+  [e,a,b,ab,d,ad,bd,abd],
+  [e,a,b,ab,cd,acd,bcd,abcd],
+  [e,a,c,ac,d,ad,cd,acd],
+  [e,a,c,ac,bd,abd,bcd,abcd],
+  [e,a,bc,abc,d,ad,bcd,abcd],
+  [e,a,bc,abc,bd,abd,cd,acd],
+  [e,b,c,bc,d,bd,cd,bcd],
+  [e,b,c,bc,ad,abd,acd,abcd],
+  [e,b,ac,abc,d,bd,acd,abcd],
+  [e,b,ac,abc,ad,abd,cd,bcd],
+  [e,ab,c,abc,d,abd,cd,abcd],
+  [e,ab,c,abc,ad,bd,acd,bcd],
+  [e,ab,ac,bc,d,abd,acd,bcd],
+  [e,ab,ac,bc,ad,bd,cd,abcd]
   ];
 
 function Test28() {
@@ -2459,6 +2460,26 @@ function Test28() {
   //Test Liste der Untergruppen
   Logtext=Logtext+"Liste_der_Untergrupoen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
   //Test Bitvergleich
+  for (var nr=0;nr<N256D4.length;nr++) {
+    var D=N256D4[nr];
+    //Logtext=Logtext+"D="+D+"\n";
+    var RETL=[];
+    for (var i=0;i<15;i++) {
+      var Untergruppe=[];
+      for (var j=0;j<8;j++) Untergruppe.push(D[Liste_der_Untergruppen_zu_abcd[i][j]]);
+      var RE=Bitvergleich(Untergruppe);
+      //Logtext=Logtext+"  U="+Untergruppe+" "+RE+"\n";
+      RETL.push(RE);
+      }
+    RETL.sort();
+    //Logtext=Logtext+RETL+"\n";
+    var Zeilegesamt="["+RETL+"]";
+    var neu="neu";
+    if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
+    GESAMTMERK.push(Zeilegesamt);
+    Logtext=Logtext+neu+Zeilegesamt+"\n";
+    }
+    
 //  for (var i=0;i<1;i++) Logtext=Logtext+Bitvergleich(0,8,4,12,2,10,6,14)+"\n";
   Logtext="Test28(), doppelte insgesamt="+doppelte+"\n"+Logtext;
   Logfile(Logtext);
