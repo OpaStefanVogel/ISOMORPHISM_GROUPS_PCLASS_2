@@ -2459,7 +2459,7 @@ function MARKZAHL_offiziell_mit_BitExpand(D) {
   return [RET,RETC];
   }
 
-function Test28() {
+function Test28(dflag) {
   Logtext="N256D4=\n"+N256D4.slice(184,186).join("\n")+"\n\n";
   Linkliste="";
   GESAMTMERK=[];
@@ -2470,18 +2470,34 @@ function Test28() {
   for (var i=0;i<16;i++) BitExpandVektor[i]=BitExpand(i,4).slice();
   Logtext=Logtext+BitExpandVektor.join("\n")+"\n\n";
   //Test Liste der Untergruppen
-  Logtext=Logtext+"Liste_der_Untergrupoen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
+  Logtext=Logtext+"Liste_der_Untergruppen_zu_abcd=\n"+Liste_der_Untergruppen_zu_abcd.join("\n")+"\n\n";
   //Test Bitvergleich
-  for (var nr=184;nr<Math.min(186,N256D4.length);nr++) {
+  var forliste=[];
+  for (var i=0;i<Math.min(200,N256D4.length);i++) forliste.push(i);
+  if (dflag>0) forliste=[96,101,184,185,201,202,129,227,130,228];
+  if (dflag==3) forliste=[184,185];
+  for (var nr of forliste) {
     var D=N256D4[nr];
     var RETM=MARKZAHL_offiziell_mit_BitExpand(D);
     //Logtext=Logtext+"D="+D+"\n";
     var RETL=[];
     for (var i=0;i<15;i++) {
       var Untergruppe=[];
+      var UG=[];
       for (var j=0;j<8;j++) Untergruppe.push(D[Liste_der_Untergruppen_zu_abcd[i][j]]);
+      for (var j=0;j<8;j++) UG.push(Liste_der_Untergruppen_zu_abcd[i][j]);
       var RE=Bitvergleich(Untergruppe);
-      //Logtext=Logtext+"  U="+Untergruppe+" "+RE+"\n";
+      if (dflag>=2) {
+        Logtext=Logtext+"  U="+i+Untergruppe+" "+RE+" "+UG+"\n";
+        for (var bit=0;bit<BitExpandVektor.length;bit++) {
+          var xt=[];
+          var yt=[];
+          for (var xb=0;xb<Untergruppe.length;xb++) xt.push(BitExpandVektor[Untergruppe[xb]][bit]);
+          for (var xb=0;xb<Untergruppe.length;xb++) yt.push(RETM[1][bit][UG[xb]]);
+          var mxt=MARKZAHL_offiziell(xt);
+          if (mxt.toString()=="3,0,0,1") Logtext=Logtext+"["+yt+"]; ["+xt+"]; ["+mxt+"]\n";
+          }
+        }
       RETL.push(RE);
       }
     RETL.sort();
@@ -2489,11 +2505,11 @@ function Test28() {
     var Zeilegesamt="["+RETM[0].slice().sort().join("],[")+"],["+RETL+"]";
     var neu="neu";
     var ind=GESAMTMERK.indexOf(Zeilegesamt);
-    if (ind>-1) {neu="doppelt"+"♥"+ind; doppelte=doppelte+1}
+    if (ind>-1) {neu="doppelt"+ind+"♥"; doppelte=doppelte+1}
     GESAMTMERK.push(Zeilegesamt);
-    Logtext=Logtext+D+"\n";
-    for (var bit=0;bit<BitExpandVektor.length;bit++) {
-      Logtext=Logtext+RETM[1][bit]+" "+RETM[0][bit]+"\n";
+    if (dflag) Logtext=Logtext+D+"\n";
+    if (dflag) for (var bit=0;bit<BitExpandVektor.length;bit++) {
+      Logtext=Logtext+"["+RETM[1][bit]+"]; ["+RETM[0][bit]+"]\n";
       }
     Logtext=Logtext+nr+neu+Zeilegesamt+"\n";
     }
@@ -2503,6 +2519,7 @@ function Test28() {
   Logfile(Logtext);
   }
 
+//184+185:
 //2,0, 2,0,1,3, 1,3,0,1, 0,1,0,1, 0,1 3,3,1,1
 //2,0, 2,0,1,3, 1,3,1,0, 1,0,1,0, 1,0 3,3,1,1
 //2,1, 0,3,1,2, 3,0,0,0, 1,1,0,0, 1,1 3,3,1,1
@@ -3049,7 +3066,12 @@ Tabelle TABLE 1 aus ...:
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
   <div>
-    <div><button id="Button Test28" onclick="Test28()" style="font-size:180%">Test28()</button>N256D3 und andere</div>
+    <div>
+      <button id="Button Test28(0)" onclick="Test28(0)" style="font-size:180%">Test28(0)</button>aktuell N256D4
+      <button id="Button Test28(1)" onclick="Test28(1)" style="font-size:180%">Test28(1)</button>
+      <button id="Button Test28(2)" onclick="Test28(2)" style="font-size:180%">Test28(2)</button>
+      <button id="Button Test28(3)" onclick="Test28(3)" style="font-size:180%">Test28(3)</button>
+      </div>
     <div>
       <button id="Button Test27(4)" onclick="Test27(4)" style="font-size:180%">Test27(4)</button>alle x y xy z xz yz zählen
       <button id="Button Test27(6)" onclick="Test27(6)" style="font-size:180%">Test27(6)</button>,
