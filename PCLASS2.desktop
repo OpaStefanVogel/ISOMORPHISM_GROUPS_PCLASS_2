@@ -1,7 +1,7 @@
 [Desktop Entry]
 Exec=lxterminal -e "ls;git pull;gitk --all &pcmanfm .&mousepad PCLASS2.desktop ERGSGRAPH.html AAAHAW_20191205_AEHNLICHKEIT.txt&bash"
 Type=Application
-Path=/home/pi/Desktop/CLONE/ISOMORPHISM_GROUPS_PCLASS_2
+Path=/home/pi/Desktop/CLONE/Repositories/ISOMORPHISM_GROUPS_PCLASS_2
 Terminal=false
 StartupNotify=true
 Icon=
