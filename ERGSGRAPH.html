@@ -949,6 +949,7 @@ function Test7() {
     for (var i=0;i<DD0.length;i++) if (DD0[i]==DD1[i]) DD2[i]=0; else DD2[i]=1;
     var M2=SORTIERUNG.indexOf(MARKZAHL0GGT(DD2).join("+"));
     var MGES=[M0,M1,M2];
+    //if (dd==2) alert(MGES);
     var MGES2=MGES.slice().sort(function(x,y) {
 //      if (x[0]<y[0]) return -1;
 //      if (x[0]>y[0]) return 1;
@@ -2182,23 +2183,31 @@ function Test23(dd0i) {
   Logfile(Logtext);
   }
 
-function Test24() {
+function Test24(ni) {
   Logtext="Test24:\n";
   Linkliste="";
-  Logtext=Logtext+'xxxx<span id="DD1T">[64,266]: DD1T=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]]</span>\n';
-  Linkliste=Linkliste+'<a href="#DD1T">DD1T</a>';
-//  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]]);
-//  var DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0]]);
+  //Logtext=Logtext+'xxxx<span id="DD1T">[64,266]: DD1T=[[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]]</span>\n';
+  //Linkliste=Linkliste+'<a href="#DD1T">DD1T</a>';
+  let DD1V=[]
+  if (ni=='10101010') DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0]]);
+  if (ni=='1010101') DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0],[1,1,1,1,1,1,1]]);
+  if (ni=='101010') DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1],[0,0,0,0,0,0]]);
+  if (ni=='10101') DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0],[1,1,1,1,1]]);
+  if (ni=='1010') DD1V=DIAG([[1],[0,0],[1,1,1],[0,0,0,0]]);
+  if (ni=='101') DD1V=DIAG([[1],[0,0],[1,1,1]]);
+  if (ni=='10') DD1V=DIAG([[1],[0,0]]);
   var T=[0,1,0,0];
-  //var DD1V=DOPPELDIAG(T,T);
-  //var DD1V=DOPPELDIAG(DOPPELDIAG(T,T),T);
-  var DD1V=DOPPELDIAG(DOPPELDIAG(DOPPELDIAG(T,T),T),T);
+  if (ni=='T') DD1V=T;
+  if (ni=='TxT') DD1V=DOPPELDIAG(T,T);
+  if (ni=='TxTxT') DD1V=DOPPELDIAG(DOPPELDIAG(T,T),T);
+  if (ni=='TxTxTxT') DD1V=DOPPELDIAG(DOPPELDIAG(DOPPELDIAG(T,T),T),T);
   var M1V=MARKZAHL(DD1V);
   Logtext=Logtext+"DD1V"+DD1V+"\n"+M1V+"\n\n";
 
-  Logtext=Logtext+KREISE_MEHRFACH_MIT_KANTEN(DD1V)+"\n";
+  //Logtext=Logtext+KREISE_MEHRFACH_MIT_KANTEN(DD1V)+"\n";
   Logtext=Logtext+KREISE_MEHRFACH(DD1V).join("\n")+"\n\n"+/*AZAHL(1,6)+*/"\n";
 //alert(KREISE(DD1V));#
+//Logfile(Logtext);return;
   for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
     Logtext=Logtext+j;  
     for (var i=0;i<AMERK.length;i++) if (AMERK[i]) if (AZAHL(i,j)==4) Logtext=Logtext+"."+AZAHL(i,j); else Logtext=Logtext+":"+AZAHL(i,j);
@@ -3087,6 +3096,25 @@ divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
   </style>
   <div style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:100%">
     <divb>
+      <divh>ERGS1NEU Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T 
+        </divh>
+      <divh>
+        <button id="Button Test24" onclick="Test24('T')" style="font-size:290%">Test24(T)</button>
+        <button onclick="Test24('TxT')" style="font-size:290%">(TxT)</button>
+        <button onclick="Test24('TxTxT')" style="font-size:290%">(TxTxT)</button>
+        <button onclick="Test24('TxTxTxT')" style="font-size:290%">(TxTxTxT)</button>
+        </divh>
+      <divh>
+        <button onclick="Test24('10')" style="font-size:290%">Test24(10)</button>
+        <button onclick="Test24('101')" style="font-size:290%">(101)</button>
+        <button onclick="Test24('1010')" style="font-size:290%">(1010)</button>
+        <button onclick="Test24('10101')" style="font-size:290%">(10101)</button>
+        <button onclick="Test24('101010')" style="font-size:290%">(101010)</button>
+        <button onclick="Test24('1010101')" style="font-size:290%">(1010101)</button>
+        <button onclick="Test24('10101010')" style="font-size:290%">(10101010)</button>
+        </divh>
+      </divb>
+    <divb>
       <divh>ERGS1NEU Automorphismen zählen</divh>
       <divh><button onclick="Test19()" style="font-size:290%">Test19()</button></divh>
       </divb>
@@ -3141,7 +3169,7 @@ divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
       </div>
     <div>hier war Test26()</div>
     <div><button id="Button Test25" onclick="Test25()" style="font-size:180%">Test25()</button>Ausgabe gemeinsame Struktur für 655 und 569</div>
-    <div><button id="Button Test24" onclick="Test24()" style="font-size:180%">Test24()</button>Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
+    <div>hier war Test24() Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
     <div>
       <button onclick="Test23(1)" style="font-size:180%">Test23(1)</button>(R1 × Z2) ×<sub><small>/D</small></sub> ERGS2[1] 
       <button onclick="Test23(2)" style="font-size:180%">Test23(2)</button>
