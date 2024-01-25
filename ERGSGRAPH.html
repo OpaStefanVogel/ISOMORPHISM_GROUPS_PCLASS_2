@@ -194,7 +194,7 @@ function ANZAHL_IJK_NULLSETZEN() {
   }
 
 function ANZAHL_IJK_HTML() {
-  var RET='<table border="0">';
+  var RET='<style>td {padding:0px}</style><table style="border-color:green; border:double">';
   for (var i=0;i<ANZAHL_IJK.length;i++) {
     for (var j=0;j<=i;j++) {
       for (var k=0;k<=j;k++) {
@@ -211,6 +211,7 @@ function ANZAHL_IJK_HTML() {
         }
       }
     }
+  RET=RET+'';
   return RET;
   }
 
@@ -633,7 +634,7 @@ function MARKZAHL5PUR_TEST2(DD,anz) {
 
 
 function MARKZAHL5PUR(DD,anz) {
-//♦!!! wird vor Test26 ersetzt durch MARKZAHL6 !!!♦
+//â™¦!!! wird vor Test26 ersetzt durch MARKZAHL6 !!!â™¦
   if (anz&&anz==1) {
     var DDNEU=MARKZAHL4(DD);
     return [DDNEU[0]+"\n",DDNEU[1],DDNEU[2]+"\n",,DDNEU[4],,,DDNEU[7]];
@@ -902,7 +903,7 @@ function Test5(dd,nr,f) {
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f/*+" "+M12[1]*/);
     //GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr+" "+f+" "+M12[1]);
-    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"â™¥"+M12[4]+"â™¦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
 //    } else Suche_Isomorphismus(M12[2],GESAMTMERKDD[ind]);
   Logtext=Logtext+GESAMTMERKORIG.join("\n");//+GESAMTMERKDD.join("\n");
   Logfile(Logtext);
@@ -934,6 +935,7 @@ function Test6() {
 function Test7() {
   //var dd=document.getElementById("Test3value").value*1;
   Logtext="Bestimmung aller Markierungen\n";
+  Linkliste="";
   ANZAHL_IJK_NULLSETZEN();
   for (var dd=1;dd<9;dd++) for (var nr=1;nr<ERGS2[dd-1].length+1;nr++) {
     //alert([dd,nr]);
@@ -1013,7 +1015,6 @@ for (var i=0;i<24;i++) {
     }
   }
 //alert(TVEC);
-
 
 function COMPDIAGSTABERZ(DD) {
   var MARK=[0,0,0,0];
@@ -1314,7 +1315,7 @@ function Test11(zmax) {
        var M1=MARKZAHL0GGT_TVEC(D1);
        var M2=MARKZAHL0GGT_TVEC(D2);
        var M3=MARKZAHL0GGT_TVEC(D3);
-       if (M1=="3,3,1,1"&&(M2=="3,3,1,1"&&M3=="1,1,0,0"||M3=="3,3,1,1"&&M2=="1,1,0,0"))
+       if (M1=="3,3,1,1"&&(M2=="3,3,1,1"&&M3=="1,1,0,0"||M3=="3,3,1,1"&&M2=="1,1,0,0")) //||M3=="3,3,1,1"&&M2=="3,3,1,1"))
          Logtext=Logtext+ERGS2[dd-1][nr-1].join("  ")+"  "+M1+" "+M2+" "+M3+"\n";
        }
      }
@@ -1386,7 +1387,7 @@ DV=[0,3,3,3,3,3,1,2,3,1,3,2,1,0,0,2,3,1,1,0,1,0,2,0,1,2,0,0,2,2,2,1];
 //    var DD0=DIAG(ERGS2[8-1][569-1][0]);
 //    var DD1=DIAG(ERGS2[8-1][569-1][1]);
 //DV=[]; for (var i=0;i<DD1.length;i++) DV[i]=2*DD0[i]+DD1[i];
-//♥♦
+//â™¥â™¦
 
 //MU=MARKZAHL4(DU)[1];
 //MU=MARKZAHL4(MU,1)[1];
@@ -1527,15 +1528,15 @@ function Test12() {
   var N11=[]; for (var i=0;i<D1.length;i++) if (D1[i]==1) N11.push(M1[5][i]);
   var N12=[]; for (var i=0;i<D1.length;i++) if (D1[i]==2) N12.push(M1[5][i]);
   var N13=[]; for (var i=0;i<D1.length;i++) if (D1[i]==3) N13.push(M1[5][i]);
-  Logtext=Logtext+N11.sort().join("★")+"\n";
-  Logtext=Logtext+N12.sort().join("★")+"\n";
-  Logtext=Logtext+N13.sort().join("★")+"\n\n";
+  Logtext=Logtext+N11.sort().join("â˜…")+"\n";
+  Logtext=Logtext+N12.sort().join("â˜…")+"\n";
+  Logtext=Logtext+N13.sort().join("â˜…")+"\n\n";
   var N21=[]; for (var i=0;i<D2.length;i++) if (D2[i]==1) N21.push(M2[5][i]);
   var N22=[]; for (var i=0;i<D2.length;i++) if (D2[i]==2) N22.push(M2[5][i]);
   var N23=[]; for (var i=0;i<D2.length;i++) if (D2[i]==3) N23.push(M2[5][i]);
-  Logtext=Logtext+N21.sort().join("★")+"\n";
-  Logtext=Logtext+N22.sort().join("★")+"\n";
-  Logtext=Logtext+N23.sort().join("★")+"\n\n";
+  Logtext=Logtext+N21.sort().join("â˜…")+"\n";
+  Logtext=Logtext+N22.sort().join("â˜…")+"\n";
+  Logtext=Logtext+N23.sort().join("â˜…")+"\n\n";
   
   Logtext=Logtext+M1[6].join(",")+"\n";
   Logtext=Logtext+M2[6].join(",")+"\n\n";
@@ -1682,7 +1683,7 @@ async function Test15(ddd) {//04 Suche ohne Logtext
     }
   if (ind==-1) {
 //04    Logtext=Logtext+"      "+ii+" "+Show_R(R1)+"  ";
-//04    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"♥"+MARKZAHL5(DD12).join("𝄞")+"♦\n";
+//04    Logtext=Logtext+"*"+MARKZAHL0GGT_TVEC(DD0)+" "+MARKZAHL0GGT_TVEC(DD1)+" "+MARKZAHL0GGT_TVEC(DD2)+"â™¥"+MARKZAHL5(DD12).join("ð„ž")+"â™¦\n";
     //return;
     GESAMTMERK.push(M12[0]);
     GESAMTMERKMU.push(M12[1]);
@@ -1692,7 +1693,7 @@ async function Test15(ddd) {//04 Suche ohne Logtext
     for (var i=0;i<R1.length;i++) RT=RT+R1[i].join("")+",";//alert(RT);
     GESAMTMERKORIG.unshift(GESAMTMERK.length+" "+RT+" "+dd+" "+nr);
     ERGS2NEU[dd-1].push([R0.slice(),R1.slice()]);
-    } //else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"♥"+M12[4]+"♦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
+    } //else if (Suche_Isomorphismus_DD(M12[4],GESAMTMERKDD[ind])[0]==false) GESAMTMERKORIG.unshift("  "+ind+" "+M12[3]+" "+GESAMTMERKMU[ind]+"â™¥"+M12[4]+"â™¦"+GESAMTMERKDD[ind]+" "+Suche_Isomorphismus(M12[3],GESAMTMERKMU[ind])[0]+" "+DD12);
 /*      else if (Suche_Isomorphismus(M12[1],GESAMTMERKMU[ind])[0]==false) {
         alert(M12.join("\n"));
         Logtext=Logtext+ind+"\n"+M12[0]+"\n"+GESAMTMERK[ind]+"\n"+M12[1]+"\n"+GESAMTMERKMU[ind]+"\n";
@@ -1787,7 +1788,8 @@ function Test17() {
   }
 
 function Test18() {
-  Logtext="Vergleich COMPDIAGSTABERZ alle y oder nur ein- und zweistellige Produkte\n";
+  Logtext="MARKZAHL für alle ERGS1 bis dd=15\n";
+  Linkliste="";
   //alert(ERGS1NEU.length);
   var t0=Date.now();
   for (var dd=0;dd<15;dd++) {
@@ -1860,7 +1862,7 @@ function Suche_Anzahl_Isomorphismen(DU,DV) {
 
 var ANZTAB=[];
 var Linkliste="";
-function Test19() {
+function Test19UNKLAR() {
   //Suche Automorphismen
   Logtext="Test19 [655,569 ],[713,705]...\n";
   Linkliste="";
@@ -1906,6 +1908,15 @@ function Test19() {
     Logtext=Logtext+"["+MARKZAHL0GGT_TVEC_N(DD2)+"]\n";
     Logtext=Logtext+M12[0]+"\n"+M12[1]+"\n"+M12[2]+"\n";
     }
+  }
+
+function Test19() {
+  //Suche Automorphismen
+  Logtext="Anzahl der Automorphismen zu ERGS1NEU\n";
+  Linkliste="";
+  var dd=8;
+  GESAMTMERK=[];
+  GESAMTMERKORIG=[];
   ANZTAB=[];
   for (var dd=0; dd<10; dd++) {
     Logtext=Logtext+'<span id="dd='+(dd+1)+'" style="background-color:GreenYellow">dd='+(dd+1)+"\n</span>";
@@ -1933,6 +1944,7 @@ function Test19() {
       //Logtext=Logtext+" "+nr+" "+ORBNUM;
       }
     Logtext=Logtext+" "+Math.log2(Number(ORBNUM))+" "+GLSTART+" "+(Math.log2(Number(ORBNUM))==GLSTART)+"\n\n";
+
 /*    var R=[[0],[1,1],[0,0,0],[1,1,1,1]];
     var R=[[0],[1,1],[0,0,0]];
     var DDD=DIAG(R);
@@ -2329,7 +2341,7 @@ function Test26(dmax) {
       Logtext=Logtext+"dd="+(dd0+1)+"  nr="+(nr0+1)+", M=["+MARKZAHL_offiziell(DD0)+"], D=["+DD3+"]\n";
       var Zeilegesamt=MARKZAHL6(DD0,DD1,DD2,DD3);
       var neu="neu";
-      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
+      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"â™¥"; doppelte=doppelte+1}
       GESAMTMERK.push(Zeilegesamt);
       Logtext=Logtext+Zeilegesamt+neu+"\n\n";
       }
@@ -2368,7 +2380,7 @@ function Test27(dmax) {
       var Zeile0="["+MARKZAHL_offiziell(DD2)+"],["+STRUKTURxyxyzxzyz(DD3)+"]\n";
       var Zeilegesamt=[Zeile0].sort().join("");
       var neu="neu";
-      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"♥"; doppelte=doppelte+1}
+      if (GESAMTMERK.indexOf(Zeilegesamt)>-1) {neu="doppelt"+"â™¥"; doppelte=doppelte+1}
       GESAMTMERK.push(Zeilegesamt);
       Logtext=Logtext+Zeilegesamt+neu+"\n\n";
       }
@@ -2505,7 +2517,7 @@ function Test28(dflag) {
     var Zeilegesamt="["+RETM[0].slice().sort().join("],[")+"],["+RETL+"]";
     var neu="neu";
     var ind=GESAMTMERK.indexOf(Zeilegesamt);
-    if (ind>-1) {neu="doppelt"+ind+"♥"; doppelte=doppelte+1}
+    if (ind>-1) {neu="doppelt"+ind+"â™¥"; doppelte=doppelte+1}
     GESAMTMERK.push(Zeilegesamt);
     if (dflag) Logtext=Logtext+D+"\n";
     if (dflag) for (var bit=0;bit<BitExpandVektor.length;bit++) {
@@ -2858,6 +2870,7 @@ function TestL() {
   </script>
   </head>
 <body onload="init('hier1',ERGS2);//allesergaenzen()">
+</body>
 <div style="position:fixed; top:0px; left:600px;"><span style=" background-color:yellow; border:none;" ><a href="#Tabelle2">Tabelle 2</a>
 <br/><a href="#DD1U">DD1U</a>
 <br/><a href="#DD1T">[64,266]</a></span></div>
@@ -3065,12 +3078,58 @@ Tabelle TABLE 1 aus ...:
 <div id="Linkliste" style="display:flex; flex-direction:column; overflow:auto"> </div>
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
-  <div>
+<style>
+divh {display:flex}
+divb {display:flex; flex-direction:column; background-color:aquamarine; border:solid}
+divc {display:flex; flex-direction:column; background-color:orange; border:solid}
+divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
+  </style>
+  <div style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:100%">
+    <divb>
+      <divh>ERGS1NEU Automorphismen zählen</divh>
+      <divh><button onclick="Test19()" style="font-size:290%">Test19()</button></divh>
+      </divb>
+    <divb>
+      <divh>ERGS1NEU alle MARKZAHL</divh>
+      <divh><button onclick="Test18()" style="font-size:290%">Test18()</button></divh>
+      </divb>
+    <divd>
+      <divh>Bestimmung aller Markierungen in ERGS2</divh>
+      <divh><button onclick="Test7()" style="font-size:290%">Test7()</button></divh>
+      </divd>
+    <divc>
+      <divh>Test15(dd) erzeugt die grüne Tabelle über ERGS2 für dd=2, 3, 4,...</divh>
+      <divh><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
+        <input id="Test15value" value="2"/>
+        </divh>
+      <divh>
+        <button onclick="Test15(2)" style="font-size:290%">Test15(2)</button>
+        <button onclick="Test15(3)" style="font-size:290%">(3)</button>
+        <button onclick="Test15(4)" style="font-size:290%">(4)</button>
+        <button onclick="Test15(5)" style="font-size:290%">(5)</button>
+        <button onclick="Test15(6)" style="font-size:290%">(6)</button>
+        <button onclick="Test15(7)" style="font-size:290%">(7)</button>
+        <button onclick="Test15(8)" style="font-size:290%">(8)</button>
+        <button onclick="Test15(9)" style="font-size:290%">(9)</button>
+        <button onclick="Test15(10)" style="font-size:290%">(10)</button>
+        <button onclick="Test15MERK()" style="font-size:290%">MERK</button>
+        </divh>
+      </divc>
+    <divd>
+      <divh>Test(26) erzeugt zu ERGS2 alle Markierungen der Form [6720+0*135+1512*120],[8640+0*135+2520*120]</divh>
+      <divh>
+        <button id="Button Test26(2)" onclick="Test26(2)" style="font-size:180%">Test26(2)</button>
+        <button id="Button Test26(4)" onclick="Test26(4)" style="font-size:180%">(4)</button>
+        <button id="Button Test26(6)" onclick="Test26(6)" style="font-size:180%">(6)</button>
+        <button id="Button Test26(8)" onclick="Test26(8)" style="font-size:180%">(8)</button>
+        </divh>
+      </divd>
+    
     <div>
       <button id="Button Test28(0)" onclick="Test28(0)" style="font-size:180%">Test28(0)</button>aktuell N256D4
       <button id="Button Test28(1)" onclick="Test28(1)" style="font-size:180%">Test28(1)</button>
       <button id="Button Test28(2)" onclick="Test28(2)" style="font-size:180%">Test28(2)</button>
-      <button id="Button Test28(3)" onclick="Test28(3)" style="font-size:180%">Test28(3)</button>
+      <button id="Button Test28(3)" onclick="Test28(3)" style="font-size:180%">Test28(3)</button>	
       </div>
     <div>
       <button id="Button Test27(4)" onclick="Test27(4)" style="font-size:180%">Test27(4)</button>alle x y xy z xz yz zählen
@@ -3078,11 +3137,7 @@ Tabelle TABLE 1 aus ...:
       <button id="Button Test27(7)" onclick="Test27(7)" style="font-size:180%">Test27(7)</button> 4 doppelt,
       <button id="Button Test27(8)" onclick="Test27(8)" style="font-size:180%">Test27(8)</button>
       </div>
-    <div>
-      <button id="Button Test26(4)" onclick="Test26(4)" style="font-size:180%">Test26(4)</button>Strukturen ERGS2 komplett bis dd=4,
-      <button id="Button Test26(6)" onclick="Test26(6)" style="font-size:180%">Test26(6)</button>,
-      <button id="Button Test26(8)" onclick="Test26(8)" style="font-size:180%">Test26(8)</button>
-      </div>
+    <div>hier war Test26()</div>
     <div><button id="Button Test25" onclick="Test25()" style="font-size:180%">Test25()</button>Ausgabe gemeinsame Struktur für 655 und 569</div>
     <div><button id="Button Test24" onclick="Test24()" style="font-size:180%">Test24()</button>Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T </div>
     <div>
@@ -3097,8 +3152,9 @@ Tabelle TABLE 1 aus ...:
       <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
       <button onclick="Test20b()" style="font-size:180%">Test20b()</button>ERGS1NEU[dd0][2...]=[[0],[1,0]...]
       </div>
-    <div><button onclick="Test19()" style="font-size:180%">Test19()</button>Automorphismen zählen</div>
-    <div><button onclick="Test18()" style="font-size:180%">Test18()</button>MARKZAHL für alle ERGS1NEU</div>
+    <div>hier war Test19() ERGS1NEU Automorphismen zählen</div>
+    <div><button onclick="Test19UNKLAR()" style="font-size:180%">Test19UNKLAR()</button>???</div>
+    <div>hier war Test18() ERGS1NEU alle MARKZAHL</div>
     <div><button onclick="Test17()" style="font-size:180%">Test17()</button>Vergleich COMPDIAGSTABERZ für alle y oder nur für einzelne</div>
     <div><button onclick="Test16()" style="font-size:200%">Test16()</button>Vergleich wegen SUPH</div>
     <div><button onclick="Test2()" style="font-size:200%">Test2</button>:
@@ -3124,19 +3180,7 @@ Tabelle TABLE 1 aus ...:
       </div>
     <div><button onclick="Test4()" style="font-size:200%">Test4: dd=8, nr=655,569,713,705...mit SUPH</button></div>
     <div><button onclick="Test4a()" style="font-size:200%">Test4a: dd=8, nr=655,569,713,705...mit x^2=(xy)^2</button></div>
-    <div><button onclick="Test15()" style="font-size:290%">Test15()</button> ERGS2NEU dd=
-      <input id="Test15value" value="2"/>
-      <button onclick="Test15(2)" style="font-size:290%">Test15(2)</button>
-      <button onclick="Test15(3)" style="font-size:290%">(3)</button>
-      <button onclick="Test15(4)" style="font-size:290%">(4)</button>
-      <button onclick="Test15(5)" style="font-size:290%">(5)</button>
-      <button onclick="Test15(6)" style="font-size:290%">(6)</button>
-      <button onclick="Test15(7)" style="font-size:290%">(7)</button>
-      <button onclick="Test15(8)" style="font-size:290%">(8)</button>
-      <button onclick="Test15(9)" style="font-size:290%">(9)</button>
-      <button onclick="Test15(10)" style="font-size:290%">(10)</button>
-      <button onclick="Test15MERK()" style="font-size:290%">MERK</button>
-      </div>
+    <div>hier war Test15() drin</div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
       <input id="Test14value" value="40"/>
       </div>
@@ -3159,5 +3203,14 @@ Tabelle TABLE 1 aus ...:
   
   <div><h id="hier2" ontouchstart="//event.preventDefault()"></h></div>
   <div><h id="hier1" ontouchstart="//event.preventDefault()"></h></div>
+<!--
+Restart 2024:
+.. Tests neu sortieren: Test15
+.. Worker verwenden
+.. utf-8 wiederherstellen
+.. in divc geht nicht overvlow:auto;
+
+  -->
   </body>
   </html>
+
