@@ -1568,7 +1568,7 @@ function Test13() {
   var sum=0;
   for (var i in RL) {Logtext=Logtext+i+" "+RL[i]+"\n"; sum=sum+RL[i]}
   Logtext=Logtext+sum+"\n"+(2**((dd+1)*((dd+1)-1)/2))+"\n";
-  Logtext=Logtext+(2n**10000n)+"\n";
+  Logtext=Logtext+'2^10000='+(2n**10000n)+"\n";
   Logfile(Logtext);
   }
 
@@ -2183,6 +2183,29 @@ function Test23(dd0i) {
   Logfile(Logtext);
   }
 
+function Koordinate(i,imax) {
+  let k=0;
+  return [400+Math.round(Math.cos(i/imax*2*Math.PI)*200),250+Math.round(Math.sin(i/imax*2*Math.PI)*200)];
+  }
+
+function zeichne_Kreise(Kreise,imax) {
+  let code='<svg width="1100" height="550" viewBox="0 0 1100 550" style="border:solid green">\n';
+  let k=[0,0];
+  for (let p of Kreise) {
+    let p0=Koordinate(p[0],imax);
+    let p1=Koordinate(p[1],imax);
+    let p2=Koordinate(p[2],imax);
+    code=code+'<line stroke="red" x1="'+p0[0]+'" y1="'+p0[1]+'" x2="'+p1[0]+'" y2="'+p1[1]+'"/>\n';  
+    code=code+'<line stroke="red" x1="'+p1[0]+'" y1="'+p1[1]+'" x2="'+p2[0]+'" y2="'+p2[1]+'"/>\n';  
+    code=code+'<line stroke="red" x1="'+p2[0]+'" y1="'+p2[1]+'" x2="'+p0[0]+'" y2="'+p0[1]+'"/>\n';  
+    //alert(p0+" "+p1+" "+p2+"\n"+code);
+    }
+  //code=code+'<line stroke="red" x1="0" y1="0" x2="100" y2="100"/>';
+  code=code+'</svg>\n';
+  id_svg.innerHTML=code;
+  }
+
+
 function Test24(ni) {
   Logtext="Test24:\n";
   Linkliste="";
@@ -2206,7 +2229,8 @@ function Test24(ni) {
 
   //Logtext=Logtext+KREISE_MEHRFACH_MIT_KANTEN(DD1V)+"\n";
   Logtext=Logtext+KREISE_MEHRFACH(DD1V).join("\n")+"\n\n"+/*AZAHL(1,6)+*/"\n";
-//alert(KREISE(DD1V));#
+  zeichne_Kreise(KREISE(DD1V),DD1V.length);
+//alert(KREISE(DD1V).join("♦"));
 //Logfile(Logtext);return;
   for (var j=1;j<AMERK.length;j++) if (AMERK[j]) {
     Logtext=Logtext+j;  
@@ -3088,13 +3112,22 @@ Tabelle TABLE 1 aus ...:
 <div id="Linkliste" style="display:flex; flex-direction:column; overflow:auto"> </div>
 <div id="Logfile" style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:70%"> </div>
   </div>
+<div id="id_svg"> </div>
 <style>
 divh {display:flex}
 divb {display:flex; flex-direction:column; background-color:aquamarine; border:solid}
 divc {display:flex; flex-direction:column; background-color:orange; border:solid}
 divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
+divf {display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:100%}
   </style>
-  <div style="display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:100%">
+  <divf>
+    <divb>
+      <divh>ERGS1 alle R durchlaufen lassen</divh>
+      <divh>
+        <button onclick="Test13()" style="font-size:270%">Test13()</button> für dd=
+        <input id="Test13value" value="4"/> &#x1D11E
+        <a href="%F0%9D%84%9E">\xF0\x9D\x84\x9E</a> &#x263A;
+        </divh>
     <divb>
       <divh>ERGS1NEU Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T 
         </divh>
@@ -3210,13 +3243,11 @@ divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
       </div>
     <div><button onclick="Test4()" style="font-size:200%">Test4: dd=8, nr=655,569,713,705...mit SUPH</button></div>
     <div><button onclick="Test4a()" style="font-size:200%">Test4a: dd=8, nr=655,569,713,705...mit x^2=(xy)^2</button></div>
-    <div>hier war Test15() drin</div>
+    <div>hier stand Test15() drin</div>
     <div><button onclick="Test14()" style="font-size:280%">Test14()</button> alle Bahnlängen bis dd=
       <input id="Test14value" value="40"/>
       </div>
-    <div><button onclick="Test13()" style="font-size:270%">Test13()</button> alle R durchlaufen lassen für dd=
-      <input id="Test13value" value="4"/> &#x1D11E; <a href="%F0%9D%84%9E">\xF0\x9D\x84\x9E</a> &#x263A;
-      </div>
+    <div>hier stand Test13() ERGS1 alle R durchlaufen lassen für dd= 4 &#x1D11E; <a href="%F0%9D%84%9E">\xF0\x9D\x84\x9E</a> &#x263A;</div>
     <div><button onclick="Test12()" style="font-size:250%">Test12()</button> Isomorphismus bestimmen </div>
     <div><button onclick="Test11()" style="font-size:250%">Test11()</button>3*(3+3+1+1) raussuchen aus ERGS2</div>
     <div><button onclick="Test10(20000)" style="font-size:200%">Test10(20000)</button> Zufallstest 2024, nur TVEC</div>
@@ -3229,7 +3260,7 @@ divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
       <button onclick="clearTimeout(tc)">Anhalten</button></div>
     <div><button onclick="Test6()">Test6()</button></div>
     <div><button onclick="TestL()">Logtext</button></div>
-    </div>
+    </divf>
   
   <div><h id="hier2" ontouchstart="//event.preventDefault()"></h></div>
   <div><h id="hier1" ontouchstart="//event.preventDefault()"></h></div>
