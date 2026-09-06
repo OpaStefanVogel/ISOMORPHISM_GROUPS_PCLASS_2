@@ -2901,6 +2901,36 @@ function TestL() {
   }
 
 //alert(COMPDIAGSTABERZ(DIAG([[1],[1,1],[0,0,0],[1,0,0,1],[0,1,1,0,0]])));
+
+function Cl(p,q) {
+  let R=[];
+  let pq=p+q;
+  for (let i=0;i<pq;i++) {
+    R[i]=[];
+    for (let j=0;j<i+1;j++) if (i<p&&j==0) R[i].push(0); else if (j>0&&R[i][0]!=R[j-1][0]) R[i].push(0); else R[i].push(1);
+    }
+  return R;
+  }
+
+function bestimme29(R) {
+  D=DIAG(R);
+  RET='';
+  RET=RET+JSON.stringify(R)+' ';
+//  RET=RET+'['+COMPDIAGSTABERZ(D)+'] ';
+  RET=RET+MARKZAHL_offiziell(D)+' ';
+  return RET;
+  }
+
+function Test29() {
+  Logtext='Test29 Cl(p,n)\n';
+  for (let pn=1;pn<Test29value.value;pn++) {
+    for (let p=0;p<=pn;p++) Logtext=Logtext+'('+p+','+(pn-p)+') '+' '+bestimme29(Cl(p,pn-p))+'\n';
+    Logtext=Logtext+'\n';
+    }
+  Logfile(Logtext);
+  }
+
+
   </script>
   </head>
 <body onload="init('hier1',ERGS2);//allesergaenzen()">
@@ -3121,6 +3151,13 @@ divd {display:flex; flex-direction:column; background-color:aqua; border:solid}
 divf {display:flex; flex-direction:column; overflow:auto; height:400px; width:80%; border:solid; border-color:grey; white-space:pre; font-family:Courier,monospace; font-size:100%}
   </style>
   <divf>
+    <divc>
+      <divh>Cl(n,m)</divh>
+      <divh>
+        <button onclick="Test29()" style="font-size:270%">Test29()</button> für p+n bis 
+        <input id="Test29value" value="16"/>
+        </divh>
+      <divc>
     <divb>
       <divh>ERGS1 alle R durchlaufen lassen</divh>
       <divh>
@@ -3128,6 +3165,7 @@ divf {display:flex; flex-direction:column; overflow:auto; height:400px; width:80
         <input id="Test13value" value="4"/> &#x1D11E
         <a href="%F0%9D%84%9E">\xF0\x9D\x84\x9E</a> &#x263A;
         </divh>
+      </divb>
     <divb>
       <divh>ERGS1NEU Test1 neu, KREISE() für T <i>×<sub><small>/D</small></sub></i> T und T <i>×<sub><small>/D</small></sub></i> T <i>×<sub><small>/D</small></sub></i> T 
         </divh>
