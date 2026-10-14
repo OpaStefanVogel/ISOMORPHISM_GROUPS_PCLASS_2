@@ -2051,10 +2051,10 @@ function DOPPELDIAG2(D1,D2) {
 function Test21() {
   Logtext="";
   Linkliste="";
-  for (var vx=0;vx<3;vx++) {
-    var R1=ERGS1NEU[1][vx];
+  for (var vx=0;vx<4;vx++) {
+    if (vx<3) var R1=ERGS1NEU[1][vx]; else var R1=ERGS1NEU[0][0];
     var D1=DIAG(R1);
-    for (var dd0=1;dd0<10;dd0++) {
+    for (var dd0=0;dd0<10;dd0++) {
       Logtext=Logtext+'<span id="R1='+MARKZAHL_offiziell(D1)+(dd0+1)+'" style="background-color:GreenYellow">R1=['+MARKZAHL_offiziell(D1)+"] dd="+(dd0+1)+"\n</span>";
       Linkliste=Linkliste+'<a href="#R1='+MARKZAHL_offiziell(D1)+(dd0+1)+'">R1=['+MARKZAHL_offiziell(D1)+"] dd="+(dd0+1)+"</a>"
       for (var nr0=0;nr0<ERGS1NEU[dd0].length;nr0++) {
@@ -3157,6 +3157,8 @@ divf {display:flex; flex-direction:column; overflow:auto; height:400px; width:80
         <button onclick="Test29()" style="font-size:270%">Test29()</button> für p+n bis 
         <input id="Test29value" value="16"/>
         </divh>
+      <divh><button onclick="Test21()" style="font-size:180%">Test21()</button>R1 <i>×<sub><small>/D</small></sub></i> Rx für R1=[8,4], [8,3], [8,2], [4,1]</divh>
+
       <divc>
     <divb>
       <divh>ERGS1 alle R durchlaufen lassen</divh>
@@ -3247,7 +3249,6 @@ divf {display:flex; flex-direction:column; overflow:auto; height:400px; width:80
       <button onclick="Test23(3)" style="font-size:180%">Test23(3)</button>
       </div>
     <div><button onclick="Test22()" style="font-size:180%">Test22()</button>R1 <i>×<sub><small>/D</small></sub></i> alleD (dauert 14 s)</div>
-    <div><button onclick="Test21()" style="font-size:180%">Test21()</button>R1 <i>×<sub><small>/D</small></sub></i> Rx</div>
     <div>
       hier war Test20() ERGS1NEU aus ERGS2 zurückholen, dann Test15(2...4)
       <button onclick="Test20a()" style="font-size:180%">Test20a()</button>ERGS1NEU[dd0].sort()
